@@ -1,0 +1,96 @@
+// 逐字複製自真實 app 的 scss/component.scss「checkbox & radio」區段（verbatim，只搬移位置）
+// 註：.form-checkbox, .form-radio 為共用選擇器，checkbox 與 radio 兩個 atom 各自都需要，故此規則同時複製到兩邊（原樣、非改寫）。
+.form-checkbox,
+.form-radio {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    box-sizing: border-box;
+
+    &:has(:disabled) {
+        cursor: not-allowed;
+    }
+
+    >span {
+        line-height: 1.375;
+        white-space: nowrap;
+    }
+}
+
+
+.form-radio {
+    &.border-wrap {
+        border: 1px solid var(--color-border-default);
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 0.625rem 1rem;
+        min-width: 130px;
+    }
+}
+
+input[type="radio"] {
+    flex-shrink: 0;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border: 1px solid var(--color-border-default);
+    border-radius: 50%;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+
+    &+span {
+        white-space: nowrap;
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        width: 8px;
+        height: 8px;
+        background-color: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: all 0.1s ease;
+    }
+
+    &:checked {
+        background-color: #fff;
+        border-color: var(--color-border-default);
+
+        &::before {
+            background-color: var(--color-primary-dark);
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    &:disabled {
+        background-color: #ebebeb;
+        border-color: var(--color-border-default);
+        cursor: not-allowed;
+
+        &::before {
+            transform: translateX(-50%) rotate(45deg) scale(0);
+        }
+
+        &:checked {
+            cursor: not-allowed;
+            background-color: #ebebeb;
+            border-color: #ebebeb;
+
+            &::before {
+                background-color: #fff;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    }
+}

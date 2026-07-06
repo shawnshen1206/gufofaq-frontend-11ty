@@ -1,0 +1,225 @@
+// 逐字複製自真實 app 的 scss/component.scss「button按鈕」區段（verbatim，只搬移位置）
+.button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    width: fit-content;
+    padding: 0.5625rem 1rem;
+    font-size: 1rem;
+    color: var(--color-text-default);
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: 500;
+    line-height: 1.375;
+    cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: all 0.3s;
+
+    &.disabled,
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5 !important;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    .icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        object-fit: contain;
+    }
+
+}
+
+.button-primary {
+    color: #fff;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            background-color: var(--color-primary-hover);
+            border: 1px solid var(--color-primary-hover);
+        }
+    }
+}
+
+.button-border {
+    color: var(--color-primary);
+    background-color: #fff;
+    border: 1px solid var(--color-primary);
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            color: #fff;
+            background-color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+    }
+}
+
+.button-orange {
+    color: #fff;
+    background-color: #fe790d;
+    border: 1px solid #fe790d;
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            background-color: #E9710E;
+            border: 1px solid #E9710E;
+        }
+    }
+}
+
+.button-green {
+    color: #fff;
+    background-color: var(--color-success);
+    border: 1px solid var(--color-success);
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            background-color: var(--color-success-hover);
+            border: 1px solid var(--color-success-hover);
+        }
+    }
+}
+
+.button-red {
+    color: #fff;
+    background-color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            background-color: var(--color-danger-hover);
+            border: 1px solid var(--color-danger-hover);
+        }
+    }
+}
+
+.button-dark {
+    color: #fff;
+    background-color: #267594;
+    border: 1px solid #267594;
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            background-color: #0c536e;
+            border: 1px solid #0c536e;
+        }
+    }
+}
+
+.button-sm {
+    padding: 0.4375rem 0.5rem;
+}
+
+.button-edit-save {
+    padding: 0;
+    color: var(--color-primary);
+    white-space: nowrap;
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &:hover {
+            color: var(--color-primary-hover);
+        }
+    }
+}
+
+.button-icon {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+
+    &.copy {
+        background-image: url(../images/icon_copy_black.png);
+    }
+
+    &.watch {
+        background-image: url(../images/icon_watch_blacck.png);
+    }
+
+    &.edit {
+        background-image: url(../images/icon_edit_blue.png);
+    }
+
+    &.delete {
+        background-image: url(../images/icon_delete.png);
+    }
+
+    &.download {
+        background-image: url(../images/icon_download.png);
+    }
+
+    &.save {
+        background-image: url(../images/icon_check_blue.png);
+    }
+
+    &.cancel {
+        background-image: url(../images/icon_close_blue.png);
+    }
+
+    &:hover {
+        background-color: var(--color-gray-300);
+    }
+
+    &:has(.tooltip) {
+        &:hover {
+            .tooltip {
+                opacity: 1;
+            }
+        }
+    }
+
+    &.no-bg {
+        &:hover {
+            background-color: transparent;
+
+            &.edit {
+                background-image: url(../images/icon_edit_bluehover.png);
+            }
+
+            &.delete {
+                background-image: url(../images/icon_delete_bluehover.png);
+            }
+
+            &.download {
+                background-image: url(../images/icon_download_bluehover.png);
+            }
+
+            &.save {
+                background-image: url(../images/icon_check_bluehover.png);
+            }
+
+            &.cancel {
+                background-image: url(../images/icon_close_bluehover.png);
+            }
+        }
+    }
+
+    &.size-sm {
+        width: 24px;
+        height: 24px;
+    }
+}

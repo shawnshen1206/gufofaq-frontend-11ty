@@ -1,0 +1,80 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 08 輸入框 section（節錄，class 沿用真實系統） -->
+<div class="flex-row gap-20">
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label class="control-label">標題</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" class="form-control">
+                <span class="error-prompt">錯誤訊息文字</span>
+            </div>
+        </div>
+        <div class="subtitle">描述：輸入框default狀態</div>
+    </div>
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label class="control-label">標題</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" class="form-control disabled" disabled>
+                <span class="error-prompt">錯誤訊息文字</span>
+            </div>
+        </div>
+        <div class="subtitle">描述：輸入框disabled狀態，加上「.disabled」的class及「disabled」屬性</div>
+    </div>
+</div>
+<div class="flex-row gap-20">
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label class="control-label">標題</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" class="form-control error">
+                <span class="error-prompt">錯誤訊息文字</span>
+            </div>
+        </div>
+        <div class="subtitle">描述：輸入框錯誤狀態，在input上加上.error，下方的錯誤訊息.error-prompt就會顯示</div>
+    </div>
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label class="control-label required">標題</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" class="form-control" required>
+                <span class="error-prompt">錯誤訊息文字</span>
+            </div>
+        </div>
+        <div class="subtitle">描述：輸入框必填，在label.control-label上加.required的class，input上加上required屬性，就會出現紅色星號</div>
+    </div>
+</div>
+<div class="flex-row gap-20">
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label class="control-label">搜尋框</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="搜尋..." class="form-control search">
+                <span class="error-prompt">錯誤訊息文字</span>
+            </div>
+        </div>
+        <div class="subtitle">描述：搜尋框，請在input.form-control上加上「.search」，即出現放大鏡圖標</div>
+    </div>
+    <div class="col-6-md">
+        <div class="form-group">
+            <div class="label">
+                <label for="" class="control-label">標題</label>
+            </div>
+            <div class="field">
+                <textarea rows="10" class="form-control" placeholder="請輸入您推薦這篇文章的原因"></textarea>
+            </div>
+        </div>
+        <div class="subtitle">
+            textarea的樣式。<br>高度100px的textarea，在textarea.form-control上加上「.size-sm」
+        </div>
+    </div>
+</div>

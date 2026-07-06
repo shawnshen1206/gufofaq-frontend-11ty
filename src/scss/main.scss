@@ -10,3 +10,10 @@
 @use "../_includes/components/mobile-nav/mobile-nav";
 @use "../_includes/components/footer/footer";
 @use "../_includes/ui/modals/modals";
+
+// ui 原子
+@use "../_includes/ui/button/button";
+@use "../_includes/ui/form-control/form-control";
+@use "../_includes/ui/checkbox/checkbox";
+@use "../_includes/ui/radio/radio";
+@use "../_includes/ui/switch/switch";

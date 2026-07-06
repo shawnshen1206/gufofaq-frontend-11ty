@@ -1,0 +1,72 @@
+// 逐字複製自真實 app 的 scss/component.scss「Switch」區段（verbatim，只搬移位置）
+label.switch {
+    --switchWidth: 2rem;
+    --switchHeight: 1rem;
+    --switchBtn: calc(var(--switchHeight) - (var(--switchPaddingVertical) * 2));
+    --switchPaddingVertical: 0.15rem;
+    --switchPaddingHorizontal: 0.15rem;
+
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+
+    .switch-checkbox {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+
+        &:checked+.switch-box {
+            background-color: #409144;
+
+            .switch-btn {
+                background-color: #fff;
+                left: calc(var(--switchWidth) - var(--switchPaddingHorizontal) - var(--switchBtn));
+            }
+        }
+    }
+
+    .switch-box {
+        display: inline-block;
+        width: var(--switchWidth);
+        height: var(--switchHeight);
+        background-color: rgb(108, 108, 108);
+        padding: var(--switchPaddingVertical) var(--switchPaddingHorizontal);
+        border-radius: 1000px;
+        vertical-align: middle;
+        transition: 0.3s;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        position: relative;
+
+        .switch-btn {
+            display: block;
+            width: var(--switchBtn);
+            height: var(--switchBtn);
+            background-color: #fff;
+            border-radius: 50%;
+            margin-left: 0px;
+            transition: 0.3s;
+            position: absolute;
+            top: 50%;
+            left: var(--switchPaddingHorizontal);
+            transform: translateY(-50%);
+        }
+    }
+}
+
+// 全部意圖判斷 switch 啟用/停用按鈕
+.switch-control-row {
+    position: absolute;
+    right: 1.5rem;
+    z-index: 10;
+
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 768px) {
+        position: static;
+    }
+}

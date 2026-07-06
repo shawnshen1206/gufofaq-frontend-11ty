@@ -1,0 +1,201 @@
+// 逐字複製自真實 app 的 scss/component.scss「form表單 / input輸入框」區段（verbatim，只搬移位置）
+// 註：本區段內與 select2 vendor 耦合的 .select-sm/.select-md 巢狀 select2-container 規則、.multiSelect 起之後 select2 樣式改寫，留給日後 ui/multi-select 處理，不在此檔。
+@use "../../../scss/mixin" as *;
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    &.row {
+        flex-direction: row;
+        align-items: center;
+
+        @media screen and (max-width: 992px) {
+            &.mobile-col {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            &.mobile-col-xs {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    }
+
+    &.w-200 {
+        width: 200px;
+
+        @media screen and (max-width: 992px) {
+            width: auto;
+        }
+    }
+}
+
+.label {
+    flex-shrink: 0;
+
+    @media screen and (max-width: 768px) {
+        &.mobile-align {
+            align-self: flex-start;
+        }
+    }
+
+    &.label-md {
+        width: 80px;
+        flex-shrink: 0;
+        text-align: right;
+
+        @media screen and (max-width: 992px) {
+            width: auto;
+        }
+    }
+}
+
+.field {
+    flex-grow: 1;
+    position: relative;
+}
+
+.function {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.control-label {
+    color: var(--color-text-default);
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4375rem 0.5rem;
+
+    &.required {
+        &::after {
+            content: "*";
+            display: inline-flex;
+            font-weight: 500;
+            color: var(--color-danger);
+        }
+    }
+}
+
+.form-control {
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.375;
+    padding: 0.625rem 0.5rem;
+    color: var(--color-text-default);
+    border-radius: 4px;
+    border: 1px solid var(--color-border-default);
+    background-color: #fff;
+    transition: all 0.3s;
+    box-sizing: border-box;
+    outline: none;
+    position: relative;
+
+    &::placeholder {
+        color: var(--color-text-dark);
+    }
+
+    &.disabled,
+    &:disabled {
+        background-color: var(--color-gray-300);
+        color: var(--color-text-dark);
+        cursor: not-allowed;
+    }
+
+    &:focus {
+        border: solid 1px var(--color-info);
+    }
+
+    &:not(.disabled),
+    &:not(:disabled) {
+        &.error {
+            border: solid 1px var(--color-danger);
+        }
+    }
+
+    &.search {
+        background-image: url(../images/icon_search_black.png);
+        background-repeat: no-repeat;
+        background-size: 1.5rem;
+        background-position: 0.625em 50%;
+        padding-left: 2.75rem;
+    }
+
+    &.time {
+        background-image: url(../images/icon_times.png);
+        background-repeat: no-repeat;
+        background-size: 1.5rem;
+        background-position: calc(100% - 0.625em) 50%;
+        padding-right: 2.75rem;
+    }
+}
+
+textarea.form-control {
+    height: 12.5rem; // 200px
+    line-height: 1.375;
+    color: var(--color-text-default);
+    white-space: pre-wrap;
+    overflow: auto;
+    margin: 0;
+
+    @include scrollbar_thin();
+    -webkit-overflow-scrolling: touch;
+    /* 啟用慣性滾動 */
+
+    &.size-sm {
+        height: 6.25rem; // 100px
+    }
+}
+
+.error-prompt {
+    display: none;
+    font-size: 0.875rem;
+    color: var(--color-danger);
+    margin-top: 0.25rem;
+}
+
+.form-group {
+    &:has(.error) {
+        .error-prompt {
+            display: block;
+        }
+    }
+}
+
+
+// 模擬 select 選框 (2-1)
+.select-wrap {
+    position: relative;
+
+    .form-control {
+        cursor: pointer;
+    }
+
+    &::after {
+        content: "";
+        width: 24px;
+        height: 24px;
+        background: url("../images/icon_arrow_down_black.png") no-repeat center center;
+        background-size: contain;
+        position: absolute;
+        top: 50%;
+        right: 0.5rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+        pointer-events: none;
+    }
+
+    .select-value {
+        color: #222;
+    }
+
+    .select-placeholder {
+        color: #888;
+    }
+}

@@ -7,6 +7,7 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/mobile-nav/mobile-nav.js": "js/mobile-nav.js",
         "src/_includes/components/footer/footer.js": "js/footer.js",
         "src/_includes/ui/modals/modals.js": "js/modals.js",
+        "src/_includes/ui/checkbox/checkbox.js": "js/checkbox.js",
     });
 
     return {

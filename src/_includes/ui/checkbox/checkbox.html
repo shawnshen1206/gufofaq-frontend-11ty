@@ -1,0 +1,47 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 09 Checkbox&Radio section（節錄，class 沿用真實系統） -->
+<div class="flex-row flex-wrap gap-20">
+    <label class="form-checkbox">
+        <input type="checkbox" name="checkbox_sample_1" checked>
+        <span>checkbox1</span>
+    </label>
+    <label class="form-checkbox">
+        <input type="checkbox" name="checkbox_sample_2">
+        <span>checkbox2</span>
+    </label>
+    <label class="form-checkbox">
+        <input type="checkbox" name="checkbox_sample_3" checked disabled>
+        <span>checkbox3</span>
+    </label>
+    <label class="form-checkbox">
+        <input type="checkbox" name="checkbox_sample_4" disabled>
+        <span>checkbox4</span>
+    </label>
+    <label class="form-checkbox border-wrap">
+        <input type="checkbox" name="checkbox_sample_5" checked>
+        <span>checkbox5（border-wrap）</span>
+    </label>
+</div>
+
+<!-- 全選 checkbox 範例：.checkbox-container 包覆 .check-all 與多個 .check-one，行為見 checkbox.js -->
+<div class="checkbox-container">
+    <label class="form-checkbox">
+        <input type="checkbox" name="custom_dataset" class="check-all">
+        <span class="text-md text-bold">自訂資料集</span>
+    </label>
+    <div class="dataset-list-wrap">
+        <div class="dataset-list">
+            <label class="form-checkbox">
+                <input type="checkbox" name="dataset_A_A" class="check-one">
+                <span>資料集A A</span>
+            </label>
+            <label class="form-checkbox">
+                <input type="checkbox" name="dataset_B_B" class="check-one">
+                <span>資料集B B</span>
+            </label>
+            <label class="form-checkbox">
+                <input type="checkbox" name="dataset_C_C" class="check-one">
+                <span>資料集C C</span>
+            </label>
+        </div>
+    </div>
+</div>
