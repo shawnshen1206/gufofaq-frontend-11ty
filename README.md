@@ -35,10 +35,10 @@ src/
 │   │                        link-file, link-modal, list-style, toast, modals, divider-vertical
 │   └── components/         大元件：header, mobile-nav, footer, disclaimer-modal,
 │                            default-table, priority-table, form-table, upload-*, step-*,
-│                            chatroom, sources-block(+source-row), qa-detail-info, multi-select-box,
-│                            block, chart-box, countdown-box, storage-bar, editable-block,
-│                            select-btn-wrap, success-box, feature-disabled-overlay, login-wrapper,
-│                            以及 9 個具體 *-modal
+│                            chatroom, sources-block(+source-row), qa-detail-info, qa-record-tabs,
+│                            prompt-edit, multi-select-box, block, chart-box, countdown-box, storage-bar,
+│                            editable-block, select-btn-wrap, success-box, feature-disabled-overlay,
+│                            login-wrapper, 以及 9 個具體 *-modal
 ├── scss/
 │   ├── _var.scss           顏色 / 字型 tokens（:root CSS 變數）
 │   ├── _mixin.scss  _normalize.scss  _base.scss  _utilities.scss

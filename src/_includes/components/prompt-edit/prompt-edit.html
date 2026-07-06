@@ -1,0 +1,46 @@
+<!-- 提示詞（收合 / 展開編輯）：取自真實 app pages/qaTest 單測/AB測試頁，class 沿用真實系統。
+     展開/儲存/回復/新版本等行為屬業務邏輯（見真實 singleTest.js）不在切版範圍，js-prompt-* 為靜態 hook。
+     參數：promptDefaultOpen（true 時加 data-default-open，AB 測試頁的預設展開欄用）。 -->
+<div class="prompt-edit"{% if promptDefaultOpen %} data-default-open="true"{% endif %} data-full-text="角色定位：
+你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
+知識來源限制：
+你的回答必須僅依據以下資料來源：
+• 《產品規格資料庫》（PDF規格書）
+• 《使用手冊》（操作說明）
+回應原則：
+• 優先使用條列式呈現資訊
+• 語氣清楚、專業且易懂
+• 不可臆測或補充未出現在資料中的內容
+• 若資料不足，需明確說明『無法從現有資料判斷』
+輸出格式：
+• 使用條列式（• 或 -）
+• 必要時分段（例如：規格 / 使用方式 / 注意事項）">
+    <div class="flex-row align-items-center gap-8">
+        <label class="control-label">提示詞</label>
+
+        <button type="button" class="button button-border js-prompt-toggle" data-text-open="完成編輯"
+            data-text-close="展開編輯">
+            展開編輯
+        </button>
+    </div>
+
+    <div class="prompt-edit-content"></div>
+
+    <div class="prompt-edit-tools flex-row justify-content-center flex-wrap gap-16">
+        <button type="button" class="button button-border js-prompt-cancel">
+            取消
+        </button>
+
+        <button type="button" class="button button-primary js-prompt-save">
+            儲存
+        </button>
+
+        <button type="button" class="button button-green js-prompt-reset">
+            回復至預設
+        </button>
+
+        <button type="button" class="button button-primary js-prompt-new-version">
+            儲存為新版本
+        </button>
+    </div>
+</div>

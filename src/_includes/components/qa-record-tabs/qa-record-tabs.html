@@ -1,0 +1,15 @@
+<!-- 問答紀錄頁籤（單測/AB測試/前台對話預覽三頁共用的 .tab-group 清單，資料化）。
+     外層 .tab-wrap/.tabs-title/.qa-side-panel 等 chrome 由各頁自帶（每頁不同），本元件只負責重複的三顆頁籤本身。
+     參數：qaRecordTabs（[{ label, active }]，未給用預設示範）。 -->
+{% if not qaRecordTabs %}
+{% set qaRecordTabs = [
+    { label: "問答紀錄1" },
+    { label: "問答紀錄2" },
+    { label: "問答紀錄3", active: true }
+] %}
+{% endif %}
+<div class="tab-group">
+    {% for tab in qaRecordTabs %}
+    <button type="button" class="tab{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
+    {% endfor %}
+</div>

@@ -59,50 +59,8 @@ permalink: 2-2-1_singleTest.html
         </div>
     </div>
 
-    <!-- 提示詞（收合 / 展開編輯） -->
-    <div class="prompt-edit" data-full-text="角色定位：
-你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
-知識來源限制：
-你的回答必須僅依據以下資料來源：
-• 《產品規格資料庫》（PDF規格書）
-• 《使用手冊》（操作說明）
-回應原則：
-• 優先使用條列式呈現資訊
-• 語氣清楚、專業且易懂
-• 不可臆測或補充未出現在資料中的內容
-• 若資料不足，需明確說明『無法從現有資料判斷』
-輸出格式：
-• 使用條列式（• 或 -）
-• 必要時分段（例如：規格 / 使用方式 / 注意事項）">
-        <div class="flex-row align-items-center gap-8">
-            <label class="control-label">提示詞</label>
-
-            <button type="button" class="button button-border js-prompt-toggle" data-text-open="完成編輯"
-                data-text-close="展開編輯">
-                展開編輯
-            </button>
-        </div>
-
-        <div class="prompt-edit-content"></div>
-
-        <div class="prompt-edit-tools flex-row justify-content-center flex-wrap gap-16">
-            <button type="button" class="button button-border js-prompt-cancel">
-                取消
-            </button>
-
-            <button type="button" class="button button-primary js-prompt-save">
-                儲存
-            </button>
-
-            <button type="button" class="button button-green js-prompt-reset">
-                回復至預設
-            </button>
-
-            <button type="button" class="button button-primary js-prompt-new-version">
-                儲存為新版本
-            </button>
-        </div>
-    </div>
+    <!-- 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit -->
+    {% include "components/prompt-edit/prompt-edit.html" %}
 
     <!-- 套用為正式設定 -->
     <div class="flex-row justify-content-center" style="margin-top: 24px;">
@@ -126,11 +84,7 @@ permalink: 2-2-1_singleTest.html
                     開啟新對話
                 </button>
                 <div class="tab-wrap">
-                    <div class="tab-group">
-                        <button type="button" class="tab" title="問答紀錄1">問答紀錄1</button>
-                        <button type="button" class="tab" title="問答紀錄2">問答紀錄2</button>
-                        <button type="button" class="tab active" title="問答紀錄3">問答紀錄3</button>
-                    </div>
+                    {% include "components/qa-record-tabs/qa-record-tabs.html" %}
                 </div>
             </div>
         </div>

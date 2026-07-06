@@ -5,6 +5,7 @@
      AI 對話內容維持真實頁面原始寫法：直接在 .td 內以純文字＋多個 <p> 呈現（未加 .long-text，真實 markup 本來就沒有），逐字保留（inline，非收合摘要）。
      「提示詞」欄用 .collapse-text/.collapse-body/.collapse-toggle 收合元件呈現：真實 app 連 scss 都沒有這組 class（純由 main.js 量測夾高），
      故收合/展開行為屬業務 JS 不在切版範圍，此處保留靜態 markup（展開鈕為靜態 hook，無 JS 時即顯示全文），逐字保留內容以維持完整欄位清單。 -->
+{% if not conversation %}
 {% set conversation = {
     satisfaction: { label: "讚", icon: "./images/icon_good.png" },
     feedback: "回答很快也很清楚，謝謝！",
@@ -14,6 +15,7 @@
     intent: "-",
     userMessage: "新住民結婚注意事項"
 } %}
+{% endif %}
 
 <div class="block block-sm" style="margin-top: 16px;">
     <div class="form-table-wrap">

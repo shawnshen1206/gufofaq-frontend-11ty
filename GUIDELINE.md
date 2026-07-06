@@ -175,6 +175,8 @@ ui/pagination/
 | `components/multi-select-box` | 自帶 `{% set fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }] %}`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
 | `components/sources-block` | 自帶 `{% set sources = [{ no, file, dataset, title, time, content, note1, note2, reference }] %}`；每筆用子元件 `source-row.html` 渲染。外層的 `.sources-block` 是設計師原有的語意／JS 鉤子 class，本身不帶樣式（視覺來自 `.block` + default-table），刻意保留。 |
 | `components/qa-detail-info` | 自帶 `{% set conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback } %}`；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文示範，依 §3-2 寫死在元件。 |
+| `components/qa-record-tabs` | 單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單；`qaRecordTabs`（`[{ label, active }]`，未給用預設）。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
+| `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/儲存等屬業務 JS 不在範圍，`js-prompt-*` 為靜態 hook。 |
 
 > 說明：除 `breadcrumb` 用 `{% if not %}` 允許頁面覆寫外，上列元件目前把示範資料以 `{% set %}` 寫死在元件內，讓每個元件都能 standalone include、在元件總覽頁直接呈現。轉 React 時把這些 `{% set %}` 資料抽成 props。
 
