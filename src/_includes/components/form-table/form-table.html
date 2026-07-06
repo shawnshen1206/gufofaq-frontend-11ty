@@ -1,0 +1,65 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 11 Table表格 section「表單表格」+ 真實頁 qaHistory 4-2_qaHistory_detail（class 沿用真實系統） -->
+<!-- 表單表格是用 div 模擬 table：最外層「.form-table-wrap」包覆多個「.form-table-group」（含 div.subtitle 標題 + div.form-table）；
+     每個 .form-table 由多個 .row 組成，.row 內是多個 .col（每個 .col 含 div.th + div.td）；
+     td 內含圖示用 td:has(.icon)（自動調整排版）；長文字需捲軸請用 div.long-text 包覆 -->
+{% set groups = [
+    {
+        subtitle: "滿意度回饋",
+        rows: [
+            [
+                { label: "使用者滿意度", value: "讚", icon: "./images/icon_good.png", colClass: "col-6-md col-12-sm" },
+                { label: "意見回饋", value: "回答很快也很清楚，謝謝！", colClass: "col-6-md col-12-sm" }
+            ]
+        ]
+    },
+    {
+        subtitle: "基本對話資訊",
+        rows: [
+            [
+                { label: "聊天室編號", value: "6537", colClass: "col-12-md" }
+            ],
+            [
+                { label: "對話編號", value: "12173", colClass: "col-4-md col-12-sm" },
+                { label: "對話時間", value: "2024/12/01 13:29:24", colClass: "col-4-md col-12-sm" },
+                { label: "有無進行意圖判斷", value: "-", colClass: "col-4-md col-12-sm" }
+            ],
+            [
+                { label: "使用者對話內容", value: "新住民結婚注意事項", colClass: "col-12-md" }
+            ],
+            [
+                { label: "AI對話內容", value: "您好！關於新住民結婚的注意事項，以下是一些重要的要點：申請結婚登記需雙方當事人親自到戶政事務所辦理，並準備有效身份證明文件與結婚證明文件。", colClass: "col-12-md", longText: true }
+            ]
+        ]
+    }
+] %}
+
+<div class="form-table-wrap">
+    {% for group in groups %}
+    <div class="form-table-group">
+        <div class="subtitle">{{ group.subtitle }}</div>
+        <div class="form-table">
+            {% for row in group.rows %}
+            <div class="row mobile-column">
+                {% for field in row %}
+                <div class="col {{ field.colClass }}">
+                    <div class="th">{{ field.label }}</div>
+                    {% if field.icon %}
+                    <div class="td">
+                        <span class="text-bold">{{ field.value }}</span>
+                        <img src="{{ field.icon }}" alt="" class="icon">
+                    </div>
+                    {% elif field.longText %}
+                    <div class="td">
+                        <div class="long-text">{{ field.value }}</div>
+                    </div>
+                    {% else %}
+                    <div class="td">{{ field.value }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,19 @@
+// 逐位元照抄自真 app scss/component.scss 1810-1827（.priority-table 意圖判斷表格區塊），只搬檔案位置，宣告一字不改
+.priority-table {
+    thead {
+        tr {
+            border: 1px solid #efefef;
+
+            th {
+                background-color: #efefef;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            border: 1px solid #efefef;
+            height: 68px;
+        }
+    }
+}

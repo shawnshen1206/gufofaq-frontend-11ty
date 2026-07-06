@@ -1,0 +1,105 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 11 Table表格 section「意圖判斷表格」（class 沿用真實系統） -->
+<!-- 意圖判斷表格使用「.default-table.priority-table」；父層用「div.table-container」包覆，需左右滾動加「.scrollTable」；
+     可編輯欄位：任務描述用 td.edit-cell.description、任務對應提示詞用 td.edit-cell.prompt，內容皆用 div.ellipsis-2 包覆；
+     編輯/設定按鈕、textarea 切換屬於 main.js 業務邏輯，不在此列 -->
+{% set rows = [
+    {
+        category: "入出國與法規",
+        description: "處理入境、出境、簽證、停留等問題",
+        prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。"
+    },
+    {
+        category: "證件與資料申請",
+        description: "協助查詢入出國紀錄、統一證號等申辦方式",
+        prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。"
+    },
+    {
+        category: "權益與申訴服務類",
+        description: "",
+        prompt: ""
+    }
+] %}
+
+<div class="table-container scrollTable">
+    <table class="default-table priority-table">
+        <colgroup>
+            <col style="width: 283px; min-width: 283px;">
+            <col style="width: 283px; min-width: 283px;">
+            <col style="width: 283px; min-width: 283px;">
+            <col style="width: 80px; min-width: 80px;">
+            <col style="width: 140px; min-width: 140px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>分類名稱</th>
+                <th>任務描述</th>
+                <th>任務對應提示詞</th>
+                <th class="text-center">功能</th>
+                <th>變更優先級</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.category }}</td>
+                <td class="edit-cell description">
+                    <div class="ellipsis-2">{{ row.description }}</div>
+                </td>
+                <td class="edit-cell prompt">
+                    <div class="ellipsis-2">{{ row.prompt }}</div>
+                </td>
+                <td class="text-center">
+                    <button class="button button-edit-save js-edit-btn" title="編輯">
+                        <img src="./images/icon_edit_blue.png" alt="" class="icon">
+                        <span class="sr-only">編輯</span>
+                    </button>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="field">
+                            <select class="form-control select-sm singleSelect">
+                                <option></option>
+                                <option value="高優先級" selected>高優先級</option>
+                                <option value="中優先級">中優先級</option>
+                                <option value="低優先級">低優先級</option>
+                                <option value="不使用">不使用</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 依優先級分組展示：div.tablelist-title 為分組標題，緊接一個「.default-table.priority-table」（見真實 app 5-2-1_knowledgeRetrieval 頁） -->
+{% set priorityGroups = [
+    { title: "高優先級（意圖判斷開啟）", categories: ["入出國與法規", "證件與資料申請", "權益與申訴服務類"] },
+    { title: "中優先級（意圖判斷開啟）", categories: ["婚姻與家庭"] },
+    { title: "低優先級（意圖判斷關閉）", categories: ["其他"] }
+] %}
+
+<div class="flex-row column gap-24">
+    {% for group in priorityGroups %}
+    <div>
+        <div class="tablelist-title">{{ group.title }}</div>
+        <div class="table-container scrollTable">
+            <table class="default-table priority-table">
+                <thead>
+                    <tr>
+                        <th>分類名稱</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in group.categories %}
+                    <tr>
+                        <td>{{ category }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+</div>

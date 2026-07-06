@@ -1,0 +1,84 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 11 Table表格 section（主要表格，class 沿用真實系統） -->
+<!-- 父層用「div.table-container」包覆，需左右滾動時加「.scrollTable」；主要表格用「table.default-table」；
+     欄位排序在 th 內加 div.th-sort + img.sort；內容較多欄位用 div.ellipsis-2 包覆；
+     功能欄按鈕用 div.btn-group 包覆；固定欄寬加 .fixed-layout；無外框加 .no-border（見下方 accordion 表格範例） -->
+{% set rows = [
+    {
+        id: "12173",
+        chatId: "6537",
+        question: "新住民結婚注意事項",
+        answer: "您好！關於新住民結婚的注意事項，以下是一些重要的要點：申請結婚登記需雙方當事人親自到戶政事務所辦理，並準備有效身份證明文件與結婚證明文件。",
+        userType: "前台問答",
+        satisfaction: "讚",
+        date: "2024/12/01 13:29"
+    },
+    {
+        id: "12174",
+        chatId: "6538",
+        question: "外籍配偶居留證申請流程",
+        answer: "申請居留證請攜帶護照、結婚證明文件及財力證明至服務站辦理，審核通過後約 7 個工作天內核發。",
+        userType: "前台問答",
+        satisfaction: "讚",
+        date: "2024/12/02 09:15"
+    },
+    {
+        id: "12175",
+        chatId: "6539",
+        question: "入出國紀錄查詢方式",
+        answer: "可透過內政部移民署網站以自然人憑證登入查詢，或親自攜帶身分證明文件至服務站臨櫃申請。",
+        userType: "後台測試",
+        satisfaction: "普通",
+        date: "2024/12/03 16:42"
+    }
+] %}
+
+<div class="table-container scrollTable">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:159px;">
+            <col style="width:1fr; min-width:159px;">
+            <col style="width: 200px; min-width: 200px;">
+            <col style="width: 200px; min-width: 200px;">
+            <col style="width:1fr; min-width:160px;">
+            <col style="width:1fr; min-width:160px;">
+            <col style="width:1fr; min-width:160px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>對話編號</th>
+                <th>聊天室編號</th>
+                <th>使用者對話內容</th>
+                <th>AI對話內容</th>
+                <th>使用者類型</th>
+                <th>滿意度</th>
+                <th>
+                    <div class="th-sort">
+                        對話日期
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort">
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.chatId }}</td>
+                <td>
+                    <a href="" class="link-file">{{ row.question }}</a>
+                </td>
+                <td>
+                    <div class="ellipsis-2">{{ row.answer }}</div>
+                </td>
+                <td>{{ row.userType }}</td>
+                <td>{{ row.satisfaction }}</td>
+                <td>{{ row.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 展開列（accordion）表格範例：expandable rows 直接複用 ui/accordion 既有標記與行為（accordion-btn/detail-row/accordion-content），
+     不重寫互動 js，僅載入 accordion.js（已在 base.html 登記） -->
+{% include "ui/accordion/accordion.html" %}

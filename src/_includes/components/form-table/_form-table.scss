@@ -1,0 +1,86 @@
+// 逐位元照抄自真 app scss/component.scss 1847-1929（.form-table-wrap / .form-table 表單表格區塊），只搬檔案位置，宣告一字不改
+@use "../../../scss/mixin" as *;
+
+/*===============================
+    表單表格 (模擬 table)
+================================*/
+.form-table-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .form-table-group {
+        .subtitle {
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: left;
+            color: var(--color-text-default);
+            padding-bottom: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        &+.form-table-group {
+            .subtitle {
+                padding: 0.5rem 0;
+                margin-bottom: 0.625rem;
+            }
+        }
+    }
+}
+
+.form-table {
+    width: 100%;
+    min-width: auto;
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+
+        .col {
+            display: flex;
+        }
+
+        .th {
+            padding: 0.5rem 0.625rem;
+            box-sizing: border-box;
+            width: 160px;
+            min-width: 160px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            color: var(--color-text-default);
+            border: 1px solid var(--color-border-default);
+            background-color: var(--color-gray-300);
+            display: flex;
+            align-items: center;
+        }
+
+        .td {
+            padding: 0.5625rem 0.625rem;
+            box-sizing: border-box;
+            font-size: 1rem;
+            text-align: left;
+            color: var(--color-text-default);
+            flex-grow: 1;
+            min-width: 0;
+            border: 1px solid var(--color-border-default);
+
+
+            &:has(.icon) {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                padding: 0.5rem 0.625rem;
+            }
+
+            .long-text {
+                max-height: 600px;
+                overflow-y: auto;
+                white-space: pre-wrap;
+                @include scrollbar_thin();
+            }
+        }
+
+    }
+}

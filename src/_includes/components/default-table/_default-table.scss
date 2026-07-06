@@ -1,0 +1,156 @@
+// 逐位元照抄自真 app scss/component.scss table表格區塊，只搬檔案位置，宣告一字不改
+// .scrollTable 1680-1685、.default-table 1687-1799、.tablelist-title 1801-1808、.file-number-group 1829-1845
+// （.priority-table 1810-1827 另外搬到 components/priority-table/_priority-table.scss）
+@use "../../../scss/mixin" as *;
+
+/*===============================
+    table表格
+================================*/
+
+.scrollTable {
+    width: 100%;
+    overflow-x: auto;
+
+    @include scrollbar_thin();
+}
+
+.default-table {
+    width: 100%;
+    position: relative;
+    border-collapse: collapse;
+
+    thead {
+        tr {
+            border: 1px solid var(--color-border-default);
+
+            th {
+                padding: 0.59375rem 0.625rem; // 9.5px 10px
+                text-align: left;
+                font-size: 1rem;
+                font-weight: 500;
+                color: var(--color-text-default);
+                background-color: var(--color-gray-200);
+                box-sizing: border-box;
+
+                word-break: break-all;
+
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            border: 1px solid var(--color-border-default);
+            height: auto;
+
+            td {
+                padding: 0.59375rem 0.625rem;
+                // line-height: normal;
+                vertical-align: middle;
+                background-color: #fff;
+                box-sizing: border-box;
+
+                textarea.form-control {
+                    height: 6.25rem; // 100px
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .th-sort,
+    .sort {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sort {
+        width: 10px;
+        height: 20px;
+        object-fit: contain;
+        cursor: pointer;
+    }
+
+    &.no-border {
+
+        thead tr {
+            border: none;
+
+            th {
+                padding: 0.625rem;
+            }
+        }
+
+        thead tr,
+        tbody tr {
+            border-left: 1px solid transparent;
+            border-right: 1px solid transparent;
+
+            &:first-child {
+                border-top: none;
+            }
+
+            &~tr {
+                border-top: none;
+            }
+        }
+
+        tbody tr {
+            td {
+                padding: 0.609375rem 0.625rem;
+            }
+        }
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        padding: 10px 10px 10px 0;
+        box-sizing: border-box;
+        align-items: center;
+    }
+
+    .form-checkbox {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    thead tr th:has(.form-checkbox),
+    tbody tr td:has(.form-checkbox) {
+        padding-right: 0;
+    }
+
+    &.fixed-layout {
+        table-layout: fixed;
+    }
+}
+
+// 優先等級表格(5-2-1)
+.tablelist-title {
+    font-size: 1.125rem;
+    text-align: left;
+    color: var(--color-primary);
+    padding: 11.625px 0;
+    box-sizing: border-box;
+}
+
+// 表格中檔案數量組
+.file-number-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .icon {
+        width: 1.875rem;
+        height: 2.375rem;
+    }
+}

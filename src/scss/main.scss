@@ -26,3 +26,8 @@
 @use "../_includes/ui/link-file/link-file";
 @use "../_includes/ui/link-modal/link-modal";
 @use "../_includes/ui/divider-vertical/divider-vertical";
+
+// 複合元件（components/）
+@use "../_includes/components/default-table/default-table";
+@use "../_includes/components/priority-table/priority-table";
+@use "../_includes/components/form-table/form-table";
