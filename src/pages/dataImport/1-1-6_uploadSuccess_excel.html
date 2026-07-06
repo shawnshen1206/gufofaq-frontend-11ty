@@ -20,11 +20,7 @@ permalink: 1-1-6_uploadSuccess_excel.html
     { label: "送出資料", done: true }
 ] %}
 <div style="margin-bottom: 34px; margin-top: 10px;">
-    <div class="step-nodes">
-        {% for step in steps %}
-        <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
-        {% endfor %}
-    </div>
+    {% include "components/step-nodes/step-nodes.html" %}
 </div>
 
 <!-- 上傳成功通知：真實頁 .success-desc 為「動態產生」（js/uploadSuccess.js 依 sessionStorage 填入

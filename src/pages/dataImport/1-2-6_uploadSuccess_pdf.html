@@ -17,12 +17,9 @@ permalink: 1-2-6_uploadSuccess_pdf.html
     { label: "上傳檔案", done: true },
     { label: "送出資料", done: true }
 ] %}
+{% set stepNodesLg = true %}
 <div style="margin-bottom: 34px; margin-top: 10px;">
-    <div class="step-nodes">
-        {% for step in steps %}
-        <div class="step-node lg{% if step.done %} done{% endif %}">{{ step.label }}</div>
-        {% endfor %}
-    </div>
+    {% include "components/step-nodes/step-nodes.html" %}
 </div>
 
 <!-- 上傳成功通知：真實頁按鈕 href/文字（重新上傳→1-2-1_uploadFile_pdf.html、開啟資料集→資料集列表）與

@@ -518,6 +518,18 @@ permalink: component.html
                     <li>樣式一、樣式二（較大步驟條，加.lg）</li>
                 </ul>
             </div>
+            {% set steps = [
+                { label: "上傳檔案", done: true },
+                { label: "預覽資料", done: false },
+                { label: "欄位對應", done: false },
+                { label: "送出資料", done: false }
+            ] %}
+            {% include "components/step-nodes/step-nodes.html" %}
+            {% set steps = [
+                { label: "上傳檔案", done: true },
+                { label: "送出資料", done: false }
+            ] %}
+            {% set stepNodesLg = true %}
             {% include "components/step-nodes/step-nodes.html" %}
             <br>
             <div class="caption">
@@ -525,6 +537,13 @@ permalink: component.html
                     <li>按鈕樣式</li>
                 </ul>
             </div>
+            {% set steps = [
+                { label: "上傳檔案", done: true },
+                { label: "預覽資料", done: true },
+                { label: "欄位對應", done: false },
+                { label: "送出資料", done: false }
+            ] %}
+            {% set stepNodesLg = false %}
             {% include "components/step-btn-wrap/step-btn-wrap.html" %}
             <div class="caption description" style="margin-top: 16px;">
                 <ul>

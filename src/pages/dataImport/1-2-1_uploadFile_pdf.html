@@ -17,15 +17,10 @@ permalink: 1-2-1_uploadFile_pdf.html
     { label: "上傳檔案", done: true },
     { label: "送出資料", done: false }
 ] %}
-<div class="step-btn-wrap no-prev" style="margin-bottom: 34px; margin-top: 10px;">
-    <div class="step-nodes">
-        {% for step in steps %}
-        <div class="step-node lg{% if step.done %} done{% endif %}">{{ step.label }}</div>
-        {% endfor %}
-    </div>
-    <button type="button" class="button button-primary align-self-end btn-next">
-        下一步<img src="./images/icon_next.png" alt="" class="icon">
-    </button>
+{% set stepNoPrev = true %}
+{% set stepNodesLg = true %}
+<div style="margin-bottom: 34px; margin-top: 10px;">
+    {% include "components/step-btn-wrap/step-btn-wrap.html" %}
 </div>
 
 <!-- 上傳區：真實頁 accept=".pdf" multiple、上限 30MB，與 components/upload-box 預設（.xlsx、單檔、10MB）不同，故手寫 -->

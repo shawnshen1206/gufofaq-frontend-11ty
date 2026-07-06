@@ -20,11 +20,7 @@ permalink: 1-1-2_uploadFile_excel.html
     { label: "送出資料", done: false }
 ] %}
 <div style="margin-bottom: 34px; margin-top: 10px;">
-    <div class="step-nodes">
-        {% for step in steps %}
-        <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
-        {% endfor %}
-    </div>
+    {% include "components/step-nodes/step-nodes.html" %}
 </div>
 
 {% include "components/upload-box/upload-box.html" %}

@@ -1,27 +1,7 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 18 步驟 section 樣式一/樣式二（class 沿用真實系統）
-     真實 app 僅定義 .done 狀態 class（無 .active），故不臆造 .active -->
-{% set steps = [
-    { label: "上傳檔案", done: true },
-    { label: "預覽資料", done: false },
-    { label: "欄位對應", done: false },
-    { label: "送出資料", done: false }
-] %}
-
-<!-- 樣式一 -->
+<!-- 步驟進度條（取自真實 app pages/components/component.html 18 步驟 section；真實 app 僅定義 .done 狀態，無 .active）。
+     頁面 include 前 set steps（[{ label, done }]）+ 選填 stepNodesLg（true 加 .lg 大尺寸變體）。資料由頁面提供，本元件不自帶。 -->
 <div class="step-nodes">
     {% for step in steps %}
-    <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
-    {% endfor %}
-</div>
-
-{% set lgSteps = [
-    { label: "上傳檔案", done: true },
-    { label: "送出資料", done: false }
-] %}
-
-<!-- 樣式二（較大步驟條，加 .lg） -->
-<div class="step-nodes">
-    {% for step in lgSteps %}
-    <div class="step-node lg{% if step.done %} done{% endif %}">{{ step.label }}</div>
+    <div class="step-node{% if stepNodesLg %} lg{% endif %}{% if step.done %} done{% endif %}">{{ step.label }}</div>
     {% endfor %}
 </div>

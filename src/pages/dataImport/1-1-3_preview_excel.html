@@ -11,8 +11,13 @@ permalink: 1-1-3_preview_excel.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條：真實頁 pages/dataImport/1-1-3_preview_excel.html 步驟 1、2 done，其餘未達成，
-     與 components/step-btn-wrap 預設資料一致，整包 include -->
+<!-- 步驟條：本頁步驟 1、2 done，其餘未達成 -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "預覽資料", done: true },
+    { label: "欄位對應", done: false },
+    { label: "送出資料", done: false }
+] %}
 <div style="margin-bottom: 24px; margin-top: 10px;">
     {% include "components/step-btn-wrap/step-btn-wrap.html" %}
 </div>
