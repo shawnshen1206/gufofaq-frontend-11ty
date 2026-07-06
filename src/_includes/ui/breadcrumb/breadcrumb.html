@@ -1,10 +1,12 @@
 <!-- 展示片段，取自真實 app pages/components/component.html 03 麵包屑 section（節錄，class 沿用真實系統） -->
-<!-- 用法：include 前 {% set breadcrumbItems = [{ label, href }] %}；最後一項不給 href = 目前頁 -->
+{# 用法：include 前先 set breadcrumbItems（陣列，元素為 { label, href }）；最後一項不給 href = 目前頁 #}
+{% if not breadcrumbItems %}
 {% set breadcrumbItems = [
   { label: "首頁", href: "#" },
   { label: "設定", href: "#" },
   { label: "知識檢索邏輯" }
 ] %}
+{% endif %}
 <div class="breadcrumb">
     <div class="wrap">
         <ul>

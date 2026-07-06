@@ -1,0 +1,157 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料集列表
+permalink: 3-1-1_datasetList.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料集列表" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 搜尋 + 儲存空間 + 新增資料集 -->
+<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column" style="margin: 16px 0;">
+    <div class="form-group" style="flex-shrink: 0; min-width: 280px;">
+        <div class="field">
+            <input type="text" placeholder="搜尋..." class="form-control search">
+            <span class="error-prompt">錯誤訊息文字</span>
+        </div>
+    </div>
+    <div class="flex-row gap-16 justify-content-end flex-wrap">
+        {% include "components/storage-bar/storage-bar.html" %}
+        <a href="3-1-2_dataImport_input.html" class="button button-primary" style="flex-shrink: 0;">
+            <img src="./images/icon_add_white.png" alt="" class="icon">新增資料集
+        </a>
+    </div>
+</div>
+
+<!-- 資料集表格：欄位與真實頁 pages/dataset/3-1-1_datasetList.html + js/datasetList.js 的 createDatasetRow() 一致，
+     動態渲染的列改用 set+for 資料化示範 2-3 筆 -->
+{% set rows = [
+    {
+        name: "客服問答知識庫",
+        href: "3-1-3_previewDataset.html?sn=101",
+        fileTypes: { xlsx: 3, pdf: 12, word: 2, api: 0, img: 1 },
+        createdAt: "2025/11/02 10:20",
+        updatedAt: "2026/06/18 09:05",
+        sizeMB: "128.45",
+        count: "3,204"
+    },
+    {
+        name: "產品規格文件集",
+        href: "3-1-3_previewDataset.html?sn=102",
+        fileTypes: { xlsx: 0, pdf: 20, word: 5, api: 1, img: 0 },
+        createdAt: "2025/12/15 14:33",
+        updatedAt: "2026/05/30 17:41",
+        sizeMB: "356.10",
+        count: "8,912"
+    },
+    {
+        name: "常見問題彙整",
+        href: "3-1-3_previewDataset.html?sn=103",
+        fileTypes: { xlsx: 1, pdf: 4, word: 0, api: 0, img: 0 },
+        createdAt: "2026/01/08 08:52",
+        updatedAt: "2026/06/29 11:12",
+        sizeMB: "18.90",
+        count: "742"
+    }
+] %}
+<div class="table-container scrollTable">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:327px;">
+            <col style="width:1fr; min-width:327px;">
+            <col style="width: 120px; min-width: 120px;">
+            <col style="width: 120px; min-width: 120px;">
+            <col style="width: 120px; min-width: 120px;">
+            <col style="width: 120px; min-width: 120px;">
+            <col style="width:64px; min-width:64px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>資料集名稱</th>
+                <th>檔案類型</th>
+                <th>建立時間</th>
+                <th>最後更新時間</th>
+                <th class="text-center">檔案大小</th>
+                <th class="text-center">資料筆數</th>
+                <th>功能</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>
+                    <a href="{{ row.href }}" title="{{ row.name }}" class="link-file">{{ row.name }}</a>
+                </td>
+                <td>
+                    <div class="file-number-group">
+                        <div class="item">
+                            <img src="./images/icon_XLSX_s.png" alt="" class="icon">
+                            <span class="number">{{ row.fileTypes.xlsx }}</span>
+                        </div>
+                        <div class="item">
+                            <img src="./images/icon_PDF_s.png" alt="" class="icon">
+                            <span class="number">{{ row.fileTypes.pdf }}</span>
+                        </div>
+                        <div class="item">
+                            <img src="./images/icon_doc_s.png" alt="" class="icon">
+                            <span class="number">{{ row.fileTypes.word }}</span>
+                        </div>
+                        <div class="item">
+                            <img src="./images/icon_API_s.png" alt="" class="icon">
+                            <span class="number">{{ row.fileTypes.api }}</span>
+                        </div>
+                        <div class="item">
+                            <img src="./images/icon_img_s.png" alt="" class="icon">
+                            <span class="number">{{ row.fileTypes.img }}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ row.createdAt }}</td>
+                <td>{{ row.updatedAt }}</td>
+                <td class="text-center">{{ row.sizeMB }} MB</td>
+                <td class="text-center">{{ row.count }} 筆</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除">
+                            <span class="sr-only">刪除</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 分頁：真實頁由 js/datasetList.js renderPagination() 動態產生（li.prev/li.active/li.next 結構），
+     此處沿用 ui/pagination 同一組 class 資料化示範 -->
+{% set pages = [
+    { number: 1, active: true },
+    { number: 2 },
+    { number: 3 }
+] %}
+<div class="pagination" role="navigation" aria-label="頁碼分頁" style="margin-top: 16px;">
+    <ul>
+        <li class="prev disabled">
+            <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                <img src="./images/icon_arrow_left_gray.png" alt="">
+            </a>
+        </li>
+        {% for page in pages %}
+        <li{% if page.active %} class="active"{% endif %}>
+            <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+        </li>
+        {% endfor %}
+        <li class="next">
+            <a href="#" aria-label="下一頁">
+                <img src="./images/icon_arrow_right_blue.png" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% include "components/delete-modal/delete-modal.html" %}
