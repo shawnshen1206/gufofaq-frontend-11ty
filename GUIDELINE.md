@@ -122,8 +122,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
 - SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；顏色用 `_var.scss` 變數
-- 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**
-  - **既有跨元件規則的例外**：原始 `component.scss` 是單一大檔，少數規則本來就把別元件的 class 嵌在自己底下（如 `.footer .link-modal`、`.select-btn-wrap .button`、`.chat-input-container .form-group .form-control`）。拆成一元件一檔時，這些規則**逐字保留在原本負責它的元件檔內**（維持外觀 100% 還原優先於嚴格隔離），並在該 scss 檔開頭以註解標明「逐字複製自真實 app」。**只有這類「原 app 既有的跨元件規則」可保留；不得新寫任何新的跨元件覆寫。** 轉 React 時再把這類規則歸位到擁有該 class 的元件。
+- 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`）
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）
 - 間距優先用既有工具 class（`flex-row column gap-16` 等）；簡單的一次性間距與表格欄寬（`<col style="width:...">`）允許行內 style（與既有切版習慣一致），但**不可**用行內 style 寫顏色與字級
 
@@ -173,7 +172,7 @@ ui/pagination/
 | `components/step-nodes` | 自帶 `{% set steps = [{ label, done }] %}`（`.done` = 已完成；`.lg` = 大尺寸變體）。 |
 | `components/step-btn-wrap` | 靜態、無參數：上一步／下一步 `href="#"`，帶 `.btn-prev`／`.btn-next` JS 鉤子 class；只需下一步時最外層加 `.no-prev` 並移除上一步按鈕。 |
 | `components/multi-select-box` | 自帶 `{% set fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }] %}`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
-| `components/sources-block` | 自帶 `{% set sources = [{ no, file, dataset, title, time, content, note1, note2, reference }] %}`；每筆用子元件 `source-row.html` 渲染。外層的 `.sources-block` 是設計師原有的語意／JS 鉤子 class，本身不帶樣式（視覺來自 `.block` + default-table），刻意保留。 |
+| `components/sources-block` | 自帶 `{% set sources = [{ no, file, dataset, title, time, content, note1, note2, reference }] %}`；每筆用子元件 `source-row.html` 渲染。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
 | `components/qa-detail-info` | 自帶 `{% set conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback } %}`；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文示範，依 §3-2 寫死在元件。 |
 | `components/qa-record-tabs` | 單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單；`qaRecordTabs`（`[{ label, active }]`，未給用預設）。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/儲存等屬業務 JS 不在範圍，`js-prompt-*` 為靜態 hook。 |
@@ -208,7 +207,7 @@ ui/pagination/
 | `ui/multi-select`（增強原生 `<select multiple>`） | `react-select`（isMulti）；value 陣列＝原生 select 的選取，行為（標籤／搜尋／複選）即規格 |
 | `_var.scss` 顏色變數 | 全域引入一次，元件照用 `var(--...)` |
 
-accordion 的行為（`ui/accordion/accordion.js`）逐字沿用真實 app `main.js`：各列**獨立開合**（點哪列就 toggle 哪列，不會自動關其他列），並以 `.sources-block` 為掃描根範圍。轉 React 時由各 accordion 元件自管開合狀態（`useState` 記住開啟的列），不要跨元件共用一份全域狀態。
+accordion 的行為（`ui/accordion/accordion.js`）逐字沿用真實 app `main.js`：各列**獨立開合**（點哪列就 toggle 哪列，不會自動關其他列），掃描根為 accordion 自有的 `.js-accordion`（原子，不綁定任何 `components/` 的 class）。轉 React 時由各 accordion 元件自管開合狀態（`useState` 記住開啟的列），不要跨元件共用一份全域狀態。
 
 HTML → JSX 為機械式替換：`class`→`className`、標籤自閉合、`{# #}`→`{/* */}`。
 CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
