@@ -1,0 +1,84 @@
+// source = 真實 app css/style.css（其 scss/style.scss 已在上游被刪除，
+// compiled css 是目前唯一僅存的真相來源）— 以下內容逐字（verbatim）搬移自
+// D:/coding/source/repos/GufoFAQ_Frontend_New/css/style.css，未做任何規則修改。
+@charset "UTF-8";
+/*
+-----------------------------------
+    0. 變數
+    1. 提示詞管理 (5-4-1)
+    2. AB測試 (2-2-3)
+-----------------------------------
+*/
+/*===============================
+    變數
+================================*/
+:root {
+  --fontFamily: NotoSans, "PingFangTC", Microsoft JhengHei, "微軟正黑體", "Helvetica", "sans-serif";
+  /*語意化顏色變數*/
+  --color-primary: #168ed1;
+  --color-primary-hover: #037ec3;
+  --color-primary-light: #e7f7ff;
+  --color-primary-dark: #13386f;
+  --color-primary-linear: linear-gradient(to right, #0a62ac, #2ebbcf);
+  --color-success: #00b526;
+  --color-success-hover: #019520;
+  --color-info: #0d97e5;
+  --color-warning: #ffc700;
+  --color-warning-hover: #efbb00;
+  --color-danger: #f12929;
+  --color-danger-hover: #d41414;
+  --color-gray-100: #f9f9f9;
+  --color-gray-200: #f5f5f5;
+  --color-gray-300: #f1f1f1;
+  --color-gray-400: #e1e1e1;
+  --color-gray-500: #dfdfdf;
+  --color-gray-600: #6c6c6c;
+  --color-black: #222222;
+  --color-text-default: var(--color-black);
+  --color-text-dark: var(--color-gray-600);
+  --color-bg-primary: #e7f7ff;
+  --color-border-default: var(--color-gray-400);
+}
+
+/*===============================
+    提示詞管理 (5-4-1)
+================================*/
+.filter-fields {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.filter-fields .form-group {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.prompt-content {
+  line-height: 1.625;
+}
+.prompt-content p {
+  margin: 0;
+}
+.prompt-content .list-style-disc > li {
+  line-height: 1.625;
+}
+
+.prompt-card.draft .prompt-text {
+  font-weight: 500;
+  margin: 0;
+  padding: 0.4375rem 0.5rem;
+  box-sizing: border-box;
+}
+.prompt-card.draft textarea.form-control {
+  line-height: 1.625;
+}
+
+/*===============================
+    AB測試 (2-2-3)
+================================*/
+.ab-test-block > div {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.ab-test-block .select-row .form-group .label {
+  width: 108px;
+}

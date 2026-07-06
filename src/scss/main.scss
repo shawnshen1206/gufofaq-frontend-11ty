@@ -48,3 +48,7 @@
 @use "../_includes/components/multi-select-box/multi-select-box";
 // sources-block、qa-detail-info：真實 scss 無專屬 class 規則（純語意/JS wrapper，視覺全由 block/default-table/accordion/form-table 提供），
 // 無 scss 檔可搬，故不新增 @use（同 disclaimer-modal 先例）
+
+// 第二支頁面專屬樣式表（真實 app css/style.css，其 scss 原始檔已於上游刪除）
+// 放在所有 component @use 之後，讓頁面專屬規則（filter-fields/prompt-card/prompt-content/ab-test-block）優先生效
+@use "style";
