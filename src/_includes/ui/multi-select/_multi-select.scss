@@ -1,0 +1,188 @@
+// ui/multi-select：select2 多選（.multiSelect）的原生 vanilla 替代。
+// 注意：select2 的 DOM（.select2-container/.select2-selection--multiple/.select2-selection__choice...）已不存在，
+// 所以本檔「無法逐位元照抄」真實 app 的 select2 規則——這是整個轉換案唯一刻意的非逐字例外。
+// 視覺數值（顏色變數、border、padding、min-height、chip 樣式、下拉箭頭圖示）取自真實 app
+// scss/component.scss 第 993-1133 行（.multiSelect / select2 多選樣式改寫區段），重新對應到本檔自訂的
+// class 名稱（.multi-select-control / .multi-select-tag / .multi-select-search / .multi-select-dropdown）。
+@use "../../../scss/mixin" as *;
+
+.multi-select {
+    position: relative;
+    width: 100%;
+}
+
+// 原生 <select multiple> 仍是唯一資料來源，但視覺上完全隱藏（換成下面的自訂控制項）
+.multi-select-native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+// 對應真實 app：.select2-container--default .select2-selection--multiple
+.multi-select-control {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 56px;
+    padding: 7px 32px 7px 8px;
+    border: 1px solid var(--color-border-default);
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    cursor: text;
+    transition: border-color 0.3s;
+
+    // 對應：.select2-container--default .select2-selection--multiple::after（下拉箭頭圖示）
+    &::after {
+        content: "";
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        width: 24px;
+        height: 24px;
+        background: url("../images/icon_arrow_down_black.png") no-repeat center center;
+        background-size: 24px 24px;
+    }
+}
+
+// 對應：.select2-container--default.select2-container--focus .select2-selection--multiple
+.multi-select.open .multi-select-control {
+    border: solid 1px var(--color-info);
+}
+
+// 對應：.select2-container--default .select2-selection--multiple .select2-selection__rendered
+.multi-select-tags {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.375;
+    min-width: 0;
+}
+
+// 對應：.select2-container--default .select2-selection--multiple .select2-selection__choice
+.multi-select-tag {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 10px 29px 10px 10px;
+    background-color: var(--color-border-default);
+    border-radius: 2px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    max-width: 100%;
+}
+
+.multi-select-tag-label {
+    color: var(--color-text-default);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// 對應：.select2-selection__choice__remove + ::after（用背景圖代替文字符號）
+.multi-select-tag-remove {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-size: 0;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+    background-image: url("../images/icon_close_black.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+// 對應：.select2-container--default .select2-search--inline .select2-search__field
+.multi-select-search {
+    flex: 1 1 auto;
+    min-width: 0.75rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.375;
+    color: var(--color-text-default);
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &::placeholder {
+        color: var(--color-text-dark);
+    }
+}
+
+// 有已選標籤時，搜尋框縮成一小段（對應 main.js：searchField.css('width', '0.75rem')）
+.multi-select.has-tags .multi-select-search {
+    flex: 0 0 auto;
+    width: 0.75rem;
+}
+
+// 下拉選項清單：select2 未在真實 app 客製此區塊樣式（沿用套件內建外觀），
+// 這裡改用本設計系統既有 token（border/box-shadow/gray 色階）重新設計，維持整體視覺一致。
+.multi-select-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    max-height: 15rem;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid var(--color-border-default);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+
+    @include scrollbar_thin();
+}
+
+.multi-select.open .multi-select-dropdown {
+    display: block;
+}
+
+.multi-select-option {
+    padding: 0.625rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1.375;
+    color: var(--color-text-default);
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-gray-200);
+    }
+
+    &.selected {
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+        font-weight: 500;
+    }
+}
+
+.multi-select-option-empty {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-dark);
+}
