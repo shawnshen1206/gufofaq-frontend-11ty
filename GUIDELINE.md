@@ -24,8 +24,8 @@ gufofaq-frontend-11ty/
 │   ├── _includes/
 │   │   ├── layouts/                   ← 整頁模板（只放模板，不放元件）
 │   │   │   ├── base.html              ←   <head> + 全頁框架 + script 清單
-│   │   │   ├── page-shell.html        ←   一般頁外殼：header + main 容器 + footer
-│   │   │   └── _layout.scss           ←   骨架樣式（.full-wrap、.wrap、.main、.page-title）
+│   │   │   └── page-shell.html        ←   一般頁外殼：header + main 容器 + footer
+│   │   │                                  （骨架樣式在 scss/ 的 _base/_style，layouts/ 只放模板）
 │   │   ├── components/                ← 大元件：會用到其他元件的組合區塊
 │   │   │   └── <元件名>/              ←   一個元件 = 一個資料夾
 │   │   │       ├── <元件名>.html      ←     元件 HTML（唯一正本）
@@ -172,17 +172,18 @@ ui/pagination/
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
 | `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
-| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆用子元件 `source-row.html` 渲染。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
+| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
 | `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 §3-2 直接寫在元件 markup。 |
 | `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/儲存等屬業務 JS 不在範圍，`js-prompt-*` 為靜態 hook。 |
+| `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
 
 > 說明：上列資料型元件的資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供（依 §3-2「重複資料放頁面」），元件本身**不自帶資料**、只負責 `{% for %}` 渲染——與範例方法一致，轉 React 即 props。（元件總覽頁 `component.html` 也是以 `{% set %}` 供這些元件示範資料，不由元件自帶。）
 
 ### 自動引入
 
 `header`（內含 mobile-nav）、`footer`（內含 disclaimer-modal）由 `page-shell` 提供，頁面不需 include。
-含子元件的元件：`header`（含 `mobile-nav`）、`footer`（含 `disclaimer-modal`）。
+含子元件的元件：`header`（含 `mobile-nav`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
