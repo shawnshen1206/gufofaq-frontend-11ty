@@ -1,0 +1,34 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 13 Tab頁籤 section（節錄，class 沿用真實系統） -->
+<!-- 使用 .tab 加 .active 呈現激活狀態；大父層 div.tab-wrap 包覆；同一組按鈕父層 div.tab-group 包覆；
+     雙層頁籤第一層 .tab-group 加 .top-tabs、第二層加 .sub-tabs。切換行為見 tab.js -->
+<div class="flex-row gap-20">
+    <div class="tab-wrap">
+        <div class="tabs-title">問答紀錄</div>
+        <div class="tab-row">
+            <div class="tab-group top-tabs">
+                <button type="button" class="tab active" data-target="group1" title="前台問答">前台問答</button>
+                <button type="button" class="tab" data-target="group2" title="後台問答">後台問答</button>
+            </div>
+        </div>
+        <div class="tab-group sub-tabs" id="group1">
+            <button type="button" class="tab" title="問答紀錄1">問答紀錄1</button>
+            <button type="button" class="tab" title="問答紀錄2">問答紀錄2</button>
+            <button type="button" class="tab active" title="問答紀錄3">問答紀錄3</button>
+        </div>
+        <div class="tab-group sub-tabs" id="group2" style="display: none;">
+            <button type="button" class="tab" title="外籍配偶準備文件">外籍配偶準備文件</button>
+            <button type="button" class="tab" title="護照效期影響出國">護照效期影響出國</button>
+            <button type="button" class="tab" title="入出國日期證明書">入出國日期證明書</button>
+            <button type="button" class="tab ellipsis-1" title="欠稅或官司被禁止出國要如何解除">欠稅或官司被禁止出國要如何解除</button>
+            <button type="button" class="tab" title="查詢過去的出國紀錄">查詢過去的出國紀錄</button>
+        </div>
+    </div>
+
+    <!-- 水平排列單層 tab 頁籤 -->
+    <div class="tab-row fit-content">
+        <div class="tab-group">
+            <button type="button" class="tab tab-md active" title="比對資料">比對資料</button>
+            <button type="button" class="tab tab-md" title="原始資料">原始資料</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+// 逐位元照抄自真 app scss/component.scss 1935-2005（accordion 手風琴區塊），只搬檔案位置，宣告一字不改
+/*===============================
+    accordion手風琴
+================================*/
+
+.accordion-btn {
+    padding: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-image: url(../images/icon_table_arrow_default.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+
+    &.open {
+        background-image: url(../images/icon_table_arrow_open.png);
+    }
+}
+
+// 內嵌 accordion 表格
+.detail-row {
+    border: none !important;
+
+    .detail-cell {
+        padding: 0 !important;
+
+        .accordion-content {
+            display: none;
+
+            .accordion-table {
+                width: 100%;
+                max-width: 100%;
+                position: relative;
+                border-collapse: collapse;
+                table-layout: fixed;
+
+                tr {
+                    height: auto;
+                    border: none !important;
+
+                    th,
+                    td {
+                        text-align: left;
+                        background-color: var(--color-gray-200);
+                        padding: 0.46875rem 1rem !important; // 7.5px 16px
+                        box-sizing: border-box;
+                        border: 1px solid var(--color-border-default);
+                        font-size: 1rem;
+                        font-weight: normal;
+                        line-height: 1.375;
+                    }
+
+                    th {
+                        white-space: nowrap;
+                        font-weight: 500;
+                        width: 120px;
+                        text-align: center;
+                    }
+
+                    td {
+                        word-break: break-word;
+                    }
+                }
+
+                tr:first-child {
+                    th,
+                    td {
+                        border-top: none;
+                    }
+                }
+            }
+        }
+
+
+    }
+}

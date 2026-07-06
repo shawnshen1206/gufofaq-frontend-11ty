@@ -8,6 +8,9 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/footer/footer.js": "js/footer.js",
         "src/_includes/ui/modals/modals.js": "js/modals.js",
         "src/_includes/ui/checkbox/checkbox.js": "js/checkbox.js",
+        "src/_includes/ui/accordion/accordion.js": "js/accordion.js",
+        "src/_includes/ui/tab/tab.js": "js/tab.js",
+        "src/_includes/ui/pagination/pagination.js": "js/pagination.js",
     });
 
     return {

@@ -1,0 +1,38 @@
+<!-- 展示片段，取自真實 app pages/components/component.html 15 Pagination頁碼 section（節錄，class 沿用真實系統） -->
+<!-- 一般頁碼形式：上一頁 li.prev / 下一頁 li.next 加 .disabled 呈現禁用；當頁 li 加 .active 呈現激活（頁碼清單為資料驅動渲染，非本檔範圍，僅示範靜態外觀） -->
+<div class="pagination" role="navigation" aria-label="頁碼分頁">
+    <ul>
+        <li class="prev disabled">
+            <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                <img src="./images/icon_arrow_left_gray.png" alt="">
+            </a>
+        </li>
+        <li class="active"><a href="#" aria-label="第1頁" aria-current="page">1</a></li>
+        <li><a href="#" data-page="2" aria-label="第2頁">2</a></li>
+        <li><a href="#" data-page="3" aria-label="第3頁">3</a></li>
+        <li class="ellipsis">...</li>
+        <li><a href="#" data-page="10" aria-label="第10頁">10</a></li>
+        <li class="next">
+            <a href="#" data-page="2" aria-label="下一頁">
+                <img src="./images/icon_arrow_right_blue.png" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- 可輸入頁碼切換：input.pager-input 內可輸入頁碼；上一頁 button.prev / 下一頁 button.next 加 disabled 屬性呈現禁用。行為見 pagination.js -->
+<div class="pagination-input" data-total="12">
+    <button type="button" class="pager-btn prev" disabled>
+        <img src="./images/icon_arrow_left_blue.png" alt="上一頁" class="icon">
+    </button>
+
+    <span class="pager-text">第</span>
+
+    <input class="pager-input form-control" type="text" value="1">
+
+    <span class="pager-text">個對話，共<span class="total"></span>個</span>
+
+    <button type="button" class="pager-btn next">
+        <img src="./images/icon_arrow_right_blue.png" alt="下一頁" class="icon">
+    </button>
+</div>

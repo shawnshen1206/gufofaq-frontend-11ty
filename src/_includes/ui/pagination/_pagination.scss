@@ -1,0 +1,142 @@
+// 逐位元照抄自真 app scss/component.scss 1497-1637（pagination 頁碼區塊），只搬檔案位置，宣告一字不改
+/*===============================
+    pagination頁碼
+================================*/
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+
+    ul {
+        padding: 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.25rem;
+        flex-wrap: wrap;
+
+        li {
+            a {
+                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                font-size: 1rem;
+                text-align: center;
+                color: var(--color-primary);
+                background-color: transparent;
+                padding: 0.625rem;
+                box-sizing: border-box;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            &.active {
+                a {
+                    color: #fff;
+                    background-color: var(--color-primary);
+                }
+            }
+
+            &.disabled {
+                cursor: not-allowed;
+
+                a {
+                    pointer-events: none;
+                }
+            }
+
+            &:not(.prev):not(.next) {
+                a {
+                    &:hover {
+                        color: #fff;
+                        background-color: var(--color-primary);
+                    }
+                }
+            }
+
+            img {
+                width: 2rem;
+                height: 2rem;
+                display: block;
+            }
+
+            &.ellipsis {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                height: 2rem;
+                font-size: 1rem;
+                font-weight: bold;
+                text-align: center;
+                color: var(--color-primary);
+                background-color: transparent;
+                padding: 0.625rem;
+                box-sizing: border-box;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+
+// 4-1 資料筆數
+.data-info {
+    padding: 1rem 0;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    color: #323c4f;
+}
+
+// 輸入版頁碼
+.pagination-input {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    align-self: flex-end;
+}
+
+.pager-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+
+    img {
+        display: block;
+    }
+}
+
+.pager-input {
+    width: 60px;
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    line-height: 1.375;
+    color: var(--color-text-default);
+    border-radius: 4px;
+    border: solid 1px var(--color-border-default);
+    background-color: #fff;
+}
