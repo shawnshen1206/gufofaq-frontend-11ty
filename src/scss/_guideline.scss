@@ -1,0 +1,343 @@
+// 逐字複製自真實 app scss/guideline.scss（verbatim；僅元件庫展示頁使用的版型/說明樣式，非全站樣式）
+// 唯一調整：第一行 @import "base/var" → @use "var"（本檔內文其實未使用任何 $ 變數，僅為對齊真實檔頭、維持可解析）
+@use "var";
+
+@mixin scrollbar() {
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background-color: rgba(#4f4f4f, 0.5);
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    /*某些元素的corner部分的部分样式(例:textarea的可拖动按钮)*/
+    &::-webkit-resizer {
+        background-color: transparent;
+        border-color: transparent;
+
+    }
+
+    /*firefox scrollbar*/
+    scrollbar-width: thin;
+    scrollbar-color: rgba(#4f4f4f, 0.5) #fff;
+}
+
+html {
+    overflow: inherit !important;
+}
+
+body {
+    overflow: hidden;
+}
+
+.full-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+
+    .main-container {
+        width: calc(100% - 200px);
+        height: 100vh;
+        padding: 1rem;
+        background-color: #fcfcfc;
+        box-sizing: border-box;
+        overflow: auto;
+        @include scrollbar();
+        position: relative;
+    }
+}
+
+aside {
+    width: 200px;
+    height: 100vh;
+    // padding-top: 56px;
+    background-color: #fffaf2;
+    box-sizing: border-box;
+    overflow-y: auto;
+    flex-shrink: 0;
+    @include scrollbar();
+
+    .title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        padding: 0.75em 1em;
+    }
+
+    ul {
+        li {
+            a {
+                display: block;
+                width: 100%;
+                font-size: 1rem;
+                color: #6c6c6c;
+                padding: 0.75em 1em;
+                text-decoration: none;
+                box-sizing: border-box;
+                transition: all 0.3s;
+
+                &:hover {
+                    background-color: #4f4f4f;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+section {
+    margin-bottom: 80px;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-bottom: 0.8333em;
+    position: relative;
+    z-index: 1;
+
+    >span:first-child {
+        color: #4f4f4f;
+        border-right: 3px solid #4f4f4f;
+        padding-right: 10px;
+        background-color: #fcfcfc;
+    }
+
+    >span:nth-child(2) {
+        color: #000;
+        padding-left: 10px;
+        padding-right: 20px;
+        background-color: #fcfcfc;
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: #3153ba;
+        opacity: 0.3;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+    }
+}
+
+.modals .row {
+    margin-bottom: 0;
+}
+
+.flex-row {
+    margin-bottom: 1.5rem;
+}
+
+.caption {
+    font-size: 1.125rem;
+    margin-bottom: 0.8888em;
+
+    ul {
+        padding-left: 24px;
+
+        li {
+            position: relative;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            text-align: left;
+
+            &::before {
+                display: block;
+                content: "";
+                width: 10px;
+                height: 10px;
+                background: #3C4C5E;
+                position: absolute;
+                left: -24px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+
+    &.description {
+        font-size: 1rem;
+        background-color: rgba(#b4bfc9, 0.5);
+        border-radius: 4px;
+        padding: 10px;
+
+        ul {
+            padding-left: 18px;
+
+            li {
+                &::before {
+                    display: block;
+                    content: "";
+                    width: 6px;
+                    height: 6px;
+                    background: #3C4C5E;
+                    position: absolute;
+                    left: -18px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+    }
+}
+
+.margin-center {
+    margin: auto;
+}
+
+.subtitle {
+    font-size: 1rem;
+    background-color: rgba(#b4bfc9, 0.5);
+    color: #151515;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 1em;
+    margin-bottom: 1.25em;
+    text-align: left;
+}
+
+.layout-img-1 {
+    width: 100%;
+}
+
+.layout-img-2 {
+    width: 100%;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    color: #4f4f4f;
+}
+
+.example-box {
+    width: 100%;
+    height: 60px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.desktop-nav {
+    position: relative;
+}
+
+.filter .flex-row {
+    margin-bottom: 0;
+}
+
+.chart-control {
+    .flex-row {
+        margin-bottom: 0;
+    }
+}
+
+.field {
+    .flex-row {
+        margin-bottom: 0;
+    }
+}
+
+.well .flex-row {
+    margin-bottom: 0;
+}
+
+.btn_gotop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.4375rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    position: fixed;
+    right: 1em;
+    bottom: -60px;
+    z-index: 99;
+    opacity: 0;
+    transition: all 0.3s;
+    background-color: #CBCBCB;
+    color: #222A32;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+.btn_gotop.show {
+    opacity: 1;
+    bottom: 60px;
+}
+
+.btn_gotop::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 6px 5px;
+    border-color: transparent transparent #222A32 transparent;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #d2d2d2;
+    padding-top: 1rem;
+    color: #fff;
+}
+
+
+.mobile-nav {
+    position: relative;
+    padding-top: 0;
+}
+.mobile-nav .overlay {
+    position: absolute;
+}
+
+.form-table-wrap {
+    .form-table-group {
+        .subtitle {
+            background-color: #fff;
+            border-radius: 0;
+            padding-top: 0;
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0;
+        }
+
+        &+.form-table-group {
+            .subtitle {
+                padding: 0.5rem 0;
+                margin-bottom: 0.625rem;
+            }
+        }
+    }
+}

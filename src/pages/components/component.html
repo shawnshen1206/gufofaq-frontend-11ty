@@ -1,0 +1,694 @@
+---
+layout: layouts/base.html
+title: GufoFAQ::元件庫
+permalink: component.html
+---
+{# 元件庫展示頁（style-guide catalog），取自真實 app pages/components/component.html。
+   本頁有自己的版型（.full-container + aside 導覽 + .main-container 18 節），不是一般頁面 chrome，
+   故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base.html。
+   各節盡量 {% include %} 已建好的 ui/* 、components/* 展示檔（DRY，避免與其他頁面的元件標記漂移），
+   純版面/文字類（欄位 Columns、文字與顏色）與跳窗展示版內容（previewModal）等無對應元件檔的原始展示，逐字手寫。 #}
+
+<div class="full-container">
+    <aside>
+        <div class="title">
+            Design<br>
+            Guideline<br>
+            網站元件庫
+        </div>
+        <ul>
+            <li><a class="aside-link" href="#introSection">簡介</a></li>
+            <li><a class="aside-link" href="#layoutSection">版型</a></li>
+            <li><a class="aside-link" href="#headerSection">Header導航</a></li>
+            <li><a class="aside-link" href="#breadcrumbSection">麵包屑</a></li>
+            <li><a class="aside-link" href="#colSection">欄位Columns</a></li>
+            <li><a class="aside-link" href="#mainSection">主要內容區</a></li>
+            <li><a class="aside-link" href="#fontSection">文字與顏色</a></li>
+            <li><a class="aside-link" href="#buttonSection">按鈕</a></li>
+            <li><a class="aside-link" href="#inputSection">輸入框</a></li>
+            <li><a class="aside-link" href="#checkboxRadioSection">Checkbox&Radio</a></li>
+            <li><a class="aside-link" href="#switchSection">Switch</a></li>
+            <li><a class="aside-link" href="#tableSection">Table表格</a></li>
+            <li><a class="aside-link" href="#accordionSection">Accordion手風琴</a></li>
+            <li><a class="aside-link" href="#tabSection">Tab頁籤</a></li>
+            <li><a class="aside-link" href="#listStyleSection">list style列表樣式</a></li>
+            <li><a class="aside-link" href="#paginationSection">Pagination頁碼</a></li>
+            <li><a class="aside-link" href="#modalSection">Modal跳窗</a></li>
+            <li><a class="aside-link" href="#informSection">檔案上傳</a></li>
+            <li><a class="aside-link" href="#stepsSection">步驟</a></li>
+        </ul>
+    </aside>
+    <div class="main-container">
+
+        <section id="introSection">
+            <h2 class="section-title"><span>00</span><span>簡介</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>本系統為「GufoFAQ」，目前使用檔案：</li>
+                </ul>
+            </div>
+            <div class="caption description">
+                <ul>
+                    <li>css/main.css ---- 用在所有頁面</li>
+                    <li>js/*.js ---- 依頁面所需元件逐一登記，見 layouts/base.html</li>
+                </ul>
+            </div>
+            <div class="caption">
+                <ul>
+                    <li>本系統元件皆為原生 JavaScript 實作，不依賴任何第三方前端套件</li>
+                </ul>
+            </div>
+            <div class="caption">
+                <ul>
+                    <li>圖片在images資料夾內</li>
+                    <li>另外scss資料夾中的_guideline.scss檔僅為元件庫本頁使用，正式頁面內不用引入</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="layoutSection">
+            <h2 class="section-title"><span>01</span><span>版型</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>版面由三個區塊構成：Header(紅框)、主要內容區(綠框)、頁尾(黃框)</li>
+                    <li>頁面向下滾動後，header 會 fixed 在最上方</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="headerSection">
+            <h2 class="section-title"><span>02</span><span>導航列 & Nav</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>主選單 hover 可展開子選單，桌機/平板/手機版切換行為皆為原生 JavaScript</li>
+                </ul>
+            </div>
+            {% include "components/header/header.html" %}
+        </section>
+
+        <section id="breadcrumbSection">
+            <h2 class="section-title"><span>03</span><span>麵包屑</span></h2>
+            {% include "ui/breadcrumb/breadcrumb.html" %}
+        </section>
+
+        <section id="colSection">
+            <h2 class="section-title"><span>04</span><span>欄位Columns</span></h2>
+            <div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <div class="example-box">.col-3-md</div>
+                    </div>
+                    <div class="col-3-md">
+                        <div class="example-box">.col-3-md</div>
+                    </div>
+                    <div class="col-3-md">
+                        <div class="example-box">.col-3-md</div>
+                    </div>
+                    <div class="col-3-md">
+                        <div class="example-box">.col-3-md</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20 mobile-column">
+                    <div class="col-4-md col-12-sm">
+                        <div class="example-box">.col-4-md .col-12-sm</div>
+                    </div>
+                    <div class="col-4-md col-12-sm">
+                        <div class="example-box">.col-4-md .col-12-sm</div>
+                    </div>
+                    <div class="col-4-md col-12-sm">
+                        <div class="example-box">.col-4-md .col-12-sm</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20 mobile-column mobile-column-xs">
+                    <div class="col-6-md col-12-sm">
+                        <div class="example-box">.col-6-md .col-12-sm</div>
+                    </div>
+                    <div class="col-6-md col-12-sm">
+                        <div class="example-box">.col-6-md .col-12-sm</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20 mobile-column-xs">
+                    <div class="col-6-md col-12-xs">
+                        <div class="example-box">.col-6-md .col-12-xs</div>
+                    </div>
+                    <div class="col-6-md col-12-xs">
+                        <div class="example-box">.col-6-md .col-12-xs</div>
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <div class="col-12-md">
+                        <div class="example-box">.col-12-md</div>
+                    </div>
+                </div>
+                <div class="caption description" style="margin-top: 1rem;">
+                    <ul>
+                        <li><span class="text-red">.col-數字-md</span>代表在桌機尺寸的欄位數，數字可從1-12，需注意，一個.flex-row內的數個「.col-數字-md」加起來不可超過12
+                        </li>
+                        <li><span class="text-red">.col-數字-sm</span>代表平板時欄位數，數字可從1-12，需注意，一個.flex-row內的數個「.col-數字-sm」加起來不可超過12
+                        </li>
+                        <li><span class="text-red">.col-數字-xs</span>代表手機版時欄位數，數字可從1-12，需注意，一個.flex-row內的數個「.col-數字-xs」加起來不可超過12
+                        </li>
+                        <li>1 .flex-row加上.align-items-start 交錯軸方向向上對齊</li>
+                        <li>2 .flex-row加上.align-items-center 交錯軸方向置中對齊</li>
+                        <li>3 .flex-row加上.align-items-end 交錯軸方向向下對齊</li>
+                        <li>4 .flex-row加上.justify-content-start 主軸方向靠前對齊</li>
+                        <li>5 .flex-row加上.justify-content-center 主軸方向置中對齊</li>
+                        <li>6 .flex-row加上.justify-content-end 主軸方向靠後對齊</li>
+                        <li>7 .flex-row加上.justify-content-between 主軸方向分散對齊</li>
+                        <li>桌機尺寸欄位間距：目前有.gap-2, .gap-4, .gap-8, .gap-10, .gap-12, .gap-16, .gap-20, .gap-24,
+                            .gap-32, .gap-40可使用，數字為間距的px數，加在.flex-row上即可</li>
+                        <li>平板欄位間距：目前有.sm-gap-4, .sm-gap-8, .sm-gap-10, .sm-gap-12, .sm-gap-16, .sm-gap-20,
+                            .sm-gap-24, .sm-gap-32可使用，數字為間距的px數，加在.flex-row.mobile-column上即可</li>
+                        <li>手機版欄位間距：目前有.xs-gap-4, .xs-gap-8, .xs-gap-10, .xs-gap-12, .xs-gap-16, .xs-gap-20,
+                            .xs-gap-24, .xs-gap-32可使用，數字為間距的px數，加在.flex-row.mobile-column-xs上即可</li>
+                        <li>如要該.flex-row能方向切換為column，請加上.column的class</li>
+                        <li>如要該.flex-row能自動換行，請加上.flex-wrap的class</li>
+                        <li>如要該.flex-row僅在「容器寬度小於992px」時能方向切換為column，請加上.mobile-column的class，只有加上這個class，<span
+                                class="text-red">.col-數字-sm</span>平板欄位才能顯示
+                        </li>
+                        <li>如要該.flex-row僅在「容器寬度小於768px」時能方向切換為column，請加上.mobile-column-xs的class，只有加上這個class，<span
+                                class="text-red">.col-數字-xs</span>手機版欄位才能顯示
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="mainSection">
+            <h2 class="section-title"><span>05</span><span>主要內容區</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>主要內容區內包含麵包屑、主要內容</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="fontSection">
+            <h2 class="section-title"><span>06</span><span>文字與顏色</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>文字大小、顏色、文字溢出設定</li>
+                </ul>
+            </div>
+            <div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <span>預設文字</span>
+                        <div class="subtitle">預設字體大小16px，置左</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-md">較大文字</span>
+                        <div class="subtitle">字體大小18px，Class：text-md</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-lg">中標文字</span>
+                        <div class="subtitle">字體大小20px，Class：text-lg</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-xl">大標文字</span>
+                        <div class="subtitle">字體大小24px，Class：text-xl</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <p class="text-left">文字置左</p>
+                        <div class="subtitle">Class：text-left</div>
+                    </div>
+                    <div class="col-3-md">
+                        <p class="text-center">文字置中</p>
+                        <div class="subtitle">Class：text-center</div>
+                    </div>
+                    <div class="col-3-md">
+                        <p class="text-right">文字置右</p>
+                        <div class="subtitle">Class：text-right</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <p class="ellipsis-1">單行文字溢出單行文字溢出單行文字溢出單行文字溢出單行文字溢出單行文字溢出單行文字溢出單行文字溢出單行文字溢出</p>
+                        <div class="subtitle">Class：ellipsis-1</div>
+                    </div>
+                    <div class="col-3-md">
+                        <p class="ellipsis-2">
+                            雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出雙行文字溢出
+                        </p>
+                        <div class="subtitle">Class：ellipsis-2</div>
+                    </div>
+                    <div class="col-3-md">
+                        <p class="ellipsis-3">
+                            三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出三行文字溢出
+                        </p>
+                        <div class="subtitle">Class：ellipsis-3</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <span class="text-red">紅色文字</span>
+                        <div class="subtitle">Class：text-red</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-blue">藍色文字</span>
+                        <div class="subtitle">Class：text-blue</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-gray">灰色文字</span>
+                        <div class="subtitle">Class：text-gray</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="text-bold">粗體文字</span>
+                        <div class="subtitle">Class：text-bold</div>
+                    </div>
+                </div>
+                <div class="flex-row gap-20">
+                    <div class="col-3-md">
+                        <span class="text-default">預設顏色文字</span>
+                        <div class="subtitle">Class：text-default</div>
+                    </div>
+                    <div class="col-3-md">
+                        <span class="divider-vertical"></span>
+                        <div class="subtitle">垂直分隔線，Class：divider-vertical</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="buttonSection">
+            <h2 class="section-title"><span>07</span><span>按鈕</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>所有按鈕都需加上「.button」的class來賦予基本樣式，然後再加上別的class變化</li>
+                    <li>按鈕內若有圖片，請在該「img」上加上「.icon」的class</li>
+                    <li>要禁用按鈕，在按鈕上加上「.disabled」的class及「disabled」屬性，即呈現禁用樣式</li>
+                </ul>
+            </div>
+            {% include "ui/button/button.html" %}
+            <div class="caption">
+                <ul>
+                    <li>連結樣式：檔案連結不需要「.button」，加上「.link-file」；跳窗連結加上「.link-modal」，兩者hover後皆有底線</li>
+                </ul>
+            </div>
+            <div class="flex-row gap-20">
+                {% include "ui/link-file/link-file.html" %}
+                {% include "ui/link-modal/link-modal.html" %}
+            </div>
+            <br>
+            <div class="caption">
+                <ul>
+                    <li>圖示類型的按鈕「不需要」加上.button產生基本樣式</li>
+                    <li>hover時不用背景色，加上「.no-bg」這個class</li>
+                    <li>較小尺寸的按鈕，加上「.size-sm」這個class</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="inputSection">
+            <h2 class="section-title"><span>08</span><span>輸入框</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>在.form-control上加上「.select-sm / .select-md」的class可改變框的內距</li>
+                </ul>
+            </div>
+            {% include "ui/form-control/form-control.html" %}
+            <div class="caption">
+                <ul>
+                    <li>多選框（tag 多選 + 搜尋過濾，原生 JavaScript 實作，見 ui/multi-select）</li>
+                </ul>
+            </div>
+            {% include "ui/multi-select/multi-select.html" %}
+        </section>
+
+        <section id="checkboxRadioSection">
+            <h2 class="section-title"><span>09</span><span>Checkbox&Radio</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>需要邊框，請在.form-checkbox / .form-radio 加上「.border-wrap」</li>
+                </ul>
+            </div>
+            {% include "ui/checkbox/checkbox.html" %}
+            <br>
+            {% include "ui/radio/radio.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>全選checkbox使用「.checkbox-container」包覆所有checkbox，全選checkbox請給class「.check-all」，其餘單個checkbox請給class「.check-one」
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="switchSection">
+            <h2 class="section-title"><span>10</span><span>Switch</span></h2>
+            <br>
+            {% include "ui/switch/switch.html" %}
+        </section>
+
+        <section id="tableSection">
+            <h2 class="section-title"><span>11</span><span>Table表格</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>主要表格</li>
+                </ul>
+            </div>
+            {% include "components/default-table/default-table.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>表格請給予.default-table設定主要表格樣式</li>
+                    <li>表格父層用「.table-container」包覆，如需要讓表格可以左右滾動，請加上「.scrollTable」的class</li>
+                    <li>如表格欄位需排序，請在th子層加上&lt;img class="sort"&gt;，並使用「div.th-sort」包住欄位標題文字及排序圖示</li>
+                    <li>表格欄位中內容較多時，請使用「div.ellipsis-2」包覆</li>
+                    <li>表格不需要左右邊框和標題欄位邊框時，請在table加上「.no-border」這個class</li>
+                    <li>表格欄位中的按鈕請用「.btn-group」包覆</li>
+                    <li>表格要固定欄寬，請在table加上「.fixed-layout」這個class</li>
+                </ul>
+            </div>
+            <br>
+            <div class="caption">
+                <ul>
+                    <li>意圖判斷表格</li>
+                </ul>
+            </div>
+            {% include "components/priority-table/priority-table.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>意圖判斷表格使用「.default-table.priority-table」這個class</li>
+                    <li>表格內可編輯的欄位：「任務描述」請在td加上「.edit-cell.description」、「任務對應提示詞」請在td加上「.edit-cell.prompt」。內容皆使用「div.ellipsis-2」包覆
+                    </li>
+                </ul>
+            </div>
+            <br>
+            <div class="caption">
+                <ul>
+                    <li>表單表格</li>
+                </ul>
+            </div>
+            {% include "components/form-table/form-table.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>表單表格是使用 div 模擬 table 的表格</li>
+                    <li>使用「.form-table」這個class，父層用「div.form-table-group」包住</li>
+                    <li>最外層使用「.form-table-wrap」包覆</li>
+                    <li>表格中長文字內容若需要使用捲軸滑動觀看，請使用「div.long-text」將文字內容包住</li>
+                </ul>
+            </div>
+            <br>
+        </section>
+
+        <section id="accordionSection">
+            <h2 class="section-title"><span>12</span><span>Accordion手風琴</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>Accordion表格</li>
+                </ul>
+            </div>
+            {% include "ui/accordion/accordion.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>手風琴表格使用「.accordion-table」這個class，父層用「div.accordion-content」包覆</li>
+                    <li>在最外層表格中使用 &lt;tr class="detail-row"&gt; &lt;td colspan="4" class="detail-cell"&gt;
+                        包覆要開合的手風琴表格(div.accordion-content)</li>
+                    <li>button.accordion-btn加上.open時，切換箭頭圖示，手風琴表格為展開狀態</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="tabSection">
+            <h2 class="section-title"><span>13</span><span>Tab頁籤</span></h2>
+            {% include "ui/tab/tab.html" %}
+            <div class="caption description">
+                <ul>
+                    <li>使用.tab的class，加上.active的class會呈現激活狀態</li>
+                    <li>整組元件大父層需用「div.tab-wrap」包覆</li>
+                    <li>同一組tab按鈕父層使用「div.tab-group」包覆</li>
+                    <li>水平排列的tab需用「div.tab-row」包覆</li>
+                    <li>雙層頁籤時，第一層頁籤在.tab-group加上「.top-tabs」這個class，第二層頁籤在.tab-group加上「.sub-tabs」這個class
+                    </li>
+                    <li>問答紀錄頁籤，請在最外層再加上「div.qa-record」</li>
+                    <li>tab有較大內距，在.tab加上「.tab-md」這個class，最外層使用「div.tab-row.fit-content」包覆</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="listStyleSection">
+            <h2 class="section-title"><span>14</span><span>list style列表樣式</span></h2>
+            {% include "ui/list-style/list-style.html" %}
+        </section>
+
+        <section id="paginationSection">
+            <h2 class="section-title"><span>15</span><span>Pagination頁碼</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>一般頁碼形式 / 可輸入頁碼切換</li>
+                </ul>
+            </div>
+            {% include "ui/pagination/pagination.html" %}
+            <div class="caption description" style="margin-top: 1rem;">
+                <ul>
+                    <li>上一頁li.prev以及下一頁li.next加上.disabled的class就會呈現禁用狀態</li>
+                    <li>當頁頁碼的li標籤加上.active的class呈現激活狀態</li>
+                    <li>上一頁button.prev以及下一頁button.next加上disabled屬性就會呈現禁用狀態</li>
+                    <li>input.pager-input內可輸入頁碼</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="modalSection">
+            <h2 class="section-title"><span>16</span><span>Modal跳窗</span></h2>
+            <div>
+                <div class="flex-row gap-16 flex-wrap align-items-center">
+                    <button type="button" class="button button-primary"
+                        onclick="openModal('datasetModal');">開啟選擇資料集modal</button>
+                    <button type="button" class="link-modal"
+                        onclick="openModal('previewModal');">檔案名稱.pdf</button>
+                    <button type="button" class="button-icon no-bg size-sm edit"
+                        onclick="openModal('editModal');" title="編輯">
+                        <span class="sr-only">編輯</span>
+                    </button>
+                    <button type="button" class="button-icon no-bg size-sm delete"
+                        onclick="openModal('deleteModal')" title="刪除">
+                        <span class="sr-only">刪除</span>
+                    </button>
+                    <button type="button" class="button button-primary"
+                        onclick="openModal('disclaimerModal')">開啟免責聲明modal</button>
+                    <button type="button" class="button button-primary"
+                        onclick="openModal('intentionModal')">開啟意圖判斷啟用modal</button>
+                    <button type="button" class="button button-dark"
+                        onclick="openModal('ProductionSettingsNoPermissionModal');">套用為正式設定（無權限）</button>
+                    <button type="button" class="button button-dark"
+                        onclick="openModal('ProductionSettingsModal');">套用為正式設定</button>
+                    <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                        <img src="./images/icon_info.png" alt="" class="icon">
+                    </button>
+                </div>
+                <div class="caption description" style="margin-top: 16px;">
+                    <ul>
+                        <li>開啟跳窗使用全域函式 window.openModal(id)，見 ui/modals/modals.js</li>
+                        <li>跳窗的html結構在本頁面最底部</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="informSection">
+            <h2 class="section-title"><span>17</span><span>檔案上傳</span></h2>
+            <div>
+                {% include "components/upload-card/upload-card.html" %}
+                <div class="subtitle">描述：檔案上傳選項，使用「.upload-card」這個class，最外層用「div.upload-card-list」包覆</div>
+            </div>
+            <br>
+            <div>
+                {% include "components/upload-box/upload-box.html" %}
+                <div class="subtitle">描述：檔案上傳區，使用「.upload-box」這個class</div>
+            </div>
+            <br>
+            <div>
+                {% include "components/success-box/success-box.html" %}
+                <div class="subtitle">描述：上傳成功通知，使用「.success-box」這個class</div>
+            </div>
+        </section>
+
+        <section id="stepsSection">
+            <h2 class="section-title"><span>18</span><span>步驟</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>樣式一、樣式二（較大步驟條，加.lg）</li>
+                </ul>
+            </div>
+            {% include "components/step-nodes/step-nodes.html" %}
+            <br>
+            <div class="caption">
+                <ul>
+                    <li>按鈕樣式</li>
+                </ul>
+            </div>
+            {% include "components/step-btn-wrap/step-btn-wrap.html" %}
+            <div class="caption description" style="margin-top: 16px;">
+                <ul>
+                    <li>1. 已完成及正在進行的步驟在div.step-node上加上.done的class，呈現深藍色文字及邊框</li>
+                    <li>2. 較大的步驟條在.step-node加上「.lg」這個class，如：樣式二</li>
+                    <li>3. 父層使用「.step-nodes」這個class</li>
+                    <li>4. 需要按鈕時，最外層使用「div.step-btn-wrap」這個class包覆，如：按鈕樣式</li>
+                    <li>5. 若只需要 "下一步" 按鈕，請在.step-btn-wrap加上「.no-prev」這個class，並移除 "上一步" 按鈕</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>GufoFAQ ｜ 元件庫</p>
+        </footer>
+    </div>
+</div>
+
+{% include "components/select-dataset-modal/select-dataset-modal.html" %}
+
+<!-- 檔案預覽 modal：元件庫展示版（modals-md + 靜態長文 .file-content）。
+     與 components/file-preview-modal（modals-lg + iframe）不同——那份對應真實檔案匯入流程
+     pages/dataImport/1-2-1_uploadFile_pdf.html 的 #previewModal，此處逐字沿用展示頁版本，id 相同、故不重複掛載兩份 -->
+<dialog class="modals" id="previewModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">檔案名稱.pdf</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="file-content">
+                        <span>Andreas Gal∗+, Brendan Eich∗, Mike Shaver∗, David Anderson∗, David Mandelin∗,<br>
+                            Mohammad R. Haghighat$, Blake Kaplan∗, Graydon Hoare∗, Boris Zbarsky∗, Jason
+                            Orendorff∗,<br>
+                            Jesse Ruderman∗, Edwin Smith#, Rick Reitmaier#, Michael Bebenita+, Mason Chang+#,
+                            Michael Franz+
+                            Mozilla Corporation∗<br>
+                            {gal,brendan,shaver,danderson,dmandelin,mrbkap,graydon,bz,jorendorff,jruderman}@mozilla.com
+                            Adobe Corporation#<br>
+                            {edwsmith,rreitmai}@adobe.com<br>
+                            Intel Corporation$ <br>
+                            {mohammad.r.haghighat}@intel.com <br>
+                            University of California, Irvine+ <br>
+                            {mbebenit,changm,franz}@uci.edu <br>
+                            Abstract <br>
+                            Dynamic languages such as JavaScript are more difficult to com-
+                            pile than statically typed ones. Since no concrete type information
+                            is available, traditional compilers need to emit generic code that can
+                            handle all possible type combinations at runtime. We present an al-
+                            ternative compilation technique for dynamically-typed languages
+                            that identifies frequently executed loop traces at run-time and then
+                            generates machine code on the fly that is specialized for the ac-
+                            tual dynamic types occurring on each path through the loop. Our
+                            method provides cheap inter-procedural type specialization, and an
+                            elegant and efficient way of incrementally compiling lazily discov-
+                            ered alternative paths through nested loops. We have implemented
+                            a dynamic compiler for JavaScript based on our technique and we
+                            have measured speedups of 10x and more for certain benchmark
+                            programs.
+                            Categories and Subject Descriptors D.3.4 [Programming Lan-
+                            guages]: Processors — Incremental compilers, code generation.
+                            General Terms Design, Experimentation, Measurement, Perfor-
+                            mance.
+                            Keywords JavaScript, just-in-time compilation, trace trees.
+                            1. Introduction
+                            Dynamic languages such as JavaScript, Python, and Ruby, are pop-
+                            ular since they are expressive, accessible to non-experts, and make
+                            deployment as easy as distributing a source file. They are used for
+                            small scripts as well as for complex applications. JavaScript, for
+                            example, is the de facto standard for client-side web programming
+                            Permission to make digital or hard copies of all or part of this work for personal
+                            or
+                            classroom use is granted without fee provided that copies are not made or
+                            distributed
+                            for profit or commercial advantage and that copies bear this notice and the full
+                            citation
+                            on the first page. To copy otherwise, to republish, to post on servers or to
+                            redistribute
+                            to lists, requires prior specific permission and/or a fee.
+                            PLDI'09, June 15–20, 2009, Dublin, Ireland.
+                            Copyright c© 2009 ACM 978-1-60558-392-1/09/06. . . $5.00
+                            and is used for the application logic of browser-based productivity
+                            applications such as Google Mail, Google Docs and Zimbra Col-
+                            laboration Suite. In this domain, in order to provide a fluid user
+                            experience and enable a new generation of applications, virtual ma-
+                            chines must provide a low startup time and high performance.
+                            Compilers for statically typed languages rely on type informa-
+                            tion to generate efficient machine code. In a dynamically typed pro-
+                            gramming language such as JavaScript, the types of expressions
+                            may vary at runtime. This means that the compiler can no longer
+                            easily transform operations into machine instructions that operate
+                            on one specific type. Without exact type information, the compiler
+                            must emit slower generalized machine code that can deal with all
+                            potential type combinations. While compile-time static type infer-
+                            ence might be able to gather type information to generate opti-
+                            mized machine code, traditional static analysis is very expensive
+                            and hence not well suited for the highly interactive environment of
+                            a web browser.
+                            We present a trace-based compilation technique for dynamic
+                            languages that reconciles speed of compilation with excellent per-
+                            formance of the generated machine code. Our system uses a mixed-
+                            mode execution approach: the system starts running JavaScript in a
+                            fast-starting bytecode interpreter. As the program runs, the system
+                            identifies hot (frequently executed) bytecode sequences, records
+                            them, and compiles them to fast native code. We call such a se-
+                            quence of instructions a trace.
+                            Unlike method-based dynamic compilers, our dynamic com-
+                            piler operates at the granularity of individual loops. This design
+                            choice is based on the expectation that programs spend most of
+                            their time in hot loops. Even in dynamically typed languages, we
+                            expect hot loops to be mostly type-stable, meaning that the types of
+                            values are invariant. (12) For example, we would expect loop coun-
+                            ters that start as integers to remain integers for all iterations. When
+                            both of these expectations hold, a trace-based compiler can cover
+                            the program execution with a small number of type-specialized, ef-
+                            ficiently compiled traces.
+                            Each compiled trace covers one path through the program with
+                            one mapping of values to types. When the VM executes a compiled
+                            trace, it cannot guarantee that the same path will be followed
+                            or that the same types will occur in subsequent loop iterations.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+{% include "components/file-edit-modal/file-edit-modal.html" %}
+{% include "components/delete-modal/delete-modal.html" %}
+{% include "components/disclaimer-modal/disclaimer-modal.html" %}
+{% include "components/intent-enable-modal/intent-enable-modal.html" %}
+{% include "components/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
+{% include "components/apply-settings-modal-2/apply-settings-modal-2.html" %}
+{% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}
+
+<button type="button" class="button btn_gotop">
+    TOP
+</button>
+
+<script>
+    // go to top + aside 導覽平滑捲動：改寫自真實 app 展示頁內嵌 script（原用 jQuery），改用原生 DOM API
+    (function () {
+        var mainContainer = document.querySelector('.main-container');
+        var gotop = document.querySelector('.btn_gotop');
+
+        if (mainContainer && gotop) {
+            gotop.addEventListener('click', function () {
+                mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            mainContainer.addEventListener('scroll', function () {
+                if (mainContainer.scrollTop > 300) {
+                    gotop.classList.add('show');
+                } else {
+                    gotop.classList.remove('show');
+                }
+            });
+        }
+
+        document.querySelectorAll('.aside-link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                var target = document.querySelector(link.getAttribute('href'));
+                if (!target || !mainContainer) return;
+                event.preventDefault();
+                mainContainer.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
+            });
+        });
+    })();
+</script>

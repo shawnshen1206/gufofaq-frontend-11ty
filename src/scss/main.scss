@@ -55,3 +55,6 @@
 // 第二支頁面專屬樣式表（真實 app css/style.css，其 scss 原始檔已於上游刪除）
 // 放在所有 component @use 之後，讓頁面專屬規則（filter-fields/prompt-card/prompt-content/ab-test-block）優先生效
 @use "style";
+
+// 元件庫展示頁（component.html）專屬版型/說明樣式，放在最後避免與一般頁面規則衝突
+@use "guideline";
