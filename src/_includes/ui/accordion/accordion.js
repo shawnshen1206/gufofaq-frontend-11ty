@@ -1,7 +1,8 @@
 // accordion 手風琴：改寫自真實 app js/main.js「表格 accordion 控制」（原用 jQuery + slideUp/slideDown），改用原生 DOM API + display 切換
 // 只轉切版互動（開合本身），資料載入/API 等業務邏輯不在此列
 document.addEventListener("DOMContentLoaded", function () {
-    var blocks = document.querySelectorAll(".sources-block");
+    // §1 原子解耦：掃描 accordion 自有的 .js-accordion 根，不再綁定 components/ 的 .sources-block
+    var blocks = document.querySelectorAll(".js-accordion");
 
     blocks.forEach(function (block) {
         // 預設隱藏所有詳細內容

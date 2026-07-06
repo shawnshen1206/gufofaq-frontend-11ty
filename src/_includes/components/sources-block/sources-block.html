@@ -1,10 +1,13 @@
-<!-- 取自真實頁 pages/qaHistory/4-2_qaHistory_detail.html「參考來源」區塊（line 309-386，class 沿用真實系統）。
-     搜尋過整份真實 scss/component.scss，沒有 .sources-block 的規則宣告 —— 它的外觀完全來自既有 .block（components/block）
-     + .default-table（components/default-table）+ ui/accordion，本身只是語意 / JS 掛鉤用的 wrapper class：
-     ui/accordion/accordion.js 是以 document.querySelectorAll(".sources-block") 當作展開/收合互動範圍的根（含「全部展開」.js-expand-all／
-     「全部收合」.js-collapse-all）。因此本元件不建立 _sources-block.scss（真實 scss 無規則可搬，避免無中生有杜撰樣式），
-     main.scss 也不需為它新增 @use（視覺完全由已註冊的 block / default-table / accordion 提供）。
-     每一筆來源列（含展開列）拆到 source-row.html 子元件，經 for 迴圈 include 逐筆渲染。 -->
+<!-- 取自真實頁 pages/qaHistory/4-2_qaHistory_detail.html「參考來源」區塊（class 沿用真實系統）。
+     .sources-block 本身無 scss 規則（外觀來自 .block + .default-table + ui/accordion）；展開/收合互動的根改用 accordion 自有的 .js-accordion（見 ui/accordion，§1 原子解耦）。
+     參數（頁面 include 前 set，未給則用預設示範資料，可 standalone 於元件庫呈現）：
+       sources：來源列陣列（每筆欄位見 source-row.html）
+       sourcesHidden：true 時根加 .hidden（真實頁預設隱藏、等 JS 依載入狀態顯示）
+       sourcesInfo / sourcesInfoClass：標題後的說明字與其 class（預設「(挑選規則 16取8…)」/ .sources-info；AB 測試頁用 .js-sources-side「(設定A)」）
+       sourcesRating：{ text, icon } 有值時顯示使用者滿意度
+       sourcesDetailHref：有值時顯示「檢視詳細內容」連結（前台問答頁用）
+     每筆來源列（含展開列）拆到 source-row.html 子元件，for 迴圈 include 逐筆渲染。 -->
+{% if not sources %}
 {% set sources = [
     {
         no: "12173-1",
@@ -29,16 +32,27 @@
         reference: "來源名稱"
     }
 ] %}
+{% endif %}
 
-<div class="block sources-block" style="margin-top: 24px;">
+<div class="block sources-block js-accordion{% if sourcesHidden %} hidden{% endif %}" style="margin-top: 24px;">
     <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
         <div>
             <span class="text-lg text-bold">參考來源</span>
-            <span class="text-bold text-gray sources-info">(挑選規則 16取8；使用模型：GPT 4o)</span>
+            <span class="text-bold text-gray {{ sourcesInfoClass or 'sources-info' }}">{{ sourcesInfo or '(挑選規則 16取8；使用模型：GPT 4o)' }}</span>
         </div>
         <div class="flex-row align-items-center gap-8 flex-wrap">
             <button class="button button-border button-sm js-expand-all">全部展開</button>
             <button class="button button-border button-sm js-collapse-all">全部收合</button>
+            {% if sourcesRating %}
+            <span class="divider-vertical"></span>
+            <div class="flex-row align-items-center gap-2 sources-rating">
+                <span>{{ sourcesRating.text }}</span>
+                <img src="{{ sourcesRating.icon }}" alt="" class="icon">
+            </div>
+            {% endif %}
+            {% if sourcesDetailHref %}
+            <a href="{{ sourcesDetailHref }}" class="button button-border button-sm sources-detail-link">檢視詳細內容</a>
+            {% endif %}
         </div>
     </div>
 
