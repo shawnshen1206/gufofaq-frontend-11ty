@@ -3,6 +3,40 @@ layout: layouts/page-shell.html
 title: GufoFAQ::對話詳細內容
 permalink: 4-2_qaHistory_detail.html
 ---
+{# 對話詳細資訊 + 參考來源資料——依 §3-2/§6 由頁面提供，元件只負責渲染 #}
+{% set conversation = {
+    satisfaction: { label: "讚", icon: "./images/icon_good.png" },
+    feedback: "回答很快也很清楚，謝謝！",
+    chatroomId: "6537",
+    id: "12173",
+    time: "2024/12/01 13:29:24",
+    intent: "-",
+    userMessage: "新住民結婚注意事項"
+} %}
+{% set sources = [
+    {
+        no: "12173-1",
+        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    },
+    {
+        no: "12173-2",
+        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    }
+] %}
 {% set breadcrumbItems = [
   { label: "首頁", href: "" },
   { label: "問答紀錄", href: "4-1_qaHistory.html" },

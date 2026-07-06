@@ -3,6 +3,58 @@ layout: layouts/page-shell.html
 title: GufoFAQ::資料匯入
 permalink: 1-1-4_columnSelect_excel.html
 ---
+{# 欄位對應資料（多選/預覽兩欄共用）——依 §3-2/§6 由頁面提供，components/multi-select-box 只負責 for 渲染 #}
+{% set fields = [
+    {
+        key: "title",
+        label: "標題",
+        placeholder: "建議選擇「標題」屬性欄位",
+        options: [
+            { value: "0", label: "客服問題", selected: true },
+            { value: "1", label: "客服回覆" },
+            { value: "2", label: "建立時間" },
+            { value: "3", label: "圖片連結" }
+        ],
+        preview: "如何申請入出國許可證"
+    },
+    {
+        key: "date",
+        label: "日期",
+        placeholder: "YYYY/MM/DD HH:mm:ss || YYYY-MM-DD HH:mm:ss",
+        options: [
+            { value: "0", label: "客服問題" },
+            { value: "1", label: "客服回覆" },
+            { value: "2", label: "建立時間", selected: true },
+            { value: "3", label: "圖片連結" }
+        ],
+        preview: "2024/12/01 13:29:24",
+        error: true
+    },
+    {
+        key: "content",
+        label: "內容",
+        placeholder: "建議選擇「內容」屬性欄位",
+        options: [
+            { value: "0", label: "客服問題" },
+            { value: "1", label: "客服回覆", selected: true },
+            { value: "2", label: "建立時間" },
+            { value: "3", label: "圖片連結" }
+        ],
+        preview: "請攜帶護照及財力證明至服務站辦理"
+    },
+    {
+        key: "image",
+        label: "圖片網址",
+        placeholder: "建議選擇「圖片網址」屬性欄位",
+        options: [
+            { value: "0", label: "客服問題" },
+            { value: "1", label: "客服回覆" },
+            { value: "2", label: "建立時間" },
+            { value: "3", label: "圖片連結", selected: true }
+        ],
+        preview: "https://example.com/image.png"
+    }
+] %}
 {% set breadcrumbItems = [
   { label: "首頁", href: "" },
   { label: "資料匯入" }

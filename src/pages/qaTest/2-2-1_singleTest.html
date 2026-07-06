@@ -3,6 +3,11 @@ layout: layouts/page-shell.html
 title: GufoFAQ::單測
 permalink: 2-2-1_singleTest.html
 ---
+{% set qaRecordTabs = [
+    { label: "問答紀錄1" },
+    { label: "問答紀錄2" },
+    { label: "問答紀錄3", active: true }
+] %}
 {% set breadcrumbItems = [
   { label: "首頁", href: "" },
   { label: "問答測試區", href: "" },

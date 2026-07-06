@@ -7,33 +7,6 @@
        sourcesRating：{ text, icon } 有值時顯示使用者滿意度
        sourcesDetailHref：有值時顯示「檢視詳細內容」連結（前台問答頁用）
      每筆來源列（含展開列）拆到 source-row.html 子元件，for 迴圈 include 逐筆渲染。 -->
-{% if not sources %}
-{% set sources = [
-    {
-        no: "12173-1",
-        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
-        dataset: "移民署 測試",
-        title: "標題名稱ＡＡＡＡＡＡ",
-        time: "2023/11/01 13:00:01",
-        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
-        note1: "備註文字",
-        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
-        reference: "來源名稱"
-    },
-    {
-        no: "12173-2",
-        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
-        dataset: "移民署 測試",
-        title: "標題名稱ＡＡＡＡＡＡ",
-        time: "2023/11/01 13:00:01",
-        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
-        note1: "備註文字",
-        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
-        reference: "來源名稱"
-    }
-] %}
-{% endif %}
-
 <div class="block sources-block js-accordion{% if sourcesHidden %} hidden{% endif %}" style="margin-top: 24px;">
     <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
         <div>

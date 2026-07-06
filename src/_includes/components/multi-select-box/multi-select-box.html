@@ -3,61 +3,7 @@
      此處依其產生的 markup 結構以 njk set fields + for 靜態化。
      左欄「select.multiSelect」重用 ui/multi-select 既有 class 命名（由已登記的 ui/multi-select/multi-select.js 於 DOMContentLoaded 增強成 tag 多選 UI）；
      左右兩欄的 form-group/label/field 結構沿用 ui/form-control 既有寫法。
-     資料以 if-not-fields 保底：頁面可於 include 前 set fields 覆寫（轉 React 即 props）。 -->
-{% if not fields %}
-{% set fields = [
-    {
-        key: "title",
-        label: "標題",
-        placeholder: "建議選擇「標題」屬性欄位",
-        options: [
-            { value: "0", label: "客服問題", selected: true },
-            { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結" }
-        ],
-        preview: "如何申請入出國許可證"
-    },
-    {
-        key: "date",
-        label: "日期",
-        placeholder: "YYYY/MM/DD HH:mm:ss || YYYY-MM-DD HH:mm:ss",
-        options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間", selected: true },
-            { value: "3", label: "圖片連結" }
-        ],
-        preview: "2024/12/01 13:29:24",
-        error: true
-    },
-    {
-        key: "content",
-        label: "內容",
-        placeholder: "建議選擇「內容」屬性欄位",
-        options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆", selected: true },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結" }
-        ],
-        preview: "請攜帶護照及財力證明至服務站辦理"
-    },
-    {
-        key: "image",
-        label: "圖片網址",
-        placeholder: "建議選擇「圖片網址」屬性欄位",
-        options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結", selected: true }
-        ],
-        preview: "https://example.com/image.png"
-    }
-] %}
-{% endif %}
-
+     欄位資料由頁面提供（include 前 set fields，見 §3-2/§6），本元件不自帶。 -->
 <div class="flex-row gap-40 mobile-column multi-select-box">
     <!-- 左欄：欄位對應 -->
     <div class="block block-lg corner-md">

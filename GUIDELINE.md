@@ -167,17 +167,17 @@ ui/pagination/
 
 | 元件 | 參數／資料 |
 |---|---|
-| `ui/breadcrumb` | include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href（比照真實 app）。未提供時元件用 `{% if not %}` 帶示範資料。 |
+| `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href（比照真實 app）。 |
 | `ui/pagination` | 靜態展示，無參數（頁碼清單在正式環境由資料驅動渲染，非切版範圍；`.pagination-input` 輸入版由 `pagination.js` 增強）。 |
 | `components/step-nodes` | 自帶 `{% set steps = [{ label, done }] %}`（`.done` = 已完成；`.lg` = 大尺寸變體）。 |
 | `components/step-btn-wrap` | 靜態、無參數：上一步／下一步 `href="#"`，帶 `.btn-prev`／`.btn-next` JS 鉤子 class；只需下一步時最外層加 `.no-prev` 並移除上一步按鈕。 |
-| `components/multi-select-box` | 自帶 `{% set fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }] %}`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
-| `components/sources-block` | 自帶 `{% set sources = [{ no, file, dataset, title, time, content, note1, note2, reference }] %}`；每筆用子元件 `source-row.html` 渲染。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
-| `components/qa-detail-info` | 自帶 `{% set conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback } %}`；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文示範，依 §3-2 寫死在元件。 |
-| `components/qa-record-tabs` | 單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單；`qaRecordTabs`（`[{ label, active }]`，未給用預設）。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
+| `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
+| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆用子元件 `source-row.html` 渲染。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
+| `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 §3-2 直接寫在元件 markup。 |
+| `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/儲存等屬業務 JS 不在範圍，`js-prompt-*` 為靜態 hook。 |
 
-> 說明：除 `breadcrumb` 用 `{% if not %}` 允許頁面覆寫外，上列元件目前把示範資料以 `{% set %}` 寫死在元件內，讓每個元件都能 standalone include、在元件總覽頁直接呈現。轉 React 時把這些 `{% set %}` 資料抽成 props。
+> 說明：上列資料型元件的資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供（依 §3-2「重複資料放頁面」），元件本身**不自帶資料**、只負責 `{% for %}` 渲染——與範例方法一致，轉 React 即 props。（純結構／展示型元件如 `step-nodes` 仍在元件總覽頁自帶示範資料。）
 
 ### 自動引入
 

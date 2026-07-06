@@ -3,6 +3,12 @@ layout: layouts/base.html
 title: GufoFAQ::元件庫
 permalink: component.html
 ---
+{# 麵包屑展示用資料——依 §3-2/§6 由頁面提供 #}
+{% set breadcrumbItems = [
+  { label: "首頁", href: "#" },
+  { label: "設定", href: "#" },
+  { label: "知識檢索邏輯" }
+] %}
 {# 元件庫展示頁（style-guide catalog），取自真實 app pages/components/component.html。
    本頁有自己的版型（.full-container + aside 導覽 + .main-container 18 節），不是一般頁面 chrome，
    故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base.html。
