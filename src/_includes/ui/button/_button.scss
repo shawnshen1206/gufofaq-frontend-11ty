@@ -184,13 +184,7 @@
         background-color: var(--color-gray-300);
     }
 
-    &:has(.tooltip) {
-        &:hover {
-            .tooltip {
-                opacity: 1;
-            }
-        }
-    }
+    // tooltip 的 hover 顯示規則已移到 ui/tooltip/_tooltip.scss（§4：本元件不再指名 .tooltip）
 
     &.no-bg {
         &:hover {

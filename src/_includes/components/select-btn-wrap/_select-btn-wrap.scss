@@ -6,18 +6,19 @@
     gap: 8px;
     flex-wrap: wrap;
 
-    .form-group {
+    // §4 隔離：容器排版改用本元件自己命名的 slot class，不指名 ui/form-control(.form-group)、ui/button(.button)
+    .select-field {
         flex: 1;
     }
 
-    .button {
+    .select-submit {
         flex-basis: 240px;
     }
 
     @media screen and (max-width: 768px) {
         flex-direction: column;
 
-        .button {
+        .select-submit {
             flex-basis: auto;
             width: 240px;
         }

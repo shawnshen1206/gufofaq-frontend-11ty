@@ -9,13 +9,15 @@
         gap: 16px;
     }
 
-    .button {
+    // §4 隔離：改用本元件自己的語意 class .btn-prev/.btn-next（已在所有 step 按鈕上），不指名 ui/button(.button)
+    .btn-prev,
+    .btn-next {
         flex-shrink: 0;
+    }
 
-        &:last-child {
-            @media screen and (max-width: 992px) {
-                align-self: flex-end;
-            }
+    .btn-next {
+        @media screen and (max-width: 992px) {
+            align-self: flex-end;
         }
     }
 
@@ -23,7 +25,7 @@
         justify-content: center;
         position: relative;
 
-        .button:last-child {
+        .btn-next {
             position: absolute;
             right: 0;
             top: 0;

@@ -15,4 +15,9 @@
     &:hover {
         text-decoration: underline;
     }
+
+    // 深色背景（如 footer）用的變體：由本元件自己提供，父元件只加 class、不從外部改本元件樣式（§4）
+    &.on-dark {
+        color: #fff;
+    }
 }

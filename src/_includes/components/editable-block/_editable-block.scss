@@ -9,7 +9,8 @@
     position: relative;
     width: 100%;
 
-    .form-group:has(textarea) {
+    // §4 隔離：本元件自己命名的 slot class（原 .form-group:has(textarea)，改由 markup 直接掛 class）
+    .edit-field-group {
         width: 100%;
     }
 

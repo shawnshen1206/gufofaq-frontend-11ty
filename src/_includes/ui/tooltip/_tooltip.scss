@@ -20,3 +20,9 @@
     transition: opacity 0.3s ease;
     z-index: 10;
 }
+
+// 顯示由觸發按鈕 hover 驅動：只用 button 標籤 + 自己的 .tooltip，不指名別元件的 class（§4 隔離；
+// 原本寫在 ui/button 的 .button-icon:has(.tooltip):hover 已移來這裡，改由 tooltip 自負責）
+button:hover .tooltip {
+    opacity: 1;
+}

@@ -70,7 +70,7 @@
                         <label class="control-label">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
-                        <select class="form-control multiSelect field-{{ field.key }}" multiple="multiple" data-placeholder="{{ field.placeholder }}">
+                        <select class="form-control multiSelect ms-control field-{{ field.key }}" multiple="multiple" data-placeholder="{{ field.placeholder }}">
                             {% for option in field.options %}
                             <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>{{ option.label }}</option>
                             {% endfor %}
@@ -96,7 +96,7 @@
                         <label class="control-label">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
-                        <input type="text" class="form-control disabled preview-{{ field.key }}" value="{{ field.preview }}" disabled>
+                        <input type="text" class="form-control disabled ms-control preview-{{ field.key }}" value="{{ field.preview }}" disabled>
                         {% if field.error %}
                         <span class="error-prompt date-error" style="display: none;">此格式可能無法被正確讀取</span>
                         {% endif %}

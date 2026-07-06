@@ -269,16 +269,17 @@
         gap: 10px;
         height: 60px;
 
-        .form-group {
+        // §4 隔離：改用本元件自己命名的 slot class，不指名 ui/form-control 的 .form-group/.form-control
+        .chat-input-field {
             flex: 1;
+        }
 
-            .form-control {
-                padding: 0.375rem 0.5rem;
-                height: 60px;
+        .chat-input-control {
+            padding: 0.375rem 0.5rem;
+            height: 60px;
 
-                &::placeholder {
-                    font-size: 0.875rem;
-                }
+            &::placeholder {
+                font-size: 0.875rem;
             }
         }
 

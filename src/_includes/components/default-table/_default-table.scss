@@ -50,7 +50,8 @@
                 background-color: #fff;
                 box-sizing: border-box;
 
-                textarea.form-control {
+                // §4 隔離：cell 內文字編輯區用 textarea 標籤選取，不指名 ui/form-control 的 .form-control
+                textarea {
                     height: 6.25rem; // 100px
                     display: block;
                 }
