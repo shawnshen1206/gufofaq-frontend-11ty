@@ -84,23 +84,5 @@ permalink: 1-1-3_preview_excel.html
     { number: 3 }
 ] %}
 <div style="margin-top: 16px;">
-    <div class="pagination" role="navigation" aria-label="頁碼分頁" data-total="3">
-        <ul>
-            <li class="prev disabled">
-                <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
-                    <img src="./images/icon_arrow_left_gray.png" alt="">
-                </a>
-            </li>
-            {% for page in pages %}
-            <li{% if page.active %} class="active"{% endif %}>
-                <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
-            </li>
-            {% endfor %}
-            <li class="next">
-                <a href="#" aria-label="下一頁">
-                    <img src="./images/icon_arrow_right_blue.png" alt="">
-                </a>
-            </li>
-        </ul>
-    </div>
+    {% include "ui/pagination/pagination.html" %}
 </div>

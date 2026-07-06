@@ -168,7 +168,7 @@ ui/pagination/
 | 元件 | 參數／資料 |
 |---|---|
 | `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href（比照真實 app）。 |
-| `ui/pagination` | 靜態展示，無參數（頁碼清單在正式環境由資料驅動渲染，非切版範圍；`.pagination-input` 輸入版由 `pagination.js` 增強）。 |
+| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
 | `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
