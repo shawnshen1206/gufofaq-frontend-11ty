@@ -1,0 +1,101 @@
+<!-- 取自真實頁 pages/qaHistory/4-2_qaHistory_detail.html「對話詳細內容」區塊（line 175-307，class 沿用真實系統）。
+     搜尋過整份真實 scss/component.scss，沒有 .qa-detail-info（或類似名稱）的專屬 class 規則 —— 這塊完全是既有原子的組合：
+     外層 .block（components/block）包 .form-table-wrap（components/form-table，已含 .form-table-group/.subtitle/.form-table/.row/.col/.th/.td），
+     因此不建立 _qa-detail-info.scss、main.scss 也不需新增 @use（避免無中生有杜撰一個真實系統沒有的 class；視覺完全由已註冊的 block / form-table 提供）。
+     AI 對話內容維持真實頁面原始寫法：直接在 .td 內以純文字＋多個 <p> 呈現（未加 .long-text，真實 markup 本來就沒有），逐字保留（inline，非收合摘要）。 -->
+{% set conversation = {
+    satisfaction: { label: "讚", icon: "./images/icon_good.png" },
+    feedback: "回答很快也很清楚，謝謝！",
+    chatroomId: "6537",
+    id: "12173",
+    time: "2024/12/01 13:29:24",
+    intent: "-",
+    userMessage: "新住民結婚注意事項"
+} %}
+
+<div class="block block-sm" style="margin-top: 16px;">
+    <div class="form-table-wrap">
+        <div class="form-table-group">
+            <div class="subtitle">滿意度回饋</div>
+            <div class="form-table">
+                <div class="row mobile-column">
+                    <div class="col col-6-md col-12-sm">
+                        <div class="th">使用者滿意度</div>
+                        <div class="td">
+                            <span class="text-bold">{{ conversation.satisfaction.label }}</span>
+                            <img src="{{ conversation.satisfaction.icon }}" alt="" class="icon">
+                        </div>
+                    </div>
+                    <div class="col col-6-md col-12-sm">
+                        <div class="th">意見回饋</div>
+                        <div class="td">{{ conversation.feedback }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-table-group">
+            <div class="subtitle">基本對話資訊</div>
+            <div class="form-table">
+                <div class="row mobile-column">
+                    <div class="col col-12-md">
+                        <div class="th">聊天室編號</div>
+                        <div class="td">{{ conversation.chatroomId }}</div>
+                    </div>
+                </div>
+                <div class="row mobile-column">
+                    <div class="col col-4-md col-12-sm">
+                        <div class="th">對話編號</div>
+                        <div class="td">{{ conversation.id }}</div>
+                    </div>
+                    <div class="col col-4-md col-12-sm">
+                        <div class="th">對話時間</div>
+                        <div class="td">{{ conversation.time }}</div>
+                    </div>
+                    <div class="col col-4-md col-12-sm">
+                        <div class="th">有無進行意圖判斷</div>
+                        <div class="td">{{ conversation.intent }}</div>
+                    </div>
+                    <div class="col col-12-md">
+                        <div class="th">使用者對話內容</div>
+                        <div class="td">{{ conversation.userMessage }}</div>
+                    </div>
+                    <div class="col col-12-md">
+                        <div class="th">AI對話內容</div>
+                        <div class="td">
+                            您好！關於新住民結婚的注意事項，以下是一些重要的要點：
+                            <p>
+                                ### 1. 申請結婚登記<br>
+                                - **雙方當事人**需親自到戶政事務所提出結婚登記申請。<br>
+                                - 需提供有效的身份證明文件，如國民身分證或護照。
+                            </p>
+                            <p>
+                                ### 2. 文件準備<br>
+                                - **結婚證明文件**：需提供與依親對象結婚登記的證明文件。<br>
+                                - **其他相關證明文件**：如有需要，可能還需提供其他文件以證明雙方的身份及婚姻狀況。
+                            </p>
+                            <p>
+                                ### 3. 健康檢查<br>
+                                - 在某些情況下，可能需要提供健康檢查合格證明。
+                            </p>
+                            <p>
+                                ### 4. 語言溝通<br>
+                                - 若雙方語言不通，建議尋求通譯人員協助，以確保理解所有法律文件及程序。
+                            </p>
+                            <p>
+                                ### 5. 法律責任<br>
+                                - 了解結婚後的法律責任，包括財產、子女撫養等問題。
+                            </p>
+                            <p>
+                                ### 6. 文化差異<br>
+                                - 注意文化差異，尊重彼此的習俗和傳統，促進良好的溝通。
+                            </p>
+                            <p>如需更詳細的資訊或具體的法律條文，建議您參考相關的法律文件或諮詢專業的法律顧問。希望這些資訊對您有所幫助！如有其他問題，隨時歡迎詢問。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

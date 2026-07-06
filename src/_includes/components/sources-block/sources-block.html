@@ -1,0 +1,68 @@
+<!-- 取自真實頁 pages/qaHistory/4-2_qaHistory_detail.html「參考來源」區塊（line 309-386，class 沿用真實系統）。
+     搜尋過整份真實 scss/component.scss，沒有 .sources-block 的規則宣告 —— 它的外觀完全來自既有 .block（components/block）
+     + .default-table（components/default-table）+ ui/accordion，本身只是語意 / JS 掛鉤用的 wrapper class：
+     ui/accordion/accordion.js 是以 document.querySelectorAll(".sources-block") 當作展開/收合互動範圍的根（含「全部展開」.js-expand-all／
+     「全部收合」.js-collapse-all）。因此本元件不建立 _sources-block.scss（真實 scss 無規則可搬，避免無中生有杜撰樣式），
+     main.scss 也不需為它新增 @use（視覺完全由已註冊的 block / default-table / accordion 提供）。
+     每一筆來源列（含展開列）拆到 source-row.html 子元件，經 {% for source in sources %} include 逐筆渲染。 -->
+{% set sources = [
+    {
+        no: "12173-1",
+        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    },
+    {
+        no: "12173-2",
+        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    }
+] %}
+
+<div class="block sources-block" style="margin-top: 24px;">
+    <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
+        <div>
+            <span class="text-lg text-bold">參考來源</span>
+            <span class="text-bold text-gray sources-info">(挑選規則 16取8；使用模型：GPT 4o)</span>
+        </div>
+        <div class="flex-row align-items-center gap-8 flex-wrap">
+            <button class="button button-border button-sm js-expand-all">全部展開</button>
+            <button class="button button-border button-sm js-collapse-all">全部收合</button>
+        </div>
+    </div>
+
+    <div class="table-container scrollTable" style="margin-top: 16px;">
+        <table class="default-table no-border">
+            <colgroup>
+                <col style="width:40px; min-width:40px;">
+                <col style="width:272px; min-width:272px;">
+                <col style="width: 1fr; min-width: 580px;">
+                <col style="width:240px; min-width:240px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>序號</th>
+                    <th>檔案</th>
+                    <th>資料集</th>
+                </tr>
+            </thead>
+            <tbody class="sources-tbody">
+                {% for source in sources %}
+                {% include "components/sources-block/source-row.html" %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
