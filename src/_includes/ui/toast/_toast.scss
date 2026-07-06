@@ -1,0 +1,38 @@
+// 逐位元照抄自真 app scss/component.scss 2363-2399（toast彈跳訊息區塊），只搬檔案位置，宣告一字不改
+.toast {
+    width: fit-content;
+    white-space: nowrap;
+    padding: .625rem 1rem;
+    box-sizing: border-box;
+    border-radius: 4px;
+    position: fixed;
+    top: 129px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.125rem;
+
+    &.toast-success {
+        color: #fff;
+        background-color: var(--color-success);
+    }
+
+    &.show {
+        opacity: 1;
+    }
+
+    .toast-icon {
+        width: 24px;
+        height: 24px;
+        padding: 3px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+}

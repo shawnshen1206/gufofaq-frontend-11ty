@@ -1,0 +1,34 @@
+// 逐位元照抄自真 app scss/component.scss 2302-2334（list style列表樣式區塊），只搬檔案位置，宣告一字不改
+.list-style-disc {
+    list-style-type: disc;
+    list-style-position: outside;
+    padding-left: 1.125rem;
+
+    >li {
+        font-size: 1rem;
+        line-height: 1.5;
+        letter-spacing: 0.24px;
+
+        ol,
+        ul {
+            padding-left: 2.25rem;
+        }
+    }
+}
+
+.list-style-decimal {
+    list-style-type: decimal;
+    list-style-position: outside;
+    padding-left: 1.125rem;
+
+    >li {
+        font-size: 1rem;
+        line-height: 1.5;
+        letter-spacing: 0.24px;
+
+        ol,
+        ul {
+            padding-left: 2.25rem;
+        }
+    }
+}
