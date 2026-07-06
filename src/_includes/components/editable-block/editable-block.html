@@ -1,0 +1,35 @@
+<!-- 展示片段，取自真實 app pages/dataset/3-1-3_previewDataset.html 與 pages/components/component.html（class 沿用真實系統）
+     切換行為由 editable-block.js 提供（原生 DOM，見該檔） -->
+
+<!-- 樣式一：單行文字 + display-text -->
+<div class="editable-block">
+    <span class="display-text">資料集名稱範例</span>
+    <input type="text" class="form-control edit-field" value="資料集名稱範例" style="display: none;">
+    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+            class="sr-only">編輯</span></button>
+    <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" style="display: none;"><span
+            class="sr-only">確認</span></button>
+    <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消" style="display: none;"><span
+            class="sr-only">取消</span></button>
+</div>
+
+<!-- 樣式二：搭配 textarea + label（見 3-1-3_previewDataset.html 任務描述） -->
+<div class="editable-block" style="margin-top: 16px;">
+    <div class="form-group">
+        <div class="label flex-row align-items-center">
+            <label class="control-label">任務描述</label>
+            <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+                    class="sr-only">編輯</span></button>
+            <div class="flex-row gap-4">
+                <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"
+                    style="display: none;"><span class="sr-only">確認</span></button>
+                <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消"
+                    style="display: none;"><span class="sr-only">取消</span></button>
+            </div>
+        </div>
+        <div class="field">
+            <textarea rows="6" class="form-control size-sm edit-field disabled" placeholder="請輸入任務描述"
+                disabled></textarea>
+        </div>
+    </div>
+</div>

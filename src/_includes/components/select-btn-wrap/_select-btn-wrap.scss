@@ -1,0 +1,25 @@
+// 逐字複製自真實 app 的 scss/component.scss「main主要內容區」區段（verbatim，只搬移位置，line 3059-3082）
+// 2-1
+.select-btn-wrap {
+    margin-top: 0.625rem;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .form-group {
+        flex: 1;
+    }
+
+    .button {
+        flex-basis: 240px;
+    }
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+
+        .button {
+            flex-basis: auto;
+            width: 240px;
+        }
+    }
+}

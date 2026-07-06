@@ -1,0 +1,14 @@
+<!-- 真實 app 頁面未見 .select-btn-wrap 實際引用（僅定義於 component.scss，註解標 // 2-1 對應 qaRecord）；
+     範例依 scss 結構（.form-group flex:1 + .button flex-basis:240px）組裝，複用真實系統的模擬 select（見 pages/dataImport/1-1-1_dataImport.html 的 .field.select-wrap）與 ui/button -->
+<div class="select-btn-wrap">
+    <div class="form-group">
+        <div class="field select-wrap">
+            <!-- 模擬select -->
+            <div tabindex="0" role="button" class="form-control select-md">
+                <span class="select-placeholder">請選擇資料集</span>
+                <span class="select-value hidden"></span>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="button button-primary">查詢</button>
+</div>

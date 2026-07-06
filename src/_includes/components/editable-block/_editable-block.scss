@@ -1,0 +1,43 @@
+// 逐字複製自真實 app 的 scss/component.scss「文字編輯區」區段（verbatim，只搬移位置，line 2678-2716）
+/*===============================
+    文字編輯區
+================================*/
+.editable-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    width: 100%;
+
+    .form-group:has(textarea) {
+        width: 100%;
+    }
+
+    .edit-field {
+        display: none; // 初始隱藏
+        padding: 6px 8px;
+        font-size: 1rem;
+        width: fit-content;
+        box-sizing: content-box;
+        box-sizing: border-box;
+    }
+
+    textarea.edit-field {
+        display: inline-block;
+        width: 100%;
+        padding: 0.625rem 0.5rem;
+        box-sizing: border-box;
+    }
+
+    .display-text {
+        display: flex;
+        align-items: center;
+        min-height: 36px;
+        vertical-align: middle;
+    }
+
+    .save-icon,
+    .cancel-icon {
+        display: none; // 初始不顯示
+    }
+}

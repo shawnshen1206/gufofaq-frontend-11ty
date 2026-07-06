@@ -1,0 +1,30 @@
+// 逐字複製自真實 app 的 scss/component.scss「步驟 / 容量使用條」區段（verbatim，只搬移位置，line 2645-2673）
+// 容量使用條
+.storage-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    .bar {
+        width: 200px;
+        height: 6px;
+        background-color: #b4bfc9;
+        border-radius: 100px;
+        overflow: hidden;
+
+        .bar-fill {
+            height: 100%;
+            background-color: var(--color-primary-dark);
+            border-radius: 100px;
+            transition: width 0.3s ease;
+        }
+    }
+
+    .text {
+        white-space: nowrap;
+        font-size: 1rem;
+        color: var(--color-text-dark);
+    }
+}

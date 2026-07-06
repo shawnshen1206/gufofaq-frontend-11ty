@@ -1,0 +1,16 @@
+<!-- 展示片段，取自真實 app pages/settings/5-3_statsModule.html 圖表區塊（class 沿用真實系統）
+     結構 + SCSS only —— 不引入 Chart.js，.chart 內僅放 <canvas> 佔位，實際繪圖為業務邏輯，不轉 -->
+<div class="chart-box">
+    <div class="chart-title">資料夾使用貢獻度</div>
+    <div class="chart-wrap">
+        <div class="chart"><canvas id="distributionDoughnut"></canvas></div>
+        <div class="chart"><canvas id="distributionBar"></canvas></div>
+    </div>
+    <div class="chart-desc row">
+        <p><span class="bold">資料時間：</span><span id="desc1Time">-</span></p>
+        <div class="flex-row gap-10 flex-wrap">
+            <p><span class="bold">對話次數：</span><span id="desc1Qa">0</span></p>
+            <p><span class="bold">取用資料數：</span><span id="desc1Retrieved">0</span></p>
+        </div>
+    </div>
+</div>
