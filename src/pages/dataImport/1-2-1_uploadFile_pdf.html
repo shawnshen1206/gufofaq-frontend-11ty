@@ -1,0 +1,183 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-2-1_uploadFile_pdf.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁只有「上傳檔案」done + 僅「下一步」按鈕（無上一步），用 .lg 步驟樣式，
+     components/step-btn-wrap 註解本身即指名本頁為「只需要下一步按鈕」範例（.no-prev、移除上一步按鈕），故手寫不整包 include -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "送出資料", done: false }
+] %}
+<div class="step-btn-wrap no-prev" style="margin-bottom: 34px; margin-top: 10px;">
+    <div class="step-nodes">
+        {% for step in steps %}
+        <div class="step-node lg{% if step.done %} done{% endif %}">{{ step.label }}</div>
+        {% endfor %}
+    </div>
+    <button type="button" class="button button-primary align-self-end btn-next">
+        下一步<img src="./images/icon_next.png" alt="" class="icon">
+    </button>
+</div>
+
+<!-- 上傳區：真實頁 accept=".pdf" multiple、上限 30MB，與 components/upload-box 預設（.xlsx、單檔、10MB）不同，故手寫 -->
+<div class="upload-box">
+    <input type="file" id="fileInput" class="upload-input" accept=".pdf" multiple />
+    <div class="upload-text">
+        <div class="upload-message">點選或拖曳檔案至該區域上傳</div>
+        <div class="upload-desc">支援上傳pdf檔案，檔案最大不超過30MB</div>
+    </div>
+</div>
+
+<!-- 檔案列表表格：真實頁 thead/tbody 皆為 js/uploadFilePdf.js 動態渲染（renderTableHeaders()/renderFileList()），
+     欄位取其固定欄（檔案名稱、標題、時間、檔案大小、功能，略過依租戶而異的自訂欄位），
+     用 set+for 資料化示範 2 筆，father/table class 沿用 components/default-table 同一組真實系統 class -->
+{% set fileRows = [
+    {
+        name: "20251119105623_公文範本.pdf",
+        title: "公文範本",
+        time: "2025/11/19 10:56",
+        sizeMB: "1.20"
+    },
+    {
+        name: "20251120091503_服務條款.pdf",
+        title: "服務條款",
+        time: "2025/11/20 09:15",
+        sizeMB: "0.85"
+    }
+] %}
+<div class="table-container scrollTable" style="margin-top: 24px;">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:200px;">
+            <col style="width:1fr; min-width:200px;">
+            <col style="width:180px; min-width:180px;">
+            <col style="width:120px; min-width:120px;">
+            <col style="width:96px; min-width:96px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>檔案名稱</th>
+                <th>標題</th>
+                <th>時間</th>
+                <th>檔案大小</th>
+                <th>功能</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in fileRows %}
+            <tr>
+                <td>
+                    <button type="button" class="link-modal btn-preview-file">{{ file.name }}</button>
+                </td>
+                <td>
+                    <span class="ellipsis-2">{{ file.title }}</span>
+                </td>
+                <td>{{ file.time }}</td>
+                <td>{{ file.sizeMB }}MB</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="button-icon no-bg size-sm edit btn-edit-file" title="編輯">
+                            <span class="sr-only">編輯</span>
+                        </button>
+                        <button type="button" class="button-icon no-bg size-sm delete btn-delete-file" title="刪除">
+                            <span class="sr-only">刪除</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 檔案預覽 modal：id/class 與 components/file-preview-modal 一致，整包 include -->
+{% include "components/file-preview-modal/file-preview-modal.html" %}
+
+<!-- 編輯 modal：真實頁為精簡版（標題／時間／自訂欄位容器／內容），與 components/file-edit-modal
+     的完整展示版（標題／時間／頻道／類型／供應商／內容）欄位不同，故依真實頁手寫 -->
+<dialog class="modals" id="editModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">編輯</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="flex-row column gap-8">
+                        <div class="form-group row">
+                            <div class="label">
+                                <label class="control-label">標題</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="editTitle" placeholder="請輸入" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="label">
+                                <label class="control-label">時間</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="editTime" class="form-control start-date" placeholder="請選擇時間"
+                                    data-modal>
+                            </div>
+                        </div>
+                        <!-- 動態渲染自訂欄位 -->
+                        <div id="editCusFields"></div>
+                        <div class="form-group row">
+                            <div class="label">
+                                <label class="control-label">內容</label>
+                            </div>
+                            <div class="field">
+                                <textarea id="editContent" rows="10" class="form-control" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals">取消</button>
+                        <button type="button" class="button button-primary">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<!-- 刪除 modal：真實頁 <p> 內含 span#deleteFileName（js 動態填入檔名），與 components/delete-modal
+     的靜態展示文字結構不同，故依真實頁手寫 -->
+<dialog class="modals" id="deleteModal">
+    <div class="modals-dialog modals-sm">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">刪除</h3>
+                </div>
+                <div class="modals-body">
+                    <p class="text-center">確定要刪除 <span id="deleteFileName"></span></p>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals">取消</button>
+                        <button type="button" class="button button-primary">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

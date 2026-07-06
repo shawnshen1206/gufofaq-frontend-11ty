@@ -1,0 +1,32 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-1-6_uploadSuccess_excel.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁 pages/dataImport/1-1-6_uploadSuccess_excel.html 4 步驟皆 done，
+     與 components/step-nodes 展示資料（僅步驟1 done）不同，故手寫本頁專屬狀態，不整包 include -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "預覽資料", done: true },
+    { label: "欄位對應", done: true },
+    { label: "送出資料", done: true }
+] %}
+<div style="margin-bottom: 34px; margin-top: 10px;">
+    <div class="step-nodes">
+        {% for step in steps %}
+        <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 上傳成功通知：真實頁 .success-desc 為「動態產生」（js/uploadSuccess.js 依 sessionStorage 填入
+     檔案名稱/檔案大小/資料總量），按鈕 href="#"、文字「再次上傳」「查看資料」與 components/success-box 完全一致，整包 include -->
+{% include "components/success-box/success-box.html" %}

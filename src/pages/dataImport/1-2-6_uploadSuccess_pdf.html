@@ -1,0 +1,43 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-2-6_uploadSuccess_pdf.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁只有「上傳檔案」「送出資料」兩步、皆 done、用 .lg 樣式，
+     與 components/step-nodes 展示資料（4 步、僅步驟1 done、無 .lg）不同，故手寫 -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "送出資料", done: true }
+] %}
+<div style="margin-bottom: 34px; margin-top: 10px;">
+    <div class="step-nodes">
+        {% for step in steps %}
+        <div class="step-node lg{% if step.done %} done{% endif %}">{{ step.label }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 上傳成功通知：真實頁按鈕 href/文字（重新上傳→1-2-1_uploadFile_pdf.html、開啟資料集→資料集列表）與
+     components/success-box（再次上傳/查看資料，href="#"）不同，故手寫；success-desc 為 js/uploadSuccess.js
+     動態帶入資料總量與檔案大小（PDF 流程順序與 excel 流程相反），沿用真實頁「動態顯示」註解 -->
+<div class="block block-lg corner-md success-box">
+    <div class="success-message">
+        <img src="./images/icon_check_green.png" alt="" class="icon">
+        <span>上傳成功</span>
+    </div>
+    <div class="success-desc">
+        <!-- 動態顯示資料筆數與檔案大小 -->
+    </div>
+    <div class="btn-row">
+        <a href="1-2-1_uploadFile_pdf.html" class="button button-border">重新上傳</a>
+        <a href="3-1-1_datasetList.html" class="button button-primary">開啟資料集</a>
+    </div>
+</div>
