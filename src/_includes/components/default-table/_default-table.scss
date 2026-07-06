@@ -112,15 +112,9 @@
         align-items: center;
     }
 
-    .form-checkbox {
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    thead tr th:has(.form-checkbox),
-    tbody tr td:has(.form-checkbox) {
+    // §4 隔離：勾選欄的 cell 用 default-table 自有的 .check-cell（原本用 :has(.form-checkbox) 指名 ui/checkbox 的 class）；
+    // 勾選框本身在 cell 內的緊湊樣式改由 ui/checkbox 的 .form-checkbox.in-cell 變體提供。
+    .check-cell {
         padding-right: 0;
     }
 

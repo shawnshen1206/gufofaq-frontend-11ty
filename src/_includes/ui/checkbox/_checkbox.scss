@@ -30,6 +30,13 @@
         background-color: #fff;
         border-radius: 4px;
     }
+
+    // 放在表格 cell 內的緊湊置中變體（原本用 `.default-table .form-checkbox` 覆寫，改由本元件自有變體提供，維持 §4 隔離）
+    &.in-cell {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
 }
 
 input[type="checkbox"] {
