@@ -11,6 +11,9 @@
 @use "../_includes/components/footer/footer";
 @use "../_includes/ui/modals/modals";
 
+// login 頁面專屬
+@use "../_includes/components/login-wrapper/login-wrapper";
+
 // ui 原子
 @use "../_includes/ui/button/button";
 @use "../_includes/ui/form-control/form-control";

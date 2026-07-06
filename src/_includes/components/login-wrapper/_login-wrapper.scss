@@ -1,0 +1,83 @@
+// 逐字複製自真實 app 的 scss/component.scss「login page」區段（.login-wrapper，第 3190-3271 行，verbatim，只搬移位置）
+.login-wrapper {
+    display: flex;
+    height: 100vh;
+
+    .login-left {
+        width: 50%;
+        background-color: #fafafa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .login-box {
+            text-align: center;
+
+            .logo {
+                width: 100%;
+                max-width: 480px;
+                height: auto;
+                margin-bottom: 32px;
+                object-fit: contain;
+            }
+
+            .form-group-wrap {
+                text-align: left;
+                padding: 0 24px;
+
+                .input {
+                    margin-bottom: 24px;
+
+                    &:last-of-type {
+                        margin-bottom: 8px;
+                    }
+                }
+
+                .forgot-btn {
+                    display: block;
+                    margin-left: auto;
+                    background: none;
+                    border: none;
+                    color: #4e4e4e;
+                    cursor: pointer;
+                    margin-bottom: 24px;
+                    font-size: 1rem;
+                    font-weight: 500;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                .login-btn {
+                    width: 100%;
+                }
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            width: 100%;
+        }
+    }
+
+    .login-right {
+        width: 50%;
+        background-color: var(--color-gray-300);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 1;
+
+        .side-img {
+            width: 100%;
+            max-width: 531px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @media screen and (max-width: 992px) {
+            display: none;
+        }
+    }
+}
