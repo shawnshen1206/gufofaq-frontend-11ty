@@ -1,0 +1,206 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::歷史問答紀錄
+permalink: 4-1_qaHistory.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "歷史問答紀錄" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入（js 依 query 切換頁籤與資料來源），
+     此靜態頁一律呈現同一份查詢表單；開始/結束時間欄位沿用真實 class（flatpickr 由 js/qaHistory.js 掛載，此處僅保留樣式用 class，不掛 JS）；
+     使用者類型／滿意度為 singleSelect（非 multiSelect），保留原生 select -->
+<div class="block block-sm border corner-md" style="margin-top: 16px;">
+    <div class="flex-row column gap-16">
+        <div class="flex-row gap-8 mobile-column sm-gap-16">
+            <div class="form-group col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label required">開始時間</label>
+                </div>
+                <div class="field">
+                    <input type="text" class="form-control time start-date" placeholder="開始時間" required>
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label required">結束時間</label>
+                </div>
+                <div class="field">
+                    <input type="text" class="form-control time end-date" placeholder="結束時間" required>
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label required">使用者類型</label>
+                </div>
+                <div class="field">
+                    <select class="form-control singleSelect user-type-select" required>
+                        <option></option>
+                        <option value="全部" selected>全部</option>
+                        <option value="前台問答">前台問答</option>
+                        <option value="後台問答">後台問答</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row gap-8 mobile-column sm-gap-16">
+            <div class="form-group col-12-sm" style="flex: 1;">
+                <div class="label">
+                    <label class="control-label">關鍵字</label>
+                </div>
+                <div class="field">
+                    <input type="text" placeholder="請輸入" class="form-control keyword-input">
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group col-12-sm w-200">
+                <div class="label">
+                    <label class="control-label">對話編號</label>
+                </div>
+                <div class="field">
+                    <input type="text" placeholder="請輸入" class="form-control chat-log-sn">
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group col-12-sm w-200">
+                <div class="label">
+                    <label class="control-label">聊天室編號</label>
+                </div>
+                <div class="field">
+                    <input type="text" placeholder="請輸入" class="form-control chat-room-sn">
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group col-12-sm w-200">
+                <div class="label">
+                    <label class="control-label">滿意度</label>
+                </div>
+                <div class="field">
+                    <select class="form-control singleSelect rating-select">
+                        <option></option>
+                        <option value="讚">讚</option>
+                        <option value="倒讚">倒讚</option>
+                        <option value="無意見">無意見</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row align-items-center justify-content-center gap-16">
+            <button class="button button-border">清除</button>
+            <button class="button button-primary">查詢</button>
+            <button class="button button-green">下載</button>
+        </div>
+    </div>
+</div>
+
+<!-- 資料表格：真實頁 tbody 為 js/qaHistory.js 依查詢結果動態渲染（初始「共0筆資料」），
+     此處以 set+for 資料化示範 3 筆已載入狀態，欄位與真實 thead 一致；對話編號連結至已轉換的 4-2_qaHistory_detail.html -->
+{% set rows = [
+    {
+        id: "12173",
+        roomId: "6537",
+        userMsg: "新住民結婚注意事項",
+        aiMsg: "您好！關於新住民結婚的注意事項，以下是一些重要的要點……",
+        userType: "前台問答",
+        rating: "讚",
+        date: "2024/12/01 13:29:24",
+        href: "4-2_qaHistory_detail.html?sn=12173"
+    },
+    {
+        id: "12174",
+        roomId: "6538",
+        userMsg: "護照效期不足可以出國嗎",
+        aiMsg: "護照效期建議至少保留6個月以上，若不足可能影響入境……",
+        userType: "後台問答",
+        rating: "無意見",
+        date: "2024/12/02 09:12:03",
+        href: "4-2_qaHistory_detail.html?sn=12174"
+    },
+    {
+        id: "12175",
+        roomId: "6539",
+        userMsg: "欠稅被限制出國要如何解除",
+        aiMsg: "欠稅限制出國的解除方式，需先向稅捐機關繳清或提供擔保……",
+        userType: "前台問答",
+        rating: "倒讚",
+        date: "2024/12/03 16:45:51",
+        href: "4-2_qaHistory_detail.html?sn=12175"
+    }
+] %}
+<div class="data-info">共{{ rows.length }}筆資料</div>
+<div class="table-container scrollTable">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:159px;">
+            <col style="width:1fr; min-width:159px;">
+            <col style="width: 200px; min-width: 200px;">
+            <col style="width: 200px; min-width: 200px;">
+            <col style="width:1fr; min-width:160px;">
+            <col style="width:1fr; min-width:160px;">
+            <col style="width:1fr; min-width:160px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>對話編號</th>
+                <th>聊天室編號</th>
+                <th>使用者對話內容</th>
+                <th>AI對話內容</th>
+                <th>使用者類型</th>
+                <th>滿意度</th>
+                <th>
+                    <div class="th-sort">
+                        對話日期
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort">
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>
+                    <a href="{{ row.href }}" title="{{ row.id }}" class="link-file">{{ row.id }}</a>
+                </td>
+                <td>{{ row.roomId }}</td>
+                <td>{{ row.userMsg }}</td>
+                <td>{{ row.aiMsg }}</td>
+                <td>{{ row.userType }}</td>
+                <td>{{ row.rating }}</td>
+                <td>{{ row.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 分頁：真實頁由 js/qaHistory.js renderPagination() 動態產生，沿用同一組 class 資料化示範 -->
+{% set pages = [
+    { number: 1, active: true },
+    { number: 2 },
+    { number: 3 }
+] %}
+<div class="pagination" role="navigation" aria-label="頁碼分頁" style="margin-top: 16px;">
+    <ul>
+        <li class="prev disabled">
+            <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                <img src="./images/icon_arrow_left_gray.png" alt="">
+            </a>
+        </li>
+        {% for page in pages %}
+        <li{% if page.active %} class="active"{% endif %}>
+            <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+        </li>
+        {% endfor %}
+        <li class="next">
+            <a href="#" aria-label="下一頁">
+                <img src="./images/icon_arrow_right_blue.png" alt="">
+            </a>
+        </li>
+    </ul>
+</div>

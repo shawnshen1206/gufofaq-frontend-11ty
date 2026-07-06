@@ -1,10 +1,38 @@
-<!-- 取自真實頁 pages/qaHistory/4-2_qaHistory_detail.html「參考來源」區塊（line 309-386，class 沿用真實系統）。
-     搜尋過整份真實 scss/component.scss，沒有 .sources-block 的規則宣告 —— 它的外觀完全來自既有 .block（components/block）
-     + .default-table（components/default-table）+ ui/accordion，本身只是語意 / JS 掛鉤用的 wrapper class：
-     ui/accordion/accordion.js 是以 document.querySelectorAll(".sources-block") 當作展開/收合互動範圍的根（含「全部展開」.js-expand-all／
-     「全部收合」.js-collapse-all）。因此本元件不建立 _sources-block.scss（真實 scss 無規則可搬，避免無中生有杜撰樣式），
-     main.scss 也不需為它新增 @use（視覺完全由已註冊的 block / default-table / accordion 提供）。
-     每一筆來源列（含展開列）拆到 source-row.html 子元件，經 for 迴圈 include 逐筆渲染。 -->
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::問答紀錄
+permalink: 2-1_qaRecord.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "服務預覽", href: "" },
+  { label: "前台對話預覽" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 主要內容：聊天視窗 + 問答紀錄頁籤，真實頁 .chatroom-wrap 與 components/chatroom 完全一致（同一份真實頁抽出），直接 include；
+     右側 qa-record 頁籤區塊為單層 tab-group（非 ui/tab 展示片段的雙層 top/sub-tabs 結構），沿用 ui/tab 的 tab-wrap/tabs-title/tab-group/.tab class -->
+<div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
+    {% include "components/chatroom/chatroom.html" %}
+
+    <div class="qa-record">
+        <div class="tab-wrap">
+            <div class="tabs-title">問答紀錄</div>
+
+            <div class="tab-group">
+                <button type="button" class="tab" title="問答紀錄1">問答紀錄1</button>
+                <button type="button" class="tab" title="問答紀錄2">問答紀錄2</button>
+                <button type="button" class="tab active" title="問答紀錄3">問答紀錄3</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 參考來源表格區塊：真實頁此區塊預設 hidden（點擊訊息列的「查看來源」才顯示），且表頭比 components/sources-block 多了使用者滿意度與
+     「檢視詳細內容」連結（連往 4-2_qaHistory_detail.html），與共用元件的表頭不完全一致，故不直接 include 整塊，改手寫表頭、
+     表格列沿用 components/sources-block/source-row.html 以 set+for 資料化示範 2 筆 -->
 {% set sources = [
     {
         no: "12173-1",
@@ -29,8 +57,7 @@
         reference: "來源名稱"
     }
 ] %}
-
-<div class="block sources-block" style="margin-top: 24px;">
+<div class="block sources-block hidden" style="margin-top: 24px;">
     <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
         <div>
             <span class="text-lg text-bold">參考來源</span>
@@ -39,6 +66,12 @@
         <div class="flex-row align-items-center gap-8 flex-wrap">
             <button class="button button-border button-sm js-expand-all">全部展開</button>
             <button class="button button-border button-sm js-collapse-all">全部收合</button>
+            <span class="divider-vertical"></span>
+            <div class="flex-row align-items-center gap-2 sources-rating">
+                <span>使用者滿意度：好</span>
+                <img src="./images/icon_good.png" alt="" class="icon">
+            </div>
+            <a href="4-2_qaHistory_detail.html?sn=12173" class="button button-border button-sm sources-detail-link">檢視詳細內容</a>
         </div>
     </div>
 
