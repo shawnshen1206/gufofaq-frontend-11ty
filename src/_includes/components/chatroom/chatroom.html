@@ -1,0 +1,110 @@
+<!-- 資料取自真實 app pages/qaRecord/2-1_qaRecord.html（.chatroom-wrap 結構）+ pages/qaTest/2-2-1_singleTest.html（qa-count + chat-input-container）。
+     只轉結構＋樣式，串流/送出/markdown 渲染屬業務邏輯，不在此元件內（見 qaRecord.js / singleTest.js）。 -->
+{% set messages = [
+    {
+        role: "robot",
+        time: "13:29",
+        content: "歡迎回來，想問些什麼呢 ?"
+    },
+    {
+        role: "user",
+        time: "13:29",
+        content: "新住民結婚注意事項"
+    }
+] %}
+
+<div class="chatroom-wrap">
+    <div class="chatroom-block">
+        <div class="chat-message-container">
+            <div class="message-container">
+                <div class="first-chat">
+                    {% for msg in messages %}
+                    {% if msg.role == "robot" %}
+                    <div class="message-wrap">
+                        <div class="message-row by-robot">
+                            <div class="message-content">
+                                <span class="robot-msg">{{ msg.content }}</span>
+                            </div>
+                            <div class="message-time">{{ msg.time }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="chat-box">
+                    {% for msg in messages %}
+                    {% if msg.role == "user" %}
+                    <div class="message-wrap">
+                        <div class="message-row by-user">
+                            <div class="message-content">
+                                <span>{{ msg.content }}</span>
+                            </div>
+                            <div class="message-time">{{ msg.time }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- AI 回答為長文格式化內容，依 GUIDELINE §3-2 直接寫死當樣式示範，不進 front matter（正式環境為 API 回傳的 markdown 渲染結果） -->
+                    <div class="message-wrap">
+                        <div class="message-row by-robot">
+                            <div class="message-content">
+                                <span class="robot-msg">您好！關於新住民結婚的注意事項，以下是一些重要的要點：
+                                    <p>
+                                        ### 1. 申請結婚登記<br>
+                                        - <strong>雙方當事人</strong>需親自到戶政事務所提出結婚登記申請。<br>
+                                        - 需提供有效的身份證明文件，如國民身分證或護照。
+                                    </p>
+                                    <p>
+                                        ### 2. 文件準備<br>
+                                        - <strong>結婚證明文件</strong>：需提供與依親對象結婚登記的證明文件。<br>
+                                        - <strong>其他相關證明文件</strong>：如有需要，可能還需提供其他文件以證明雙方的身份及婚姻狀況。
+                                    </p>
+                                    <p>
+                                        ### 3. 健康檢查<br>
+                                        - 在某些情況下，可能需要提供健康檢查合格證明。
+                                    </p>
+                                    <p>
+                                        ### 4. 語言溝通<br>
+                                        - 若雙方語言不通，建議尋求通譯人員協助，以確保理解所有法律文件及程序。
+                                    </p>
+                                    <p>
+                                        ### 5. 法律責任<br>
+                                        - 了解結婚後的法律責任，包括財產、子女撫養等問題。
+                                    </p>
+                                    <p>
+                                        ### 6. 文化差異<br>
+                                        - 注意文化差異，尊重彼此的習俗和傳統，促進良好的溝通。
+                                    </p>
+                                    <p>如需更詳細的資訊或具體的法律條文，建議您參考相關的法律文件或諮詢專業的法律顧問。希望這些資訊對您有所幫助！如有其他問題，隨時歡迎詢問。
+                                    </p>
+                                </span>
+                            </div>
+                            <div class="message-time">13:30</div>
+                        </div>
+                        <div class="message-icon">
+                            <button class="button-icon copy copyBtn" data-toast="文字已複製!">
+                                <span class="tooltip">複製</span>
+                            </button>
+                            <button class="button-icon watch watchBtn">
+                                <span class="tooltip">查看來源</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="qa-count">問答次數：0/3000，摘要次數：0/1000</div>
+    <div class="chat-input-container">
+        <div class="input-wrap">
+            <div class="form-group">
+                <div class="field">
+                    <textarea class="form-control" placeholder="輸入問題"></textarea>
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <button type="submit" class="button button-primary">送出</button>
+        </div>
+    </div>
+</div>
