@@ -1,0 +1,36 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-1-4_columnSelect_excel.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁 pages/dataImport/1-1-4_columnSelect_excel.html 步驟 1、2、3 done，僅「送出資料」未達成，
+     與 components/step-btn-wrap 預設資料（步驟3 未 done）不同，故手寫本頁專屬狀態，不整包 include -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "預覽資料", done: true },
+    { label: "欄位對應", done: true },
+    { label: "送出資料", done: false }
+] %}
+<div class="step-btn-wrap" style="margin-bottom: 24px; margin-top: 10px;">
+    <a href="#" class="button button-primary btn-prev">
+        <img src="./images/icon_back.png" alt="" class="icon">上一步
+    </a>
+    <div class="step-nodes">
+        {% for step in steps %}
+        <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
+        {% endfor %}
+    </div>
+    <a href="#" class="button button-primary align-self-end btn-next">
+        下一步<img src="./images/icon_next.png" alt="" class="icon">
+    </a>
+</div>
+
+{% include "components/multi-select-box/multi-select-box.html" %}

@@ -1,0 +1,30 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-1-2_uploadFile_excel.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁 pages/dataImport/1-1-2_uploadFile_excel.html 步驟 1「上傳檔案」done，其餘未達成
+     （components/step-nodes 展示檔含 樣式一/樣式二 兩種示範，本頁只用「樣式一」單一步驟條，故依其 markup 手寫本頁專屬狀態，不整包 include） -->
+{% set steps = [
+    { label: "上傳檔案", done: true },
+    { label: "預覽資料", done: false },
+    { label: "欄位對應", done: false },
+    { label: "送出資料", done: false }
+] %}
+<div style="margin-bottom: 34px; margin-top: 10px;">
+    <div class="step-nodes">
+        {% for step in steps %}
+        <div class="step-node{% if step.done %} done{% endif %}">{{ step.label }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+{% include "components/upload-box/upload-box.html" %}

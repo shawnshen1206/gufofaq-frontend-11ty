@@ -1,0 +1,32 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-1-1_dataImport.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 選擇資料集：真實頁 pages/dataImport/1-1-1_dataImport.html 的「模擬select」觸發 datasetModal，
+     class 沿用真實系統（同 components/select-btn-wrap 的 .field.select-wrap 寫法），onclick="openModal(...)"
+     沿用 ui/modals 既有 window.openModal 靜態呼叫方式（同 ui/link-modal 既有寫法） -->
+<div class="form-group row" style="margin-top: 10px;">
+    <div class="label">
+        <label class="control-label">資料集名稱</label>
+    </div>
+    <div class="field select-wrap">
+        <!-- 模擬select -->
+        <div tabindex="0" role="button" class="form-control select-md" onclick="openModal('datasetModal');">
+            <span class="select-placeholder">請選擇</span>
+            <span class="select-value hidden"></span>
+        </div>
+    </div>
+</div>
+
+{% include "components/upload-card/upload-card.html" %}
+
+{% include "components/select-dataset-modal/select-dataset-modal.html" %}

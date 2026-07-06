@@ -1,0 +1,101 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料匯入
+permalink: 1-1-3_preview_excel.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料匯入" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 步驟條：真實頁 pages/dataImport/1-1-3_preview_excel.html 步驟 1、2 done，其餘未達成，
+     與 components/step-btn-wrap 預設資料一致，整包 include -->
+<div style="margin-bottom: 24px; margin-top: 10px;">
+    {% include "components/step-btn-wrap/step-btn-wrap.html" %}
+</div>
+
+<!-- 資料預覽表格：真實頁 thead/tbody 由 js/previewExcel.js 依上傳的 excel 欄位動態產生（本檔為「動態產生」註解），
+     此處欄位取用與後續 1-1-4_columnSelect_excel 欄位對應步驟一致的樣本（客服問題／客服回覆／建立時間／圖片連結），
+     用 set+for 資料化示範 3 筆，父層與 table class 沿用 components/default-table 同一組真實系統 class -->
+{% set previewRows = [
+    {
+        question: "如何申請入出國許可證",
+        answer: "請攜帶護照及財力證明至服務站辦理",
+        date: "2024/12/01 13:29:24",
+        image: "https://example.com/image1.png"
+    },
+    {
+        question: "外籍配偶居留證申請流程",
+        answer: "請攜帶護照、結婚證明文件及財力證明至服務站辦理，審核通過後約7個工作天內核發",
+        date: "2024/12/02 09:15:03",
+        image: "https://example.com/image2.png"
+    },
+    {
+        question: "入出國紀錄查詢方式",
+        answer: "可透過內政部移民署網站以自然人憑證登入查詢，或親自攜帶身分證明文件至服務站臨櫃申請",
+        date: "2024/12/03 16:42:51",
+        image: "https://example.com/image3.png"
+    }
+] %}
+<div class="table-container scrollTable">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:200px;">
+            <col style="width:1fr; min-width:280px;">
+            <col style="width:180px; min-width:180px;">
+            <col style="width:1fr; min-width:200px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>客服問題</th>
+                <th>客服回覆</th>
+                <th>建立時間</th>
+                <th>圖片連結</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in previewRows %}
+            <tr>
+                <td>{{ row.question }}</td>
+                <td>
+                    <div class="ellipsis-2">{{ row.answer }}</div>
+                </td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.image }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 分頁：真實頁 pagination 由 js/previewExcel.js 依資料筆數動態產生（data-total="0"），
+     此處沿用與 3-1-1_datasetList 同一組 class 資料化示範 -->
+{% set pages = [
+    { number: 1, active: true },
+    { number: 2 },
+    { number: 3 }
+] %}
+<div style="margin-top: 16px;">
+    <div class="pagination" role="navigation" aria-label="頁碼分頁" data-total="3">
+        <ul>
+            <li class="prev disabled">
+                <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                    <img src="./images/icon_arrow_left_gray.png" alt="">
+                </a>
+            </li>
+            {% for page in pages %}
+            <li{% if page.active %} class="active"{% endif %}>
+                <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+            </li>
+            {% endfor %}
+            <li class="next">
+                <a href="#" aria-label="下一頁">
+                    <img src="./images/icon_arrow_right_blue.png" alt="">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

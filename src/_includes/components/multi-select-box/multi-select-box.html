@@ -1,6 +1,6 @@
 <!-- 取自真實頁面 pages/dataImport/1-1-4_columnSelect_excel.html「欄位對應」步驟（class 沿用真實系統）。
      真實頁面左右兩欄內容是頁面自身 js/columnSelect_excel.js 在執行期動態產生（.multi-select-box .block:first / :last 內 empty() 後 append()），
-     此處依其產生的 markup 結構以 njk {% set fields %} + {% for %} 靜態化。
+     此處依其產生的 markup 結構以 njk set fields + for 靜態化。
      左欄「select.multiSelect」重用 ui/multi-select 既有 class 命名（由已登記的 ui/multi-select/multi-select.js 於 DOMContentLoaded 增強成 tag 多選 UI）；
      左右兩欄的 form-group/label/field 結構沿用 ui/form-control 既有寫法。 -->
 {% set fields = [
