@@ -1,0 +1,209 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::知識檢索邏輯
+permalink: 5-2-1_knowledgeRetrieval.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "5-1-1_accountInfo.html" },
+  { label: "設定", href: "" },
+  { label: "知識檢索邏輯" }
+] %}
+
+<!-- 真實頁在麵包屑外層多包一層 #contentWrapper + #featureDisabledOverlay（功能未啟用遮罩，預設 display:none，
+     由後端旗標決定是否顯示，屬靜態遮罩非業務 JS），逐段保留 -->
+<div id="contentWrapper" style="position: relative;">
+    <div id="featureDisabledOverlay"
+        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(128, 128, 128, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; min-height: 400px;">
+        <div
+            style="background-color: white; padding: 40px 60px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); text-align: center;">
+            <div style="font-size: 24px; font-weight: 600; color: #333;">功能未啟用</div>
+            <div style="font-size: 16px; color: #666; margin-top: 12px;">此功能目前尚未開放使用</div>
+        </div>
+    </div>
+
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+
+    <!-- 設置頁籤（沿用 ui/tab）+ 前台問答預設使用（沿用 ui/radio），兩者共用同一份「設置一/二/三」清單資料化 -->
+    {% set settingTabs = [
+      { label: "設置一", active: true },
+      { label: "設置二" },
+      { label: "設置三" }
+    ] %}
+    <div class="page-title-wrap flex-row flex-wrap gap-16" style="margin-bottom: 8px;">
+        <div class="tab-row fit-content">
+            <div class="tab-group">
+                {% for tab in settingTabs %}
+                <button type="button" class="tab tab-md{% if tab.active %} active{% endif %}"
+                    data-setting-sn="{{ loop.index }}" title="{{ tab.label }}">{{ tab.label }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group row mobile-col-xs">
+            <div class="label">
+                <label for="" class="control-label">前台問答預設使用</label>
+            </div>
+            <div class="field">
+                <div class="flex-row flex-wrap gap-24">
+                    {% for tab in settingTabs %}
+                    <label class="form-radio">
+                        <input type="radio" name="frontEnd_qa"{% if tab.active %} checked{% endif %}>
+                        <span>{{ tab.label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 意圖判斷分級表：沿用 components/priority-table 的 5 欄 .default-table.priority-table 結構，
+         高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 -->
+    <div class="block flex-row column gap-10" style="position: relative;">
+        <div class="switch-control-row">
+            <button id="openPrioritySwitch" class="button button-border">啟用全部意圖判斷</button>
+            <button id="closePrioritySwitch" class="button button-border">停用全部意圖判斷</button>
+        </div>
+
+        {% set priorityLevels = [
+          {
+            title: "高優先級",
+            rows: [
+              { category: "入出國與法規", description: "處理入境、出境、簽證、停留等問題", prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。", priority: "高優先級" },
+              { category: "證件與資料申請", description: "協助查詢入出國紀錄、統一證號等申辦方式", prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。", priority: "高優先級" }
+            ]
+          },
+          {
+            title: "中優先級",
+            rows: [
+              { category: "婚姻與家庭", description: "涉外婚姻登記、外籍配偶居留等問題", prompt: "我是移民署的智能客服，協助說明涉外婚姻登記、外籍配偶居留申請相關規定。", priority: "中優先級" }
+            ]
+          },
+          {
+            title: "低優先級",
+            rows: [
+              { category: "權益與申訴服務類", description: "", prompt: "", priority: "低優先級" }
+            ]
+          }
+        ] %}
+        {% for level in priorityLevels %}
+        <div class="flex-row column gap-16 priority-box">
+            <div class="flex-row align-items-center gap-12">
+                <div class="tablelist-title">{{ level.title }}</div>
+                <div class="tablelist-asking flex-row align-items-center gap-8">
+                    意圖判斷啟用
+                    <label class="switch priority-switch" aria-label="啟用切換">
+                        <input type="checkbox" class="switch-checkbox" role="switch">
+                        <span class="switch-box">
+                            <span class="switch-btn"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="table-container scrollTable">
+                <table class="default-table priority-table">
+                    <colgroup>
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 80px; min-width: 80px;">
+                        <col style="width: 140px; min-width: 140px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>分類名稱</th>
+                            <th>任務描述</th>
+                            <th>任務對應提示詞</th>
+                            <th class="text-center">功能</th>
+                            <th>變更優先級</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in level.rows %}
+                        <tr>
+                            <td>{{ row.category }}</td>
+                            <td class="edit-cell description">
+                                <div class="ellipsis-2">{{ row.description }}</div>
+                            </td>
+                            <td class="edit-cell prompt">
+                                <div class="ellipsis-2">{{ row.prompt }}</div>
+                            </td>
+                            <td class="text-center">
+                                <button class="button button-edit-save js-edit-btn" title="編輯">
+                                    <img src="./images/icon_edit_blue.png" alt="" class="icon">
+                                    <span class="sr-only">編輯</span>
+                                </button>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <div class="field">
+                                        <select class="form-control select-sm singleSelect">
+                                            <option></option>
+                                            <option value="高優先級"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
+                                            <option value="中優先級"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
+                                            <option value="低優先級"{% if row.priority == "低優先級" %} selected{% endif %}>低優先級</option>
+                                            <option value="不使用">不使用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="flex-row column gap-16">
+            <div class="flex-row align-items-center gap-12">
+                <div class="tablelist-title">未使用</div>
+            </div>
+            <div class="table-container scrollTable">
+                <table class="default-table priority-table">
+                    <colgroup>
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 283px; min-width: 283px;">
+                        <col style="width: 80px; min-width: 80px;">
+                        <col style="width: 140px; min-width: 140px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>分類名稱</th>
+                            <th>任務描述</th>
+                            <th>任務對應提示詞</th>
+                            <th class="text-center">功能</th>
+                            <th>變更優先級</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 未使用分類：真實頁初始為空狀態 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 意圖判斷啟用 modal：真實頁本體 dialog（驗證未設定任務描述時提示），逐字保留 -->
+<dialog class="modals" id="intentionModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">意圖判斷啟用</h3>
+                </div>
+                <div class="modals-body">
+                    <p class="text-center">親愛的客戶您好，尚有資料夾未設定任務描述，請進行設定否則將不會被列入判斷。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<!-- 知識檢索配置檢視 modal：依 Phase 3 任務指示複用已建立的 components/knowledge-retrieval-modal。
+     註：此 dialog 真實來源其實是 pages/qaTest/2-2-1_singleTest.html 的 #knowledgeModal（非本頁原生內容，本頁真實檔案內僅有上方 intentionModal），
+     內容與本頁「設置頁籤＋高/中/低優先級分類表」概念一致，故沿用同一元件、隨頁保留供後續串接觸發按鈕，本頁未新增外部未存在的觸發按鈕 -->
+{% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

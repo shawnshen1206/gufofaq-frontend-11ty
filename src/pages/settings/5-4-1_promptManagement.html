@@ -1,0 +1,128 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::提示詞管理
+permalink: 5-4-1_promptManagement.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "5-1-1_accountInfo.html" },
+  { label: "設定", href: "" },
+  { label: "提示詞管理" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 篩選列：關鍵字 + 日期區間（真實頁由 flatpickr range 模式掛載於同一輸入框，此處不引入 vendor，僅保留原生 class 呈現靜態輸入框）
+     + 版本單選（singleSelect，非 select2 增強，沿用 ui/form-control 原生 select 寫法） -->
+<div class="block" style="margin-bottom: 10px;">
+    <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
+        <div class="filter-fields flex-row gap-16 mobile-column">
+            <div class="form-group row mobile-col col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label">關鍵字</label>
+                </div>
+                <div class="field">
+                    <input type="text" class="form-control" placeholder="請輸入關鍵字查詢" value="條列式">
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group row mobile-col col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label">日期區間</label>
+                </div>
+                <div class="field">
+                    <input type="text" class="form-control calendar range-date" placeholder="起迄日">
+                    <span class="error-prompt">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group row mobile-col col-4-md col-12-sm">
+                <div class="label">
+                    <label class="control-label">版本</label>
+                </div>
+                <div class="field">
+                    <select class="form-control singleSelect">
+                        <option></option>
+                        <option value="V3">V3</option>
+                        <option value="V2">V2</option>
+                        <option value="V1">V1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row flex-wrap gap-16 align-items-center">
+            <button type="button" class="button button-border js-filter-clear">清除</button>
+            <button type="button" class="button button-primary js-prompt-search">查詢</button>
+            <button type="button" class="button button-primary js-add-prompt">
+                <img src="./images/icon_add_white.png" alt="" class="icon">
+                新增提示詞
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 版本卡片列表：V4 新增草稿卡（真實頁預設 hidden，點「新增提示詞」才顯示，屬業務 JS 行為不轉，此處保留 hidden 靜態展示樣式）+
+     V3/V2/V1 歷史版本卡（結構完全相同，僅版本號/時間區間/引用次數/內容不同——內容本身真實頁三版皆為同一段文字，故用 set+for 資料化） -->
+<div class="prompt-card-list flex-row column gap-10">
+
+    <div class="block prompt-card draft hidden">
+        <div class="flex-row column gap-16">
+            <div class="text-md text-blue">V4</div>
+            <div>
+                <p class="prompt-text">儲存後將自動建立新版本，不覆蓋舊有版本</p>
+                <div class="form-group">
+                    <div class="field">
+                        <textarea class="form-control size-lg js-prompt-input" placeholder="請輸入提示詞內容">角色定位：
+你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
+知識來源限制：</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row justify-content-center gap-16">
+                <button type="button" class="button button-border js-prompt-cancel">取消</button>
+                <button type="button" class="button button-primary js-prompt-save">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    {% set versions = [
+      { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204次" },
+      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:38", refCount: "14次" },
+      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/18 15:02:32", refCount: "300次" }
+    ] %}
+    {% for v in versions %}
+    <div class="block prompt-card">
+        <div class="flex-row column gap-16">
+            <div class="flex-row justify-content-between align-items-center flex-wrap gap-16">
+                <div class="text-md text-blue">{{ v.label }}（{{ v.timeRange }}）</div>
+                <div class="flex-row align-items-center gap-8">
+                    <span>被問答引用次數：{{ v.refCount }}</span>
+                    <span class="divider-vertical"></span>
+                    <button type="button" class="button-icon copy copyBtn" data-toast="提示詞已複製！">
+                        <span class="tooltip">複製</span>
+                    </button>
+                </div>
+            </div>
+            <div class="prompt-content">
+                <p>角色定位：<br>你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。</p>
+                <p>知識來源限制：<br>你的回答必須僅依據以下資料來源：</p>
+                <ul class="list-style-disc">
+                    <li>《產品規格資料庫》（PDF規格書）</li>
+                    <li>《使用手冊》（操作說明）</li>
+                </ul>
+                <p>回應原則：</p>
+                <ul class="list-style-disc">
+                    <li>優先使用「<span class="text-red">條列式</span>」呈現資訊</li>
+                    <li>語氣清楚、專業且易懂</li>
+                    <li>不可臆測或補充未出現在資料中的內容</li>
+                    <li>若資料不足，需明確說明「無法從現有資料判斷」</li>
+                </ul>
+                <p>輸出格式：</p>
+                <ul class="list-style-disc">
+                    <li>使用條列式（• 或 -）</li>
+                    <li>必要時分段（例如：規格 / 使用方式 / 注意事項）</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,127 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::統計模組
+permalink: 5-3_statsModule.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "5-1-1_accountInfo.html" },
+  { label: "設定", href: "" },
+  { label: "統計模組" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 篩選列：資料時間篩選（近24小時/上週/上個月單選 + 時間區間，起訖欄真實頁由 flatpickr 掛載，此處不引入 vendor，
+     僅保留原生 class 與 disabled 預設狀態）+ 查詢資料類型單選 -->
+<div class="block flex-row column gap-24" style="margin-top: 10px;">
+    <div class="flex-row column gap-16">
+        <div class="form-group row flex-row mobile-column-xs gap-16">
+            <div class="label mobile-align">
+                <label for="" class="control-label">資料時間篩選</label>
+            </div>
+            <div class="field w100">
+                <div class="flex-row gap-16 mobile-column flex-wrap field-with-input-group">
+                    <div class="flex-row gap-16 mobile-column-xs col-12-xs">
+                        <div class="function">
+                            <label class="form-radio border-wrap w100">
+                                <input type="radio" name="data-time">
+                                <span>近24小時</span>
+                            </label>
+                        </div>
+                        <div class="function">
+                            <label class="form-radio border-wrap w100">
+                                <input type="radio" name="data-time" checked>
+                                <span>上週</span>
+                            </label>
+                        </div>
+                        <div class="function">
+                            <label class="form-radio border-wrap w100">
+                                <input type="radio" name="data-time">
+                                <span>上個月</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex-row gap-16 mobile-column-xs field-with-input">
+                        <div class="function">
+                            <label class="form-radio">
+                                <input type="radio" name="data-time">
+                                <span>時間區間</span>
+                            </label>
+                        </div>
+                        <div class="function">
+                            <div class="flex-row align-items-center gap-16 mobile-column-xs col-12-xs">
+                                <input type="text" class="form-control start-date with-input" placeholder="請選擇開始時間"
+                                    disabled>
+                                <span>至</span>
+                                <input type="text" class="form-control end-date with-input" placeholder="請選擇結束時間"
+                                    disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row flex-row mobile-column-xs gap-16">
+            <div class="label mobile-align">
+                <label class="control-label">查詢資料類型</label>
+            </div>
+            <div class="field flex-row gap-24 col-12-sm mobile-column-xs">
+                <div class="function">
+                    <label class="form-radio">
+                        <input type="radio" name="data-type" checked>
+                        <span>全部</span>
+                    </label>
+                </div>
+                <div class="function">
+                    <label class="form-radio">
+                        <input type="radio" name="data-type">
+                        <span>前台問答</span>
+                    </label>
+                </div>
+                <div class="function">
+                    <label class="form-radio">
+                        <input type="radio" name="data-type">
+                        <span>後台問答</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row align-items-center justify-content-center gap-16">
+        <button class="button button-border">取消</button>
+        <button class="button button-primary">查詢</button>
+    </div>
+</div>
+
+<!-- 圖表區塊：沿用 components/chart-box，.chart 內僅放 <canvas> 佔位，不掛 Chart.js（業務 JS 不轉） -->
+<div style="margin-top: 1.5rem;">
+    {% include "components/chart-box/chart-box.html" %}
+</div>
+
+<!-- 下方兩個圖表區塊與 chart-box 展示片段的 markup 不完全相同（分別為排行榜表格容器、單一折線圖），
+     沿用同一組 .chart-box/.chart-title/.chart/.chart-desc verbatim class 手寫 -->
+<div class="flex-row gap-24 mobile-column" style="margin-top: 1rem;">
+    <div class="chart-box">
+        <div class="chart-title">貢獻度排行與優先續建議</div>
+        <div class="chart" id="rankingTableWrap" style="height: auto; overflow-x: auto;"></div>
+        <div class="chart-desc">
+            <p><span class="bold">資料時間：</span><span id="desc2Time">-</span></p>
+            <div class="flex-row gap-10 flex-wrap">
+                <p><span class="bold">對話次數：</span><span id="desc2Qa">0</span></p>
+                <p><span class="bold">取用資料數：</span><span id="desc2Retrieved">0</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="chart-box">
+        <div class="chart-title">近4周取用次數變化</div>
+        <div class="chart"><canvas id="weeklyLine"></canvas></div>
+        <div class="chart-desc">
+            <p><span class="bold">資料時間：</span><span id="desc3Time">-</span></p>
+            <div class="flex-row gap-10 flex-wrap">
+                <p><span class="bold">對話次數：</span><span id="desc3Qa">0</span></p>
+                <p><span class="bold">取用資料數：</span><span id="desc3Retrieved">0</span></p>
+            </div>
+        </div>
+    </div>
+</div>
