@@ -182,7 +182,7 @@ ui/pagination/
 ### 自動引入
 
 `header`（內含 mobile-nav）、`footer`（內含 disclaimer-modal）由 `page-shell` 提供，頁面不需 include。
-含子元件的元件：`sources-block`（含 `source-row`）、`header`（含 `mobile-nav`）、`footer`（含 `disclaimer-modal`）。
+含子元件的元件：`header`（含 `mobile-nav`）、`footer`（含 `disclaimer-modal`）。
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
@@ -241,11 +241,14 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 <tr>...</tr><tr class="detail-row">...</tr>
 <!-- ……× 16 -->
 
-<!-- ✅ 資料 + 迴圈，示意 3 筆 -->
+<!-- ✅ 資料 + 迴圈，示意 3 筆（重複列的 markup 直接寫在迴圈內） -->
 {% for source in sources %}
-{% include "components/sources-block/source-row.html" %}
+<tr>…{{ source.file }}…</tr>
+<tr class="detail-row">…{{ source.content }}…</tr>
 {% endfor %}
 ```
+
+> ⚠️ Eleventy 陷阱：`{% include %}` 若**巢狀在被 include 的元件內部的 `{% for %}` 迴圈裡**，會渲染成空白（不報錯）。所以「每列再拆一個子元件用 include」這種寫法只在**頁面層**的 for 迴圈可行；元件內部要逐列渲染時，把列的 markup 直接寫在該元件的 for 迴圈內（如 `sources-block`）。
 
 ```js
 // ❌ jQuery，且所有頁面的行為擠在一支 main.js
