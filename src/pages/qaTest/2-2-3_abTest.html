@@ -1,0 +1,301 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::AB測試
+permalink: 2-2-3_abTest.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "問答測試區", href: "" },
+  { label: "AB測試" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 設定卡 A / B：兩欄結構完全對稱，僅標題與 selected 值不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
+     避免整段複製貼上；提示詞收合區塊（.prompt-edit）沿用 2-2-1_singleTest 逐字寫死的手法（真實系統無對應既有元件），
+     設定A 預設展開（data-default-open="true"），設定B 預設收合，與真實頁一致 -->
+{% set abSides = [
+    { side: "A", defaultOpen: true },
+    { side: "B", defaultOpen: false }
+] %}
+<div class="block ab-test-block flex-row gap-24 mobile-column">
+    {% for ab in abSides %}
+    <div data-ab-side="{{ ab.side }}">
+        <div class="flex-row align-items-center gap-10" style="margin-bottom: 10px;">
+            <span class="text-lg text-bold text-blue">設定{{ ab.side }}</span>
+            <button type="button" class="button button-dark js-apply-production">套用為正式設定</button>
+        </div>
+
+        <div class="select-row flex-row column gap-16">
+            <div class="form-group row mobile-col">
+                <div class="label flex-row">
+                    <label class="control-label">知識檢索</label>
+                    <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                        <img src="./images/icon_info.png" alt="" class="icon">
+                    </button>
+                </div>
+                <div class="field">
+                    <select class="form-control singleSelect js-knowledge-select">
+                        <option></option>
+                        <option value="配置一" selected>配置一</option>
+                        <option value="配置二">配置二</option>
+                        <option value="配置三">配置三</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row mobile-col">
+                <div class="label">
+                    <label class="control-label">LLM模型</label>
+                </div>
+                <div class="field">
+                    <select class="form-control singleSelect js-llm-select">
+                        <option></option>
+                        <option value="OpenAI gpt-4o-mini" selected>OpenAI gpt-4o-mini</option>
+                        <option value="OpenAI gpt-4o">OpenAI gpt-4o</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row mobile-col">
+                <div class="label">
+                    <label class="control-label">資料取樣數</label>
+                </div>
+                <div class="field">
+                    <div class="flex-row align-items-center gap-4">
+                        <input type="text" placeholder="請輸入" class="form-control sample-count w100 js-sample-selected"
+                            value="4">
+                        <span class="text-gray">/</span>
+                        <input type="text" placeholder="請輸入" class="form-control sample-count w100 js-sample-total"
+                            value="6">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提示詞（收合 / 展開編輯） -->
+        <div class="prompt-edit"{% if ab.defaultOpen %} data-default-open="true"{% endif %} data-full-text="角色定位：
+你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
+知識來源限制：
+你的回答必須僅依據以下資料來源：
+• 《產品規格資料庫》（PDF規格書）
+• 《使用手冊》（操作說明）
+回應原則：
+• 優先使用條列式呈現資訊
+• 語氣清楚、專業且易懂
+• 不可臆測或補充未出現在資料中的內容
+• 若資料不足，需明確說明『無法從現有資料判斷』
+輸出格式：
+• 使用條列式（• 或 -）
+• 必要時分段（例如：規格 / 使用方式 / 注意事項）">
+            <div class="flex-row align-items-center gap-8">
+                <label class="control-label">提示詞</label>
+
+                <button type="button" class="button button-border js-prompt-toggle" data-text-open="完成編輯"
+                    data-text-close="展開編輯">
+                    展開編輯
+                </button>
+            </div>
+
+            <div class="prompt-edit-content"></div>
+
+            <div class="prompt-edit-tools flex-row justify-content-center flex-wrap gap-16">
+                <button type="button" class="button button-border js-prompt-cancel">
+                    取消
+                </button>
+
+                <button type="button" class="button button-primary js-prompt-save">
+                    儲存
+                </button>
+
+                <button type="button" class="button button-green js-prompt-reset">
+                    回復至預設
+                </button>
+
+                <button type="button" class="button button-primary js-prompt-new-version">
+                    儲存為新版本
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- 對話區：AB 雙欄比較訊息真實系統無對應既有元件（components/chatroom 是單欄 user/robot 結構），
+     故聊天視窗外殼（.chatroom-wrap/.chatroom-block/.chat-input-container）逐字寫死、僅回覆訊息改用 .ab-compare 雙欄比較 markup，
+     與 2-2-1_singleTest 共用同一份聊天室外殼樣式；右側問答紀錄面板真實頁預設 hidden（AB頁尚未支援），逐字保留 -->
+<div style="margin-top: 24px;">
+    <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
+        <div class="chatroom-wrap">
+            <div class="chatroom-block">
+                <div class="chat-message-container">
+                    <div class="message-container">
+                        <div class="chat-box">
+                            <div class="message-wrap">
+                                <div class="message-row by-user">
+                                    <div class="message-content">
+                                        <span>請整理 UH3240 USB-C 的完整規格與主要特色</span>
+                                    </div>
+                                    <div class="message-time">13:29</div>
+                                </div>
+                            </div>
+
+                            <div class="message-wrap">
+                                <div class="message-row by-robot">
+                                    <div class="ab-compare flex-row gap-4 mobile-column">
+                                        <div class="ab-compare-item">
+                                            <div class="message-content">
+                                                <span class="robot-msg">
+                                                    <p class="item-title">設定A（設置一，V3-角色定位型）</p>
+                                                    <div class="item-content">
+                                                        <p>您好！以下是 UH3240 USB-C 多埠集線器的規格整理：</p>
+                                                        <ul class="list-style-disc">
+                                                            <li>視訊輸出：支援 4K（3840×2160）@ 60Hz HDMI 輸出，適合高解析度顯示器。</li>
+                                                            <li>電力傳輸：最高可提供 92W USB-C PD 3.0，支援規格 5V / 9V / 15V / 20V。</li>
+                                                            <li>傳輸埠：USB 3.2 Gen 1 介面，傳輸速率最高 5 Gbps。</li>
+                                                            <li>擴充埠：2× USB Type-A、1× HDMI、1× USB-C DC-in。</li>
+                                                        </ul>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="message-icon">
+                                                <button class="button-icon copy copyBtn" data-toast="文字已複製!">
+                                                    <span class="tooltip">複製</span>
+                                                </button>
+                                                <button class="button-icon watch watchBtn">
+                                                    <span class="tooltip">查看來源</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ab-compare-item">
+                                            <div class="message-content">
+                                                <span class="robot-msg">
+                                                    <p class="item-title">設定B（設置二，V2-任務導向型）</p>
+                                                    <div class="item-content">
+                                                        <p>UH3240 主要規格摘要如下：</p>
+                                                        <ul class="list-style-disc">
+                                                            <li>視訊：4K 60Hz HDMI 2.0 輸出</li>
+                                                            <li>充電：92W PD 3.0，支援 5V～20V</li>
+                                                            <li>埠：USB 3.2 Gen 1（5 Gbps）</li>
+                                                            <li>連接：USB-C + HDMI + USB-A ×2</li>
+                                                        </ul>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="message-icon">
+                                                <button class="button-icon copy copyBtn" data-toast="文字已複製!">
+                                                    <span class="tooltip">複製</span>
+                                                </button>
+                                                <button class="button-icon watch watchBtn">
+                                                    <span class="tooltip">查看來源</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="message-time">13:30</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="qa-count">問答次數：0/3000，摘要次數：0/1000</div>
+            <div class="chat-input-container">
+                <div class="input-wrap">
+                    <div class="form-group">
+                        <div class="field">
+                            <textarea name="" id="" class="form-control" placeholder="輸入問題"></textarea>
+                            <span class="error-prompt">錯誤訊息文字</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="button button-primary">送出</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="qa-record qa-side-panel collapsed hidden">
+            <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
+                <span class="qa-side-panel-title">問答紀錄</span>
+            </button>
+            <div class="qa-side-panel-body">
+                <button class="button button-orange w100">
+                    <img src="./images/icon_add_white.png" alt="" class="icon">
+                    開啟新對話
+                </button>
+                <div class="tab-wrap">
+                    <div class="tab-group">
+                        <button type="button" class="tab" title="問答紀錄1">問答紀錄1</button>
+                        <button type="button" class="tab" title="問答紀錄2">問答紀錄2</button>
+                        <button type="button" class="tab active" title="問答紀錄3">問答紀錄3</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
+     表格列同樣沿用 components/sources-block/source-row.html 以 set+for 資料化示範 2 筆 -->
+{% set sources = [
+    {
+        no: "12173-1",
+        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    },
+    {
+        no: "12173-2",
+        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    }
+] %}
+<div class="block sources-block hidden" style="margin-top: 24px;">
+    <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
+        <div>
+            <span class="text-lg text-bold">參考來源</span>
+            <span class="text-bold text-gray js-sources-side">(設定A)</span>
+        </div>
+        <div class="flex-row align-items-center gap-8 flex-wrap">
+            <button class="button button-border button-sm js-expand-all">全部展開</button>
+            <button class="button button-border button-sm js-collapse-all">全部收合</button>
+        </div>
+    </div>
+
+    <div class="table-container scrollTable" style="margin-top: 16px;">
+        <table class="default-table no-border">
+            <colgroup>
+                <col style="width:40px; min-width:40px;">
+                <col style="width:272px; min-width:272px;">
+                <col style="width: 1fr; min-width: 580px;">
+                <col style="width:240px; min-width:240px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>序號</th>
+                    <th>檔案</th>
+                    <th>資料集</th>
+                </tr>
+            </thead>
+            <tbody class="sources-tbody">
+                {% for source in sources %}
+                {% include "components/sources-block/source-row.html" %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "components/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
+{% include "components/apply-settings-modal-2/apply-settings-modal-2.html" %}
+{% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

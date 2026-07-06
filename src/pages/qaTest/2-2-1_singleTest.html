@@ -1,0 +1,204 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::單測
+permalink: 2-2-1_singleTest.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "問答測試區", href: "" },
+  { label: "單測" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
+     提示詞收合／展開編輯區塊（.prompt-edit）在真實 scss / 既有元件皆無對應片段，無中生有杜撰不如逐字保留，故此處逐字寫死，
+     JS 展開/收合、儲存/回復等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） -->
+<div class="block">
+    <div class="filter-fields flex-row gap-16 mobile-column">
+        <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="label flex-row">
+                <label class="control-label">知識檢索</label>
+                <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                    <img src="./images/icon_info.png" alt="" class="icon">
+                </button>
+            </div>
+            <div class="field">
+                <select class="form-control singleSelect" id="knowledgeConfigSelect">
+                    <option></option>
+                    <option value="配置一" selected>配置一</option>
+                    <option value="配置二">配置二</option>
+                    <option value="配置三">配置三</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label class="control-label">LLM模型</label>
+            </div>
+            <div class="field">
+                <select class="form-control singleSelect" id="llmModelSelect">
+                    <option></option>
+                    <option value="OpenAI gpt-4o-mini" selected>OpenAI gpt-4o-mini</option>
+                    <option value="OpenAI gpt-4o">OpenAI gpt-4o</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label class="control-label">資料取樣數</label>
+            </div>
+            <div class="field">
+                <div class="flex-row align-items-center gap-4">
+                    <input type="text" placeholder="請輸入" class="form-control" id="sampleSelectedInput" value="4">
+                    <span class="text-gray">/</span>
+                    <input type="text" placeholder="請輸入" class="form-control" id="sampleTotalInput" value="6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示詞（收合 / 展開編輯） -->
+    <div class="prompt-edit" data-full-text="角色定位：
+你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
+知識來源限制：
+你的回答必須僅依據以下資料來源：
+• 《產品規格資料庫》（PDF規格書）
+• 《使用手冊》（操作說明）
+回應原則：
+• 優先使用條列式呈現資訊
+• 語氣清楚、專業且易懂
+• 不可臆測或補充未出現在資料中的內容
+• 若資料不足，需明確說明『無法從現有資料判斷』
+輸出格式：
+• 使用條列式（• 或 -）
+• 必要時分段（例如：規格 / 使用方式 / 注意事項）">
+        <div class="flex-row align-items-center gap-8">
+            <label class="control-label">提示詞</label>
+
+            <button type="button" class="button button-border js-prompt-toggle" data-text-open="完成編輯"
+                data-text-close="展開編輯">
+                展開編輯
+            </button>
+        </div>
+
+        <div class="prompt-edit-content"></div>
+
+        <div class="prompt-edit-tools flex-row justify-content-center flex-wrap gap-16">
+            <button type="button" class="button button-border js-prompt-cancel">
+                取消
+            </button>
+
+            <button type="button" class="button button-primary js-prompt-save">
+                儲存
+            </button>
+
+            <button type="button" class="button button-green js-prompt-reset">
+                回復至預設
+            </button>
+
+            <button type="button" class="button button-primary js-prompt-new-version">
+                儲存為新版本
+            </button>
+        </div>
+    </div>
+
+    <!-- 套用為正式設定 -->
+    <div class="flex-row justify-content-center" style="margin-top: 24px;">
+        <button type="button" class="button button-dark js-apply-production">套用為正式設定</button>
+    </div>
+</div>
+
+<!-- 對話區：聊天視窗沿用 components/chatroom（結構與真實頁一致）；右側可收合問答紀錄面板（.qa-side-panel）真實系統無對應既有元件，
+     collapsed/展開互動屬業務邏輯（見 singleTest.js），此處逐字保留樣式 class -->
+<div style="margin-top: 24px;">
+    <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
+        {% include "components/chatroom/chatroom.html" %}
+
+        <div class="qa-record qa-side-panel collapsed">
+            <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
+                <span class="qa-side-panel-title">問答紀錄</span>
+            </button>
+            <div class="qa-side-panel-body">
+                <button class="button button-orange w100">
+                    <img src="./images/icon_add_white.png" alt="" class="icon">
+                    開啟新對話
+                </button>
+                <div class="tab-wrap">
+                    <div class="tab-group">
+                        <button type="button" class="tab" title="問答紀錄1">問答紀錄1</button>
+                        <button type="button" class="tab" title="問答紀錄2">問答紀錄2</button>
+                        <button type="button" class="tab active" title="問答紀錄3">問答紀錄3</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 參考來源表格區塊：真實頁預設 hidden（點擊訊息列「查看來源」才顯示），表頭與 components/sources-block 一致，
+     表格列沿用 components/sources-block/source-row.html 以 set+for 資料化示範 2 筆（同 2-1_qaRecord.html 手法） -->
+{% set sources = [
+    {
+        no: "12173-1",
+        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    },
+    {
+        no: "12173-2",
+        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
+        dataset: "移民署 測試",
+        title: "標題名稱ＡＡＡＡＡＡ",
+        time: "2023/11/01 13:00:01",
+        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        note1: "備註文字",
+        note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
+        reference: "來源名稱"
+    }
+] %}
+<div class="block sources-block hidden" style="margin-top: 24px;">
+    <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
+        <div>
+            <span class="text-lg text-bold">參考來源</span>
+            <span class="text-bold text-gray sources-info">(挑選規則 16取8；使用模型：GPT 4o)</span>
+        </div>
+        <div class="flex-row align-items-center gap-8 flex-wrap">
+            <button class="button button-border button-sm js-expand-all">全部展開</button>
+            <button class="button button-border button-sm js-collapse-all">全部收合</button>
+        </div>
+    </div>
+
+    <div class="table-container scrollTable" style="margin-top: 16px;">
+        <table class="default-table no-border">
+            <colgroup>
+                <col style="width:40px; min-width:40px;">
+                <col style="width:272px; min-width:272px;">
+                <col style="width: 1fr; min-width: 580px;">
+                <col style="width:240px; min-width:240px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>序號</th>
+                    <th>檔案</th>
+                    <th>資料集</th>
+                </tr>
+            </thead>
+            <tbody class="sources-tbody">
+                {% for source in sources %}
+                {% include "components/sources-block/source-row.html" %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "components/apply-settings-modal/apply-settings-modal.html" %}
+{% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

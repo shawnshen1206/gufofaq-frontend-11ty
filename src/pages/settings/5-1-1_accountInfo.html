@@ -1,0 +1,145 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::帳號資訊
+permalink: 5-1-1_accountInfo.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "5-1-1_accountInfo.html" },
+  { label: "設定", href: "" },
+  { label: "帳號資訊" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 使用期倒數：與 components/countdown-box 完全一致（同一份真實頁抽出），直接 include -->
+{% include "components/countdown-box/countdown-box.html" %}
+
+<!-- 帳號資訊：真實頁欄位多數為 disabled 唯讀（帳號/檢索模式/規格/資料儲存上限/資料取用規則/選用模型皆由後端配置決定，僅公司單位、
+     系統提示詞可編輯），欄位不重複、無需 for 迴圈資料化，逐欄位沿用真實 class 手寫 -->
+<div class="block flex-row column gap-24">
+    <div class="text-center text-xl">帳號資訊</div>
+    <div class="flex-row column gap-16">
+        <div class="flex-row gap-40 mobile-column sm-gap-16">
+            <div class="col-6-md col-12-sm">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">帳號</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="請輸入" class="form-control disabled account-email"
+                            value="" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6-md col-12-sm">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">公司/單位</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="請輸入公司/單位" class="form-control account-company">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row gap-40">
+            <div class="col-12-md">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">系統提示詞</label>
+                    </div>
+                    <div class="field">
+                        <textarea name="" id="" rows="10" class="form-control account-prompt"
+                            placeholder="請輸入您的提示詞"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row gap-40 mobile-column sm-gap-16">
+            <div class="col-4-md col-12-sm">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">檢索模式</label>
+                    </div>
+                    <div class="field flex-row gap-16 mobile-column-xs">
+                        <div class="col-6-md col-12-xs">
+                            <div class="form-group row">
+                                <div class="label">
+                                    <label for="" class="control-label">主題</label>
+                                </div>
+                                <div class="field">
+                                    <input type="text" placeholder="請輸入" class="form-control disabled retrieval-topic"
+                                        value="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6-md col-12-xs">
+                            <div class="form-group row">
+                                <div class="label">
+                                    <label for="" class="control-label">向量</label>
+                                </div>
+                                <div class="field">
+                                    <input type="text" placeholder="請輸入" class="form-control disabled retrieval-vector"
+                                        value="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8-md col-12-sm flex-row gap-40 mobile-column sm-gap-16">
+                <div class="col-6-md col-12-sm">
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="" class="control-label">規格</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" placeholder="請輸入" class="form-control disabled account-spec"
+                                value="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6-md col-12-sm">
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="" class="control-label">資料儲存上限</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" placeholder="請輸入" class="form-control disabled account-storage-limit"
+                                value="" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row gap-40 mobile-column-xs xs-gap-16">
+            <div class="col-6-md col-12-xs">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">資料取用規則</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="請輸入" class="form-control disabled account-data-rule"
+                            value="" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6-md col-12-xs">
+                <div class="form-group">
+                    <div class="label">
+                        <label for="" class="control-label">選用模型</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="請輸入" class="form-control disabled account-model"
+                            value="" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row align-items-center justify-content-center gap-16">
+        <button class="button button-border">取消</button>
+        <button class="button button-primary">儲存</button>
+    </div>
+</div>
