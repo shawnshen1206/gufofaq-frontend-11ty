@@ -1,0 +1,35 @@
+// 逐位元照抄自真 app scss/component.scss 1640-1673（breadcrumb 麵包屑區塊），只搬檔案位置，宣告一字不改
+/*===============================
+    breadcrumb麵包屑
+================================*/
+.breadcrumb {
+    ul {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+
+        li {
+            color: var(--color-text-dark);
+            word-break: break-all;
+
+            +li {
+                &::before {
+                    text-align: center;
+                    color: var(--color-text-dark);
+                    padding: 0 0.5rem;
+                    content: "/";
+                }
+            }
+
+            a {
+                color: var(--color-text-dark);
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

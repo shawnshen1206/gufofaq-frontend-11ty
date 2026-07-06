@@ -1,0 +1,18 @@
+// 逐位元照抄自真 app scss/component.scss 755-771（link-modal 區塊，含原註解），只搬檔案位置，宣告一字不改
+// 連結樣式的按鈕
+.link-modal {
+    color: var(--color-primary);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: normal;
+    word-break: break-all;
+
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

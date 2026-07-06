@@ -1,0 +1,5 @@
+// .divider-vertical：真 app scss/component.scss 對此 class 沒有任何宣告（grep 全檔 0 筆命中）。
+// 該 class 只出現在 pages/components/component.html（垂直分隔線示範），實際上是刻意的「無樣式」class。
+// 依鐵則「不得發明樣式」，這裡照實保留成空規則，不補任何宣告。
+.divider-vertical {
+}
