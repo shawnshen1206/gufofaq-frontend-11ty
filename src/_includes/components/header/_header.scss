@@ -1,0 +1,145 @@
+// 從 component.scss 的「header」與「mobile-nav」區段逐字抽出（僅本元件的 class）
+// superfish 被拿掉：桌機下拉選單改用 CSS-hover（&:hover > ul）取代原本 JS 展開行為，視覺不變
+.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 0 1.5rem;
+    background-color: #fff;
+    border-bottom: 2px solid;
+    border-image: var(--color-primary-linear) 1;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+        margin: 0;
+
+        a {
+            display: block;
+            width: 272.5px;
+            height: 42px;
+            background-image: url(../images/img_logo.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            text-indent: 101%;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
+
+.desktop-nav {
+    .main-menu {
+        display: flex;
+        gap: 1.25rem;
+        align-items: center;
+        box-sizing: border-box;
+
+        li {
+            position: relative;
+            transition: all 0.3s;
+
+            &::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 100%;
+                height: 8px;
+                background: transparent;
+            }
+
+            a {
+                position: relative;
+                padding: 1rem 0.625rem;
+                display: block;
+                box-sizing: border-box;
+
+                &.dropdown {
+                    &::after {
+                        content: "";
+                        display: inline-block;
+                        width: 20px;
+                        height: 22px;
+                        background-image: url(../images/icon_header_arrowdown_black.png);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        background-position: center;
+                        position: absolute;
+
+                    }
+                }
+
+                &.logout {
+                    padding-left: 1rem;
+
+                    &::before {
+                        content: "";
+                        display: block;
+                        width: 1px;
+                        height: 16px;
+                        background-color: var(--color-primary);
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                }
+            }
+
+            >ul {
+                display: none;
+                position: absolute;
+                top: calc(100% + 4px);
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                box-sizing: border-box;
+                z-index: 15;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+                border-radius: 4px;
+
+                li {
+                    a {
+                        text-align: center;
+                        padding: 0.5rem 2.5rem;
+                        box-sizing: border-box;
+                        display: block;
+                        background-color: #fff;
+                        white-space: nowrap;
+
+                        &:hover {
+                            background-color: var(--color-primary-light);
+                        }
+
+                    }
+
+                    &+li {
+                        border-top: 1px solid var(--color-border-default);
+                    }
+                }
+            }
+
+            // 原本靠 superfish JS 展開；切版改為 CSS-hover，視覺結果相同
+            &:hover>ul {
+                display: block;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .header {
+        height: 56px;
+    }
+}

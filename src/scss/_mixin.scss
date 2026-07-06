@@ -1,0 +1,111 @@
+/*html整頁用*/
+@mixin scrollbar() {
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        // background-color: #CBCBCB;
+        background-color: #13386f;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    /*某些元素的corner部分的部分样式(例:textarea的可拖动按钮)*/
+    &::-webkit-resizer {
+        background-color: transparent;
+        border-color: transparent;
+
+    }
+
+    /*firefox scrollbar*/
+    scrollbar-width: thin;
+    // scrollbar-color: #CBCBCB transparent;
+    scrollbar-color: #13386f transparent;
+}
+
+/*元件用，滾動條較細*/
+@mixin scrollbar_thin() {
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 6px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #dfdfdf;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    /*某些元素的corner部分的部分样式(例:textarea的可拖动按钮)*/
+    &::-webkit-resizer {
+        background-color: transparent;
+        border-color: transparent;
+
+    }
+
+    /*firefox scrollbar*/
+    scrollbar-width: thin;
+    scrollbar-color: #dfdfdf transparent;
+}
+
+@mixin scrollbar_modal() {
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #dfdfdf;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    /*某些元素的corner部分的部分样式(例:textarea的可拖动按钮)*/
+    &::-webkit-resizer {
+        background-color: transparent;
+        border-color: transparent;
+
+    }
+
+    /*firefox scrollbar*/
+    scrollbar-width: thin;
+    scrollbar-color: #dfdfdf transparent;
+}

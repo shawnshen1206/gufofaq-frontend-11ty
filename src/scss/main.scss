@@ -1,0 +1,12 @@
+// 只放 @use 組裝清單（依 GUIDELINE.md）
+@use "var";
+@use "mixin";
+@use "normalize";
+@use "base";
+@use "utilities";
+
+// chrome 元件
+@use "../_includes/components/header/header";
+@use "../_includes/components/mobile-nav/mobile-nav";
+@use "../_includes/components/footer/footer";
+@use "../_includes/ui/modals/modals";

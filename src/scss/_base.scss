@@ -1,0 +1,85 @@
+// 從 component.scss 的「樣式共用」與「main主要內容區」區段逐字抽出（verbatim）
+@use "mixin" as *;
+
+* {
+    transition: font-size 0.3s ease;
+    font-family: var(--fontFamily);
+}
+
+html {
+    @include scrollbar();
+    width: 100%;
+}
+
+body {
+    font-family: var(--fontFamily);
+    font-size: 1rem;
+    width: 100%;
+    line-height: 1.375;
+    color: var(--color-text-default);
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+ul,
+ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-text-default);
+}
+
+.full-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.wrap {
+    max-width: 1560px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    @media screen and (max-width: 1560px) {
+        max-width: 1200px;
+    }
+}
+
+/*===============================
+    main主要內容區
+================================*/
+
+.main {
+    box-sizing: border-box;
+    flex: 1 0 auto;
+    padding: 1rem 2.5rem 2.5rem 2.5rem;
+    box-sizing: border-box;
+    background-color: #fafafa;
+}
+
+.page-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-align: left;
+    word-break: break-all;
+}

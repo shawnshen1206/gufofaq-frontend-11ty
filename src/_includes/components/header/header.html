@@ -1,0 +1,73 @@
+{% set menuItems = [
+  {
+    label: "資料配置",
+    submenu: [
+      { label: "資料匯入", href: "#" },
+      { label: "資料集列表", href: "#" }
+    ]
+  },
+  {
+    label: "服務預覽",
+    submenu: [
+      { label: "前台對話預覽", href: "#" },
+      { label: "歷史紀錄", href: "#" }
+    ]
+  },
+  {
+    label: "問答測試區",
+    submenu: [
+      { label: "單測", href: "#" },
+      { label: "AB測試", href: "#" },
+      { label: "模擬聊天", href: "#", hidden: true },
+      { label: "歷史紀錄", href: "#" }
+    ]
+  },
+  {
+    label: "設定",
+    submenu: [
+      { label: "帳號資訊", href: "#" },
+      { label: "知識檢索邏輯", href: "#" },
+      { label: "統計模組", href: "#" },
+      { label: "提示詞管理", href: "#" }
+    ]
+  },
+  {
+    label: "English",
+    href: "#",
+    hidden: true
+  },
+  {
+    label: "登出",
+    href: "#",
+    class: "logout"
+  }
+] %}
+
+<header class="header">
+    <h1 class="logo">
+        <a href="#" title="GufoFAQ logo">GufoFAQ</a>
+    </h1>
+    <nav class="desktop-nav">
+        <ul class="main-menu">
+            {% for item in menuItems %}
+            <li{% if item.hidden %} class="hidden"{% endif %}>
+                {% if item.submenu %}
+                <a href="#" class="dropdown" title="{{ item.label }}">{{ item.label }}</a>
+                <ul>
+                    {% for sub in item.submenu %}
+                    <li{% if sub.hidden %} class="hidden"{% endif %}>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}">{{ item.label }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <button type="button" class="nav-toggle"></button>
+</header>
+
+{% include "components/mobile-nav/mobile-nav.html" %}

@@ -1,0 +1,12 @@
+---
+layout: layouts/base.html
+---
+{% include "components/header/header.html" %}
+
+<main class="main">
+    <div class="wrap">
+        {{ content | safe }}
+    </div>
+</main>
+
+{% include "components/footer/footer.html" %}

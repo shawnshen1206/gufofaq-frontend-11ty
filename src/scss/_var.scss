@@ -1,0 +1,35 @@
+:root {
+    --fontFamily: NotoSans, "PingFangTC", Microsoft JhengHei, "微軟正黑體", "Helvetica", "sans-serif";
+
+    /*語意化顏色變數*/
+    --color-primary: #168ed1;
+    --color-primary-hover: #037ec3;
+    --color-primary-light: #e7f7ff;
+    --color-primary-dark: #13386f;
+    --color-primary-linear: linear-gradient(to right, #0a62ac, #2ebbcf);
+
+    --color-success: #00b526;
+    --color-success-hover: #019520;
+
+    --color-info: #0d97e5;
+
+    --color-warning: #ffc700;
+    --color-warning-hover: #efbb00;
+
+    --color-danger: #f12929;
+    --color-danger-hover: #d41414;
+
+    --color-gray-100: #f9f9f9;
+    --color-gray-200: #f5f5f5;
+    --color-gray-300: #f1f1f1;
+    --color-gray-400: #e1e1e1;
+    --color-gray-500: #dfdfdf;
+    --color-gray-600: #6c6c6c;
+    --color-black: #222222;
+
+    --color-text-default: var(--color-black);
+    --color-text-dark: var(--color-gray-600);
+    --color-bg-primary: #e7f7ff;
+    --color-border-default: var(--color-gray-400);
+
+}
