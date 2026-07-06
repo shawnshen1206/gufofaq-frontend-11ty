@@ -31,9 +31,9 @@ permalink: 2-1_qaRecord.html
     </div>
 </div>
 
-<!-- 參考來源表格區塊：真實頁此區塊預設 hidden（點擊訊息列的「查看來源」才顯示），且表頭比 components/sources-block 多了使用者滿意度與
-     「檢視詳細內容」連結（連往 4-2_qaHistory_detail.html），與共用元件的表頭不完全一致，故不直接 include 整塊，改手寫表頭、
-     來源列資料 set sources（示範 2 筆）交給 components/sources-block 內嵌 for 渲染 -->
+<!-- 參考來源表格區塊：真實頁此區塊預設 hidden（點擊訊息列的「查看來源」才顯示）。使用者滿意度與「檢視詳細內容」連結
+     （連往 4-2_qaHistory_detail.html）由 components/sources-block 的 sourcesRating / sourcesDetailHref 參數帶入；
+     來源列資料 set sources（示範 2 筆）交給該元件內嵌 for 渲染 -->
 {% set sources = [
     {
         no: "12173-1",
