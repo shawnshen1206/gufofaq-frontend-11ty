@@ -1,0 +1,35 @@
+// 逐位元照抄自真實 app scss/component.scss 上傳成功通知 section（.success-box，行 2524-2557）
+// 上傳成功通知
+.success-box {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+
+    .success-message {
+        display: flex;
+        gap: 8px;
+
+        span {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--color-text-default);
+        }
+    }
+
+    .success-desc {
+        p {
+            margin: 0;
+
+            &+p {
+                margin-top: 0.5rem;
+            }
+        }
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 16px;
+        text-align: center;
+    }
+}

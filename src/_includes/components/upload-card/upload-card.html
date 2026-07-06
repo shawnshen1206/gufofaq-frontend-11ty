@@ -1,0 +1,45 @@
+<!-- 資料取自真實 app pages/dataImport/1-1-1_dataImport.html 檔案匯入類型選單（.upload-card-list 內 4 張卡片） -->
+{% set cards = [
+    {
+        type: "excel",
+        icon: "icon_XLSX_s.png",
+        iconAlt: "Excel Icon",
+        title: "Excel",
+        desc: "支援上傳 xlsx 檔案，檔案最大不超過 10MB"
+    },
+    {
+        type: "pdf",
+        icon: "icon_PDF_s.png",
+        iconAlt: "PDF Icon",
+        title: "PDF",
+        desc: "支援上傳pdf檔案，檔案最大不超過30MB"
+    },
+    {
+        type: "word",
+        icon: "icon_doc_s.png",
+        iconAlt: "WORD Icon",
+        title: "WORD",
+        desc: "支援上傳doc檔案，檔案最大不超過30MB"
+    },
+    {
+        type: "image",
+        icon: "icon_img_s.png",
+        iconAlt: "Image Icon",
+        title: "Image",
+        desc: "支援上傳PNG、JPG檔案，檔案最大不超過30MB"
+    }
+] %}
+
+<div class="upload-card-list">
+    {% for card in cards %}
+    <a href="javascript:void(0)" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}">
+        <div class="upload-content">
+            <div class="upload-header">
+                <img src="./images/{{ card.icon }}" alt="{{ card.iconAlt }}" class="upload-icon" />
+                <p class="upload-title">{{ card.title }}</p>
+            </div>
+            <p class="upload-desc">{{ card.desc }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>

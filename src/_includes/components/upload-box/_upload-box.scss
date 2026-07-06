@@ -1,0 +1,45 @@
+// 逐位元照抄自真實 app scss/component.scss 檔案上傳區 section（.upload-box，行 2479-2522）
+// 檔案上傳區
+.upload-box {
+    width: 100%;
+    height: 200px;
+    background-color: #fff;
+    border: 1px dashed var(--color-border-default);
+    text-align: center;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: border-color 0.3s ease;
+
+    /* 隱藏 input */
+    .upload-input {
+        display: none;
+    }
+
+    &:hover,
+    &.drag-over {
+        border-color: var(--color-primary-dark);
+    }
+
+    .upload-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+
+        .upload-message {
+            font-size: 18px;
+            color: var(--color-text-default);
+            text-align: center;
+        }
+
+        .upload-desc {
+            font-size: 16px;
+            color: var(--color-text-dark);
+            text-align: center;
+        }
+    }
+}

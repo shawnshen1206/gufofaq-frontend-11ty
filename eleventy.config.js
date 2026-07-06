@@ -12,6 +12,7 @@ module.exports = function (eleventyConfig) {
         "src/_includes/ui/tab/tab.js": "js/tab.js",
         "src/_includes/ui/pagination/pagination.js": "js/pagination.js",
         "src/_includes/ui/multi-select/multi-select.js": "js/multi-select.js",
+        "src/_includes/components/upload-box/upload-box.js": "js/upload-box.js",
     });
 
     return {
