@@ -4,6 +4,7 @@
   "private": true,
   "description": "GufoFAQ react-friendly 11ty 切版交付專案",
   "scripts": {
+    "dev": "run-p dev:html dev:css",
     "dev:html": "eleventy --serve",
     "dev:css": "sass --watch src/scss/main.scss:dist/css/main.css",
     "build:html": "eleventy",

@@ -17,6 +17,11 @@ module.exports = function (eleventyConfig) {
         "src/_includes/ui/toast/toast.js": "js/toast.js",
     });
 
+    // 開發時 sass 另外編譯 dist/css，讓 eleventy --serve 監看 css 變動也即時重載
+    eleventyConfig.setServerOptions({
+        watch: ["dist/css/**/*.css"],
+    });
+
     return {
         dir: {
             input: "src",
