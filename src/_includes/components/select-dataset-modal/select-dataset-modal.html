@@ -1,0 +1,55 @@
+<!-- 選擇資料集 modal，取自真實 app pages/components/component.html #datasetModal（class/id 沿用真實系統）；
+     真實頁面（如 pages/dataImport/1-1-1_dataImport.html）的 .dataset-list 內容由 js 動態載入（<!-- 動態載入資料集列表 -->），
+     此處依 component.html 展示版的具體 checkbox 列表，用 set+for 資料化 -->
+{% set datasets = [
+    { name: "dataset_AA", label: "資料集AA", checked: true },
+    { name: "dataset_BB", label: "資料集BB", checked: true },
+    { name: "dataset_CC", label: "資料集CC", checked: true },
+    { name: "dataset_DD", label: "資料集DD" },
+    { name: "dataset_EE", label: "資料集EE" }
+] %}
+<dialog class="modals" id="datasetModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">選擇資料集</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="dataset-box-wrap">
+                        <div class="checkbox-container">
+                            <div class="dataset-list-wrap">
+                                <div class="form-group">
+                                    <div class="field">
+                                        <input type="text" placeholder="搜尋資料集..." class="form-control search">
+                                        <span class="error-prompt">錯誤訊息文字</span>
+                                    </div>
+                                </div>
+                                <div class="dataset-list">
+                                    {% for dataset in datasets %}
+                                    <label class="form-checkbox border-wrap">
+                                        <input type="checkbox" name="{{ dataset.name }}"{% if dataset.checked %} checked{% endif %} class="check-one">
+                                        <span>{{ dataset.label }}</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row">
+                        <button type="button" class="button add-dataset">
+                            <img src="./images/icon_add_blue.png" alt="" class="icon">
+                            新增資料集
+                        </button>
+                        <button type="button" class="button button-primary btn-close-modals">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

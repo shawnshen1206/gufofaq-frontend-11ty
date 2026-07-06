@@ -1,0 +1,22 @@
+<!-- 檔案預覽 modal，取自真實 app pages/dataImport/1-2-1_uploadFile_pdf.html #previewModal（class/id 沿用真實系統，modals-lg）；
+     真實頁面標題 h3#previewFileName 與 iframe#previewFrame 的內容由 js（uploadFile_pdf.js 等）動態填入，此處保留結構、無 src；
+     component.html 展示頁另有一份 modals-md + 靜態長文 .file-content 的版本（供設計展示用），本頁保留真實功能頁的 iframe 結構 -->
+<dialog class="modals" id="previewModal">
+    <div class="modals-dialog modals-lg">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="previewFileName">檔案名稱.pdf</h3>
+                </div>
+                <div class="modals-body">
+                    <div style="width: 100%; height: 600px;">
+                        <iframe id="previewFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

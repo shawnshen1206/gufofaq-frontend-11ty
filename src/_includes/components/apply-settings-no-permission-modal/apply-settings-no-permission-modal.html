@@ -1,0 +1,20 @@
+<!-- 套用正式設定：無權限 modal，取自真實 app pages/qaTest/2-2-3_abTest.html #ProductionSettingsNoPermissionModal（與 component.html 展示版一致，class/id 沿用真實系統）；
+     真實 app 的第三種「套用正式設定」變體：權限不足時的提示（無 modals-footer，僅右上角關閉）；超出任務清單七個模組但屬同一族群 modal，一併補齊 -->
+<dialog class="modals" id="ProductionSettingsNoPermissionModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">套用為正式設定</h3>
+                </div>
+                <div class="modals-body">
+                    <p class="text-center" style="margin: 0;">
+                        親愛的客戶您好，因權限不足，無法套用。如需開啟此功能，請聯絡houl.tu@solventosoft.com.tw</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

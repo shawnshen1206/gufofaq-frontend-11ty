@@ -1,0 +1,26 @@
+<!-- 刪除確認 modal，取自真實 app pages/components/component.html #deleteModal（class/id 沿用真實系統，modals-sm）；
+     真實功能頁（如 pages/dataImport/1-2-1_uploadFile_pdf.html、pages/dataset/3-1-1_datasetList.html）的 <p> 內容/按鈕 id
+     由 js 動態帶入待刪除項目名稱與綁定確認事件（#deleteFileName、#deleteModalText、#confirmDeleteBtn），此處採 component.html 靜態展示文字 -->
+<dialog class="modals" id="deleteModal">
+    <div class="modals-dialog modals-sm">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals">
+                <img src="./images/icon_close_blue.png" alt="">
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">刪除</h3>
+                </div>
+                <div class="modals-body">
+                    <p class="text-center">確定要刪除 檔案名稱2.pdf</p>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals">取消</button>
+                        <button type="button" class="button button-primary btn-close-modals">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
