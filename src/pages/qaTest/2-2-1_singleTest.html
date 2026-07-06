@@ -79,20 +79,7 @@ permalink: 2-2-1_singleTest.html
     <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
         {% include "components/chatroom/chatroom.html" %}
 
-        <div class="qa-record qa-side-panel collapsed">
-            <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
-                <span class="qa-side-panel-title">問答紀錄</span>
-            </button>
-            <div class="qa-side-panel-body">
-                <button class="button button-orange w100">
-                    <img src="./images/icon_add_white.png" alt="" class="icon">
-                    開啟新對話
-                </button>
-                <div class="tab-wrap">
-                    {% include "components/qa-record-tabs/qa-record-tabs.html" %}
-                </div>
-            </div>
-        </div>
+        {% include "components/qa-side-panel/qa-side-panel.html" %}
     </div>
 </div>
 

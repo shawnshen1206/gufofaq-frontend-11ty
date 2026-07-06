@@ -1,0 +1,17 @@
+<!-- 問答紀錄可收合側欄（單測 2-2-1 / AB測試 2-2-3 頁共用）。collapsed/展開互動屬業務 JS（見真實 singleTest.js），
+     js-side-toggle 為靜態 hook；內含 qa-record-tabs，其 qaRecordTabs 資料由頁面提供。
+     參數：sidePanelHidden（true 時加 .hidden，真實頁預設隱藏、等 JS 顯示）。 -->
+<div class="qa-record qa-side-panel collapsed{% if sidePanelHidden %} hidden{% endif %}">
+    <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
+        <span class="qa-side-panel-title">問答紀錄</span>
+    </button>
+    <div class="qa-side-panel-body">
+        <button class="button button-orange w100">
+            <img src="./images/icon_add_white.png" alt="" class="icon">
+            開啟新對話
+        </button>
+        <div class="tab-wrap">
+            {% include "components/qa-record-tabs/qa-record-tabs.html" %}
+        </div>
+    </div>
+</div>

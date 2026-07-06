@@ -176,20 +176,8 @@ permalink: 2-2-3_abTest.html
             </div>
         </div>
 
-        <div class="qa-record qa-side-panel collapsed hidden">
-            <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
-                <span class="qa-side-panel-title">問答紀錄</span>
-            </button>
-            <div class="qa-side-panel-body">
-                <button class="button button-orange w100">
-                    <img src="./images/icon_add_white.png" alt="" class="icon">
-                    開啟新對話
-                </button>
-                <div class="tab-wrap">
-                    {% include "components/qa-record-tabs/qa-record-tabs.html" %}
-                </div>
-            </div>
-        </div>
+        {% set sidePanelHidden = true %}
+        {% include "components/qa-side-panel/qa-side-panel.html" %}
     </div>
 </div>
 
