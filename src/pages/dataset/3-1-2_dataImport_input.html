@@ -1,0 +1,28 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料集列表
+permalink: 3-1-2_dataImport_input.html
+---
+<!-- 麵包屑：真實頁 pages/dataset/3-1-2_dataImport_input.html 第三層為靜態文字「資料集列表」（與第二層同名，
+     真實頁面本身如此，非本次轉換誤植），逐字沿用 -->
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料集列表", href: "3-1-1_datasetList.html" },
+  { label: "資料集列表" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 資料集名稱輸入：真實頁 #datasetName 純文字輸入框，class 沿用真實系統 -->
+<div class="form-group row" style="margin-top: 10px;">
+    <div class="label">
+        <label class="control-label">資料集名稱</label>
+    </div>
+    <div class="field">
+        <input type="text" id="datasetName" placeholder="請輸入資料集名稱" class="form-control select-md">
+        <span class="error-prompt" style="display: none;"></span>
+    </div>
+</div>
+
+{% include "components/upload-card/upload-card.html" %}

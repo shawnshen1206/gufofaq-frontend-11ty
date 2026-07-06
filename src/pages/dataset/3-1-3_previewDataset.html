@@ -1,0 +1,175 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料集列表
+permalink: 3-1-3_previewDataset.html
+---
+<!-- 麵包屑 + 資料集名稱（editable-block）：真實頁第三層麵包屑與資料集名稱皆為 js previewDataset.js 載入後動態填字（原文「載入中...」），
+     改用範例資料「客服問答知識庫」呈現載入完成狀態，與 3-1-1_datasetList.html 的範例資料集同名以求前後頁一致 -->
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料集列表", href: "3-1-1_datasetList.html" },
+  { label: "客服問答知識庫" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+    <!-- 資料集名稱：components/editable-block 樣式一（display-text + edit/save/cancel），逐字沿用其 class -->
+    <div class="editable-block">
+        <span class="display-text">客服問答知識庫</span>
+        <input type="text" class="form-control edit-field" value="客服問答知識庫" style="display: none;">
+        <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+                class="sr-only">編輯</span></button>
+        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" style="display: none;"><span
+                class="sr-only">確認</span></button>
+        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消" style="display: none;"><span
+                class="sr-only">取消</span></button>
+    </div>
+</div>
+
+<!-- 任務描述 / 任務對應提示詞：components/editable-block 樣式二（textarea + label），左右兩欄與真實頁一致 -->
+<div class="flex-row gap-16 mobile-column" style="margin: 16px 0;">
+    <div style="flex: 1 1 0; min-width: 0;">
+        <div class="editable-block">
+            <div class="form-group">
+                <div class="label flex-row align-items-center">
+                    <label class="control-label">任務描述</label>
+                    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+                            class="sr-only">編輯</span></button>
+                    <div class="flex-row gap-4">
+                        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"
+                            style="display: none;"><span class="sr-only">確認</span></button>
+                        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消"
+                            style="display: none;"><span class="sr-only">取消</span></button>
+                    </div>
+                </div>
+                <div class="field">
+                    <textarea rows="10" class="form-control size-sm edit-field disabled" placeholder="請輸入任務描述"
+                        disabled>回答客服常見問題，內容涵蓋帳號、訂單與退換貨相關問題。</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="flex: 1 1 0; min-width: 0;">
+        <div class="editable-block">
+            <div class="form-group">
+                <div class="label flex-row align-items-center">
+                    <label class="control-label">任務對應提示詞</label>
+                    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+                            class="sr-only">編輯</span></button>
+                    <div class="flex-row gap-4">
+                        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"
+                            style="display: none;"><span class="sr-only">確認</span></button>
+                        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消"
+                            style="display: none;"><span class="sr-only">取消</span></button>
+                    </div>
+                </div>
+                <div class="field">
+                    <textarea rows="10" class="form-control size-sm edit-field disabled" placeholder="請輸入任務對應提示詞"
+                        disabled>你是客服助理，請根據提供的資料集內容，以親切、精簡的語氣回答使用者的問題。</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 搜尋 + 檔案總大小 + 刪除/新增檔案：真實頁 delete-selected-btn / add-file-btn 預設 display:none（等待 js 依選取/載入狀態切換），
+     此處呈現「已載入且可操作」的靜態最終態，故移除 inline display:none -->
+<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column" style="margin: 16px 0;">
+    <div class="form-group" style="flex-shrink: 0; min-width: 280px;">
+        <div class="field">
+            <input type="text" placeholder="搜尋檔案..." class="form-control search">
+        </div>
+    </div>
+    <div class="flex-row gap-16 justify-content-end align-items-center flex-wrap">
+        <p class="text-gray" style="margin: 0;">共 128.45 MB</p>
+        <button type="button" class="button button-red delete-selected-btn">刪除</button>
+        <a href="#" class="button button-primary add-file-btn" style="flex-shrink: 0;">
+            <img src="./images/icon_add_white.png" alt="" class="icon">新增檔案
+        </a>
+    </div>
+</div>
+
+<!-- 檔案表格：真實頁 tbody 為 js 動態渲染（載入中...），欄位取自 thead 固定欄位，
+     用 set+for 資料化示範 3 筆；檔名連結分別指向已轉換的 3-1-5（一般檔案預覽）與 3-1-6（excel 比對預覽），串起頁面關聯 -->
+{% set fileRows = [
+    { name: "常見問題.pdf", href: "3-1-5_previewFile_detail.html?sn=1001", createdAt: "2025/11/02 10:20", sizeMB: "12.30", count: "312" },
+    { name: "商品清單.xlsx", href: "3-1-6_previewExcel_compare.html?sn=1002", createdAt: "2025/12/10 15:44", sizeMB: "3.05", count: "980" },
+    { name: "客服應對規範.docx", href: "3-1-5_previewFile_detail.html?sn=1003", createdAt: "2026/01/22 11:08", sizeMB: "0.85", count: "1,912" }
+] %}
+<div class="table-container scrollTable checkbox-container">
+    <table class="default-table">
+        <colgroup>
+            <col style="width:1fr; min-width:36px;">
+            <col style="width:1fr; min-width:522px;">
+            <col style="width: 180px; min-width: 180px;">
+            <col style="width: 180px; min-width: 180px;">
+            <col style="width: 180px; min-width: 180px;">
+            <col style="width: 100px; min-width: 100px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>
+                    <label class="form-checkbox">
+                        <input type="checkbox" class="check-all">
+                    </label>
+                </th>
+                <th>檔案名稱</th>
+                <th>建立時間</th>
+                <th class="text-center">檔案大小</th>
+                <th class="text-center">資料筆數</th>
+                <th>功能</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in fileRows %}
+            <tr>
+                <td>
+                    <label class="form-checkbox">
+                        <input type="checkbox" class="check-one">
+                    </label>
+                </td>
+                <td>
+                    <a href="{{ file.href }}" title="{{ file.name }}" class="link-file">{{ file.name }}</a>
+                </td>
+                <td>{{ file.createdAt }}</td>
+                <td class="text-center">{{ file.sizeMB }} MB</td>
+                <td class="text-center">{{ file.count }} 筆</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除">
+                            <span class="sr-only">刪除</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 分頁：真實頁 .pagination data-total="20" 由 pagination.js 動態產生，沿用同一組 class 資料化示範 -->
+{% set pages = [
+    { number: 1, active: true },
+    { number: 2 },
+    { number: 3 }
+] %}
+<div class="pagination" role="navigation" aria-label="頁碼分頁" style="margin-top: 16px;">
+    <ul>
+        <li class="prev disabled">
+            <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                <img src="./images/icon_arrow_left_gray.png" alt="">
+            </a>
+        </li>
+        {% for page in pages %}
+        <li{% if page.active %} class="active"{% endif %}>
+            <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+        </li>
+        {% endfor %}
+        <li class="next">
+            <a href="#" aria-label="下一頁">
+                <img src="./images/icon_arrow_right_blue.png" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% include "components/delete-modal/delete-modal.html" %}

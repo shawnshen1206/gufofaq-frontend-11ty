@@ -1,0 +1,59 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料集列表
+permalink: 3-1-5_previewFile_detail.html
+---
+<!-- 麵包屑 + 頁面標題：真實頁第三層麵包屑與 .page-title 皆為 js previewFileDetail.js 載入後動態填字（原文「載入中...」），
+     改用範例檔名「常見問題.pdf」呈現載入完成狀態，與 3-1-3_previewDataset.html 的範例檔案列表對應 -->
+{% set breadcrumbItems = [
+  { label: "首頁", href: "" },
+  { label: "資料集列表", href: "3-1-1_datasetList.html" },
+  { label: "常見問題.pdf" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+    <div class="page-title">常見問題.pdf</div>
+</div>
+
+<!-- 表單內容（模擬table）：真實頁 form-table-wrap 只有單一 form-table-group（無 subtitle），
+     欄位固定為 標題/時間/頻道/類型/供應商/內容，逐字沿用 components/form-table 的 class 結構，改以範例資料呈現 -->
+<div class="form-table-wrap" style="margin-top: 10px;">
+    <div class="form-table-group">
+        <div class="form-table">
+            <div class="row mobile-column">
+                <div class="col col-12-md">
+                    <div class="th">標題</div>
+                    <div class="td">常見問題.pdf</div>
+                </div>
+            </div>
+            <div class="row mobile-column">
+                <div class="col col-6-md col-12-sm">
+                    <div class="th">時間</div>
+                    <div class="td">2025/11/02 10:20</div>
+                </div>
+                <div class="col col-6-md col-12-sm">
+                    <div class="th">頻道</div>
+                    <div class="td">客服問答知識庫</div>
+                </div>
+            </div>
+            <div class="row mobile-column">
+                <div class="col col-6-md col-12-sm">
+                    <div class="th">類型</div>
+                    <div class="td">PDF</div>
+                </div>
+                <div class="col col-6-md col-12-sm">
+                    <div class="th">供應商</div>
+                    <div class="td">自行上傳</div>
+                </div>
+            </div>
+            <div class="row mobile-column">
+                <div class="col col-12-md">
+                    <div class="th">內容</div>
+                    <div class="td">
+                        <div class="long-text">Q：如何申請退換貨？<br>A：商品到貨後 7 日內，請至會員中心提出退換貨申請，並保持商品與吊牌完整，客服將於收到申請後 2 個工作天內完成審核並回覆處理進度。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

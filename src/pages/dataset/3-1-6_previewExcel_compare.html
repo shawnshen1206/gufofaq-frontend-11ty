@@ -1,0 +1,140 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::資料集列表
+permalink: 3-1-6_previewExcel_compare.html
+---
+<!-- 麵包屑：真實頁第三層為 .folder-name-link（回連資料集）、第四層為 .file-name（目前檔案），
+     ui/breadcrumb 只支援 label/href 無法掛這兩個專屬 class，故依真實頁手寫，逐字沿用 class；
+     資料同樣以「客服問答知識庫 / 商品清單.xlsx」呈現載入完成狀態 -->
+<div class="flex-row column gap-16">
+    <div class="breadcrumb">
+        <div class="wrap">
+            <ul>
+                <li><a href="" title="首頁">首頁</a></li>
+                <li><a href="3-1-1_datasetList.html" title="資料集列表">資料集列表</a></li>
+                <li><a href="3-1-3_previewDataset.html?sn=1002" class="folder-name-link" title="客服問答知識庫">客服問答知識庫</a></li>
+                <li class="file-name">商品清單.xlsx</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page-title text-default file-name-title">商品清單.xlsx</div>
+</div>
+
+<!-- 頁籤：ui/tab 水平單層頁籤（.tab-row.fit-content > .tab-group > .tab.tab-md），行為沿用已全域註冊的 tab.js -->
+<div class="tab-row fit-content" style="margin-top: 16px;">
+    <div class="tab-group">
+        <button type="button" class="tab tab-md active" title="比對資料">比對資料</button>
+        <button type="button" class="tab tab-md" title="原始資料">原始資料</button>
+    </div>
+</div>
+
+<!-- 比對資料表格：欄位固定為 標題/時間/內容/圖片網址/自訂欄位1-3，皆可排序（th-sort + icon），
+     用 set+for 資料化示範 3 筆，class 沿用 components/default-table -->
+{% set rows = [
+    { title: "商品編號 A001", time: "2025/12/10 15:44", content: "無線藍牙耳機，續航 24 小時", image: "https://example.com/img/a001.jpg", field1: "電子3C", field2: "現貨", field3: "990" },
+    { title: "商品編號 A002", time: "2025/12/10 15:44", content: "保溫瓶 500ml，316 不鏽鋼內膽", image: "https://example.com/img/a002.jpg", field1: "生活用品", field2: "現貨", field3: "450" },
+    { title: "商品編號 A003", time: "2025/12/10 15:44", content: "USB-C 充電線 1.5M", image: "https://example.com/img/a003.jpg", field1: "電子3C", field2: "補貨中", field3: "199" }
+] %}
+<div class="table-container scrollTable" style="margin-top: 10px;">
+    <table class="default-table fixed-layout">
+        <colgroup>
+            <col style="width:1fr; min-width:170.4px;">
+            <col style="width:1fr; min-width:171.4px;">
+            <col style="width:1fr; min-width:171.4px;">
+            <col style="width:1fr; min-width:171.4px;">
+            <col style="width:1fr; min-width:171.4px;">
+            <col style="width:1fr; min-width:171.4px;">
+            <col style="width:1fr; min-width:170.4px;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>
+                    <div class="th-sort">
+                        標題
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th>
+                    <div class="th-sort">
+                        時間
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th>
+                    <div class="th-sort">
+                        內容
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th>
+                    <div class="th-sort">
+                        圖片網址
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th class="custom-field-th">
+                    <div class="th-sort custom-field-col">
+                        自訂欄位1
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th class="custom-field-th">
+                    <div class="th-sort custom-field-col">
+                        自訂欄位2
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+                <th class="custom-field-th">
+                    <div class="th-sort custom-field-col">
+                        自訂欄位3
+                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.title }}</td>
+                <td>{{ row.time }}</td>
+                <td>{{ row.content }}</td>
+                <td>
+                    <div class="ellipsis-2">{{ row.image }}</div>
+                </td>
+                <td>{{ row.field1 }}</td>
+                <td>{{ row.field2 }}</td>
+                <td>{{ row.field3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 分頁：真實頁 .pagination data-total="20" 由 pagination.js 動態產生，沿用同一組 class 資料化示範 -->
+{% set pages = [
+    { number: 1, active: true },
+    { number: 2 },
+    { number: 3 }
+] %}
+<div style="margin-top: 16px;">
+    <div class="pagination" role="navigation" aria-label="頁碼分頁">
+        <ul>
+            <li class="prev disabled">
+                <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+                    <img src="./images/icon_arrow_left_gray.png" alt="">
+                </a>
+            </li>
+            {% for page in pages %}
+            <li{% if page.active %} class="active"{% endif %}>
+                <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+            </li>
+            {% endfor %}
+            <li class="next">
+                <a href="#" aria-label="下一頁">
+                    <img src="./images/icon_arrow_right_blue.png" alt="">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
