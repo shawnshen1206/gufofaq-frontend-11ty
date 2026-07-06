@@ -17,7 +17,7 @@
     label: "問答測試區",
     submenu: [
       { label: "單測", href: "2-2-1_singleTest.html" },
-      { label: "AB測試", href: "2-2-3_abTest.html" },
+      { label: "AB測試", href: "2-2-3_abTest.html", beta: true },
       { label: "模擬聊天", href: "#", hidden: true },
       { label: "歷史紀錄", href: "4-1_qaHistory.html?source=backend" }
     ]
@@ -32,7 +32,9 @@
     ]
   },
   {
-    label: "English",
+    label: "EN",
+    title: "English",
+    class: "dropdown",
     href: "#",
     hidden: true
   },
@@ -56,12 +58,12 @@
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" style="width:26px; vertical-align:middle; margin-left:4px;">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>
                 {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}">{{ item.label }}</a>
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}">{{ item.label }}</a>
                 {% endif %}
             </li>
             {% endfor %}

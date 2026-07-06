@@ -1,0 +1,45 @@
+// 功能未啟用遮罩
+// 真 app（pages/settings/5-2-1_knowledgeRetrieval.html）原本以 inline style 寫死顏色/字級，
+// 違反 §4「不可用行內 style 寫顏色與字級」——故將原值原封搬進 class（外觀不變）。
+// display 切換改用 .active 狀態 class（原本 inline display:none，由後端旗標決定）。
+.feature-disabled-wrap {
+    position: relative;
+}
+
+.feature-disabled-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    background-color: rgba(128, 128, 128, 0.7);
+
+    &.active {
+        display: flex;
+    }
+}
+
+.feature-disabled-box {
+    padding: 40px 60px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.feature-disabled-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.feature-disabled-desc {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #666;
+}

@@ -11,13 +11,11 @@ permalink: 5-2-1_knowledgeRetrieval.html
 
 <!-- 真實頁在麵包屑外層多包一層 #contentWrapper + #featureDisabledOverlay（功能未啟用遮罩，預設 display:none，
      由後端旗標決定是否顯示，屬靜態遮罩非業務 JS），逐段保留 -->
-<div id="contentWrapper" style="position: relative;">
-    <div id="featureDisabledOverlay"
-        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(128, 128, 128, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; min-height: 400px;">
-        <div
-            style="background-color: white; padding: 40px 60px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); text-align: center;">
-            <div style="font-size: 24px; font-weight: 600; color: #333;">功能未啟用</div>
-            <div style="font-size: 16px; color: #666; margin-top: 12px;">此功能目前尚未開放使用</div>
+<div id="contentWrapper" class="feature-disabled-wrap">
+    <div id="featureDisabledOverlay" class="feature-disabled-overlay">
+        <div class="feature-disabled-box">
+            <div class="feature-disabled-title">功能未啟用</div>
+            <div class="feature-disabled-desc">此功能目前尚未開放使用</div>
         </div>
     </div>
 

@@ -16,6 +16,18 @@
         box-sizing: border-box;
     }
 
+    // .chart-wrap 讓兩張圖並排：真實 app 的 scss/component.scss 源碼漏了這條，只存在於已編譯的 css/component.css（line 3339-3348），
+    // 依編譯輸出補回，否則兩張圖會上下堆疊而非並排（外觀還原）。
+    .chart-wrap {
+        display: flex;
+        gap: 56px;
+
+        @media screen and (max-width: 992px) {
+            flex-direction: column;
+            gap: 24px;
+        }
+    }
+
     .chart {
         width: 100%;
         height: 302px;

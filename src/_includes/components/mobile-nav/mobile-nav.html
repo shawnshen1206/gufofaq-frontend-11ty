@@ -10,12 +10,12 @@
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" style="width:26px; vertical-align:middle; margin-left:4px;">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>
                 {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}">{{ item.label }}</a>
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}">{{ item.label }}</a>
                 {% endif %}
             </li>
             {% endfor %}

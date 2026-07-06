@@ -72,34 +72,5 @@
         </tbody>
     </table>
 </div>
-
-<!-- 依優先級分組展示：div.tablelist-title 為分組標題，緊接一個「.default-table.priority-table」（見真實 app 5-2-1_knowledgeRetrieval 頁） -->
-{% set priorityGroups = [
-    { title: "高優先級（意圖判斷開啟）", categories: ["入出國與法規", "證件與資料申請", "權益與申訴服務類"] },
-    { title: "中優先級（意圖判斷開啟）", categories: ["婚姻與家庭"] },
-    { title: "低優先級（意圖判斷關閉）", categories: ["其他"] }
-] %}
-
-<div class="flex-row column gap-24">
-    {% for group in priorityGroups %}
-    <div>
-        <div class="tablelist-title">{{ group.title }}</div>
-        <div class="table-container scrollTable">
-            <table class="default-table priority-table">
-                <thead>
-                    <tr>
-                        <th>分類名稱</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for category in group.categories %}
-                    <tr>
-                        <td>{{ category }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+<!-- 註：真實 app 的「依優先級分組」版面（5-2-1_knowledgeRetrieval 頁）是把上方這張完整 5 欄 .default-table.priority-table
+     連同 .tablelist-title 標題整組重複，並非另一種單欄變體；該分組用法已由 5-2-1 頁本身逐段呈現，此元件僅示範單張表格結構，不再另造一個真實 app 不存在的單欄表。 -->

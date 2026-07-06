@@ -35,9 +35,10 @@ src/
 │   │                        link-file, link-modal, list-style, toast, modals, divider-vertical
 │   └── components/         大元件：header, mobile-nav, footer, disclaimer-modal,
 │                            default-table, priority-table, form-table, upload-*, step-*,
-│                            chatroom, sources-block(+source-row), qa-detail-info,
-│                            multi-select-box, block, chart-box, countdown-box, storage-bar,
-│                            editable-block, login-wrapper, 以及 9 個具體 *-modal
+│                            chatroom, sources-block(+source-row), qa-detail-info, multi-select-box,
+│                            block, chart-box, countdown-box, storage-bar, editable-block,
+│                            select-btn-wrap, success-box, feature-disabled-overlay, login-wrapper,
+│                            以及 9 個具體 *-modal
 ├── scss/
 │   ├── _var.scss           顏色 / 字型 tokens（:root CSS 變數）
 │   ├── _mixin.scss  _normalize.scss  _base.scss  _utilities.scss
@@ -45,9 +46,9 @@ src/
 │   ├── _guideline.scss     元件總覽頁專用樣式
 │   └── main.scss           @use 組裝清單（新增元件在這加一行）
 ├── images/                 圖片資產
-└── pages/                  23 個頁面（依 section 分資料夾；permalink 輸出扁平）
-    ├── dataImport/ dataset/ qaHistory/ qaRecord/ qaTest/ settings/ components/
-    └── (src/index.html = 登入頁)
+├── index.html              登入頁（src/ 根，與 pages/ 同層）
+└── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名（全站含登入頁共 23 頁）
+    └── dataImport/ dataset/ qaHistory/ qaRecord/ qaTest/ settings/ components/
 dist/                       build 輸出（勿手改）
 ```
 

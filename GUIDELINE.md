@@ -19,7 +19,7 @@
 ## 1. 檔案結構
 
 ```
-react-friendly-example/
+gufofaq-frontend-11ty/
 ├── src/
 │   ├── _includes/
 │   │   ├── layouts/                   ← 整頁模板（只放模板，不放元件）
@@ -39,7 +39,8 @@ react-friendly-example/
 │   │   ├── _utilities.scss            ←   text-*、flex-row、gap-*、col-* 等工具 class
 │   │   └── main.scss                  ←   只放 @use 組裝清單
 │   ├── images/
-│   └── <頁面>.html                    ← 頁面 = 選 layout + 元件組合
+│   ├── index.html                     ← 登入頁（src/ 根，與 pages/ 同層）
+│   └── pages/<section>/<頁面>.html     ← 頁面 = 選 layout + 元件組合（permalink 輸出扁平檔名到 dist/ 根）
 └── dist/                              ← build 輸出（不可手動編輯）
 ```
 
@@ -49,7 +50,7 @@ react-friendly-example/
 |---|---|---|
 | `layouts/` | 是整頁的**模板**嗎？ | base、page-shell |
 | `components/` | 它的 html / scss / js **會用到其他元件**，或是某大元件的**專屬子片段**嗎？（大） | header、sources-block、multi-select-box、mobile-nav |
-| `ui/` | **不依賴任何其他元件**的最小單位？（小） | button、modals、pagination-input |
+| `ui/` | **不依賴任何其他元件**的最小單位？（小） | button、modals、pagination |
 
 「專屬子片段」指由某個大元件 include、不會單獨使用的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`、行為依賴 `modals.js`）、`disclaimer-modal`（footer 的免責聲明跳窗，套用 `modals` 的樣式）。它們放在 `components/` 而非 `ui/`。
 
@@ -75,6 +76,8 @@ react-friendly-example/
 | `{% for x in 清單 %}…{% endfor %}`（搭配 `{% if %}`） | 渲染重複結構 | `.map()` |
 
 例外：`layouts/` 內的 `{{ content | safe }}` 是固定管線（頁面內容的注入點），不需修改。
+
+**註解**：要註解模板碼一律用 nunjucks 註解 `{# … #}`（build 時被移除、不進輸出，轉 React 時對應 `{/* */}`）。不要在 HTML 註解 `<!-- -->` 內寫 `{% %}`／`{{ }}`——即使在註解裡 nunjucks 仍會解析而出錯。`{# #}` 不算「第 5 種語法」，它是註解機制、不產生任何 markup，白名單的 4 個語法指的是會產生輸出的模板結構。
 
 `{% set %}` 的變數在 include 後**不會消失**（整頁共用）：同頁第二次使用同元件必須重新 set 全部參數；不同元件的參數名不可相同。
 
@@ -120,6 +123,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
 - SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；顏色用 `_var.scss` 變數
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**
+  - **既有跨元件規則的例外**：原始 `component.scss` 是單一大檔，少數規則本來就把別元件的 class 嵌在自己底下（如 `.footer .link-modal`、`.select-btn-wrap .button`、`.chat-input-container .form-group .form-control`）。拆成一元件一檔時，這些規則**逐字保留在原本負責它的元件檔內**（維持外觀 100% 還原優先於嚴格隔離），並在該 scss 檔開頭以註解標明「逐字複製自真實 app」。**只有這類「原 app 既有的跨元件規則」可保留；不得新寫任何新的跨元件覆寫。** 轉 React 時再把這類規則歸位到擁有該 class 的元件。
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）
 - 間距優先用既有工具 class（`flex-row column gap-16` 等）；簡單的一次性間距與表格欄寬（`<col style="width:...">`）允許行內 style（與既有切版習慣一致），但**不可**用行內 style 寫顏色與字級
 
@@ -130,10 +134,10 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 每個有互動的元件，行為寫在自己資料夾的 `<元件名>.js`：
 
 ```
-ui/pagination-input/
-├── pagination-input.html
-├── _pagination-input.scss
-└── pagination-input.js     ← 這個元件的行為
+ui/pagination/
+├── pagination.html
+├── _pagination.scss
+└── pagination.js     ← 這個元件的行為
 ```
 
 ### 寫法規則
@@ -160,16 +164,19 @@ ui/pagination-input/
 
 ## 6. 元件使用一覽
 
-### 需要參數的元件
+### 帶資料的元件
 
-| 元件 | 參數 |
+| 元件 | 參數／資料 |
 |---|---|
-| `ui/breadcrumb` | include 前 `{% set breadcrumbItems = [{ label, href }] %}`；最後一項不給 `href` = 目前頁 |
-| `ui/pagination-input` | include 前 set `pagerCurrent`、`pagerTotal` |
-| `components/step-btn-wrap` | front matter `steps:`（`label`、`done`）；include 前 set `stepPrevHref`、`stepNextHref` |
-| `components/multi-select-box` | front matter `fields:`（`label`、`placeholder`、`options`（`text`/`selected`）、`preview`、`error` 選填）；左欄的 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選 |
-| `components/sources-block` | front matter `sources:`（`no`、`file`、`dataset`、`title`、`time`、`content`、`note1`、`note2`、`reference`）；每筆用子元件 `source-row.html` 渲染。外層的 `.sources-block` 是設計師原有的語意／JS 鉤子 class，本身不帶樣式（視覺來自 `.block` + default-table），刻意保留 |
-| `components/qa-detail-info` | front matter `conversation:`（`chatroomId`、`id`、`time`、`intent`、`userMessage`、`satisfaction`、`feedback`）；AI 回答內容為長文示範，依 §3-2 寫死在元件 |
+| `ui/breadcrumb` | include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href（比照真實 app）。未提供時元件用 `{% if not %}` 帶示範資料。 |
+| `ui/pagination` | 靜態展示，無參數（頁碼清單在正式環境由資料驅動渲染，非切版範圍；`.pagination-input` 輸入版由 `pagination.js` 增強）。 |
+| `components/step-nodes` | 自帶 `{% set steps = [{ label, done }] %}`（`.done` = 已完成；`.lg` = 大尺寸變體）。 |
+| `components/step-btn-wrap` | 靜態、無參數：上一步／下一步 `href="#"`，帶 `.btn-prev`／`.btn-next` JS 鉤子 class；只需下一步時最外層加 `.no-prev` 並移除上一步按鈕。 |
+| `components/multi-select-box` | 自帶 `{% set fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }] %}`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
+| `components/sources-block` | 自帶 `{% set sources = [{ no, file, dataset, title, time, content, note1, note2, reference }] %}`；每筆用子元件 `source-row.html` 渲染。外層的 `.sources-block` 是設計師原有的語意／JS 鉤子 class，本身不帶樣式（視覺來自 `.block` + default-table），刻意保留。 |
+| `components/qa-detail-info` | 自帶 `{% set conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback } %}`；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文示範，依 §3-2 寫死在元件。 |
+
+> 說明：除 `breadcrumb` 用 `{% if not %}` 允許頁面覆寫外，上列元件目前把示範資料以 `{% set %}` 寫死在元件內，讓每個元件都能 standalone include、在元件總覽頁直接呈現。轉 React 時把這些 `{% set %}` 資料抽成 props。
 
 ### 自動引入
 
@@ -178,8 +185,8 @@ ui/pagination-input/
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-`button`、`block`、`default-table`、`form-group`、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`。
-結構以兩個範例頁為準（`multi-select` 無 html，靠 js 增強 `.multiSelect`）。
+`button`、`block`、`default-table`、`form-group`、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`、`login-wrapper`（無 html，class 直接寫在 `src/index.html`）。
+結構以 `src/pages/**` 與元件總覽頁為準（`multi-select` 無 html，靠 js 增強 `.multiSelect`）。
 
 ---
 
@@ -199,7 +206,7 @@ ui/pagination-input/
 | `ui/multi-select`（增強原生 `<select multiple>`） | `react-select`（isMulti）；value 陣列＝原生 select 的選取，行為（標籤／搜尋／複選）即規格 |
 | `_var.scss` 顏色變數 | 全域引入一次，元件照用 `var(--...)` |
 
-accordion 的「一次只開一列」在本範本用全域 DOM 查詢（`document.querySelectorAll(".accordion-btn.open")`）實作，跨整頁所有表格。轉 React 時改由各 accordion 元件自管狀態（記住開啟的列 index），不要跨元件共用，否則同頁多個表格會互相關閉。
+accordion 的行為（`ui/accordion/accordion.js`）逐字沿用真實 app `main.js`：各列**獨立開合**（點哪列就 toggle 哪列，不會自動關其他列），並以 `.sources-block` 為掃描根範圍。轉 React 時由各 accordion 元件自管開合狀態（`useState` 記住開啟的列），不要跨元件共用一份全域狀態。
 
 HTML → JSX 為機械式替換：`class`→`className`、標籤自閉合、`{# #}`→`{/* */}`。
 CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。

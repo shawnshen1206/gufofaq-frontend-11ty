@@ -49,6 +49,7 @@
 @use "../_includes/components/select-btn-wrap/select-btn-wrap";
 @use "../_includes/components/chatroom/chatroom";
 @use "../_includes/components/multi-select-box/multi-select-box";
+@use "../_includes/components/feature-disabled-overlay/feature-disabled-overlay";
 // sources-block、qa-detail-info：真實 scss 無專屬 class 規則（純語意/JS wrapper，視覺全由 block/default-table/accordion/form-table 提供），
 // 無 scss 檔可搬，故不新增 @use（同 disclaimer-modal 先例）
 

@@ -2,7 +2,7 @@
      A/B 測試頁套用正式設定前需並列比對「原設定」與「設定B」；單一測試頁的簡易確認版本見 apply-settings-modal、無權限版本見 apply-settings-no-permission-modal -->
 {% set settingColumns = [
     { title: "原設定", retrieval: "配置一", llm: "OpenAI gpt-4o-mini", sampleMin: "4", sampleMax: "6" },
-    { title: "設定B", retrieval: "配置一", llm: "OpenAI gpt-4o-mini", sampleMin: "4", sampleMax: "6" }
+    { title: "設定B", retrieval: "配置一", llm: "OpenAI gpt-4o-mini", sampleMin: "4", sampleMax: "6", jsApplyTitle: true }
 ] %}
 <dialog class="modals" id="ProductionSettingsModal">
     <div class="modals-dialog modals-md">
@@ -18,7 +18,7 @@
                     <div class="flex-row gap-24">
                         {% for column in settingColumns %}
                         <div style="flex: 1 1 0;">
-                            <p class="text-bold text-blue text-lg" style="margin-bottom: 10px;">{{ column.title }}</p>
+                            <p class="text-bold text-blue text-lg{% if column.jsApplyTitle %} js-apply-title{% endif %}" style="margin-bottom: 10px;">{{ column.title }}</p>
                             <div class="flex-row column gap-16">
                                 <div class="form-group row mobile-col">
                                     <div class="label">
@@ -82,7 +82,7 @@
                 <div class="modals-footer">
                     <div class="button-row center">
                         <button type="button" class="button button-border btn-close-modals">取消</button>
-                        <button type="button" class="button button-primary btn-close-modals">套用為正式設定</button>
+                        <button type="button" class="button button-primary btn-close-modals js-confirm-apply">套用為正式設定</button>
                     </div>
                 </div>
             </div>
