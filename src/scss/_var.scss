@@ -31,5 +31,6 @@
     --color-text-dark: var(--color-gray-600);
     --color-bg-primary: #e7f7ff;
     --color-border-default: var(--color-gray-400);
+    --color-blockquote-bg: rgba(0, 0, 0, 0.02); // markdown 引言區塊背景（半透明黑，疊在任何底色上）
 
 }
