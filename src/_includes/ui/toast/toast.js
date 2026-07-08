@@ -18,7 +18,7 @@ function showToast(message, type = 'success', duration = 3000) {
         const toastIcon = document.createElement('img');
         toastIcon.className = 'toast-icon';
         toastIcon.src = imagePath + 'finish_white.png';
-        toastIcon.alt = 'toast-icon';
+        toastIcon.alt = '';
         toast.appendChild(toastIcon);
     }
 

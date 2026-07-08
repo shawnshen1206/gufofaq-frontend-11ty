@@ -3,6 +3,6 @@
      資料 qaRecordTabs（[{ label, active }]）由頁面提供（見 §3-2/§6），本元件不自帶。 -->
 <div class="tab-group">
     {% for tab in qaRecordTabs %}
-    <button type="button" class="tab{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
+    <button type="button" class="tab on-record{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
     {% endfor %}
 </div>

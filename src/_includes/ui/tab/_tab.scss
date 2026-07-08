@@ -63,6 +63,12 @@
         background-color: var(--color-primary);
         color: #fff;
     }
+
+    // 問答紀錄側欄用的頁籤變體：未激活為主色藍字（激活態沿用上面的 .active）。
+    // 由 components/qa-record-tabs 掛用，取代原本 .qa-record .tab 的跨元件覆寫（§4）。
+    &.on-record {
+        color: var(--color-primary);
+    }
 }
 
 .tab-row {

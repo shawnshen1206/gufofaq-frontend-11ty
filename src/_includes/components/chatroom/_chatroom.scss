@@ -45,7 +45,7 @@
             width: fit-content;
             padding: 0.5rem 1rem;
             border-radius: 30px;
-            border: 1px solid #e1e1e1;
+            border: 1px solid var(--color-border-default);
             box-sizing: border-box;
             font-size: 0.875rem;
             color: #4e4e4e;
@@ -234,12 +234,25 @@
     @media screen and (max-width: 767px) {
         max-width: 70%;
     }
+
+    // AB 雙欄比較（2-2-3）用：每欄一個 message-content，撐滿、無內距（供 components/ab-compare 掛用，§4）
+    &.in-compare {
+        max-width: 100%;
+        align-self: auto;
+        flex: 1 1 0;
+        padding: 0;
+    }
 }
 
 .message-time {
     color: var(--color-text-dark);
     display: flex;
     align-self: flex-end;
+
+    // 緊接在 AB 雙欄比較之後的時間戳，加大下方間距（取代原 .ab-compare + .message-time，§4）
+    &.after-compare {
+        margin-bottom: 44px;
+    }
 }
 
 .message-icon {
