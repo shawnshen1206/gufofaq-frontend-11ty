@@ -1,14 +1,15 @@
 <!-- 步驟導覽：上一步 + step-nodes + 下一步（取自真實 app 步驟 section，class 沿用真實系統）。
      頁面 include 前 set steps（[{ label, done }]）+ 選填 stepNoPrev（true＝只留下一步、外層加 .no-prev）/ stepNodesLg（傳給內含 step-nodes）。
-     btn-prev/btn-next 為 JS hook（步驟切換屬業務邏輯，靜態保留）；中間進度條沿用 components/step-nodes。 -->
+     真實 app 的上一步/下一步經業務 JS（驗證+送出）跳頁（§5 不做）；此處提供簡化版靜態跳轉：
+     頁面 set stepPrevHref / stepNextHref 即直接連到該頁，未設則維持 "#"（btn-prev/btn-next 仍為 JS hook）。 -->
 <div class="step-btn-wrap{% if stepNoPrev %} no-prev{% endif %}">
     {% if not stepNoPrev %}
-    <a href="#" class="button button-primary btn-prev">
+    <a href="{{ stepPrevHref or '#' }}" class="button button-primary btn-prev">
         <img src="./images/icon_back.png" alt="" class="icon">上一步
     </a>
     {% endif %}
     {% include "components/step-nodes/step-nodes.html" %}
-    <a href="#" class="button button-primary align-self-end btn-next">
+    <a href="{{ stepNextHref or '#' }}" class="button button-primary align-self-end btn-next">
         下一步<img src="./images/icon_next.png" alt="" class="icon">
     </a>
 </div>

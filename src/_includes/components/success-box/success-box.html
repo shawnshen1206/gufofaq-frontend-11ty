@@ -1,5 +1,6 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 17 檔案上傳 section 上傳成功通知範例（class 沿用真實系統） -->
-<!-- 父層用 .block.block-lg.corner-md 包覆（.block 樣式由 components/block 提供，已建置） -->
+<!-- 展示片段，取自真實 app pages/components/component.html 17 檔案上傳 section 上傳成功通知範例（class 沿用真實系統）。
+     父層用 .block.block-lg.corner-md 包覆（.block 樣式由 components/block 提供，已建置）。
+     簡化版靜態跳轉：頁面 set successRetryHref（再次上傳）/ successViewHref（查看資料）即直接連到該頁，未設則 "#"。 -->
 <div class="block block-lg corner-md success-box">
     <div class="success-message">
         <img src="./images/icon_check_green.png" alt="" class="icon">
@@ -11,7 +12,7 @@
         <p>資料總量：90筆</p>
     </div>
     <div class="btn-row">
-        <a href="#" class="button button-border">再次上傳</a>
-        <a href="#" class="button button-primary">查看資料</a>
+        <a href="{{ successRetryHref or '#' }}" class="button button-border">再次上傳</a>
+        <a href="{{ successViewHref or '#' }}" class="button button-primary">查看資料</a>
     </div>
 </div>

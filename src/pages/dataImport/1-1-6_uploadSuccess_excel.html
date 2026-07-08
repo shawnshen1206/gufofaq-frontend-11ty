@@ -25,4 +25,7 @@ permalink: 1-1-6_uploadSuccess_excel.html
 
 <!-- 上傳成功通知：真實頁 .success-desc 為「動態產生」（js/uploadSuccess.js 依 sessionStorage 填入
      檔案名稱/檔案大小/資料總量），按鈕 href="#"、文字「再次上傳」「查看資料」與 components/success-box 完全一致，整包 include -->
+{# 簡化版靜態跳轉：再次上傳→資料匯入首頁、查看資料→資料集列表 #}
+{% set successRetryHref = "1-1-1_dataImport.html" %}
+{% set successViewHref = "3-1-1_datasetList.html" %}
 {% include "components/success-box/success-box.html" %}

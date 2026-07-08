@@ -23,4 +23,6 @@ permalink: 1-1-2_uploadFile_excel.html
     {% include "components/step-nodes/step-nodes.html" %}
 </div>
 
+{# 簡化版靜態跳轉：點上傳區前進到預覽頁（真實 app 為上傳完自動跳） #}
+{% set uploadNextHref = "1-1-3_preview_excel.html" %}
 {% include "components/upload-box/upload-box.html" %}

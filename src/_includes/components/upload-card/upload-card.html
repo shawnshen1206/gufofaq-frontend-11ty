@@ -1,7 +1,11 @@
-<!-- 資料取自真實 app pages/dataImport/1-1-1_dataImport.html 檔案匯入類型選單（.upload-card-list 內 4 張卡片） -->
+<!-- 資料取自真實 app pages/dataImport/1-1-1_dataImport.html 檔案匯入類型選單（.upload-card-list 內 4 張卡片）。
+     真實 app 點卡片後由業務 JS 驗證+上傳+取 sn 才跳頁（§5 不做）；此處提供「簡化版靜態跳轉」：
+     頁面 set uploadCardNav=true 時，卡片直接連到該類型的上傳頁（excel→1-1-2、pdf/word/image→1-2-1）。
+     未設（如元件庫展示頁）則維持 javascript:void(0) 不跳轉。 -->
 {% set cards = [
     {
         type: "excel",
+        href: "1-1-2_uploadFile_excel.html",
         icon: "icon_XLSX_s.png",
         iconAlt: "Excel Icon",
         title: "Excel",
@@ -9,6 +13,7 @@
     },
     {
         type: "pdf",
+        href: "1-2-1_uploadFile_pdf.html",
         icon: "icon_PDF_s.png",
         iconAlt: "PDF Icon",
         title: "PDF",
@@ -16,6 +21,7 @@
     },
     {
         type: "word",
+        href: "1-2-1_uploadFile_pdf.html",
         icon: "icon_doc_s.png",
         iconAlt: "WORD Icon",
         title: "WORD",
@@ -23,6 +29,7 @@
     },
     {
         type: "image",
+        href: "1-2-1_uploadFile_pdf.html",
         icon: "icon_img_s.png",
         iconAlt: "Image Icon",
         title: "Image",
@@ -32,7 +39,7 @@
 
 <div class="upload-card-list">
     {% for card in cards %}
-    <a href="javascript:void(0)" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}">
+    <a href="{% if uploadCardNav %}{{ card.href }}{% else %}javascript:void(0){% endif %}" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}">
         <div class="upload-content">
             <div class="upload-header">
                 <img src="./images/{{ card.icon }}" alt="{{ card.iconAlt }}" class="upload-icon" />
