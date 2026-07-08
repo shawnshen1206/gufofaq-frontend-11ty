@@ -1,0 +1,10 @@
+<!-- 星等評分（1~5）。行為由 star-rating.js 提供（點選/hover 預覽/所在 modal 關閉時重置）。 -->
+{% set stars = stars or [1, 2, 3, 4, 5] %}
+<div class="star-container">
+    {% for n in stars %}
+    <div class="star-wrap">
+        <span class="star-num">{{ n }}</span>
+        <span class="star-icon" role="button" tabindex="0" aria-label="{{ n }} 分"></span>
+    </div>
+    {% endfor %}
+</div>

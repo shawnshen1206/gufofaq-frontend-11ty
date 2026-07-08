@@ -180,6 +180,19 @@
         background-image: url(../images/icon_close_blue.png);
     }
 
+    // 前台 FAQ 訊息動作鈕（讚/倒讚/分享；複製沿用上面的 .copy）
+    &.like {
+        background-image: url(../images/icon_good.png);
+    }
+
+    &.dislike {
+        background-image: url(../images/icon_not_good.png);
+    }
+
+    &.share {
+        background-image: url(../images/icon_share.png);
+    }
+
     &:hover {
         background-color: var(--color-gray-300);
     }

@@ -1,0 +1,35 @@
+<!-- 前台 FAQ 評分/回饋 modal（讚/倒讚後開啟）。沿用 ui/modals 結構，內含 components/star-rating。 -->
+<dialog class="modals" id="likeModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
+                <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">幫助我們改進</h3>
+                </div>
+                <div class="modals-body">
+                    <span>針對本次問答評分(1到5分)<span class="text-red">(必填)</span></span>
+                    {% include "components/star-rating/star-rating.html" %}
+                    <div class="form-group mt-12">
+                        <div class="label">
+                            <label for="feedbackText" class="control-label">意見回饋</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="form-control" id="feedbackText" placeholder="請輸入您的意見回饋">
+                            <span class="error-prompt">輸入錯誤！</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals">取消</button>
+                        <button type="submit" class="button button-primary btn-close-modals">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

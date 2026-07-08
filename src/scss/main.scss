@@ -50,8 +50,15 @@
 @use "../_includes/components/storage-bar/storage-bar";
 @use "../_includes/components/editable-block/editable-block";
 @use "../_includes/components/select-btn-wrap/select-btn-wrap";
+@use "../_includes/components/chat-message/chat-message";
 @use "../_includes/components/chatroom/chatroom";
+@use "../_includes/components/faq-chatroom/faq-chatroom";
+@use "../_includes/components/chatbot-shell/chatbot-shell";
+@use "../_includes/components/chatbot-header/chatbot-header";
+@use "../_includes/components/chatbot-footer/chatbot-footer";
 @use "../_includes/components/ab-compare/ab-compare";
+@use "../_includes/components/star-rating/star-rating";
+@use "../_includes/components/faq-share-modal/faq-share-modal";
 @use "../_includes/components/prompt-edit/prompt-edit";
 @use "../_includes/components/qa-side-panel/qa-side-panel";
 @use "../_includes/components/multi-select-box/multi-select-box";

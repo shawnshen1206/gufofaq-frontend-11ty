@@ -1,0 +1,32 @@
+<!-- 前台 FAQ 分享連結 modal（訊息「分享」鈕開啟）。沿用 ui/modals 結構；複製鈕 data-toast 由 toast.js 觸發。 -->
+<dialog class="modals" id="shareModal">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
+                <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
+            </button>
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title">分享連結</h3>
+                </div>
+                <div class="modals-body">
+                    <span>分享前，請確認此連結內容</span>
+                    <div class="share-text">
+                        本連結內容由 AI 系統初步產出，僅作為草稿或參考依據使用，尚未經人工確認或修改，若需進一步採用，請先檢閱並確認內容之正確性與完整性。
+                    </div>
+                    <div class="share-link">
+                        <textarea id="sharelink" class="form-control share-link-txt"
+                            aria-label="分享連結">https://gufofaq.com/s/t_688az1b69a88191bf23bd633dec</textarea>
+                        <button class="button button-primary share-link-btn" type="button" data-toast="連結已複製!">複製</button>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

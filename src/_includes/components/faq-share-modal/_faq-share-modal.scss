@@ -1,0 +1,40 @@
+// 前台 FAQ 分享 modal 內容（分享說明區 + 連結列）。取自真 app FAQ scss/layout/_modal.scss。
+.share-text {
+    margin: 1rem 0 1.25rem 0;
+    font-size: 1.125rem;
+    background-color: var(--color-gray-100);
+    padding: 0.625rem;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.share-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+
+    // 連結 textarea / 複製鈕為本元件自有 slot class（同時掛 ui/form-control 與 ui/button），不覆寫它們（§4）
+    .share-link-txt {
+        flex-grow: 1;
+        height: 2.75rem;
+    }
+
+    .share-link-btn {
+        width: 64px;
+        height: 44px;
+        white-space: nowrap;
+    }
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+
+        .share-link-btn {
+            width: 100%;
+        }
+
+        .share-link-txt {
+            height: 4.125rem;
+        }
+    }
+}

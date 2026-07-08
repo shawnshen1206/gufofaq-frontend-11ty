@@ -1,0 +1,38 @@
+// 星等評分（1~5 顆星）。取自真 app FAQ 前台 scss/layout/_modal.scss。
+.star-container {
+    display: flex;
+    gap: 15px;
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
+
+    .star-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .star-num {
+            text-align: center;
+            color: var(--color-text-dark);
+        }
+
+        .star-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url(../images/icon_star_not_fill.png);
+            background-repeat: no-repeat;
+            background-size: 40px 40px;
+            background-position: center;
+            background-color: transparent;
+            padding: 0;
+            border: 0;
+            display: inline-block;
+            cursor: pointer;
+
+            // 選中（.active，由 star-rating.js 加）或 hover 時亮起
+            &.active,
+            &:hover {
+                background-image: url(../images/icon_star_fill.png);
+            }
+        }
+    }
+}

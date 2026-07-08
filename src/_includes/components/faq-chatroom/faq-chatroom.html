@@ -1,0 +1,60 @@
+<!-- 前台 FAQ 聊天：容器/輸入為 faq-chatroom 自有；訊息泡泡沿用共用 components/chat-message；動作鈕沿用 ui/button 的 .button-icon。
+     初始問候＋一組示範問答（含 讚/倒讚/複製/分享 動作鈕）為靜態示範；串流送問答屬業務邏輯（見真實 main.js）不在切版範圍。 -->
+<div class="faq-chatroom">
+    <div class="faq-chat-scroll">
+        <div class="message-wrap">
+            <div class="message-row by-robot">
+                <div class="avatar">
+                    <div class="pic"></div>
+                </div>
+                <div class="message-content">
+                    <span class="robot-msg">你好，請問有甚麼問題需要我幫你解答的?</span>
+                </div>
+                <div class="message-time">13:29</div>
+            </div>
+        </div>
+
+        <div class="message-wrap">
+            <div class="message-row by-user">
+                <div class="message-content">
+                    <span>新住民結婚有哪些注意事項?</span>
+                </div>
+                <div class="message-time">13:30</div>
+            </div>
+        </div>
+
+        <div class="message-wrap">
+            <div class="message-row by-robot">
+                <div class="avatar">
+                    <div class="pic"></div>
+                </div>
+                <div class="message-content">
+                    <span class="robot-msg">您好！新住民結婚的主要注意事項包括：申請結婚登記需雙方親自到戶政事務所辦理，並準備有效身分證明與結婚證明文件；部分情況需健康檢查合格證明；語言不通時建議尋求通譯協助。</span>
+                </div>
+                <div class="message-time">13:30</div>
+            </div>
+            <div class="message-icon">
+                <button type="button" class="button-icon like" title="讚" onclick="openModal('likeModal')"><span class="sr-only">讚</span></button>
+                <button type="button" class="button-icon dislike" title="倒讚" onclick="openModal('likeModal')"><span class="sr-only">倒讚</span></button>
+                <button type="button" class="button-icon copy" data-toast="文字已複製!"><span class="tooltip">複製</span></button>
+                <button type="button" class="button-icon share" title="分享" onclick="openModal('shareModal')"><span
+                        class="sr-only">分享</span></button>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="message-scroll-btn js-scroll-bottom" title="捲到最新訊息">
+        <img src="./images/icon_left_arrowdown_black.png" alt="">
+        <span class="sr-only">捲到最新訊息</span>
+    </button>
+
+    <div class="faq-chat-input">
+        <div class="input-wrap">
+            <div class="faq-chat-field form-group">
+                <input type="text" placeholder="請輸入問題..." class="form-control" aria-label="輸入問題">
+                <span class="error-prompt">輸入錯誤！</span>
+            </div>
+            <button type="submit" class="button button-primary flex-shrink-0">送出</button>
+        </div>
+    </div>
+</div>

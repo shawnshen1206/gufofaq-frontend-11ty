@@ -1,0 +1,118 @@
+// 前台 FAQ 聊天容器（全高、佔滿聊天區）。訊息泡泡沿用共用 components/chat-message；
+// 本檔只寫 FAQ 專屬：容器/捲動區/頭像/快速回覆/捲到底鈕/輸入列，全部 scope 在 .faq-chatroom 下，
+// 不與後台 components/chatroom 的同名容器（chatroom-block/chat-message-container/chat-input-container）相撞。
+// 輸入欄位用自有 slot class .faq-chat-field（同時掛 .form-group 以沿用其錯誤顯示行為），不覆寫 ui/form-control（§4）。
+@use "../../../scss/mixin" as *;
+
+.faq-chatroom {
+    width: 100%;
+    background-color: var(--color-gray-100);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+
+    // 訊息捲動區
+    .faq-chat-scroll {
+        flex-grow: 1;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        box-sizing: border-box;
+        overflow-y: auto;
+
+        @include scrollbar_thin();
+    }
+
+    // 頭像（機器人貓頭鷹），在訊息列內
+    .avatar {
+        min-width: 32px;
+        height: 32px;
+        border-radius: 100px;
+        background-image: var(--color-primary-linear);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .pic {
+            width: 20px;
+            height: 20px;
+            background-image: url(../images/icon_owl.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    }
+
+    // 快速回覆選項
+    .message-option-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+
+        .message-option {
+            display: inline-block;
+            width: 100%;
+            padding: 0.5rem 0.625rem;
+            border-radius: 8px;
+            background-color: var(--color-bg-primary);
+            color: var(--color-primary);
+            box-sizing: border-box;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // 捲到最底按鈕（捲動超過 100px 時由 faq-chatroom.js 加 .show）
+    .message-scroll-btn {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 0;
+        box-shadow: 0 0 6px 0 var(--color-border-default);
+        background-color: #fff;
+        position: absolute;
+        bottom: 92px;
+        right: 1.5rem;
+        box-sizing: border-box;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+
+        img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        &.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    // 問題輸入列
+    .faq-chat-input {
+        width: 100%;
+        padding: 1rem 1.5rem 2rem 1.5rem;
+        box-sizing: border-box;
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        // 輸入欄位容器（同時掛 .form-group：沿用其 :has(.error) 錯誤顯示）；送出鈕用 .flex-shrink-0 工具不縮
+        .faq-chat-field {
+            flex-grow: 1;
+            position: relative;
+        }
+    }
+}

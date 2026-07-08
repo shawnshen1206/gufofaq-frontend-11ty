@@ -16,6 +16,8 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/editable-block/editable-block.js": "js/editable-block.js",
         "src/_includes/components/qa-side-panel/qa-side-panel.js": "js/qa-side-panel.js",
         "src/_includes/components/prompt-edit/prompt-edit.js": "js/prompt-edit.js",
+        "src/_includes/components/faq-chatroom/faq-chatroom.js": "js/faq-chatroom.js",
+        "src/_includes/components/star-rating/star-rating.js": "js/star-rating.js",
         "src/_includes/ui/toast/toast.js": "js/toast.js",
     });
 
