@@ -1,4 +1,4 @@
-<!-- 前台 FAQ 評分/回饋 modal（讚/倒讚後開啟）。沿用 ui/modals 結構，內含 components/star-rating。 -->
+<!-- 前台 FAQ 回饋 modal（讚/倒讚後開啟，讓人填理由）。沿用 ui/modals 結構；讚/倒讚二選一由 faq-feedback.js 控制。 -->
 <dialog class="modals" id="likeModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
@@ -11,14 +11,21 @@
                     <h3 class="modals-title">幫助我們改進</h3>
                 </div>
                 <div class="modals-body">
-                    <span>針對本次問答評分(1到5分)<span class="text-red">(必填)</span></span>
-                    {% include "components/star-rating/star-rating.html" %}
+                    <span>這個回答對你有幫助嗎？<span class="text-red">(必填)</span></span>
+                    <div class="feedback-vote" role="group" aria-label="這個回答對你有幫助嗎">
+                        <button type="button" class="feedback-vote-btn like" data-vote="like" aria-pressed="false">
+                            <span class="feedback-vote-icon"></span>讚
+                        </button>
+                        <button type="button" class="feedback-vote-btn dislike" data-vote="dislike" aria-pressed="false">
+                            <span class="feedback-vote-icon"></span>倒讚
+                        </button>
+                    </div>
                     <div class="form-group mt-12">
                         <div class="label">
                             <label for="feedbackText" class="control-label">意見回饋</label>
                         </div>
                         <div class="field">
-                            <input type="text" class="form-control" id="feedbackText" placeholder="請輸入您的意見回饋">
+                            <textarea class="form-control" id="feedbackText" rows="3" placeholder="請告訴我們原因（選填）"></textarea>
                             <span class="error-prompt">輸入錯誤！</span>
                         </div>
                     </div>

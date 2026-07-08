@@ -1,0 +1,48 @@
+// 前台 FAQ 回饋 modal：讚/倒讚二選一（取代原星等評分）＋填理由。只用於本 modal。
+// 圖示沿用 images/icon_good.png、icon_not_good.png（同訊息動作鈕，但這裡是可選取的切換鈕，故自有樣式）。
+.feedback-vote {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+
+    .feedback-vote-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        color: var(--color-text-dark);
+        background-color: #fff;
+        border: 1px solid var(--color-gray-300);
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        .feedback-vote-icon {
+            width: 24px;
+            height: 24px;
+            background-repeat: no-repeat;
+            background-size: 24px 24px;
+            background-position: center;
+        }
+
+        &.like .feedback-vote-icon {
+            background-image: url(../images/icon_good.png);
+        }
+
+        &.dislike .feedback-vote-icon {
+            background-image: url(../images/icon_not_good.png);
+        }
+
+        &:hover {
+            border-color: var(--color-primary);
+        }
+
+        // 選中（.active，由 faq-feedback.js 加）
+        &.active {
+            color: var(--color-primary);
+            background-color: var(--color-gray-100);
+            border-color: var(--color-primary);
+        }
+    }
+}
