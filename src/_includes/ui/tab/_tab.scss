@@ -14,7 +14,7 @@
     box-sizing: border-box;
     width: 240px;
     height: fit-content;
-    max-height: 634px;
+    max-height: 600px; // 真 app 編譯 css 為 600px（scss 源碼舊值 634px）
 
     @media screen and (max-width: 768px) {
         width: 100%;

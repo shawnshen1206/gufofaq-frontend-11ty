@@ -58,7 +58,7 @@
             a {
                 position: relative;
                 padding: 1rem 0.625rem;
-                display: block;
+                display: flex; // 真 app 編譯 css 為 flex（scss 源碼舊值 block）
                 box-sizing: border-box;
 
                 &.dropdown {

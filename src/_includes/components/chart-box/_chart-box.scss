@@ -30,7 +30,7 @@
 
     .chart {
         width: 100%;
-        height: 302px;
+        height: 300px; // 真 app 編譯 css 為 300px（scss 源碼舊值 302px）
 
         // 內容為表格（非固定高 canvas）時：自動高、可橫向捲動（取代頁面行內 height/overflow）
         &.chart-auto {
@@ -44,6 +44,16 @@
         flex-direction: column;
         gap: 10px;
         margin-top: 22px;
+
+        // 橫向排列變體（真 app 編譯 css 有；scss 源碼漏）：桌機一列、≤992px 收回直排
+        &.row {
+            flex-direction: row;
+
+            @media screen and (max-width: 992px) {
+                flex-direction: column;
+            }
+        }
+
         p {
             margin: 0;
             font-size: 18px;

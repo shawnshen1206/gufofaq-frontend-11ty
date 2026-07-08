@@ -63,6 +63,7 @@
 .field {
     flex-grow: 1;
     position: relative;
+    width: 100%; // 真 app 編譯 css 有（scss 源碼漏）
 }
 
 .function {
