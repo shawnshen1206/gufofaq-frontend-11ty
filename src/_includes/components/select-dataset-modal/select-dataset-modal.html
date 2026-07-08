@@ -1,6 +1,6 @@
-<!-- 選擇資料集 modal，取自真實 app pages/components/component.html #datasetModal（class/id 沿用真實系統）；
-     真實頁面（如 pages/dataImport/1-1-1_dataImport.html）的 .dataset-list 內容由 js 動態載入（<!-- 動態載入資料集列表 -->），
-     此處依 component.html 展示版的具體 checkbox 列表，用 set+for 資料化 -->
+{# 選擇資料集 modal，取自真實 app pages/components/component.html #datasetModal（class/id 沿用真實系統）；
+   真實頁面（如 pages/dataImport/1-1-1_dataImport.html）的 .dataset-list 內容由 js 動態載入，
+   此處依 component.html 展示版的具體 checkbox 列表，用 set+for 資料化 #}
 {% set datasets = [
     { name: "dataset_AA", label: "資料集AA", checked: true },
     { name: "dataset_BB", label: "資料集BB", checked: true },
