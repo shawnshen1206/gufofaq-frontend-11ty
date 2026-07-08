@@ -29,82 +29,45 @@ permalink: 3-1-6_previewExcel_compare.html
     </div>
 </div>
 
-<!-- 比對資料表格：欄位固定為 標題/時間/內容/圖片網址/自訂欄位1-3，皆可排序（th-sort + icon），
-     用 set+for 資料化示範 3 筆，class 沿用 components/default-table -->
+<!-- 比對資料表格：欄位為「動態」——由帳號的欄位對照（document_field_mapping）決定有哪些欄與各欄顯示名，
+     非固定欄。以 set columns（key＝原始欄、label＝顯示名）+ set rows（每列以 key 取值）示範，
+     渲染時 thead/tbody 皆對 columns 迴圈（→ React 直接 .map()）。每欄皆可排序（th-sort + icon）。
+     class 沿用 components/default-table。示範資料含「供應商 / 價格」等自訂欄，凸顯欄位由對照表決定。 -->
+{% set columns = [
+    { key: "title", label: "標題" },
+    { key: "time", label: "時間" },
+    { key: "content", label: "內容" },
+    { key: "image", label: "圖片網址" },
+    { key: "supplier", label: "供應商" },
+    { key: "price", label: "價格" }
+] %}
 {% set rows = [
-    { title: "商品編號 A001", time: "2025/12/10 15:44", content: "無線藍牙耳機，續航 24 小時", image: "https://example.com/img/a001.jpg", field1: "電子3C", field2: "現貨", field3: "990" },
-    { title: "商品編號 A002", time: "2025/12/10 15:44", content: "保溫瓶 500ml，316 不鏽鋼內膽", image: "https://example.com/img/a002.jpg", field1: "生活用品", field2: "現貨", field3: "450" },
-    { title: "商品編號 A003", time: "2025/12/10 15:44", content: "USB-C 充電線 1.5M", image: "https://example.com/img/a003.jpg", field1: "電子3C", field2: "補貨中", field3: "199" }
+    { title: "商品編號 A001", time: "2025/12/10 15:44", content: "無線藍牙耳機，續航 24 小時", image: "https://example.com/img/a001.jpg", supplier: "宏興電子", price: "990" },
+    { title: "商品編號 A002", time: "2025/12/10 15:44", content: "保溫瓶 500ml，316 不鏽鋼內膽", image: "https://example.com/img/a002.jpg", supplier: "日商生活", price: "450" },
+    { title: "商品編號 A003", time: "2025/12/10 15:44", content: "USB-C 充電線 1.5M", image: "https://example.com/img/a003.jpg", supplier: "宏興電子", price: "199" }
 ] %}
 <div class="table-container scrollTable mt-10">
     <table class="default-table fixed-layout">
-        <colgroup>
-            <col style="min-width:170.4px;">
-            <col style="min-width:171.4px;">
-            <col style="min-width:171.4px;">
-            <col style="min-width:171.4px;">
-            <col style="min-width:171.4px;">
-            <col style="min-width:171.4px;">
-            <col style="min-width:170.4px;">
-        </colgroup>
         <thead>
             <tr>
+                {% for col in columns %}
                 <th>
                     <div class="th-sort">
-                        標題
+                        {{ col.label }}
                         <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
                     </div>
                 </th>
-                <th>
-                    <div class="th-sort">
-                        時間
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
-                <th>
-                    <div class="th-sort">
-                        內容
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
-                <th>
-                    <div class="th-sort">
-                        圖片網址
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
-                <th class="custom-field-th">
-                    <div class="th-sort custom-field-col">
-                        自訂欄位1
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
-                <th class="custom-field-th">
-                    <div class="th-sort custom-field-col">
-                        自訂欄位2
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
-                <th class="custom-field-th">
-                    <div class="th-sort custom-field-col">
-                        自訂欄位3
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort" data-order="none">
-                    </div>
-                </th>
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for row in rows %}
             <tr>
-                <td>{{ row.title }}</td>
-                <td>{{ row.time }}</td>
-                <td>{{ row.content }}</td>
+                {% for col in columns %}
                 <td>
-                    <div class="ellipsis-2">{{ row.image }}</div>
+                    <div class="ellipsis-2">{{ row[col.key] }}</div>
                 </td>
-                <td>{{ row.field1 }}</td>
-                <td>{{ row.field2 }}</td>
-                <td>{{ row.field3 }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
