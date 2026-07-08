@@ -271,8 +271,25 @@ btn.addEventListener("click", function () { btn.classList.toggle("open"); });
 ```
 
 ```scss
-/* ❌ 在 A 元件的 scss 裡改 B 元件 */
+/* ❌ 在 A 元件的 scss 裡改 B 元件（即使真 app 是這樣寫、即使「忠於真 app」——§4 無例外） */
 .sources-block .button { padding: 0; }
+.qa-record .tab { color: ...; }         /* ❌ 跨元件覆寫 */
 
-/* ✅ 各自的樣式寫在各自的檔案 */
+/* ✅ 各自的樣式寫在各自的檔案；跨元件覆寫改成 owning 元件的 variant/slot class */
+.tab.on-record { color: ...; }          /* ✅ 由 ui/tab 提供變體，qa-record-tabs markup 掛用 */
 ```
+
+> ⚠️ **移植陷阱：真 app 的 scss 源碼會漏規則，「編譯後的 css」才是最終真相。** 從 `GufoFAQ_Frontend_New` 搬樣式時，**不要只照 `scss/component.scss` 抄**——它有一批宣告只存在**編譯後的 `css/component.css`**（scss 源碼是舊的/漏的）。本專案已因此踩過多次：`divider-vertical`（整個規則漏抓→分隔線全站不可見）、`footer`（漏 `flex-wrap`/`gap`）、`info-btn`/`ab-compare`（整個元件樣式漏）、`.control-label`（漏 `line-height:normal`→整列偏高）、`.button`（`line-height` 舊值）、`.breadcrumb ul`（`justify-content` 舊值 flex-end）、多個元件的 `height`/`max-height`/斷點。**搬任何樣式後，以 `css/component.css` 對照驗證值**（或直接以編譯 css 為來源）。
+
+```scss
+/* ❌ 頁面/元件庫專屬 scss 用「裸元素選擇器」——打包進全站 main.css 會洩漏、影響每一頁 */
+body { overflow: hidden; }   /* 這條原是元件庫頁專用，卻關掉了全站每頁的捲動 */
+aside { height: 100vh; }
+footer { ... }
+
+/* ✅ 頁面專屬樣式全部限定在該頁的 body class 底下（見 _guideline.scss 收進 .guideline-page） */
+body.guideline-page { overflow: hidden; }
+.guideline-page { aside { ... } footer { ... } }
+```
+
+> ⚠️ **裸元素選擇器（`html`/`body`/`aside`/`section`/`footer`…）只准出現在 `_normalize`/`_base`（全域 reset 的法定職責）。** 任何頁面專屬樣式（如元件庫頁 `_guideline`、目錄頁 `_catalog`）因為本專案把所有 scss 打包進單一 `main.css` 全站載入，裸選擇器會洩漏覆蓋全站——一律限定在該頁的 body class 底下。
