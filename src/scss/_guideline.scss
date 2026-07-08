@@ -38,19 +38,21 @@
     scrollbar-color: rgba(#4f4f4f, 0.5) #fff;
 }
 
-html {
-    overflow: inherit !important;
-}
-
-body {
+// 以下所有規則限定在元件庫展示頁（body.guideline-page）。
+// 本檔是頁面專屬樣式（原 app 只在 component.html 載入 guideline.css）；本專案把全部 scss 打包進單一 main.css、
+// 全站載入，若不限定，這裡的裸選擇器（html/body/aside/section/footer）與撞名 class（.mobile-nav/.form-table-wrap…）
+// 會洩漏、覆蓋全站——最嚴重的是 body{overflow:hidden} 讓每一頁都無法捲動。
+// 元件庫頁自身的版型：.full-container 佔滿 100vh、內部 .main-container/aside 各自捲動，故 body 不捲。
+body.guideline-page {
     overflow: hidden;
 }
 
-.full-container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    box-sizing: border-box;
+.guideline-page {
+    .full-container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        box-sizing: border-box;
 
     .main-container {
         width: calc(100% - 200px);
@@ -341,3 +343,4 @@ footer {
         }
     }
 }
+} // 收尾：.guideline-page 包住全部元件庫頁專屬樣式（限定不外洩）
