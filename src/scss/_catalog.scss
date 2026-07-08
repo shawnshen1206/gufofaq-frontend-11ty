@@ -1,0 +1,63 @@
+// 部署站台首頁：頁面目錄（catalog）專屬樣式。僅本頁使用（性質同 _guideline，showcase 專用、正式頁面不引入）。
+// 顏色一律走 _var.scss 變數；間距用固定尺標，維持與全站一致。
+.catalog {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    box-sizing: border-box;
+}
+
+.catalog-header {
+    margin-bottom: 2rem;
+}
+
+.catalog-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    margin: 0;
+}
+
+.catalog-sub {
+    margin: 0.5rem 0 0;
+    color: var(--color-text-dark);
+    line-height: 1.6;
+}
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.catalog-card {
+    border: 1px solid var(--color-border-default);
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 1.25rem;
+    box-sizing: border-box;
+}
+
+.catalog-card-title {
+    font-weight: 600;
+    color: var(--color-text-default);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-gray-400);
+}
+
+.catalog-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.catalog-links a {
+    color: var(--color-primary);
+    width: fit-content;
+
+    &:hover {
+        color: var(--color-primary-hover);
+        text-decoration: underline;
+    }
+}

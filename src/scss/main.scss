@@ -61,3 +61,6 @@
 
 // 元件庫展示頁（component.html）專屬版型/說明樣式，放在最後避免與一般頁面規則衝突
 @use "guideline";
+
+// 部署站台首頁（catalog.html）專屬樣式，同 guideline 為 showcase 專用
+@use "catalog";

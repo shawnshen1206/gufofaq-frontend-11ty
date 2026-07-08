@@ -1,0 +1,87 @@
+---
+layout: layouts/base.html
+title: GufoFAQ::頁面目錄
+permalink: index.html
+---
+{# 部署站台首頁：所有頁面的目錄（showcase 入口，不是 app 的一部分——性質同 component.html）。
+   登入頁移到 login.html，本頁佔用 index.html 當站台進入點，讓進站就能點去任一頁。
+   連結清單資料化，新增頁面時在此加一筆。 #}
+{% set sections = [
+    {
+        title: "資料匯入",
+        links: [
+            { label: "資料匯入（選擇資料集）", href: "1-1-1_dataImport.html" },
+            { label: "上傳 Excel", href: "1-1-2_uploadFile_excel.html" },
+            { label: "Excel 資料預覽", href: "1-1-3_preview_excel.html" },
+            { label: "Excel 欄位對應", href: "1-1-4_columnSelect_excel.html" },
+            { label: "Excel 上傳完成", href: "1-1-6_uploadSuccess_excel.html" },
+            { label: "上傳 PDF", href: "1-2-1_uploadFile_pdf.html" },
+            { label: "PDF 上傳完成", href: "1-2-6_uploadSuccess_pdf.html" }
+        ]
+    },
+    {
+        title: "資料集",
+        links: [
+            { label: "資料集列表", href: "3-1-1_datasetList.html" },
+            { label: "新增資料集", href: "3-1-2_dataImport_input.html" },
+            { label: "資料集預覽", href: "3-1-3_previewDataset.html" },
+            { label: "檔案內容預覽", href: "3-1-5_previewFile_detail.html" },
+            { label: "Excel 比對預覽", href: "3-1-6_previewExcel_compare.html" }
+        ]
+    },
+    {
+        title: "服務預覽",
+        links: [
+            { label: "前台對話預覽", href: "2-1_qaRecord.html" }
+        ]
+    },
+    {
+        title: "問答測試區",
+        links: [
+            { label: "單測", href: "2-2-1_singleTest.html" },
+            { label: "AB 測試", href: "2-2-3_abTest.html" }
+        ]
+    },
+    {
+        title: "歷史紀錄",
+        links: [
+            { label: "歷史問答紀錄", href: "4-1_qaHistory.html" },
+            { label: "對話詳細內容", href: "4-2_qaHistory_detail.html" }
+        ]
+    },
+    {
+        title: "設定",
+        links: [
+            { label: "帳號資訊", href: "5-1-1_accountInfo.html" },
+            { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html" },
+            { label: "統計模組", href: "5-3_statsModule.html" },
+            { label: "提示詞管理", href: "5-4-1_promptManagement.html" }
+        ]
+    },
+    {
+        title: "其他",
+        links: [
+            { label: "元件庫（style guide）", href: "component.html" },
+            { label: "登入頁", href: "login.html" }
+        ]
+    }
+] %}
+<div class="catalog">
+    <header class="catalog-header">
+        <h1 class="catalog-title">GufoFAQ 前端切版預覽</h1>
+        <p class="catalog-sub">Eleventy 切版正本的頁面目錄，點任一頁即可瀏覽。<br>
+            各頁的 header 導航列與頁面間連結可正常切換；元件用法一頁看完請開「元件庫」。</p>
+    </header>
+    <div class="catalog-grid">
+        {% for section in sections %}
+        <div class="catalog-card">
+            <div class="catalog-card-title">{{ section.title }}</div>
+            <div class="catalog-links">
+                {% for link in section.links %}
+                <a href="{{ link.href }}">{{ link.label }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

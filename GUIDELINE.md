@@ -39,7 +39,8 @@ gufofaq-frontend-11ty/
 │   │   ├── _utilities.scss            ←   text-*、flex-row、gap-*、col-*、mt-*/mb-*/my-* 等工具 class
 │   │   └── main.scss                  ←   只放 @use 組裝清單
 │   ├── images/
-│   ├── index.html                     ← 登入頁（src/ 根，與 pages/ 同層）
+│   ├── index.html                     ← 登入頁（permalink 輸出成 login.html）
+│   ├── catalog.html                   ← 部署站台首頁＝頁面目錄（permalink 輸出成 index.html；showcase 入口，性質同 component.html，非 app 一部分）
 │   └── pages/<section>/<頁面>.html     ← 頁面 = 選 layout + 元件組合（permalink 輸出扁平檔名到 dist/ 根）
 └── dist/                              ← build 輸出（不可手動編輯）
 ```
