@@ -1,0 +1,51 @@
+# 推上 master 時自動 build 並發布 dist/ 到 GitHub Pages，
+# 讓大家用瀏覽器開 https://shawnshen1206.github.io/gufofaq-frontend-11ty/ 看切版。
+# 一次性設定：GitHub repo → Settings → Pages → Build and deployment → Source 選「GitHub Actions」。
+# dist/ 在 .gitignore 內（build 產物不進版控），故由本流程現建現部署，不需 gh-pages 分支。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: # 也可在 Actions 頁手動觸發
+
+# GitHub Pages 部署所需權限（官方 deploy-pages 用 OIDC）
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時只跑一個部署；新 push 進來時取消上一個未完成的
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # sass + eleventy，輸出到 dist/（見 package.json 的 build script）
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
