@@ -1,0 +1,134 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::使用者管理
+permalink: 5-5-1_userManagement.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html" },
+  { label: "設定", href: "" },
+  { label: "使用者管理" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 租戶成員與權限管理（僅租戶管理者）。SaaS 新需求，逆向自 apps/web app/(app)/users；
+     真正把關在 product（require_admin / require_capability），本頁僅提供管理介面。
+     能力鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 -->
+{% set capabilities = [
+  { key: "data", label: "資料匯入／資料集管理" },
+  { key: "ask", label: "問答（後台測試區）" },
+  { key: "history", label: "歷史紀錄" },
+  { key: "settings", label: "設定類（提示詞／檢索設定）" }
+] %}
+{% set members = [
+  { email: "admin@example.com", isAdmin: true, permissions: [] },
+  { email: "editor@example.com", isAdmin: false, permissions: ["data", "settings"] },
+  { email: "viewer@example.com", isAdmin: false, permissions: ["ask", "history"] }
+] %}
+
+<!-- 新增成員：電子郵件 + 初始密碼 + 能力勾選（ui/checkbox）+ 租戶管理者（ui/switch）+ 新增按鈕 -->
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold">新增成員</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMemberEmailInput" class="control-label required">電子郵件</label>
+                </div>
+                <div class="field">
+                    <input type="email" id="newMemberEmailInput" placeholder="user@example.com" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMemberPasswordInput" class="control-label required">初始密碼</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newMemberPasswordInput" placeholder="請輸入初始密碼" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row flex-wrap gap-20 align-items-center">
+        <span class="text-bold">能力：</span>
+        {% for cap in capabilities %}
+        <label class="form-checkbox">
+            <input type="checkbox" name="new_member_perm_{{ cap.key }}">
+            <span>{{ cap.label }}</span>
+        </label>
+        {% endfor %}
+        <label class="switch" aria-label="租戶管理者切換">
+            <input type="checkbox" class="switch-checkbox" role="switch">
+            <span class="switch-box">
+                <span class="switch-btn"></span>
+            </span>
+        </label>
+        <span class="text-bold">租戶管理者</span>
+        <button type="button" class="button button-primary">
+            <img src="./images/icon_add_white.png" alt="" class="icon">
+            新增成員
+        </button>
+    </div>
+</div>
+
+<!-- 成員清單：default-table；角色欄用 ui/switch（管理者切換），能力欄每一格用 ui/checkbox；
+     管理者列的能力全開且鎖定（disabled），對齊 apps/web 行為 -->
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold">成員清單</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="min-width:220px;">
+                <col style="min-width:180px;">
+                {% for cap in capabilities %}
+                <col style="min-width:120px;">
+                {% endfor %}
+                <col style="min-width:120px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>電子郵件</th>
+                    <th>角色</th>
+                    {% for cap in capabilities %}
+                    <th>{{ cap.label }}</th>
+                    {% endfor %}
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.email }}</td>
+                    <td>
+                        <div class="flex-row align-items-center gap-8">
+                            <label class="switch" aria-label="租戶管理者切換">
+                                <input type="checkbox" class="switch-checkbox" role="switch"{% if member.isAdmin %} checked{% endif %}>
+                                <span class="switch-box">
+                                    <span class="switch-btn"></span>
+                                </span>
+                            </label>
+                            <span>{% if member.isAdmin %}管理者{% else %}成員{% endif %}</span>
+                        </div>
+                    </td>
+                    {% for cap in capabilities %}
+                    <td class="text-center">
+                        <label class="form-checkbox">
+                            <input type="checkbox"{% if member.isAdmin or (cap.key in member.permissions) %} checked{% endif %}{% if member.isAdmin %} disabled{% endif %}>
+                            <span class="sr-only">{{ cap.label }}</span>
+                        </label>
+                    </td>
+                    {% endfor %}
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm">儲存</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

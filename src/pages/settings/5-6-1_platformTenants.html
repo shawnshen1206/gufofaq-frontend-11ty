@@ -1,0 +1,78 @@
+---
+layout: layouts/page-shell.html
+title: GufoFAQ::租戶功能開通
+permalink: 5-6-1_platformTenants.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html" },
+  { label: "平台管理", href: "" },
+  { label: "租戶功能開通" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<!-- 平台管理（僅平台系統管理員，跨租戶）：控制各租戶能使用哪些功能。SaaS 新需求，逆向自 apps/web app/(app)/platform；
+     真正把關在 product（require_platform_admin），本頁僅提供管理介面。
+     功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 -->
+{% set features = [
+  { key: "data", label: "資料匯入／資料集管理" },
+  { key: "ask", label: "問答（後台測試區）" },
+  { key: "history", label: "歷史紀錄" },
+  { key: "settings", label: "設定類（提示詞／檢索設定）" }
+] %}
+{% set tenants = [
+  { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings"] },
+  { name: "示範租戶 B", userCount: 3, features: ["data", "ask"] },
+  { name: "示範租戶 C", userCount: 1, features: ["ask"] }
+] %}
+
+<!-- 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用） -->
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold">租戶功能開通</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="min-width:200px;">
+                <col style="min-width:120px;">
+                {% for feature in features %}
+                <col style="min-width:140px;">
+                {% endfor %}
+                <col style="min-width:120px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>租戶</th>
+                    <th>使用者數</th>
+                    {% for feature in features %}
+                    <th class="text-center">{{ feature.label }}</th>
+                    {% endfor %}
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                <tr>
+                    <td>{{ tenant.name }}</td>
+                    <td class="text-center">{{ tenant.userCount }}</td>
+                    {% for feature in features %}
+                    <td class="text-center">
+                        <label class="switch" aria-label="{{ tenant.name }} {{ feature.label }} 開通切換">
+                            <input type="checkbox" class="switch-checkbox" role="switch"{% if feature.key in tenant.features %} checked{% endif %}>
+                            <span class="switch-box">
+                                <span class="switch-btn"></span>
+                            </span>
+                        </label>
+                    </td>
+                    {% endfor %}
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm">儲存</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
