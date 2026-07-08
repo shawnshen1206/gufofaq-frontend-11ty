@@ -1,2 +1,9 @@
-<!-- 觸發範例：呼叫全域 showToast()（見 toast.js），需搭配 layouts/base.html 裡的 #toastContainer -->
-<button class="button button-primary" type="button" onclick="showToast('訊息')">顯示 toast</button>
+<!-- 觸發範例：呼叫全域 showToast(message, type)（見 toast.js），需搭配 layouts/base.html 裡的 #toastContainer。
+     type：success（預設）/ error / warning / info；亦可在任何按鈕加 data-toast + data-toast-type 自動觸發。 -->
+<div class="flex-row gap-16 flex-wrap">
+    <button class="button button-primary" type="button" onclick="showToast('已成功儲存')">success</button>
+    <button class="button button-red" type="button" onclick="showToast('發生錯誤，請稍後再試', 'error')">error</button>
+    <button class="button button-border" type="button" onclick="showToast('請先完成必填欄位', 'warning')">warning</button>
+    <button class="button button-dark" type="button" onclick="showToast('正在處理中…', 'info')">info</button>
+    <button class="button button-border" type="button" data-toast="文字已複製!" data-toast-type="info">data-toast 觸發</button>
+</div>

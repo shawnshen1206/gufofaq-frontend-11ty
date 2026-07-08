@@ -14,6 +14,8 @@ module.exports = function (eleventyConfig) {
         "src/_includes/ui/multi-select/multi-select.js": "js/multi-select.js",
         "src/_includes/components/upload-box/upload-box.js": "js/upload-box.js",
         "src/_includes/components/editable-block/editable-block.js": "js/editable-block.js",
+        "src/_includes/components/qa-side-panel/qa-side-panel.js": "js/qa-side-panel.js",
+        "src/_includes/components/prompt-edit/prompt-edit.js": "js/prompt-edit.js",
         "src/_includes/ui/toast/toast.js": "js/toast.js",
     });
 

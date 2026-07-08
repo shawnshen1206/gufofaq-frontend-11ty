@@ -19,9 +19,25 @@
     gap: 4px;
     font-size: 1.125rem;
 
+    // 顏色變體（success 為真 app 原有；error/warning/info 為本專案擴充，用 _var 語意色）
     &.toast-success {
         color: #fff;
         background-color: var(--color-success);
+    }
+
+    &.toast-error {
+        color: #fff;
+        background-color: var(--color-danger);
+    }
+
+    &.toast-warning {
+        color: var(--color-black);
+        background-color: var(--color-warning);
+    }
+
+    &.toast-info {
+        color: #fff;
+        background-color: var(--color-info);
     }
 
     &.show {

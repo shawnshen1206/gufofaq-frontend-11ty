@@ -1,5 +1,6 @@
 <!-- 提示詞（收合 / 展開編輯）：取自真實 app pages/qaTest 單測/AB測試頁，class 沿用真實系統。
-     展開/儲存/回復/新版本等行為屬業務邏輯（見真實 singleTest.js）不在切版範圍，js-prompt-* 為靜態 hook。
+     展開/收合（切換 .open，注入編輯 textarea / 首行預覽）為純視覺互動，由 prompt-edit.js 提供；
+     實際儲存/建新版本等 API 屬業務邏輯不在此。
      參數：promptDefaultOpen（true 時加 data-default-open，AB 測試頁的預設展開欄用）。 -->
 <div class="prompt-edit"{% if promptDefaultOpen %} data-default-open="true"{% endif %} data-full-text="角色定位：
 你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。

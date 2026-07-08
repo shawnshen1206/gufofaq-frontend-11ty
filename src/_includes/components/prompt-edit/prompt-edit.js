@@ -1,0 +1,57 @@
+// 提示詞收合/展開編輯（單測 2-2-1 / AB測 2-2-3）：點「展開編輯」切換 .open——展開時注入編輯用 textarea、
+// 收合時顯示首行預覽，並切換按鈕文字（data-text-open/close）。工具列（取消/儲存…）由 CSS 依 .open 顯示。
+// 改寫自真實 app singleTest.js 的 prompt-edit 行為（原 jQuery），純視覺切換，不含儲存 API。
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".prompt-edit").forEach(function (box) {
+        var toggle = box.querySelector(".js-prompt-toggle");
+        var content = box.querySelector(".prompt-edit-content");
+        if (!toggle || !content) return;
+
+        var openText = toggle.getAttribute("data-text-open") || "完成編輯";
+        var closeText = toggle.getAttribute("data-text-close") || "展開編輯";
+
+        function fullText() { return box.getAttribute("data-full-text") || ""; }
+        function saveFromTextarea() {
+            var ta = content.querySelector("textarea");
+            if (ta) box.setAttribute("data-full-text", ta.value);
+        }
+
+        function render() {
+            var open = box.classList.contains("open");
+            toggle.textContent = open ? openText : closeText;
+            content.innerHTML = "";
+            if (open) {
+                var ta = document.createElement("textarea");
+                ta.className = "form-control size-lg";
+                ta.value = fullText();
+                content.appendChild(ta);
+            } else {
+                var lines = fullText().split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+                var summary = lines.length ? (lines.length > 1 ? lines[0] + "..." : lines[0]) : "";
+                var div = document.createElement("div");
+                div.className = "ellipsis-1";
+                div.title = fullText();
+                div.textContent = summary;
+                content.appendChild(div);
+            }
+        }
+
+        // 初始：data-default-open 則預設展開
+        if (box.hasAttribute("data-default-open")) box.classList.add("open");
+        render();
+
+        toggle.addEventListener("click", function () {
+            if (box.classList.contains("open")) saveFromTextarea();
+            box.classList.toggle("open");
+            render();
+        });
+
+        // 儲存：寫回值並收合；取消/回復：直接收合
+        box.querySelectorAll(".js-prompt-save").forEach(function (b) {
+            b.addEventListener("click", function () { saveFromTextarea(); box.classList.remove("open"); render(); });
+        });
+        box.querySelectorAll(".js-prompt-cancel, .js-prompt-reset").forEach(function (b) {
+            b.addEventListener("click", function () { box.classList.remove("open"); render(); });
+        });
+    });
+});
