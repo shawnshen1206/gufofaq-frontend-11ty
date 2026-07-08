@@ -37,7 +37,11 @@ Tailwind v4 `@theme`（建議，直接是 CSS 變數、和現有 `var(--color-*)
   --color-gray-500: #dfdfdf;
   --color-gray-600: #6c6c6c;
   --color-black: #222222;
-  --color-blockquote-bg: rgba(0, 0, 0, 0.02); /* markdown 引言區塊背景（半透明黑） */
+  --color-blockquote-bg: rgba(0, 0, 0, 0.02);
+  --color-gray-350: #efefef;  --color-gray-550: #888888;  --color-gray-700: #4e4e4e;  --color-gray-800: #333333;
+  --color-gray-blue: #b4bfc9; --color-gray-blue-dark: #323c4f; --color-tooltip-bg: #363636;
+  --color-orange: #fe790d;    --color-orange-hover: #e9710e;
+  --color-dark: #267594;      --color-dark-hover: #0c536e;   --color-toggle-on: #409144;
 }
 /* 語意別名：text-default=black、text-dark=gray-600、border-default=gray-400、bg-primary=#e7f7ff */
 /* 漸層 --color-primary-linear（header 底線、footer 背景）非顏色 token：設成一般 CSS 變數或用 bg-[linear-gradient(to_right,#0a62ac,#2ebbcf)] */
@@ -62,7 +66,7 @@ Tailwind v4 `@theme`（建議，直接是 CSS 變數、和現有 `var(--color-*)
 - 字級（**注意命名偏移 +1，別同名對應**）：`text-md`(18px)→`text-lg`、`text-lg`(20px)→`text-xl`、`text-xl`(24px)→`text-2xl`；base 16px→`text-base`。
 - 字型：`--fontFamily` 設進 theme 的 `--font-sans` 或 config `fontFamily.sans`。
 
-> **顏色不是全在 token**：多數顏色走 `_var.scss`，但既有 verbatim atom 仍有一批**未 token 化的原色**需 arbitrary color（`bg-[#fe790d]` 等）：`_button.scss` 的 `#fe790d`/`#267594`（orange/dark variant）、`_switch.scss` 的 `#409144`/`rgb(108,108,108)`、`_storage-bar.scss` 的 `#b4bfc9`、`_base.scss` 的 `#fafafa`、chatroom/tab 的 `#4e4e4e`/`#efefef` 等。別假設每個顏色都有 token。（這批屬 GUIDELINE §4 待補債，日後會逐一收成 `_var` token；`rgba(0,0,0,.02)` 已收成 `--color-blockquote-bg`，走一般 token 對應。）
+> **顏色一律走 `_var` token（`@theme` 對應），不寫 arbitrary `bg-[#hex]`（`#fff` → `bg-white`）。**
 
 ---
 
@@ -138,7 +142,7 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 **例外：整頁 `html` 與 `mobile-nav` 用的是完整 `scrollbar()`，thumb = `--color-primary-dark`** → 這兩處掛 `scrollbar-thumb-primary-dark`（別跟其他一樣上 gray-500）。thumb 顏色一律照該處 `@include` 的是哪個 mixin 決定。**不要略過捲軸樣式。**
 
 ### 5-2. markdown 產生的富文字（`.robot-msg`，住在共用 `src/_includes/components/chat-message/_chat-message.scss`）
-> **`.robot-msg` 已抽成共用**：由 `chatroom`（後台卡片）與 `faq-chatroom`（前台全高）**兩個容器元件共用**。轉換時 markdown renderer 的 `components` 對應要放在**共用的 `ChatMessage` 元件**（後台/前台都 render 它），**不要在兩個 chatroom 各複製一份**。
+> **`.robot-msg` 由 `chatroom`（後台卡片）與 `faq-chatroom`（前台全高）兩個容器共用**：markdown renderer 的 `components` 對應放在**共用的 `ChatMessage` 元件**，別在兩個容器各複製一份。
 
 `.robot-msg` 對 `h1~h6/p/ul/ol/li/code/pre/blockquote/table/th/td/hr/a` 逐標籤上樣式，而**標題/清單/表格/程式碼那幾層在原始碼裡沒有實體標籤**（demo 是字面 `###`/`-` 文字，正式環境由 markdown renderer 產生）。兩種零 CSS 做法，擇一：
 
@@ -160,8 +164,7 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 用 `appearance:none`（或隱藏 `opacity:0` 的 input）+ 偽元素/相鄰兄弟畫出控制項（checkbox 用旋轉 border 打勾、radio 用 scale 圓點，**switch 用隱藏 checkbox + `:checked + .switch-box .switch-btn` 相鄰兄弟 + custom property `calc()` 推 handle 位置**，含 `:checked`/`:disabled` 過渡）。純 Tailwind arbitrary `before:` 很難忠實重現。**建議做法：改成受控的 React 元件（SVG icon / 自畫 handle），或此處留一小段 CSS 逃生口**。這是整個轉換裡唯一「硬要零 CSS 會很痛」的地方——若團隊零 CSS 是硬底線，優先走受控元件。
 
 ### 5-5. 實體元素的背景圖 icon（不是偽元素，數量多）
-`.form-control.search`/`.time`（放大鏡/時鐘，`_form-control.scss`）、`.button-icon` 系列約 16 個 sprite（`_button.scss`，含新增的 `like`/`dislike`/`share`）、`.multiSelect` 相關 icon（`_multi-select.scss`）都是**實體元素**的 `background-image:url(../images/*.png)`。→ `bg-[url(...)] bg-no-repeat bg-contain` arbitrary，或改 SVG 元件；**要重寫資產路徑到 React public/，數量大，別漏。**
-- **今天新增的 bg-image 資產**：`icon_owl.png`（faq-chatroom 頭像 `.avatar .pic`）、`Logo.png`（chatbot-header logo，見下方 text-indent）、`icon_good.png`/`icon_not_good.png`（**在 faq-feedback-modal 是可切換的 `.feedback-vote-btn.like/.dislike .feedback-vote-icon`，不是靜態 icon**）。`bg-size` 兩值（`24px 24px`）→ `bg-[length:24px_24px]`。
+`.form-control.search`/`.time`（放大鏡/時鐘，`_form-control.scss`）、`.button-icon` 系列 sprite（`_button.scss`）、`.multiSelect` 相關 icon（`_multi-select.scss`）、`faq-chatroom` 頭像 `icon_owl.png`、`chatbot-header` 的 `Logo.png`、`faq-feedback-modal` 的 `icon_good.png`/`icon_not_good.png`（可切換的 `.feedback-vote-btn` 圖，不是靜態 icon）都是**實體元素**的 `background-image:url(...)`。→ `bg-[url(...)] bg-no-repeat bg-contain` arbitrary，或改 SVG 元件；兩值 `background-size` → `bg-[length:24px_24px]`。**要重寫資產路徑到 React public/，數量大，別漏。**
 - **logo 圖片替換文字技法**：`.chatbot-header .logo a`（也見 `_header.scss`）用 `text-indent:101%; white-space:nowrap; overflow:hidden` 把文字推出視野、只留 bg 圖 → `indent-[101%] whitespace-nowrap overflow-hidden`（或直接把文字改 `sr-only`）。`text-indent` 無 utility，用 arbitrary。
 
 ### 5-6. 特殊 CSS 屬性
@@ -176,7 +179,7 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 `chatbot-shell` 在 `.chatbot-wrap` 定義 `--header-height:72px`/`--footer-height:38px`，由**分屬 4 個 scss 檔**的 `.chatbot-header`（`height`）、`.chatbot-footer`（`height`）、`.chatbot-main`（`top`/`bottom`）消費。這是**跨檔的版面契約**——機械式 class→className 會把每個 `height`/`top`/`bottom` 各自轉、遺失共用變數或把 72/38 內聯到各處不一致。做法：把兩個變數保留成 CSS 變數（定義在 wrap 上，或塞進 `@theme`），子片段用 `top-[var(--header-height)]`/`bottom-[var(--footer-height)]`/`h-[var(--header-height)]`。
 
 ### 5-9. CSS 動畫（`@keyframes`）——**Tailwind 純 utility 表達不了具名 keyframe**
-`ui/modals` 的 `.modals` 開關用 `@keyframes modalFadeInDown/modalFadeOutUp` + `animation: … 0.3s`（`.show`/`.hide` 觸發）；**今天的 `faq-share-modal`/`faq-feedback-modal` 內容都在 `.modals` 內，共用這組動畫**。純 utility 無法表達具名 keyframe → 在 v4 `@theme`/`@keyframes` 註冊，或裝 `tailwindcss-animate` plugin；否則開關淡入淡出會被默默丟掉。另 `.modals::backdrop{background:rgba(0,0,0,.3)}`（`.show` 時）→ 用原生 `backdrop:` variant：`backdrop:bg-black/30`。
+`ui/modals` 的 `.modals` 開關用 `@keyframes modalFadeInDown/modalFadeOutUp` + `animation: … 0.3s`（`.show`/`.hide` 觸發；所有 modal 含 `faq-*-modal` 共用）。純 utility 無法表達具名 keyframe → 在 v4 `@theme`/`@keyframes` 註冊，或裝 `tailwindcss-animate` plugin；否則開關淡入淡出會被默默丟掉。另 `.modals::backdrop{background:rgba(0,0,0,.3)}` → 用原生 `backdrop:` variant：`backdrop:bg-black/30`。
 
 ---
 
@@ -197,7 +200,7 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
 14. **高 z-index 超出 Tailwind 預設**：Tailwind 只出 `z-0..z-50`，但 code 有 toast `2000`、header `1000`、`feature-disabled-overlay`/`chatbot-header` `100`/`99`、`mobile-nav` `97~100`、`qa-side-panel` `10/2/1` → 一律 `z-[N]` arbitrary，別夾成 `z-50` 破壞疊層。
 15. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
-16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。（今天 `chat-message` 已把舊的 `.ab-compare + .message-time` 兄弟覆寫改成 `.message-time.after-compare` 變體 class，是正解示範。）
+16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
 
 ---
 

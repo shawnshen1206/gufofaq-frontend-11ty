@@ -33,4 +33,17 @@
     --color-border-default: var(--color-gray-400);
     --color-blockquote-bg: rgba(0, 0, 0, 0.02); // markdown 引言區塊背景（半透明黑，疊在任何底色上）
 
+    /* 延伸色：原本散在 verbatim atom 的原色 hex 收成 token（§4；值沿用原 hex） */
+    --color-gray-350: #efefef; // tab/priority-table 表面、checkbox/radio disabled 底（#ebebeb 併入，差不多）
+    --color-gray-550: #888888; // 模擬 select 的 placeholder（form-control）
+    --color-gray-700: #4e4e4e; // 深灰文字：tab 標題、chatroom 日期、login
+    --color-gray-800: #333333; // feature-disabled 標題
+    --color-gray-blue: #b4bfc9; // storage-bar 底軌
+    --color-gray-blue-dark: #323c4f; // pagination 資訊列文字
+    --color-tooltip-bg: #363636; // tooltip 底色
+    --color-orange: #fe790d; // button-orange
+    --color-orange-hover: #e9710e; // button-orange hover
+    --color-dark: #267594; // button-dark
+    --color-dark-hover: #0c536e; // button-dark hover
+    --color-toggle-on: #409144; // switch 開啟態底色
 }

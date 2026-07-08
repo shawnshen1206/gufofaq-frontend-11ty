@@ -122,10 +122,10 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
-- SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 變數（只有 `#fff` 可字面）**——「逐字照抄自真 app」不是保留原色 hex 的豁免（見核心原則「規範優先於歷史」）。既有 verbatim atom 若仍有原色 hex（如 `button-orange`/`button-dark`、tab `#efefef`/`#4e4e4e`、pagination `#323c4f`、tooltip `#363636`、form-control `#888`…）屬**待補債**：逐一補進 `_var` 命名 token（值沿用現有 hex，符合「數值差不多」），**不列白名單豁免**
+- SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 變數，不寫裸 hex**（`#fff`、陰影 `rgba` 除外）
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`、`.filter-field`、`.ab-side`）
-  - **「用」與「改」要分清**：**沿用**別元件的 class 當 markup（例：`qa-side-panel` 的 `<div class="tab-wrap">` 借用 `ui/tab` 的盒子基礎樣式）是可以的；但要**覆寫/約束**被嵌入元件的尺寸或排版時（連加一條 `max-height` 都算），一律在該元素加 parent 自有的 slot class（如 `tab-wrap qa-side-tab-wrap`）再把規則寫在 slot class 上，或由 owning 元件出 variant——**絕不在自己的 scss 直接寫別人的 class 選擇器**
-  - **父 shell 定義、專屬子片段消費的版面 custom property 屬「允許的父子耦合」**（例：`chatbot-shell` 在 `.chatbot-wrap` 定義 `--header-height`/`--footer-height`，由 `chatbot-header`/`chatbot-footer`/`.chatbot-main` 各自消費），**不視為跨元件洩漏**——類比 `_var` 的全域 token，只是作用域限該 shell
+  - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
+  - 父 shell 定義、專屬子片段消費的版面 `custom property`（如 shell 的 `--header-height`）屬**允許的父子耦合**，不算跨元件洩漏
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ab-test-block`），不放全域樣式表
 - **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標同 gap：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - 行內 style 的合法用途只有三種：表格欄寬（`<col style="width:...">`）、資料驅動的值（如 storage-bar 的 `width: 84.3%`，轉 React 即 `style={{width}}`）、由 JS 切換顯示的初始 `display: none`。**不可**用行內 style 寫顏色、字級與間距

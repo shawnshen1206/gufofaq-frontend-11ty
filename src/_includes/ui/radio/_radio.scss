@@ -74,7 +74,7 @@ input[type="radio"] {
     }
 
     &:disabled {
-        background-color: #ebebeb;
+        background-color: var(--color-gray-350);
         border-color: var(--color-border-default);
         cursor: not-allowed;
 
@@ -84,8 +84,8 @@ input[type="radio"] {
 
         &:checked {
             cursor: not-allowed;
-            background-color: #ebebeb;
-            border-color: #ebebeb;
+            background-color: var(--color-gray-350);
+            border-color: var(--color-gray-350);
 
             &::before {
                 background-color: #fff;

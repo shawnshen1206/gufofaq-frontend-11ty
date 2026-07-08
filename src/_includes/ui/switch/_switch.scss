@@ -18,7 +18,7 @@ label.switch {
         opacity: 0;
 
         &:checked+.switch-box {
-            background-color: #409144;
+            background-color: var(--color-toggle-on);
 
             .switch-btn {
                 background-color: #fff;
@@ -31,7 +31,7 @@ label.switch {
         display: inline-block;
         width: var(--switchWidth);
         height: var(--switchHeight);
-        background-color: rgb(108, 108, 108);
+        background-color: var(--color-gray-600);
         padding: var(--switchPaddingVertical) var(--switchPaddingHorizontal);
         border-radius: 1000px;
         vertical-align: middle;
