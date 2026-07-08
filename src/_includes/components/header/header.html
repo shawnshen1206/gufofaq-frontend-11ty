@@ -58,7 +58,7 @@
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" style="width:26px; vertical-align:middle; margin-left:4px;">{% endif %}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -69,7 +69,7 @@
             {% endfor %}
         </ul>
     </nav>
-    <button type="button" class="nav-toggle"></button>
+    <button type="button" class="nav-toggle" aria-label="開啟選單"></button>
 </header>
 
 {% include "components/mobile-nav/mobile-nav.html" %}

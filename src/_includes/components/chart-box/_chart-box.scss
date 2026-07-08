@@ -31,6 +31,12 @@
     .chart {
         width: 100%;
         height: 302px;
+
+        // 內容為表格（非固定高 canvas）時：自動高、可橫向捲動（取代頁面行內 height/overflow）
+        &.chart-auto {
+            height: auto;
+            overflow-x: auto;
+        }
     }
 
     .chart-desc {

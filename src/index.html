@@ -11,7 +11,7 @@ permalink: index.html
             <form class="form-group-wrap" id="loginForm">
                 <div class="form-group">
                     <div class="label">
-                        <label class="control-label">帳號</label>
+                        <label for="email" class="control-label">帳號</label>
                     </div>
                     <div class="field">
                         <input type="email" id="email" name="email" placeholder="請輸入帳號" class="form-control input" required autocomplete="email">
@@ -20,7 +20,7 @@ permalink: index.html
                 </div>
                 <div class="form-group">
                     <div class="label">
-                        <label class="control-label">密碼</label>
+                        <label for="password" class="control-label">密碼</label>
                     </div>
                     <div class="field">
                         <input type="password" id="password" name="password" placeholder="請輸入密碼" class="form-control input" required autocomplete="current-password">
@@ -45,15 +45,16 @@ permalink: index.html
 <dialog class="modals" id="passwordModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
                     <h3 class="modals-title">忘記密碼</h3>
                 </div>
                 <div class="modals-body">
-                    <p class="text-center" style="margin: 0;">親愛的使用者您好，如忘記密碼請與平台管理者聯絡。
+                    <p class="text-center m-0">親愛的使用者您好，如忘記密碼請與平台管理者聯絡。
                         聯絡email：houl.tu@solventosoft.com.tw，謝謝！</p>
                 </div>
             </div>

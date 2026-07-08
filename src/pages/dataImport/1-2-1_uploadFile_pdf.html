@@ -19,7 +19,7 @@ permalink: 1-2-1_uploadFile_pdf.html
 ] %}
 {% set stepNoPrev = true %}
 {% set stepNodesLg = true %}
-<div style="margin-bottom: 34px; margin-top: 10px;">
+<div class="mt-10 mb-32">
     {% include "components/step-btn-wrap/step-btn-wrap.html" %}
 </div>
 
@@ -49,11 +49,11 @@ permalink: 1-2-1_uploadFile_pdf.html
         sizeMB: "0.85"
     }
 ] %}
-<div class="table-container scrollTable" style="margin-top: 24px;">
+<div class="table-container scrollTable mt-24">
     <table class="default-table">
         <colgroup>
-            <col style="width:1fr; min-width:200px;">
-            <col style="width:1fr; min-width:200px;">
+            <col style="min-width:200px;">
+            <col style="min-width:200px;">
             <col style="width:180px; min-width:180px;">
             <col style="width:120px; min-width:120px;">
             <col style="width:96px; min-width:96px;">
@@ -102,8 +102,9 @@ permalink: 1-2-1_uploadFile_pdf.html
 <dialog class="modals" id="editModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
@@ -113,7 +114,7 @@ permalink: 1-2-1_uploadFile_pdf.html
                     <div class="flex-row column gap-8">
                         <div class="form-group row">
                             <div class="label">
-                                <label class="control-label">標題</label>
+                                <label for="editTitle" class="control-label">標題</label>
                             </div>
                             <div class="field">
                                 <input type="text" id="editTitle" placeholder="請輸入" class="form-control">
@@ -121,7 +122,7 @@ permalink: 1-2-1_uploadFile_pdf.html
                         </div>
                         <div class="form-group row">
                             <div class="label">
-                                <label class="control-label">時間</label>
+                                <label for="editTime" class="control-label">時間</label>
                             </div>
                             <div class="field">
                                 <input type="text" id="editTime" class="form-control start-date" placeholder="請選擇時間"
@@ -132,7 +133,7 @@ permalink: 1-2-1_uploadFile_pdf.html
                         <div id="editCusFields"></div>
                         <div class="form-group row">
                             <div class="label">
-                                <label class="control-label">內容</label>
+                                <label for="editContent" class="control-label">內容</label>
                             </div>
                             <div class="field">
                                 <textarea id="editContent" rows="10" class="form-control" disabled></textarea>
@@ -156,8 +157,9 @@ permalink: 1-2-1_uploadFile_pdf.html
 <dialog class="modals" id="deleteModal">
     <div class="modals-dialog modals-sm">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">

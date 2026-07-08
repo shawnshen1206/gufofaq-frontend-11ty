@@ -14,33 +14,33 @@ permalink: 4-1_qaHistory.html
 <!-- 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入（js 依 query 切換頁籤與資料來源），
      此靜態頁一律呈現同一份查詢表單；開始/結束時間欄位沿用真實 class（flatpickr 由 js/qaHistory.js 掛載，此處僅保留樣式用 class，不掛 JS）；
      使用者類型／滿意度為 singleSelect（非 multiSelect），保留原生 select -->
-<div class="block block-sm border corner-md" style="margin-top: 16px;">
+<div class="block block-sm border corner-md mt-16">
     <div class="flex-row column gap-16">
         <div class="flex-row gap-8 mobile-column sm-gap-16">
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label required">開始時間</label>
+                    <label for="startDateInput" class="control-label required">開始時間</label>
                 </div>
                 <div class="field">
-                    <input type="text" class="form-control time start-date" placeholder="開始時間" required>
+                    <input type="text" id="startDateInput" class="form-control time start-date" placeholder="開始時間" required>
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label required">結束時間</label>
+                    <label for="endDateInput" class="control-label required">結束時間</label>
                 </div>
                 <div class="field">
-                    <input type="text" class="form-control time end-date" placeholder="結束時間" required>
+                    <input type="text" id="endDateInput" class="form-control time end-date" placeholder="結束時間" required>
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label required">使用者類型</label>
+                    <label for="userTypeSelect" class="control-label required">使用者類型</label>
                 </div>
                 <div class="field">
-                    <select class="form-control singleSelect user-type-select" required>
+                    <select id="userTypeSelect" class="form-control singleSelect user-type-select" required>
                         <option></option>
                         <option value="全部" selected>全部</option>
                         <option value="前台問答">前台問答</option>
@@ -50,39 +50,39 @@ permalink: 4-1_qaHistory.html
             </div>
         </div>
         <div class="flex-row gap-8 mobile-column sm-gap-16">
-            <div class="form-group col-12-sm" style="flex: 1;">
+            <div class="form-group col-12-sm flex-1">
                 <div class="label">
-                    <label class="control-label">關鍵字</label>
+                    <label for="keywordInput" class="control-label">關鍵字</label>
                 </div>
                 <div class="field">
-                    <input type="text" placeholder="請輸入" class="form-control keyword-input">
+                    <input type="text" id="keywordInput" placeholder="請輸入" class="form-control keyword-input">
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label class="control-label">對話編號</label>
+                    <label for="chatLogSnInput" class="control-label">對話編號</label>
                 </div>
                 <div class="field">
-                    <input type="text" placeholder="請輸入" class="form-control chat-log-sn">
+                    <input type="text" id="chatLogSnInput" placeholder="請輸入" class="form-control chat-log-sn">
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label class="control-label">聊天室編號</label>
+                    <label for="chatRoomSnInput" class="control-label">聊天室編號</label>
                 </div>
                 <div class="field">
-                    <input type="text" placeholder="請輸入" class="form-control chat-room-sn">
+                    <input type="text" id="chatRoomSnInput" placeholder="請輸入" class="form-control chat-room-sn">
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label class="control-label">滿意度</label>
+                    <label for="ratingSelect" class="control-label">滿意度</label>
                 </div>
                 <div class="field">
-                    <select class="form-control singleSelect rating-select">
+                    <select id="ratingSelect" class="form-control singleSelect rating-select">
                         <option></option>
                         <option value="讚">讚</option>
                         <option value="倒讚">倒讚</option>
@@ -137,13 +137,13 @@ permalink: 4-1_qaHistory.html
 <div class="table-container scrollTable">
     <table class="default-table">
         <colgroup>
-            <col style="width:1fr; min-width:159px;">
-            <col style="width:1fr; min-width:159px;">
+            <col style="min-width:159px;">
+            <col style="min-width:159px;">
             <col style="width: 200px; min-width: 200px;">
             <col style="width: 200px; min-width: 200px;">
-            <col style="width:1fr; min-width:160px;">
-            <col style="width:1fr; min-width:160px;">
-            <col style="width:1fr; min-width:160px;">
+            <col style="min-width:160px;">
+            <col style="min-width:160px;">
+            <col style="min-width:160px;">
         </colgroup>
         <thead>
             <tr>
@@ -185,6 +185,6 @@ permalink: 4-1_qaHistory.html
     { number: 2 },
     { number: 3 }
 ] %}
-<div style="margin-top: 16px;">
+<div class="mt-16">
     {% include "ui/pagination/pagination.html" %}
 </div>

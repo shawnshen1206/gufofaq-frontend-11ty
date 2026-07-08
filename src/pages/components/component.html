@@ -146,7 +146,7 @@ permalink: component.html
                         <div class="example-box">.col-12-md</div>
                     </div>
                 </div>
-                <div class="caption description" style="margin-top: 1rem;">
+                <div class="caption description mt-16">
                     <ul>
                         <li><span class="text-red">.col-數字-md</span>代表在桌機尺寸的欄位數，數字可從1-12，需注意，一個.flex-row內的數個「.col-數字-md」加起來不可超過12
                         </li>
@@ -175,6 +175,11 @@ permalink: component.html
                         <li>如要該.flex-row僅在「容器寬度小於768px」時能方向切換為column，請加上.mobile-column-xs的class，只有加上這個class，<span
                                 class="text-red">.col-數字-xs</span>手機版欄位才能顯示
                         </li>
+                        <li>欄寬會自動扣除 gap 分攤（calc）：同一列 col 數字總和＝12 時剛好填滿一行，搭配.flex-wrap也不會提早掉行；直向排列（.column／斷點下的.mobile-column）時不扣，.col-12-* 恆為整寬</li>
+                        <li>垂直間距（區塊與區塊之間）：<span class="text-red">.mt-數字</span>（margin-top）、<span
+                                class="text-red">.mb-數字</span>（margin-bottom）、<span
+                                class="text-red">.my-數字</span>（上下同時），數字尺標同 gap（4, 8, 10, 12, 16, 20, 24, 32,
+                            40）；歸零用.m-0。<span class="text-red">不要寫行內 style="margin-..."</span>（詳見 GUIDELINE §4）；水平間距一律交給.flex-row 的 gap-*</li>
                     </ul>
                 </div>
             </div>
@@ -312,6 +317,7 @@ permalink: component.html
             <div class="caption">
                 <ul>
                     <li>在.form-control上加上「.select-sm / .select-md」的class可改變框的內距</li>
+                    <li>label 與輸入框需以 for/id 關聯（同一元件在頁面重複出現時，id 用迴圈變數組出唯一值）；沒有可見 label 的輸入框（如聊天輸入），在控制項上加 aria-label</li>
                 </ul>
             </div>
             {% include "ui/form-control/form-control.html" %}
@@ -333,7 +339,7 @@ permalink: component.html
             {% include "ui/checkbox/checkbox.html" %}
             <br>
             {% include "ui/radio/radio.html" %}
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>全選checkbox使用「.checkbox-container」包覆所有checkbox，全選checkbox請給class「.check-all」，其餘單個checkbox請給class「.check-one」
                     </li>
@@ -355,7 +361,7 @@ permalink: component.html
                 </ul>
             </div>
             {% include "components/default-table/default-table.html" %}
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>表格請給予.default-table設定主要表格樣式</li>
                     <li>表格父層用「.table-container」包覆，如需要讓表格可以左右滾動，請加上「.scrollTable」的class</li>
@@ -372,8 +378,13 @@ permalink: component.html
                     <li>意圖判斷表格</li>
                 </ul>
             </div>
+            {% set rows = [
+                { category: "入出國與法規", description: "處理入境、出境、簽證、停留等問題", prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。", priority: "高優先級" },
+                { category: "證件與資料申請", description: "協助查詢入出國紀錄、統一證號等申辦方式", prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。", priority: "高優先級" },
+                { category: "權益與申訴服務類", description: "", prompt: "", priority: "高優先級" }
+            ] %}
             {% include "components/priority-table/priority-table.html" %}
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>意圖判斷表格使用「.default-table.priority-table」這個class</li>
                     <li>表格內可編輯的欄位：「任務描述」請在td加上「.edit-cell.description」、「任務對應提示詞」請在td加上「.edit-cell.prompt」。內容皆使用「div.ellipsis-2」包覆
@@ -387,7 +398,7 @@ permalink: component.html
                 </ul>
             </div>
             {% include "components/form-table/form-table.html" %}
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>表單表格是使用 div 模擬 table 的表格</li>
                     <li>使用「.form-table」這個class，父層用「div.form-table-group」包住</li>
@@ -406,7 +417,7 @@ permalink: component.html
                 </ul>
             </div>
             {% include "ui/accordion/accordion.html" %}
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>手風琴表格使用「.accordion-table」這個class，父層用「div.accordion-content」包覆</li>
                     <li>在最外層表格中使用 &lt;tr class="detail-row"&gt; &lt;td colspan="4" class="detail-cell"&gt;
@@ -466,7 +477,7 @@ permalink: component.html
                     <img src="./images/icon_arrow_right_blue.png" alt="下一頁" class="icon">
                 </button>
             </div>
-            <div class="caption description" style="margin-top: 1rem;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>上一頁li.prev以及下一頁li.next加上.disabled的class就會呈現禁用狀態</li>
                     <li>當頁頁碼的li標籤加上.active的class呈現激活狀態</li>
@@ -504,7 +515,7 @@ permalink: component.html
                         <img src="./images/icon_info.png" alt="" class="icon">
                     </button>
                 </div>
-                <div class="caption description" style="margin-top: 16px;">
+                <div class="caption description mt-16">
                     <ul>
                         <li>開啟跳窗使用全域函式 window.openModal(id)，見 ui/modals/modals.js</li>
                         <li>跳窗的html結構在本頁面最底部</li>
@@ -565,7 +576,7 @@ permalink: component.html
             ] %}
             {% set stepNodesLg = false %}
             {% include "components/step-btn-wrap/step-btn-wrap.html" %}
-            <div class="caption description" style="margin-top: 16px;">
+            <div class="caption description mt-16">
                 <ul>
                     <li>1. 已完成及正在進行的步驟在div.step-node上加上.done的class，呈現深藍色文字及邊框</li>
                     <li>2. 較大的步驟條在.step-node加上「.lg」這個class，如：樣式二</li>
@@ -590,8 +601,9 @@ permalink: component.html
 <dialog class="modals" id="previewModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">

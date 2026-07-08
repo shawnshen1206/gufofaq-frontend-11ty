@@ -1,23 +1,16 @@
-<!-- 展示片段，取自真實 app pages/dataset/3-1-3_previewDataset.html 與 pages/components/component.html（class 沿用真實系統）
-     切換行為由 editable-block.js 提供（原生 DOM，見該檔） -->
-
-<!-- 樣式一：單行文字 + display-text -->
+{# 文字編輯區（原生 DOM 切換檢視/編輯，行為見 editable-block.js）。參數由使用頁面 include 前 set（見 §3-2/§6）：
+     editType："text"（單行：display-text + input）或 "textarea"（多行：label + textarea）
+     editValue：目前值（顯示文字 / input value / textarea 內容）
+     editLabel：欄位名——textarea 樣式的可見 label；text 樣式無可見 label，用作 input 的 aria-label
+     editPlaceholder：textarea 的 placeholder（選填）
+     editRows：textarea 列數（選填，預設 10）
+   同頁重複使用時每次 include 前重新 set 全部參數（§2 set 全域）。用法見 3-1-3_previewDataset.html。
+   save/cancel/input 的 display:none 為 JS 切換的初始態（§4 允許），與 _editable-block.scss 的初始隱藏一致。 #}
+{% if editType == "textarea" %}
 <div class="editable-block">
-    <span class="display-text">資料集名稱範例</span>
-    <input type="text" class="form-control edit-field" value="資料集名稱範例" style="display: none;">
-    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
-            class="sr-only">編輯</span></button>
-    <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" style="display: none;"><span
-            class="sr-only">確認</span></button>
-    <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消" style="display: none;"><span
-            class="sr-only">取消</span></button>
-</div>
-
-<!-- 樣式二：搭配 textarea + label（見 3-1-3_previewDataset.html 任務描述） -->
-<div class="editable-block" style="margin-top: 16px;">
     <div class="form-group edit-field-group">
         <div class="label flex-row align-items-center">
-            <label class="control-label">任務描述</label>
+            <label class="control-label">{{ editLabel }}</label>
             <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
                     class="sr-only">編輯</span></button>
             <div class="flex-row gap-4">
@@ -28,8 +21,21 @@
             </div>
         </div>
         <div class="field">
-            <textarea rows="6" class="form-control size-sm edit-field disabled" placeholder="請輸入任務描述"
-                disabled></textarea>
+            <textarea rows="{{ editRows or 10 }}" class="form-control size-sm edit-field disabled"
+                placeholder="{{ editPlaceholder }}" aria-label="{{ editLabel }}" disabled>{{ editValue }}</textarea>
         </div>
     </div>
 </div>
+{% else %}
+<div class="editable-block">
+    <span class="display-text">{{ editValue }}</span>
+    <input type="text" class="form-control edit-field" value="{{ editValue }}" style="display: none;"
+        aria-label="{{ editLabel }}">
+    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
+            class="sr-only">編輯</span></button>
+    <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" style="display: none;"><span
+            class="sr-only">確認</span></button>
+    <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消" style="display: none;"><span
+            class="sr-only">取消</span></button>
+</div>
+{% endif %}

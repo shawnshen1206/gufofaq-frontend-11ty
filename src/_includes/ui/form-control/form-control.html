@@ -1,12 +1,13 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 08 輸入框 section（節錄，class 沿用真實系統） -->
+<!-- 展示片段，取自真實 app pages/components/component.html 08 輸入框 section（節錄，class 沿用真實系統）。
+     label 與輸入框以 for/id 關聯（無障礙示範，見 GUIDELINE §4；本片段只在元件庫頁出現一次，故可用固定 id） -->
 <div class="flex-row gap-20">
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label class="control-label">標題</label>
+                <label for="demoInputDefault" class="control-label">標題</label>
             </div>
             <div class="field">
-                <input type="text" placeholder="請輸入" class="form-control">
+                <input type="text" id="demoInputDefault" placeholder="請輸入" class="form-control">
                 <span class="error-prompt">錯誤訊息文字</span>
             </div>
         </div>
@@ -15,10 +16,10 @@
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label class="control-label">標題</label>
+                <label for="demoInputDisabled" class="control-label">標題</label>
             </div>
             <div class="field">
-                <input type="text" placeholder="請輸入" class="form-control disabled" disabled>
+                <input type="text" id="demoInputDisabled" placeholder="請輸入" class="form-control disabled" disabled>
                 <span class="error-prompt">錯誤訊息文字</span>
             </div>
         </div>
@@ -29,10 +30,10 @@
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label class="control-label">標題</label>
+                <label for="demoInputError" class="control-label">標題</label>
             </div>
             <div class="field">
-                <input type="text" placeholder="請輸入" class="form-control error">
+                <input type="text" id="demoInputError" placeholder="請輸入" class="form-control error">
                 <span class="error-prompt">錯誤訊息文字</span>
             </div>
         </div>
@@ -41,10 +42,10 @@
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label class="control-label required">標題</label>
+                <label for="demoInputRequired" class="control-label required">標題</label>
             </div>
             <div class="field">
-                <input type="text" placeholder="請輸入" class="form-control" required>
+                <input type="text" id="demoInputRequired" placeholder="請輸入" class="form-control" required>
                 <span class="error-prompt">錯誤訊息文字</span>
             </div>
         </div>
@@ -55,10 +56,10 @@
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label class="control-label">搜尋框</label>
+                <label for="demoInputSearch" class="control-label">搜尋框</label>
             </div>
             <div class="field">
-                <input type="text" placeholder="搜尋..." class="form-control search">
+                <input type="text" id="demoInputSearch" placeholder="搜尋..." class="form-control search">
                 <span class="error-prompt">錯誤訊息文字</span>
             </div>
         </div>
@@ -67,10 +68,10 @@
     <div class="col-6-md">
         <div class="form-group">
             <div class="label">
-                <label for="" class="control-label">標題</label>
+                <label for="demoTextarea" class="control-label">標題</label>
             </div>
             <div class="field">
-                <textarea rows="10" class="form-control" placeholder="請輸入您推薦這篇文章的原因"></textarea>
+                <textarea rows="10" id="demoTextarea" class="form-control" placeholder="請輸入您推薦這篇文章的原因"></textarea>
             </div>
         </div>
         <div class="subtitle">

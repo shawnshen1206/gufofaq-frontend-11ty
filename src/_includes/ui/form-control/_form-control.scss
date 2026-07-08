@@ -32,6 +32,12 @@
             width: auto;
         }
     }
+
+    // 工具列裡的搜尋欄：固定不縮、下限 280px（取代頁面行內 flex-shrink/min-width）
+    &.w-search {
+        flex-shrink: 0;
+        min-width: 280px;
+    }
 }
 
 .label {

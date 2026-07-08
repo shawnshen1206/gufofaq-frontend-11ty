@@ -12,77 +12,43 @@ permalink: 3-1-3_previewDataset.html
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
-    <!-- 資料集名稱：components/editable-block 樣式一（display-text + edit/save/cancel），逐字沿用其 class -->
-    <div class="editable-block">
-        <span class="display-text">客服問答知識庫</span>
-        <input type="text" class="form-control edit-field" value="客服問答知識庫" style="display: none;">
-        <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
-                class="sr-only">編輯</span></button>
-        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" style="display: none;"><span
-                class="sr-only">確認</span></button>
-        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消" style="display: none;"><span
-                class="sr-only">取消</span></button>
-    </div>
+    {# 資料集名稱：editable-block 樣式一（單行 text） #}
+    {% set editType = "text" %}
+    {% set editLabel = "資料集名稱" %}
+    {% set editValue = "客服問答知識庫" %}
+    {% include "components/editable-block/editable-block.html" %}
 </div>
 
-<!-- 任務描述 / 任務對應提示詞：components/editable-block 樣式二（textarea + label），左右兩欄與真實頁一致 -->
-<div class="flex-row gap-16 mobile-column" style="margin: 16px 0;">
-    <div style="flex: 1 1 0; min-width: 0;">
-        <div class="editable-block">
-            <div class="form-group edit-field-group">
-                <div class="label flex-row align-items-center">
-                    <label class="control-label">任務描述</label>
-                    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
-                            class="sr-only">編輯</span></button>
-                    <div class="flex-row gap-4">
-                        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"
-                            style="display: none;"><span class="sr-only">確認</span></button>
-                        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消"
-                            style="display: none;"><span class="sr-only">取消</span></button>
-                    </div>
-                </div>
-                <div class="field">
-                    <textarea rows="10" class="form-control size-sm edit-field disabled" placeholder="請輸入任務描述"
-                        disabled>回答客服常見問題，內容涵蓋帳號、訂單與退換貨相關問題。</textarea>
-                </div>
-            </div>
-        </div>
+<!-- 任務描述 / 任務對應提示詞：editable-block 樣式二（textarea），左右兩欄各佔一半、可壓縮（.flex-1） -->
+<div class="flex-row gap-16 mobile-column my-16">
+    <div class="flex-1">
+        {% set editType = "textarea" %}
+        {% set editLabel = "任務描述" %}
+        {% set editPlaceholder = "請輸入任務描述" %}
+        {% set editValue = "回答客服常見問題，內容涵蓋帳號、訂單與退換貨相關問題。" %}
+        {% include "components/editable-block/editable-block.html" %}
     </div>
-    <div style="flex: 1 1 0; min-width: 0;">
-        <div class="editable-block">
-            <div class="form-group edit-field-group">
-                <div class="label flex-row align-items-center">
-                    <label class="control-label">任務對應提示詞</label>
-                    <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
-                            class="sr-only">編輯</span></button>
-                    <div class="flex-row gap-4">
-                        <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"
-                            style="display: none;"><span class="sr-only">確認</span></button>
-                        <button type="button" class="button-icon no-bg size-sm cancel cancel-icon" title="取消"
-                            style="display: none;"><span class="sr-only">取消</span></button>
-                    </div>
-                </div>
-                <div class="field">
-                    <textarea rows="10" class="form-control size-sm edit-field disabled" placeholder="請輸入任務對應提示詞"
-                        disabled>你是客服助理，請根據提供的資料集內容，以親切、精簡的語氣回答使用者的問題。</textarea>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1">
+        {% set editType = "textarea" %}
+        {% set editLabel = "任務對應提示詞" %}
+        {% set editPlaceholder = "請輸入任務對應提示詞" %}
+        {% set editValue = "你是客服助理，請根據提供的資料集內容，以親切、精簡的語氣回答使用者的問題。" %}
+        {% include "components/editable-block/editable-block.html" %}
     </div>
 </div>
 
 <!-- 搜尋 + 檔案總大小 + 刪除/新增檔案：真實頁 delete-selected-btn / add-file-btn 預設 display:none（等待 js 依選取/載入狀態切換），
      此處呈現「已載入且可操作」的靜態最終態，故移除 inline display:none -->
-<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column" style="margin: 16px 0;">
-    <div class="form-group" style="flex-shrink: 0; min-width: 280px;">
+<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column my-16">
+    <div class="form-group w-search">
         <div class="field">
             <input type="text" placeholder="搜尋檔案..." class="form-control search">
         </div>
     </div>
     <div class="flex-row gap-16 justify-content-end align-items-center flex-wrap">
-        <p class="text-gray" style="margin: 0;">共 128.45 MB</p>
+        <p class="text-gray m-0">共 128.45 MB</p>
         <button type="button" class="button button-red delete-selected-btn">刪除</button>
-        <a href="#" class="button button-primary add-file-btn" style="flex-shrink: 0;">
+        <a href="#" class="button button-primary add-file-btn flex-shrink-0">
             <img src="./images/icon_add_white.png" alt="" class="icon">新增檔案
         </a>
     </div>
@@ -98,8 +64,8 @@ permalink: 3-1-3_previewDataset.html
 <div class="table-container scrollTable checkbox-container">
     <table class="default-table">
         <colgroup>
-            <col style="width:1fr; min-width:36px;">
-            <col style="width:1fr; min-width:522px;">
+            <col style="min-width:36px;">
+            <col style="min-width:522px;">
             <col style="width: 180px; min-width: 180px;">
             <col style="width: 180px; min-width: 180px;">
             <col style="width: 180px; min-width: 180px;">
@@ -152,7 +118,7 @@ permalink: 3-1-3_previewDataset.html
     { number: 2 },
     { number: 3 }
 ] %}
-<div style="margin-top: 16px;">
+<div class="mt-16">
     {% include "ui/pagination/pagination.html" %}
 </div>
 

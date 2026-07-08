@@ -14,11 +14,11 @@ permalink: 5-3_statsModule.html
 
 <!-- 篩選列：資料時間篩選（近24小時/上週/上個月單選 + 時間區間，起訖欄真實頁由 flatpickr 掛載，此處不引入 vendor，
      僅保留原生 class 與 disabled 預設狀態）+ 查詢資料類型單選 -->
-<div class="block flex-row column gap-24" style="margin-top: 10px;">
+<div class="block flex-row column gap-24 mt-10">
     <div class="flex-row column gap-16">
         <div class="form-group row flex-row mobile-column-xs gap-16">
             <div class="label mobile-align">
-                <label for="" class="control-label">資料時間篩選</label>
+                <label class="control-label">資料時間篩選</label>
             </div>
             <div class="field w100">
                 <div class="flex-row gap-16 mobile-column flex-wrap field-with-input-group">
@@ -95,16 +95,16 @@ permalink: 5-3_statsModule.html
 </div>
 
 <!-- 圖表區塊：沿用 components/chart-box，.chart 內僅放 <canvas> 佔位，不掛 Chart.js（業務 JS 不轉） -->
-<div style="margin-top: 1.5rem;">
+<div class="mt-24">
     {% include "components/chart-box/chart-box.html" %}
 </div>
 
 <!-- 下方兩個圖表區塊與 chart-box 展示片段的 markup 不完全相同（分別為排行榜表格容器、單一折線圖），
      沿用同一組 .chart-box/.chart-title/.chart/.chart-desc verbatim class 手寫 -->
-<div class="flex-row gap-24 mobile-column" style="margin-top: 1rem;">
+<div class="flex-row gap-24 mobile-column mt-16">
     <div class="chart-box">
         <div class="chart-title">貢獻度排行與優先續建議</div>
-        <div class="chart" id="rankingTableWrap" style="height: auto; overflow-x: auto;"></div>
+        <div class="chart chart-auto" id="rankingTableWrap"></div>
         <div class="chart-desc">
             <p><span class="bold">資料時間：</span><span id="desc2Time">-</span></p>
             <div class="flex-row gap-10 flex-wrap">

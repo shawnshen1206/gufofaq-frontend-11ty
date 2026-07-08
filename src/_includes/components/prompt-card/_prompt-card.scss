@@ -1,0 +1,28 @@
+// 提示詞版本卡（5-4-1 提示詞管理）：.block 的 variant。
+// 純樣式元件（無 html/js）：markup 寫在頁面（草稿卡 .prompt-card.draft、歷史版本卡 .prompt-card）。
+// （原始規則來自真實 app css/style.css「提示詞管理 (5-4-1)」段；textarea 依 GUIDELINE §4
+//  「slot class」原則改指本元件自己的 .prompt-input，不指名 ui/form-control 的 class；
+//  卡片內的列表行距改用 ui/list-style 的 .line-loose variant，本檔不觸碰它的 class。）
+.prompt-card {
+    &.draft {
+        .prompt-text {
+            font-weight: 500;
+            margin: 0;
+            padding: 0.4375rem 0.5rem;
+            box-sizing: border-box;
+        }
+
+        .prompt-input {
+            line-height: 1.625;
+        }
+    }
+}
+
+// 卡片內文（提示詞全文）：行距放鬆為 1.625
+.prompt-content {
+    line-height: 1.625;
+
+    p {
+        margin: 0;
+    }
+}

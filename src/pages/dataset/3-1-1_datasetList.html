@@ -12,8 +12,8 @@ permalink: 3-1-1_datasetList.html
 </div>
 
 <!-- 搜尋 + 儲存空間 + 新增資料集 -->
-<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column" style="margin: 16px 0;">
-    <div class="form-group" style="flex-shrink: 0; min-width: 280px;">
+<div class="flex-row justify-content-between flex-wrap gap-16 mobile-column my-16">
+    <div class="form-group w-search">
         <div class="field">
             <input type="text" placeholder="搜尋..." class="form-control search">
             <span class="error-prompt">錯誤訊息文字</span>
@@ -21,7 +21,7 @@ permalink: 3-1-1_datasetList.html
     </div>
     <div class="flex-row gap-16 justify-content-end flex-wrap">
         {% include "components/storage-bar/storage-bar.html" %}
-        <a href="3-1-2_dataImport_input.html" class="button button-primary" style="flex-shrink: 0;">
+        <a href="3-1-2_dataImport_input.html" class="button button-primary flex-shrink-0">
             <img src="./images/icon_add_white.png" alt="" class="icon">新增資料集
         </a>
     </div>
@@ -61,8 +61,8 @@ permalink: 3-1-1_datasetList.html
 <div class="table-container scrollTable">
     <table class="default-table">
         <colgroup>
-            <col style="width:1fr; min-width:327px;">
-            <col style="width:1fr; min-width:327px;">
+            <col style="min-width:327px;">
+            <col style="min-width:327px;">
             <col style="width: 120px; min-width: 120px;">
             <col style="width: 120px; min-width: 120px;">
             <col style="width: 120px; min-width: 120px;">
@@ -134,7 +134,7 @@ permalink: 3-1-1_datasetList.html
     { number: 2 },
     { number: 3 }
 ] %}
-<div style="margin-top: 16px;">
+<div class="mt-16">
     {% include "ui/pagination/pagination.html" %}
 </div>
 

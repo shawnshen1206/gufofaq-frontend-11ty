@@ -1,25 +1,10 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 11 Table表格 section「意圖判斷表格」（class 沿用真實系統） -->
-<!-- 意圖判斷表格使用「.default-table.priority-table」；父層用「div.table-container」包覆，需左右滾動加「.scrollTable」；
-     可編輯欄位：任務描述用 td.edit-cell.description、任務對應提示詞用 td.edit-cell.prompt，內容皆用 div.ellipsis-2 包覆；
-     編輯/設定按鈕、textarea 切換屬於 main.js 業務邏輯，不在此列 -->
-{% set rows = [
-    {
-        category: "入出國與法規",
-        description: "處理入境、出境、簽證、停留等問題",
-        prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。"
-    },
-    {
-        category: "證件與資料申請",
-        description: "協助查詢入出國紀錄、統一證號等申辦方式",
-        prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。"
-    },
-    {
-        category: "權益與申訴服務類",
-        description: "",
-        prompt: ""
-    }
-] %}
-
+<!-- 意圖判斷表格（5 欄 .default-table.priority-table，class 沿用既有系統）。
+     資料由使用頁面在 include 前 set（見 §3-2/§6）：
+       rows = [{ category, description, prompt, priority }]
+       priority 對應「變更優先級」下拉的選中值（"高優先級"/"中優先級"/"低優先級"/"不使用"，空字串＝未選）；rows 空陣列＝空狀態表。
+     可編輯欄位：任務描述 td.edit-cell.description、任務對應提示詞 td.edit-cell.prompt，內容用 div.ellipsis-2 包覆；
+     編輯/設定按鈕、textarea 切換屬 main.js 業務邏輯，不在此列。
+     用法：component.html（單張示範）、5-2-1_knowledgeRetrieval.html（依高/中/低優先級分組，每組 set rows 後 include）。 -->
 <div class="table-container scrollTable">
     <table class="default-table priority-table">
         <colgroup>
@@ -57,12 +42,12 @@
                 <td>
                     <div class="form-group">
                         <div class="field">
-                            <select class="form-control select-sm singleSelect">
+                            <select class="form-control select-sm singleSelect" aria-label="變更優先級">
                                 <option></option>
-                                <option value="高優先級" selected>高優先級</option>
-                                <option value="中優先級">中優先級</option>
-                                <option value="低優先級">低優先級</option>
-                                <option value="不使用">不使用</option>
+                                <option value="高優先級"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
+                                <option value="中優先級"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
+                                <option value="低優先級"{% if row.priority == "低優先級" %} selected{% endif %}>低優先級</option>
+                                <option value="不使用"{% if row.priority == "不使用" %} selected{% endif %}>不使用</option>
                             </select>
                         </div>
                     </div>
@@ -72,5 +57,3 @@
         </tbody>
     </table>
 </div>
-<!-- 註：真實 app 的「依優先級分組」版面（5-2-1_knowledgeRetrieval 頁）是把上方這張完整 5 欄 .default-table.priority-table
-     連同 .tablelist-title 標題整組重複，並非另一種單欄變體；該分組用法已由 5-2-1 頁本身逐段呈現，此元件僅示範單張表格結構，不再另造一個真實 app 不存在的單欄表。 -->

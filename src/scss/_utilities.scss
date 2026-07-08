@@ -1,4 +1,35 @@
-// 從 component.scss 的「樣式共用」尾段與「flex欄位」區段逐字抽出（verbatim）
+// 工具 class（utility layer）——語意沿用真實 app component.scss「樣式共用」「flex欄位」區段
+// （class 名與視覺不變），相對原始寫法有三點升級（規則說明見 GUIDELINE §4）：
+//
+// 1) 尺標生成：原本 gap/col 三個斷點手寫三份，改用同一把 $spacing-scale 尺標以 @each 生成（輸出等價）；
+//    並新增同尺標的 .mt-*/.mb-*/.my-*/.m-0 間距工具，取代頁面四散的行內 style="margin-*"。
+// 2) 欄寬修正：.col-N-* 改為 calc() 扣除 gap 分攤——同一列 col 總和 = 12 時剛好填滿 100%。
+//    （原寫法 width: N/12*100% 未扣 gap，總寬超過 100% 靠 flex-shrink 硬擠，搭配 .flex-wrap 會提早掉行。）
+//    gap-* 同時寫入 --flex-gap 供 col 計算；直向排列（.column、斷點下的 .mobile-column(-xs)）時
+//    把 --flex-gap 歸零，讓 .col-12-* 恆為整寬。
+// 3) 覆寫層級：間距（mt/mb/my/m-0）、顯示（hidden）、對齊（text-left/center/right）這類「最後一手」
+//    單屬性工具帶 !important——它們取代的是行內 style，語意上不允許被元件樣式反壓。
+//    文字大小與顏色工具不帶 !important（允許元件情境覆寫；.text-default 沿用原本的 !important）。
+
+@use "sass:map";
+
+// 間距尺標（class 名 = px 數，值 = rem）：gap-*/sm-gap-*/xs-gap-*/mt-*/mb-*/my-* 共用同一把尺
+$spacing-scale: (
+    2: 0.125rem,
+    4: 0.25rem,
+    8: 0.5rem,
+    10: 0.625rem,
+    12: 0.75rem,
+    16: 1rem,
+    20: 1.25rem,
+    24: 1.5rem,
+    32: 2rem,
+    40: 2.5rem,
+);
+$gaps-md: (2, 4, 8, 10, 12, 16, 20, 24, 32, 40); // 桌機 gap-*（沿用原有清單）
+$gaps-mobile: (4, 8, 10, 12, 16, 20, 24, 32); // sm-gap-*/xs-gap-*（沿用原有清單）
+$margins: (4, 8, 10, 12, 16, 20, 24, 32, 40); // mt-*/mb-*/my-*
+
 .text-md {
     font-size: 1.125rem; // 18px
 }
@@ -12,7 +43,7 @@
 }
 
 .text-left {
-    text-align: left;
+    text-align: left !important;
 }
 
 .text-center {
@@ -20,7 +51,7 @@
 }
 
 .text-right {
-    text-align: right;
+    text-align: right !important;
 }
 
 // 單行文字溢出
@@ -60,12 +91,13 @@
     color: var(--color-text-dark);
 }
 
+// 「粗體」沿用真實 app 的視覺定義 = 500（medium）；class 名是設計系統既有詞彙，勿改名、勿改值
 .text-bold {
     font-weight: 500;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .icon {
@@ -74,8 +106,32 @@
     object-fit: contain;
 }
 
+// 選單項的 BETA 小徽章圖（header / mobile-nav 共用；取代原本的行內 width/margin/vertical-align）
+.beta-icon {
+    width: 26px;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
 .w100 {
     width: 100%;
+}
+
+/*===============================
+    flex 子項與定位原子（與 gap-、col- 同層的排版工具，取代頁面行內排版 style）
+================================*/
+// 均分剩餘寬度且可壓縮到內容以下（長內容不撐破 flex 容器）；Tailwind 對應 flex-1
+.flex-1 {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+.relative {
+    position: relative;
 }
 
 .sr-only {
@@ -95,11 +151,37 @@
 }
 
 /*===============================
+    間距（margin）
+================================*/
+// 垂直節奏用 mt-*/mb-*/my-*（水平間距一律交給 flex-row 的 gap-*）；歸零用 .m-0
+.m-0 {
+    margin: 0 !important;
+}
+
+@each $n in $margins {
+    $v: map.get($spacing-scale, $n);
+
+    .mt-#{$n} {
+        margin-top: $v !important;
+    }
+
+    .mb-#{$n} {
+        margin-bottom: $v !important;
+    }
+
+    .my-#{$n} {
+        margin-top: $v !important;
+        margin-bottom: $v !important;
+    }
+}
+
+/*===============================
     flex欄位
 ================================*/
 .flex-row {
     display: flex;
     position: relative;
+    --flex-gap: 0rem; // col-N-* 欄寬計算用；由 gap-* 寫入、直向排列時歸零
 
     &.align-items-start {
         align-items: flex-start;
@@ -129,44 +211,11 @@
         justify-content: space-between;
     }
 
-    &.gap-2 {
-        gap: 0.125rem;
-    }
-
-    &.gap-4 {
-        gap: 0.25rem;
-    }
-
-    &.gap-8 {
-        gap: 0.5rem;
-    }
-
-    &.gap-10 {
-        gap: 0.625rem;
-    }
-
-    &.gap-12 {
-        gap: 0.75rem;
-    }
-
-    &.gap-16 {
-        gap: 1rem;
-    }
-
-    &.gap-20 {
-        gap: 1.25rem;
-    }
-
-    &.gap-24 {
-        gap: 1.5rem;
-    }
-
-    &.gap-32 {
-        gap: 2rem;
-    }
-
-    &.gap-40 {
-        gap: 2.5rem;
+    @each $n in $gaps-md {
+        &.gap-#{$n} {
+            gap: map.get($spacing-scale, $n);
+            --flex-gap: #{map.get($spacing-scale, $n)};
+        }
     }
 
     &.flex-wrap {
@@ -175,144 +224,34 @@
 
     &.column {
         flex-direction: column !important;
+        --flex-gap: 0rem; // 直向排列沒有水平 gap 要扣
     }
-
 }
 
-.col-12-md {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.col-10-md {
-    width: 83.3333%;
-    box-sizing: border-box;
-}
-
-.col-9-md {
-    width: 75%;
-    box-sizing: border-box;
-}
-
-.col-8-md {
-    width: 66.6666%;
-    box-sizing: border-box;
-}
-
-.col-7-md {
-    width: 58.3333%;
-    box-sizing: border-box;
-}
-
-.col-6-md {
-    width: 50%;
-    box-sizing: border-box;
-}
-
-.col-5-md {
-    width: 41.6666%;
-    box-sizing: border-box;
-}
-
-.col-4-md {
-    width: 33.3333%;
-    box-sizing: border-box;
-}
-
-.col-3-md {
-    width: 25%;
-    box-sizing: border-box;
-}
-
-.col-2-md {
-    width: 16.6666%;
-    box-sizing: border-box;
-}
-
-.col-1-md {
-    width: 8.3333%;
-    box-sizing: border-box;
+// 欄寬 = 佔比 - gap 分攤：同一列各 col 的 span 總和 = 12 時，寬度 + gap 剛好 100%
+@for $i from 12 through 1 {
+    .col-#{$i}-md {
+        width: calc(100% * #{$i} / 12 - var(--flex-gap, 0rem) * #{12 - $i} / 12);
+        box-sizing: border-box;
+    }
 }
 
 @media screen and (max-width: 992px) {
-    .col-12-sm {
-        width: 100%;
-    }
-
-    .col-10-sm {
-        width: 83.3333%;
-    }
-
-    .col-9-sm {
-        width: 75%;
-    }
-
-    .col-8-sm {
-        width: 66.6666%;
-    }
-
-    .col-7-sm {
-        width: 58.3333%;
-    }
-
-    .col-6-sm {
-        width: 50%;
-    }
-
-    .col-5-sm {
-        width: 41.6666%;
-    }
-
-    .col-4-sm {
-        width: 33.3333%;
-    }
-
-    .col-3-sm {
-        width: 25%;
-    }
-
-    .col-2-sm {
-        width: 16.6666%;
-    }
-
-    .col-1-sm {
-        width: 8.3333%;
+    @for $i from 12 through 1 {
+        .col-#{$i}-sm {
+            width: calc(100% * #{$i} / 12 - var(--flex-gap, 0rem) * #{12 - $i} / 12);
+        }
     }
 
     .flex-row {
         &.mobile-column {
             flex-direction: column !important;
+            --flex-gap: 0rem; // 直向排列沒有水平 gap 要扣
 
-            &.sm-gap-4 {
-                gap: 0.25rem;
-            }
-
-            &.sm-gap-8 {
-                gap: 0.5rem;
-            }
-
-            &.sm-gap-10 {
-                gap: 0.625rem;
-            }
-
-            &.sm-gap-12 {
-                gap: 0.75rem;
-            }
-
-            &.sm-gap-16 {
-                gap: 1rem;
-            }
-
-            &.sm-gap-20 {
-                gap: 1.25rem;
-            }
-
-            &.sm-gap-24 {
-                gap: 1.5rem;
-            }
-
-            &.sm-gap-32 {
-                gap: 2rem;
+            @each $n in $gaps-mobile {
+                &.sm-gap-#{$n} {
+                    gap: map.get($spacing-scale, $n);
+                }
             }
 
             .align-self-end {
@@ -323,84 +262,21 @@
 }
 
 @media screen and (max-width: 768px) {
-    .col-12-xs {
-        width: 100%;
-    }
-
-    .col-10-xs {
-        width: 83.3333%;
-    }
-
-    .col-9-xs {
-        width: 75%;
-    }
-
-    .col-8-xs {
-        width: 66.6666%;
-    }
-
-    .col-7-xs {
-        width: 58.3333%;
-    }
-
-    .col-6-xs {
-        width: 50%;
-    }
-
-    .col-5-xs {
-        width: 41.6666%;
-    }
-
-    .col-4-xs {
-        width: 33.3333%;
-    }
-
-    .col-3-xs {
-        width: 25%;
-    }
-
-    .col-2-xs {
-        width: 16.6666%;
-    }
-
-    .col-1-xs {
-        width: 8.3333%;
+    @for $i from 12 through 1 {
+        .col-#{$i}-xs {
+            width: calc(100% * #{$i} / 12 - var(--flex-gap, 0rem) * #{12 - $i} / 12);
+        }
     }
 
     .flex-row {
         &.mobile-column-xs {
             flex-direction: column !important;
+            --flex-gap: 0rem; // 直向排列沒有水平 gap 要扣
 
-            &.xs-gap-4 {
-                gap: 0.25rem;
-            }
-
-            &.xs-gap-8 {
-                gap: 0.5rem;
-            }
-
-            &.xs-gap-10 {
-                gap: 0.625rem;
-            }
-
-            &.xs-gap-12 {
-                gap: 0.75rem;
-            }
-
-            &.xs-gap-16 {
-                gap: 1rem;
-            }
-
-            &.xs-gap-20 {
-                gap: 1.25rem;
-            }
-
-            &.xs-gap-24 {
-                gap: 1.5rem;
-            }
-
-            &.xs-gap-32 {
-                gap: 2rem;
+            @each $n in $gaps-mobile {
+                &.xs-gap-#{$n} {
+                    gap: map.get($spacing-scale, $n);
+                }
             }
 
             &.xs-column-reverse {

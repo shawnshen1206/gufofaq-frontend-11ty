@@ -4,8 +4,9 @@
 <dialog class="modals" id="editModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
@@ -15,30 +16,30 @@
                     <div class="flex-row column gap-8">
                         <div class="form-group col-12-md">
                             <div class="label">
-                                <label class="control-label">標題</label>
+                                <label for="fileEditTitle" class="control-label">標題</label>
                             </div>
                             <div class="field">
-                                <input type="text" placeholder="請輸入" class="form-control" value="檔案名稱.pdf">
+                                <input type="text" id="fileEditTitle" placeholder="請輸入" class="form-control" value="檔案名稱.pdf">
                                 <span class="error-prompt">錯誤訊息文字</span>
                             </div>
                         </div>
                         <div class="col-12-md flex-row gap-8 mobile-column">
                             <div class="form-group col-6-md col-12-sm">
                                 <div class="label">
-                                    <label class="control-label">時間</label>
+                                    <label for="fileEditTime" class="control-label">時間</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" class="form-control time start-date" placeholder="請選擇時間"
+                                    <input type="text" id="fileEditTime" class="form-control time start-date" placeholder="請選擇時間"
                                         data-modal>
                                     <span class="error-prompt">錯誤訊息文字</span>
                                 </div>
                             </div>
                             <div class="form-group col-6-md col-12-sm">
                                 <div class="label">
-                                    <label class="control-label">頻道</label>
+                                    <label for="fileEditChannel" class="control-label">頻道</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" placeholder="請輸入" class="form-control">
+                                    <input type="text" id="fileEditChannel" placeholder="請輸入" class="form-control">
                                     <span class="error-prompt">錯誤訊息文字</span>
                                 </div>
                             </div>
@@ -46,19 +47,19 @@
                         <div class="col-12-md flex-row gap-8 mobile-column">
                             <div class="form-group col-6-md col-12-sm">
                                 <div class="label">
-                                    <label class="control-label">類型</label>
+                                    <label for="fileEditType" class="control-label">類型</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" placeholder="請輸入" class="form-control">
+                                    <input type="text" id="fileEditType" placeholder="請輸入" class="form-control">
                                     <span class="error-prompt">錯誤訊息文字</span>
                                 </div>
                             </div>
                             <div class="form-group col-6-md col-12-sm">
                                 <div class="label">
-                                    <label class="control-label">供應商</label>
+                                    <label for="fileEditSupplier" class="control-label">供應商</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" placeholder="請輸入" class="form-control">
+                                    <input type="text" id="fileEditSupplier" placeholder="請輸入" class="form-control">
                                     <span class="error-prompt">錯誤訊息文字</span>
                                 </div>
                             </div>
@@ -66,10 +67,10 @@
                         <div class="col-12-md">
                             <div class="form-group">
                                 <div class="label">
-                                    <label for="" class="control-label">內容</label>
+                                    <label for="fileEditContent" class="control-label">內容</label>
                                 </div>
                                 <div class="field">
-                                    <textarea name="" id="" rows="10" class="form-control disabled"
+                                    <textarea id="fileEditContent" rows="10" class="form-control disabled"
                                         placeholder="請輸入您推薦這篇文章的原因" disabled>Andreas Gal∗+, Brendan Eich∗, Mike Shaver∗, David Anderson∗, David Mandelin∗,
 Mohammad R. Haghighat$, Blake Kaplan∗, Graydon Hoare∗, Boris Zbarsky∗, Jason Orendorff∗,
 Jesse Ruderman∗, Edwin Smith#, Rick Reitmaier#, Michael Bebenita+, Mason Chang+#, Michael Franz+

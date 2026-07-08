@@ -14,33 +14,33 @@ permalink: 5-4-1_promptManagement.html
 
 <!-- 篩選列：關鍵字 + 日期區間（真實頁由 flatpickr range 模式掛載於同一輸入框，此處不引入 vendor，僅保留原生 class 呈現靜態輸入框）
      + 版本單選（singleSelect，非 select2 增強，沿用 ui/form-control 原生 select 寫法） -->
-<div class="block" style="margin-bottom: 10px;">
+<div class="block mb-10">
     <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
         <div class="filter-fields flex-row gap-16 mobile-column">
-            <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label">關鍵字</label>
+                    <label for="promptKeywordInput" class="control-label">關鍵字</label>
                 </div>
                 <div class="field">
-                    <input type="text" class="form-control" placeholder="請輸入關鍵字查詢" value="條列式">
+                    <input type="text" id="promptKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" value="條列式">
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
-            <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label">日期區間</label>
+                    <label for="promptDateRangeInput" class="control-label">日期區間</label>
                 </div>
                 <div class="field">
-                    <input type="text" class="form-control calendar range-date" placeholder="起迄日">
+                    <input type="text" id="promptDateRangeInput" class="form-control calendar range-date" placeholder="起迄日">
                     <span class="error-prompt">錯誤訊息文字</span>
                 </div>
             </div>
-            <div class="form-group row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label class="control-label">版本</label>
+                    <label for="promptVersionSelect" class="control-label">版本</label>
                 </div>
                 <div class="field">
-                    <select class="form-control singleSelect">
+                    <select id="promptVersionSelect" class="form-control singleSelect">
                         <option></option>
                         <option value="V3">V3</option>
                         <option value="V2">V2</option>
@@ -71,7 +71,7 @@ permalink: 5-4-1_promptManagement.html
                 <p class="prompt-text">儲存後將自動建立新版本，不覆蓋舊有版本</p>
                 <div class="form-group">
                     <div class="field">
-                        <textarea class="form-control size-lg js-prompt-input" placeholder="請輸入提示詞內容">角色定位：
+                        <textarea class="form-control size-lg prompt-input js-prompt-input" placeholder="請輸入提示詞內容" aria-label="提示詞內容">角色定位：
 你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
 知識來源限制：</textarea>
                     </div>
@@ -105,19 +105,19 @@ permalink: 5-4-1_promptManagement.html
             <div class="prompt-content">
                 <p>角色定位：<br>你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。</p>
                 <p>知識來源限制：<br>你的回答必須僅依據以下資料來源：</p>
-                <ul class="list-style-disc">
+                <ul class="list-style-disc line-loose">
                     <li>《產品規格資料庫》（PDF規格書）</li>
                     <li>《使用手冊》（操作說明）</li>
                 </ul>
                 <p>回應原則：</p>
-                <ul class="list-style-disc">
+                <ul class="list-style-disc line-loose">
                     <li>優先使用「<span class="text-red">條列式</span>」呈現資訊</li>
                     <li>語氣清楚、專業且易懂</li>
                     <li>不可臆測或補充未出現在資料中的內容</li>
                     <li>若資料不足，需明確說明「無法從現有資料判斷」</li>
                 </ul>
                 <p>輸出格式：</p>
-                <ul class="list-style-disc">
+                <ul class="list-style-disc line-loose">
                     <li>使用條列式（• 或 -）</li>
                     <li>必要時分段（例如：規格 / 使用方式 / 注意事項）</li>
                 </ul>

@@ -22,7 +22,7 @@ permalink: 3-1-6_previewExcel_compare.html
 </div>
 
 <!-- 頁籤：ui/tab 水平單層頁籤（.tab-row.fit-content > .tab-group > .tab.tab-md），行為沿用已全域註冊的 tab.js -->
-<div class="tab-row fit-content" style="margin-top: 16px;">
+<div class="tab-row fit-content mt-16">
     <div class="tab-group">
         <button type="button" class="tab tab-md active" title="比對資料">比對資料</button>
         <button type="button" class="tab tab-md" title="原始資料">原始資料</button>
@@ -36,16 +36,16 @@ permalink: 3-1-6_previewExcel_compare.html
     { title: "商品編號 A002", time: "2025/12/10 15:44", content: "保溫瓶 500ml，316 不鏽鋼內膽", image: "https://example.com/img/a002.jpg", field1: "生活用品", field2: "現貨", field3: "450" },
     { title: "商品編號 A003", time: "2025/12/10 15:44", content: "USB-C 充電線 1.5M", image: "https://example.com/img/a003.jpg", field1: "電子3C", field2: "補貨中", field3: "199" }
 ] %}
-<div class="table-container scrollTable" style="margin-top: 10px;">
+<div class="table-container scrollTable mt-10">
     <table class="default-table fixed-layout">
         <colgroup>
-            <col style="width:1fr; min-width:170.4px;">
-            <col style="width:1fr; min-width:171.4px;">
-            <col style="width:1fr; min-width:171.4px;">
-            <col style="width:1fr; min-width:171.4px;">
-            <col style="width:1fr; min-width:171.4px;">
-            <col style="width:1fr; min-width:171.4px;">
-            <col style="width:1fr; min-width:170.4px;">
+            <col style="min-width:170.4px;">
+            <col style="min-width:171.4px;">
+            <col style="min-width:171.4px;">
+            <col style="min-width:171.4px;">
+            <col style="min-width:171.4px;">
+            <col style="min-width:171.4px;">
+            <col style="min-width:170.4px;">
         </colgroup>
         <thead>
             <tr>
@@ -117,6 +117,6 @@ permalink: 3-1-6_previewExcel_compare.html
     { number: 2 },
     { number: 3 }
 ] %}
-<div style="margin-top: 16px;">
+<div class="mt-16">
     {% include "ui/pagination/pagination.html" %}
 </div>

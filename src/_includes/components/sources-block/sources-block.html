@@ -8,7 +8,7 @@
        sourcesDetailHref：有值時顯示「檢視詳細內容」連結（前台問答頁用）
      每筆來源列（摘要列 + 隱藏的 accordion detail 列）以 for-source 迴圈直接內嵌渲染
      （原 source-row 子元件已內嵌：Eleventy 的 include 巢狀在 for 內會渲染空白，故不再拆子元件 include）。 -->
-<div class="block sources-block js-accordion{% if sourcesHidden %} hidden{% endif %}" style="margin-top: 24px;">
+<div class="block sources-block js-accordion mt-24{% if sourcesHidden %} hidden{% endif %}">
     <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
         <div>
             <span class="text-lg text-bold">參考來源</span>
@@ -30,12 +30,12 @@
         </div>
     </div>
 
-    <div class="table-container scrollTable" style="margin-top: 16px;">
+    <div class="table-container scrollTable mt-16">
         <table class="default-table no-border">
             <colgroup>
                 <col style="width:40px; min-width:40px;">
                 <col style="width:272px; min-width:272px;">
-                <col style="width: 1fr; min-width: 580px;">
+                <col style="min-width: 580px;">
                 <col style="width:240px; min-width:240px;">
             </colgroup>
             <thead>

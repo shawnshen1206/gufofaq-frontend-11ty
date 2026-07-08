@@ -24,10 +24,10 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-6-md col-12-sm">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">帳號</label>
+                        <label for="accountEmailInput" class="control-label">帳號</label>
                     </div>
                     <div class="field">
-                        <input type="text" placeholder="請輸入" class="form-control disabled account-email"
+                        <input type="text" id="accountEmailInput" placeholder="請輸入" class="form-control disabled account-email"
                             value="" disabled>
                     </div>
                 </div>
@@ -35,10 +35,10 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-6-md col-12-sm">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">公司/單位</label>
+                        <label for="accountCompanyInput" class="control-label">公司/單位</label>
                     </div>
                     <div class="field">
-                        <input type="text" placeholder="請輸入公司/單位" class="form-control account-company">
+                        <input type="text" id="accountCompanyInput" placeholder="請輸入公司/單位" class="form-control account-company">
                     </div>
                 </div>
             </div>
@@ -47,10 +47,10 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-12-md">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">系統提示詞</label>
+                        <label for="systemPromptInput" class="control-label">系統提示詞</label>
                     </div>
                     <div class="field">
-                        <textarea name="" id="" rows="10" class="form-control account-prompt"
+                        <textarea id="systemPromptInput" rows="10" class="form-control account-prompt"
                             placeholder="請輸入您的提示詞"></textarea>
                     </div>
                 </div>
@@ -60,16 +60,16 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-4-md col-12-sm">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">檢索模式</label>
+                        <label id="retrievalModeLabel" class="control-label">檢索模式</label>
                     </div>
-                    <div class="field flex-row gap-16 mobile-column-xs">
+                    <div class="field flex-row gap-16 mobile-column-xs" role="group" aria-labelledby="retrievalModeLabel">
                         <div class="col-6-md col-12-xs">
                             <div class="form-group row">
                                 <div class="label">
-                                    <label for="" class="control-label">主題</label>
+                                    <label for="retrievalTopicInput" class="control-label">主題</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" placeholder="請輸入" class="form-control disabled retrieval-topic"
+                                    <input type="text" id="retrievalTopicInput" placeholder="請輸入" class="form-control disabled retrieval-topic"
                                         value="" disabled>
                                 </div>
                             </div>
@@ -77,10 +77,10 @@ permalink: 5-1-1_accountInfo.html
                         <div class="col-6-md col-12-xs">
                             <div class="form-group row">
                                 <div class="label">
-                                    <label for="" class="control-label">向量</label>
+                                    <label for="retrievalVectorInput" class="control-label">向量</label>
                                 </div>
                                 <div class="field">
-                                    <input type="text" placeholder="請輸入" class="form-control disabled retrieval-vector"
+                                    <input type="text" id="retrievalVectorInput" placeholder="請輸入" class="form-control disabled retrieval-vector"
                                         value="" disabled>
                                 </div>
                             </div>
@@ -92,10 +92,10 @@ permalink: 5-1-1_accountInfo.html
                 <div class="col-6-md col-12-sm">
                     <div class="form-group">
                         <div class="label">
-                            <label for="" class="control-label">規格</label>
+                            <label for="accountSpecInput" class="control-label">規格</label>
                         </div>
                         <div class="field">
-                            <input type="text" placeholder="請輸入" class="form-control disabled account-spec"
+                            <input type="text" id="accountSpecInput" placeholder="請輸入" class="form-control disabled account-spec"
                                 value="" disabled>
                         </div>
                     </div>
@@ -103,10 +103,10 @@ permalink: 5-1-1_accountInfo.html
                 <div class="col-6-md col-12-sm">
                     <div class="form-group">
                         <div class="label">
-                            <label for="" class="control-label">資料儲存上限</label>
+                            <label for="accountStorageLimitInput" class="control-label">資料儲存上限</label>
                         </div>
                         <div class="field">
-                            <input type="text" placeholder="請輸入" class="form-control disabled account-storage-limit"
+                            <input type="text" id="accountStorageLimitInput" placeholder="請輸入" class="form-control disabled account-storage-limit"
                                 value="" disabled>
                         </div>
                     </div>
@@ -117,10 +117,10 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-6-md col-12-xs">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">資料取用規則</label>
+                        <label for="accountDataRuleInput" class="control-label">資料取用規則</label>
                     </div>
                     <div class="field">
-                        <input type="text" placeholder="請輸入" class="form-control disabled account-data-rule"
+                        <input type="text" id="accountDataRuleInput" placeholder="請輸入" class="form-control disabled account-data-rule"
                             value="" disabled>
                     </div>
                 </div>
@@ -128,10 +128,10 @@ permalink: 5-1-1_accountInfo.html
             <div class="col-6-md col-12-xs">
                 <div class="form-group">
                     <div class="label">
-                        <label for="" class="control-label">選用模型</label>
+                        <label for="accountModelInput" class="control-label">選用模型</label>
                     </div>
                     <div class="field">
-                        <input type="text" placeholder="請輸入" class="form-control disabled account-model"
+                        <input type="text" id="accountModelInput" placeholder="請輸入" class="form-control disabled account-model"
                             value="" disabled>
                     </div>
                 </div>

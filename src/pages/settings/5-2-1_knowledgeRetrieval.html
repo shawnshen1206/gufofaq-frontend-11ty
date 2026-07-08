@@ -27,7 +27,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
       { label: "設置二" },
       { label: "設置三" }
     ] %}
-    <div class="page-title-wrap flex-row flex-wrap gap-16" style="margin-bottom: 8px;">
+    <div class="page-title-wrap flex-row flex-wrap gap-16 mb-8">
         <div class="tab-row fit-content">
             <div class="tab-group">
                 {% for tab in settingTabs %}
@@ -38,7 +38,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
         </div>
         <div class="form-group row mobile-col-xs">
             <div class="label">
-                <label for="" class="control-label">前台問答預設使用</label>
+                <label class="control-label">前台問答預設使用</label>
             </div>
             <div class="field">
                 <div class="flex-row flex-wrap gap-24">
@@ -55,7 +55,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
 
     <!-- 意圖判斷分級表：沿用 components/priority-table 的 5 欄 .default-table.priority-table 結構，
          高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 -->
-    <div class="block flex-row column gap-10" style="position: relative;">
+    <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
             <button id="openPrioritySwitch" class="button button-border">啟用全部意圖判斷</button>
             <button id="closePrioritySwitch" class="button button-border">停用全部意圖判斷</button>
@@ -96,58 +96,9 @@ permalink: 5-2-1_knowledgeRetrieval.html
                     </label>
                 </div>
             </div>
-            <div class="table-container scrollTable">
-                <table class="default-table priority-table">
-                    <colgroup>
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 80px; min-width: 80px;">
-                        <col style="width: 140px; min-width: 140px;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>分類名稱</th>
-                            <th>任務描述</th>
-                            <th>任務對應提示詞</th>
-                            <th class="text-center">功能</th>
-                            <th>變更優先級</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in level.rows %}
-                        <tr>
-                            <td>{{ row.category }}</td>
-                            <td class="edit-cell description">
-                                <div class="ellipsis-2">{{ row.description }}</div>
-                            </td>
-                            <td class="edit-cell prompt">
-                                <div class="ellipsis-2">{{ row.prompt }}</div>
-                            </td>
-                            <td class="text-center">
-                                <button class="button button-edit-save js-edit-btn" title="編輯">
-                                    <img src="./images/icon_edit_blue.png" alt="" class="icon">
-                                    <span class="sr-only">編輯</span>
-                                </button>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <div class="field">
-                                        <select class="form-control select-sm singleSelect">
-                                            <option></option>
-                                            <option value="高優先級"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
-                                            <option value="中優先級"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
-                                            <option value="低優先級"{% if row.priority == "低優先級" %} selected{% endif %}>低優先級</option>
-                                            <option value="不使用">不使用</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            {# 表格本體抽用 components/priority-table：每組先 set rows 再 include（頁面層 for＋include 可行，非 §9 陷阱） #}
+            {% set rows = level.rows %}
+            {% include "components/priority-table/priority-table.html" %}
         </div>
         {% endfor %}
 
@@ -155,29 +106,9 @@ permalink: 5-2-1_knowledgeRetrieval.html
             <div class="flex-row align-items-center gap-12">
                 <div class="tablelist-title">未使用</div>
             </div>
-            <div class="table-container scrollTable">
-                <table class="default-table priority-table">
-                    <colgroup>
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 283px; min-width: 283px;">
-                        <col style="width: 80px; min-width: 80px;">
-                        <col style="width: 140px; min-width: 140px;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>分類名稱</th>
-                            <th>任務描述</th>
-                            <th>任務對應提示詞</th>
-                            <th class="text-center">功能</th>
-                            <th>變更優先級</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 未使用分類：真實頁初始為空狀態 -->
-                    </tbody>
-                </table>
-            </div>
+            {# 未使用分類：真實頁初始為空狀態 → 空 rows 渲染空表 #}
+            {% set rows = [] %}
+            {% include "components/priority-table/priority-table.html" %}
         </div>
     </div>
 </div>
@@ -186,8 +117,9 @@ permalink: 5-2-1_knowledgeRetrieval.html
 <dialog class="modals" id="intentionModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals">
+            <button type="button" class="modals-close btn-close-modals" title="關閉">
                 <img src="./images/icon_close_blue.png" alt="">
+                <span class="sr-only">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">

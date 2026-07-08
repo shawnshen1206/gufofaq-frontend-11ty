@@ -11,7 +11,7 @@
     &::-webkit-scrollbar-thumb {
         border-radius: 4px;
         // background-color: #CBCBCB;
-        background-color: #13386f;
+        background-color: var(--color-primary-dark);
     }
 
     /* Track */
@@ -34,7 +34,7 @@
     /*firefox scrollbar*/
     scrollbar-width: thin;
     // scrollbar-color: #CBCBCB transparent;
-    scrollbar-color: #13386f transparent;
+    scrollbar-color: var(--color-primary-dark) transparent;
 }
 
 /*元件用，滾動條較細*/
@@ -49,7 +49,7 @@
     /* Handle */
     &::-webkit-scrollbar-thumb {
         border-radius: 4px;
-        background-color: #dfdfdf;
+        background-color: var(--color-gray-500);
     }
 
     /* Track */
@@ -71,7 +71,7 @@
 
     /*firefox scrollbar*/
     scrollbar-width: thin;
-    scrollbar-color: #dfdfdf transparent;
+    scrollbar-color: var(--color-gray-500) transparent;
 }
 
 @mixin scrollbar_modal() {
@@ -85,7 +85,7 @@
     /* Handle */
     &::-webkit-scrollbar-thumb {
         border-radius: 4px;
-        background-color: #dfdfdf;
+        background-color: var(--color-gray-500);
     }
 
     /* Track */
@@ -107,5 +107,5 @@
 
     /*firefox scrollbar*/
     scrollbar-width: thin;
-    scrollbar-color: #dfdfdf transparent;
+    scrollbar-color: var(--color-gray-500) transparent;
 }
