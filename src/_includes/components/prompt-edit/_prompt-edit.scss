@@ -1,0 +1,23 @@
+// 提示詞收合/展開編輯區（單測 2-2-1 / AB測 2-2-3）。取自真 app 已編譯 css/component.css
+// （scss 源碼漏了、只存在編譯輸出——同 divider-vertical/footer/info-btn/ab-compare 的系統性漏抓）。
+// 原本我們專案完全沒有 .prompt-edit 樣式，導致該區塊排版跑掉。
+.prompt-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
+
+    .prompt-edit-content {
+        padding: 0 0.5rem;
+        box-sizing: border-box;
+    }
+
+    // 展開/儲存等工具列：預設收合，.open 時顯示（展開行為屬業務 JS，見頁面說明）
+    .prompt-edit-tools {
+        display: none;
+    }
+
+    &.open .prompt-edit-tools {
+        display: flex;
+    }
+}

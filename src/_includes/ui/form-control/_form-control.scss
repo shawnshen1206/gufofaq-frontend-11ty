@@ -1,5 +1,5 @@
-// 逐字複製自真實 app 的 scss/component.scss「form表單 / input輸入框」區段（verbatim，只搬移位置）
-// 註：本區段內與 select2 vendor 耦合的 .select-sm/.select-md 巢狀 select2-container 規則、.multiSelect 起之後 select2 樣式改寫，留給日後 ui/multi-select 處理，不在此檔。
+// 取自真實 app 的 form-control 樣式（含只存在編譯 css 的 .select-sm/.select-md 內距與 textarea.size-lg 高度變體，
+// scss 源碼漏抓、依編譯輸出補回）。與 select2 vendor 耦合的 .select-*+select2-container 規則屬 §5 不做。
 @use "../../../scss/mixin" as *;
 
 .form-group {
@@ -140,6 +140,15 @@
         background-position: calc(100% - 0.625em) 50%;
         padding-right: 2.75rem;
     }
+
+    // 內距變體（原只存在真 app 編譯 css）
+    &.select-sm {
+        padding: 0.25rem 0.5rem;
+    }
+
+    &.select-md {
+        padding: 0.375rem 0.5rem;
+    }
 }
 
 textarea.form-control {
@@ -156,6 +165,10 @@ textarea.form-control {
 
     &.size-sm {
         height: 6.25rem; // 100px
+    }
+
+    &.size-lg {
+        height: 25.75rem; // 412px（原只存在真 app 編譯 css）
     }
 }
 

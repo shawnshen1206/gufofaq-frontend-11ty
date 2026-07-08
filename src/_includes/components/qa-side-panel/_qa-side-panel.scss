@@ -1,0 +1,74 @@
+// 可收合問答紀錄側欄（單測 2-2-1 / AB測 2-2-3，固定於視窗右側）。取自真 app 已編譯 css/component.css
+// （scss 源碼漏了、只存在編譯輸出）。原本我們專案完全沒有 .qa-side-panel 樣式，側欄整個沒定位/沒外觀。
+.qa-side-panel {
+    display: flex;
+    align-items: flex-start;
+    flex-shrink: 0;
+    position: fixed;
+    top: max(72px, 100vh - 550px);
+    right: 0;
+    transition: right 0.3s ease;
+    z-index: 10;
+
+    .qa-side-panel-toggle {
+        flex-shrink: 0;
+        padding: 0.625rem 0.75rem;
+        box-sizing: border-box;
+        border-radius: 4px 0 0 4px;
+        background-color: #fff;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--color-primary);
+        cursor: pointer;
+        box-shadow: -2px 2px 3px 0px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+
+        &::after {
+            content: "";
+            display: block;
+            width: 24px;
+            height: 24px;
+            background-image: url(../images/icon_arrow_right_blue.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+    }
+
+    .qa-side-panel-title {
+        writing-mode: vertical-rl;
+        letter-spacing: 2px;
+    }
+
+    .qa-side-panel-body {
+        width: min-content;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        border-radius: 0 4px 4px 4px;
+        background-color: #fff;
+        padding: 0.75rem;
+        box-sizing: border-box;
+        box-shadow: -2px 2px 3px 1px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+
+        // 內嵌 qa-record-tabs 的 .tab-wrap 高度上限（本元件約束其 slot 內容排版，faithful 沿用真 app）
+        .tab-wrap {
+            max-height: 170px;
+
+            @media screen and (max-width: 768px) {
+                width: 240px;
+            }
+        }
+    }
+
+    // 收合態：整個側欄滑出視窗右緣、切換鈕箭頭轉向（.collapsed 由業務 JS 切換）
+    &.collapsed {
+        right: -269px;
+
+        .qa-side-panel-toggle::after {
+            transform: rotate(180deg);
+        }
+    }
+}

@@ -1,0 +1,44 @@
+// AB 測試對話區的雙欄比較（2-2-3）。樣式取自真 app 的**已編譯** css/component.css
+// （scss 源碼漏了、只存在編譯輸出——同 divider-vertical/footer/info-btn）。
+// 原本我們專案完全沒有 .ab-compare 樣式，導致 AB 對話區兩欄比較排版跑掉；此處補回。
+// 純樣式元件（無 html/js）：2-2-3 的聊天視窗外殼與 .ab-compare 雙欄是逐字寫死（真實系統無對應元件，
+// 見該頁註解），故本檔內的 .message-content / .message-time 覆寫是針對該頁「就地重用聊天訊息 class」的
+// AB 比較情境，與真 app 同一寫法（在 .ab-compare 範圍內覆寫共用訊息類，屬 §4 已記載的合理外觀覆寫）。
+.ab-compare {
+    flex: 1;
+
+    .ab-compare-item {
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .message-content {
+        max-width: 100%;
+        align-self: auto;
+        flex: 1 1 0;
+        padding: 0;
+
+        .item-title {
+            border-bottom: solid 1px var(--color-border-default);
+            text-align: center;
+            padding: 0.5rem 0;
+            box-sizing: border-box;
+            margin: 0;
+            line-height: normal;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .item-content {
+            padding: 0.5rem 1.5rem;
+            box-sizing: border-box;
+        }
+    }
+
+    // 比較列與時間戳之間的間距（真 app 用相鄰選擇器）
+    &+.message-time {
+        margin-bottom: 44px;
+    }
+}

@@ -29,6 +29,8 @@
 @use "../_includes/ui/link-file/link-file";
 @use "../_includes/ui/link-modal/link-modal";
 @use "../_includes/ui/divider-vertical/divider-vertical";
+@use "../_includes/ui/info-btn/info-btn";
+@use "../_includes/ui/collapse-text/collapse-text";
 @use "../_includes/ui/list-style/list-style";
 @use "../_includes/ui/toast/toast";
 
@@ -49,6 +51,10 @@
 @use "../_includes/components/editable-block/editable-block";
 @use "../_includes/components/select-btn-wrap/select-btn-wrap";
 @use "../_includes/components/chatroom/chatroom";
+@use "../_includes/components/ab-compare/ab-compare";
+@use "../_includes/components/prompt-edit/prompt-edit";
+@use "../_includes/components/qa-side-panel/qa-side-panel";
+@use "../_includes/components/qa-record-tabs/qa-record-tabs";
 @use "../_includes/components/multi-select-box/multi-select-box";
 @use "../_includes/components/feature-disabled-overlay/feature-disabled-overlay";
 // 原第二支樣式表（真實 app css/style.css）已依 GUIDELINE §4 解散歸戶成下列三個純樣式元件

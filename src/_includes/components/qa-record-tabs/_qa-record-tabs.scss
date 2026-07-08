@@ -1,0 +1,12 @@
+// 問答紀錄頁籤（外層 .qa-record + 內含 ui/tab）。取自真 app 已編譯 css/component.css（scss 源碼漏了）。
+// .qa-record .tab 是 qa-record 情境下對內嵌 tab 的外觀覆寫（藍字、激活反白），faithful 沿用真 app 寫法。
+.qa-record {
+    .tab {
+        color: var(--color-primary);
+
+        &.active {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+    }
+}
