@@ -53,8 +53,9 @@
         box-shadow: -2px 2px 3px 1px rgba(0, 0, 0, 0.1);
         z-index: 1;
 
-        // 內嵌 qa-record-tabs 的 .tab-wrap 高度上限（本元件約束其 slot 內容排版，faithful 沿用真 app）
-        .tab-wrap {
+        // 內嵌 qa-record-tabs 的 tab-wrap 高度上限。§4：不可在本元件 scss 覆寫 ui/tab 的 .tab-wrap，
+        // 改用 parent 自有的 slot class .qa-side-tab-wrap（markup 同時掛 .tab-wrap 取其基礎樣式）。
+        .qa-side-tab-wrap {
             max-height: 170px;
 
             @media screen and (max-width: 768px) {

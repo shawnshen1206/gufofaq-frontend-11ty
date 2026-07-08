@@ -17,7 +17,7 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/qa-side-panel/qa-side-panel.js": "js/qa-side-panel.js",
         "src/_includes/components/prompt-edit/prompt-edit.js": "js/prompt-edit.js",
         "src/_includes/components/faq-chatroom/faq-chatroom.js": "js/faq-chatroom.js",
-        "src/_includes/components/faq-feedback-modal/faq-feedback.js": "js/faq-feedback.js",
+        "src/_includes/components/faq-feedback-modal/faq-feedback-modal.js": "js/faq-feedback-modal.js",
         "src/_includes/ui/toast/toast.js": "js/toast.js",
     });
 
