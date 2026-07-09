@@ -111,6 +111,45 @@ permalink: 5-2-1_knowledgeRetrieval.html
             {% include "components/priority-table/priority-table.html" %}
         </div>
     </div>
+
+    {# 欄位命名：目前作用中的設置（設置一/二/三）為固定 14 槽 schema 各自命名「此設定的顯示名」。
+       左為槽預設名（control-label），右為本設定顯示名輸入框（form-control）。資料化：set fieldSlots + for 渲染。
+       由既有 block + form-group/control-label/form-control 組合，無需新元件。 #}
+    {% set fieldSlots = [
+      { key: "title", defaultLabel: "標題", label: "問題標題" },
+      { key: "content", defaultLabel: "內容", label: "回覆內容" },
+      { key: "source", defaultLabel: "來源", label: "來源" },
+      { key: "date", defaultLabel: "日期", label: "建立日期" },
+      { key: "category", defaultLabel: "分類", label: "分類" },
+      { key: "number", defaultLabel: "數值", label: "數值" },
+      { key: "flag", defaultLabel: "標記", label: "標記" },
+      { key: "tags", defaultLabel: "標籤", label: "標籤" },
+      { key: "privilege", defaultLabel: "權限", label: "權限" },
+      { key: "note1", defaultLabel: "備註1", label: "備註1" },
+      { key: "note2", defaultLabel: "備註2", label: "備註2" },
+      { key: "note3", defaultLabel: "備註3", label: "備註3" },
+      { key: "note4", defaultLabel: "備註4", label: "備註4" },
+      { key: "note5", defaultLabel: "備註5", label: "備註5" }
+    ] %}
+    <div class="block flex-row column gap-16 mt-16">
+        <div class="flex-row column gap-8">
+            <div class="tablelist-title">欄位命名</div>
+            <div class="text-gray">為此設定的 14 個欄位槽命名「此設定的顯示名」</div>
+        </div>
+        <div class="flex-row flex-wrap gap-16">
+            {% for slot in fieldSlots %}
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label label-md">
+                    <label for="fieldName-{{ slot.key }}" class="control-label">{{ slot.defaultLabel }}</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="fieldName-{{ slot.key }}" placeholder="此設定的顯示名"
+                        class="form-control" value="{{ slot.label }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 <!-- 意圖判斷啟用 modal：真實頁本體 dialog（驗證未設定任務描述時提示），逐字保留 -->
