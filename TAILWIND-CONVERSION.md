@@ -161,7 +161,7 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 ```
 scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 ```
-**例外：整頁 `html`、`mobile-nav`、元件庫頁用的是完整 `scrollbar()`，thumb = `--scrollbar-thumb-strong`**（別跟其他一樣上 `--scrollbar-thumb`）。thumb 顏色一律照該處 `@include` 的是哪個 mixin 決定。**不要略過捲軸樣式。**
+**例外：整頁 `html` 與 `mobile-nav` 用的是 `_mixin.scss` 的完整 `scrollbar()`，thumb = `--scrollbar-thumb-strong`**（別跟其他一樣上 `--scrollbar-thumb`）。**元件庫頁 `_guideline.scss` 另有一支同名的本地 `scrollbar()` mixin，thumb = `--gl-scrollbar-thumb`**（showcase 專用色盤，見 `_guideline-var.scss`）——同名不同義，別混用。thumb 顏色一律照該處 `@include` 的是哪支 mixin 決定。**不要略過捲軸樣式。**
 
 ### 5-2. markdown 產生的富文字（`.robot-msg`，住在共用 `src/_includes/ui/chat-message/_chat-message.scss`）
 > **`.robot-msg` 由 `chatroom`（後台卡片）與 `faq-chatroom`（前台全高）兩個容器共用**：markdown renderer 的 `components` 對應放在**共用的 `ChatMessage` 元件**，別在兩個容器各複製一份。
@@ -223,7 +223,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 11. **實體元素的背景圖 icon 數量多別漏**（§5-5）：搜尋/時間框、`.button-icon` 約 13 個 sprite → `bg-[url()]` 或 SVG，且要改資產路徑。
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
-14. **高 z-index 超出 Tailwind 預設**：Tailwind 只出 `z-0..z-50`，但 code 有 toast `2000`、header `1000`、`feature-disabled-overlay` `100`、`mobile-nav` `97~100`、`qa-side-panel` `10/2/1` → 一律 `z-[N]` arbitrary，別夾成 `z-50` 破壞疊層。
+14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`header 1000`、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
 15. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
 16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
 

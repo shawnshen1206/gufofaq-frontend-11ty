@@ -30,6 +30,8 @@
     width: 100%;
     position: relative;
 
+    // 日期分隔列：markup 由業務 js 在執行期產生（真 app 的 qaRecord.js / singleTest.js），
+    // 故本專案沒有靜態 markup —— 這不是死 CSS，別刪。
     .date-wrap {
         display: flex;
         justify-content: center;
@@ -64,7 +66,6 @@
 
     .input-wrap {
         display: flex;
-        align-items: center;
         align-items: stretch;
         gap: 10px;
         height: 60px;

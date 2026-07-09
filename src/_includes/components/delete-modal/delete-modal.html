@@ -15,7 +15,7 @@
                     <h3 class="modals-title" id="deleteModal-title" data-i18n="action.delete">刪除</h3>
                 </div>
                 <div class="modals-body">
-                    <p class="text-center"><span data-i18n="common.confirmDelete">確定要刪除</span> {% if deleteTargetId %}<span id="{{ deleteTargetId }}"></span>{% else %}{{ deleteTargetName or "檔案名稱2.pdf" }}{% endif %}</p>
+                    <p class="text-center delete-modal-text"><span data-i18n="common.confirmDelete">確定要刪除</span> {% if deleteTargetId %}<span id="{{ deleteTargetId }}"></span>{% else %}{{ deleteTargetName or "檔案名稱2.pdf" }}{% endif %}</p>
                 </div>
                 <div class="modals-footer">
                     <div class="button-row center">

@@ -14,7 +14,7 @@ bodyClass: guideline-page
    本頁有自己的版型（.full-container + aside 導覽 + .main-container 18 節），不是一般頁面 chrome，
    故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base/base.html。
    各節盡量 {% include %} 已建好的 ui/* 、components/* 展示檔（DRY，避免與其他頁面的元件標記漂移），
-   純版面/文字類（欄位 Columns、文字與顏色）與跳窗展示版內容（previewModal）等無對應元件檔的原始展示，逐字手寫。 #}
+   純版面/文字類（欄位 Columns、文字與顏色）與跳窗展示版內容（previewTextModal）等無對應元件檔的原始展示，逐字手寫。 #}
 
 <div class="full-container">
     <aside>
@@ -444,7 +444,7 @@ bodyClass: guideline-page
                     <li>水平排列的tab需用「div.tab-row」包覆</li>
                     <li>雙層頁籤時，第一層頁籤在.tab-group加上「.top-tabs」這個class，第二層頁籤在.tab-group加上「.sub-tabs」這個class
                     </li>
-                    <li>問答紀錄頁籤，請在最外層再加上「div.qa-record」</li>
+                    <li>問答紀錄頁籤，在.tab加上「.on-record」這個class（見 components/qa-record-tabs）</li>
                     <li>tab有較大內距，在.tab加上「.tab-md」這個class，最外層使用「div.tab-row.fit-content」包覆</li>
                 </ul>
             </div>
