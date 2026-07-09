@@ -98,60 +98,8 @@ permalink: 1-2-1_uploadFile_pdf.html
 <!-- 檔案預覽 modal：id/class 與 components/file-preview-modal 一致，整包 include -->
 {% include "components/file-preview-modal/file-preview-modal.html" %}
 
-<!-- 編輯 modal：真實頁為精簡版（標題／時間／自訂欄位容器／內容），與 components/file-edit-modal
-     的完整展示版（標題／時間／頻道／類型／供應商／內容）欄位不同，故依真實頁手寫 -->
-<dialog class="modals" id="editModal">
-    <div class="modals-dialog modals-md">
-        <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉">
-                <img src="./images/icon_close_blue.png" alt="">
-                <span class="sr-only">關閉</span>
-            </button>
-            <div class="modals-content">
-                <div class="modals-header">
-                    <h3 class="modals-title">編輯</h3>
-                </div>
-                <div class="modals-body">
-                    <div class="flex-row column gap-8">
-                        <div class="form-group row">
-                            <div class="label">
-                                <label for="editTitle" class="control-label">標題</label>
-                            </div>
-                            <div class="field">
-                                <input type="text" id="editTitle" placeholder="請輸入" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="label">
-                                <label for="editTime" class="control-label">時間</label>
-                            </div>
-                            <div class="field">
-                                <input type="text" id="editTime" class="form-control start-date" placeholder="請選擇時間"
-                                    data-modal>
-                            </div>
-                        </div>
-                        <!-- 動態渲染自訂欄位 -->
-                        <div id="editCusFields"></div>
-                        <div class="form-group row">
-                            <div class="label">
-                                <label for="editContent" class="control-label">內容</label>
-                            </div>
-                            <div class="field">
-                                <textarea id="editContent" rows="10" class="form-control" disabled></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modals-footer">
-                    <div class="button-row center">
-                        <button type="button" class="button button-border btn-close-modals">取消</button>
-                        <button type="button" class="button button-primary">儲存</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</dialog>
+{# 編輯 modal：整包 include components/file-edit-modal（14 固定槽自填；content 自 PDF 抽取為 disabled，其餘可填） #}
+{% include "components/file-edit-modal/file-edit-modal.html" %}
 
 <!-- 刪除 modal：真實頁 <p> 內含 span#deleteFileName（js 動態填入檔名），與 components/delete-modal
      的靜態展示文字結構不同，故依真實頁手寫 -->
