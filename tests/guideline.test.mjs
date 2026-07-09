@@ -519,27 +519,30 @@ test("§9 裸元素選擇器只准出現在 _normalize / _base", () => {
     const hits = [];
     for (const f of srcScss.filter((p) => !/scss\/_(normalize|base)\.scss$/.test(p))) {
         const src = strip(read(f));
-        const stack = [];                            // 只推「樣式規則」的區塊，at-rule 不推
-        let buf = "", line = 1;
+        // @media / @supports / @each 之類會「就地展開」，不算一層巢狀；
+        // @mixin / @keyframes / @function 的內容不在原地輸出（@include 到哪就在哪），視為一層。
+        const OPAQUE = /^@(mixin|keyframes|function)\b/;
+        const stack = [];
+        let buf = "", line = 1, selLine = 1;
         for (let i = 0; i < src.length; i++) {
             const ch = src[i];
             if (ch === "\n") { line++; buf += " "; continue; }
             if (ch === "{") {
                 const sel = buf.trim();
                 const isAtRule = sel.startsWith("@");
-                // 「頂層」只數樣式規則的巢狀層數：@media 包著的裸元素一樣會洩漏到全站
+                // 「頂層」只數會就地輸出的巢狀層數：@media 包著的裸元素一樣會洩漏到全站
                 const styleDepth = stack.filter((x) => x === "rule").length;
                 if (!isAtRule && styleDepth === 0) {
                     for (const group of sel.split(",")) {
                         const first = group.trim().split(/[\s>+~]/)[0];
-                        if (/^[a-z][a-z0-9]*$/.test(first) && ELEMENTS.has(first)) hits.push(`${f}:${line}  ${group.trim()}`);
+                        if (/^[a-z][a-z0-9]*$/.test(first) && ELEMENTS.has(first)) hits.push(`${f}:${selLine}  ${group.trim()}`);
                     }
                 }
-                stack.push(isAtRule ? "@" : "rule");
+                stack.push(!isAtRule || OPAQUE.test(sel) ? "rule" : "@");
                 buf = "";
             } else if (ch === "}") { stack.pop(); buf = ""; }
             else if (ch === ";") buf = "";
-            else buf += ch;
+            else { if (!buf.trim()) selLine = line; buf += ch; }   // 選擇器起始行，錯誤訊息才指得準
         }
     }
     assert.equal(hits.length, 0, `打包進單一 main.css 會洩漏到全站：\n${fail(hits)}`);
@@ -602,17 +605,23 @@ const COLOR_ROLES = {
     surfaces: ["--surface", "--surface-raised", "--surface-sunken", "--surface-hover", "--surface-disabled", "--surface-input"],
     // 成對的：[前景, 背景] 要 ≥4.5:1
     pairs: [["--tooltip-text", "--tooltip-bg"]],
-    // chrome 零件：不承載內文，不做內文對比斷言（邊框/捲軸/軌道/把手/tint）
+    // chrome 零件：不承載內文，不做內文對比斷言（邊框/捲軸/軌道/把手/tint/陰影/遮罩/漸層）
     chrome: ["--on-accent", "--on-warning", "--border", "--border-subtle", "--brand-tint",
         "--scrollbar-thumb", "--scrollbar-thumb-strong", "--control-track", "--control-track-alt",
-        "--control-knob", "--toggle-on"],
+        "--control-knob", "--toggle-on",
+        "--shadow", "--shadow-strong", "--overlay", "--overlay-tint", "--brand-gradient"],
+    // 非顏色，不參與分類
+    nonColor: ["--fontFamily"],
 };
 
 test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對底色 ≥3、內文疊表面 ≥4.5）", () => {
     const lin = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
     const lum = (hex) => {
-        const h = hex.length === 4 ? hex.replace(/[0-9a-f]/gi, (c) => c + c) : hex; // 容忍 3 碼寫法
-        const n = parseInt(h.slice(1, 7), 16);
+        const body = hex.slice(1);
+        // #rgb / #rgba → 展開；#rrggbb / #rrggbbaa → 原樣。alpha 不參與亮度計算。
+        const rgb = body.length <= 4 ? body.slice(0, 3).replace(/./g, (c) => c + c) : body.slice(0, 6);
+        if (rgb.length !== 6) throw new Error(`無法解析色值 ${hex}`);
+        const n = parseInt(rgb, 16);
         return 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
     };
     const src = read("src/scss/_var.scss");
@@ -624,20 +633,25 @@ test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對
         }
         throw new Error("_var.scss 大括號不平衡");
     };
-    const vars = (body) => Object.fromEntries(
-        [...body.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{3,8})\s*;/g)].map((m) => [m[1], m[2]])
-    );
+    // 抓「每一個」宣告，不只 hex —— 否則用 rgba()/gradient 寫的新填充色會靜默逃過窮舉分類
+    const vars = (body) => Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 
-    const { fillOnWhiteText, fillOnDarkText, textOnSurface, surfaces, pairs, chrome } = COLOR_ROLES;
-    const classified = new Set([...fillOnWhiteText, ...fillOnDarkText, ...textOnSurface, ...surfaces, ...chrome, ...pairs.flat()]);
+    const { fillOnWhiteText, fillOnDarkText, textOnSurface, surfaces, pairs, chrome, nonColor } = COLOR_ROLES;
+    const needsHex = new Set([...fillOnWhiteText, ...fillOnDarkText, ...textOnSurface, ...surfaces, ...pairs.flat()]);
+    const classified = new Set([...needsHex, ...chrome, ...nonColor]);
     const bad = [];
 
     for (const [mode, at] of [["light", /^:root\s*\{/m], ["dark", /^\[data-theme="dark"\]\s*\{/m]]) {
         const t = vars(blockAt(src.search(at)));
-        // 窮舉：每一顆 hex 色 token 都要被歸類，否則新增顏色會靜默逃過對比檢查
+        // 窮舉：每一顆 token 都要被歸類，否則新增顏色會靜默逃過對比檢查
         for (const token of Object.keys(t))
-            if (!classified.has(token)) bad.push(`${mode} ${token} 沒有被歸類到 COLOR_ROLES —— 它是填充還是文字？`);
-        const get = (k) => { if (!t[k]) throw new Error(`_var.scss(${mode}) 缺少或無法解析 ${k}`); return t[k]; };
+            if (!classified.has(token)) bad.push(`${mode} ${token} 沒有被歸類到 COLOR_ROLES —— 它是填充、文字、表面、還是 chrome？`);
+        const get = (k) => {
+            const v = t[k];
+            if (!v) throw new Error(`_var.scss(${mode}) 缺少 ${k}`);
+            if (!/^#[0-9a-fA-F]{3,8}$/.test(v)) throw new Error(`_var.scss(${mode}) 的 ${k} 要參與對比計算，必須是 hex，實際是 ${v}`);
+            return v;
+        };
         const ratio = (a, b) => { const [x, y] = [lum(get(a)), lum(get(b))].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
         const check = (r, min, msg) => { if (r < min) bad.push(`${mode} ${msg} = ${r.toFixed(2)} < ${min}`); };
 
