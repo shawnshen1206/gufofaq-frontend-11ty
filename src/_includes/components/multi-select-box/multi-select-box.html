@@ -9,14 +9,14 @@
     <div class="block block-lg corner-md">
         <div class="flex-row column gap-24 justify-content-center">
             <div class="flex-row column gap-8">
-                <div class="text-lg text-bold text-center">欄位對應</div>
-                <div class="text-gray text-center">請選擇欲對應的來源內容</div>
+                <div class="text-lg text-bold text-center" data-i18n="dataImport.columnMapping">欄位對應</div>
+                <div class="text-gray text-center" data-i18n="dataImport.selectSourceHint">請選擇欲對應的來源內容</div>
             </div>
             <div class="flex-row column gap-16">
                 {% for field in fields %}
                 <div class="form-group row mobile-col">
                     <div class="label label-md">
-                        <label for="ms-{{ field.key }}" class="control-label">{{ field.label }}</label>
+                        <label for="ms-{{ field.key }}" class="control-label" data-i18n="field.{{ field.key }}">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
                         <select id="ms-{{ field.key }}" class="form-control multiSelect ms-control field-{{ field.key }}" multiple="multiple" data-placeholder="{{ field.placeholder }}">
@@ -35,19 +35,19 @@
     <div class="block block-lg corner-md">
         <div class="flex-row column gap-24 justify-content-center">
             <div class="flex-row column gap-8">
-                <div class="text-lg text-bold text-center">預覽</div>
-                <div class="text-gray text-center">預覽已對應之結果</div>
+                <div class="text-lg text-bold text-center" data-i18n="dataImport.previewTitle">預覽</div>
+                <div class="text-gray text-center" data-i18n="dataImport.previewHint">預覽已對應之結果</div>
             </div>
             <div class="flex-row column gap-16">
                 {% for field in fields %}
                 <div class="form-group row mobile-col">
                     <div class="label label-md">
-                        <label for="ms-preview-{{ field.key }}" class="control-label">{{ field.label }}</label>
+                        <label for="ms-preview-{{ field.key }}" class="control-label" data-i18n="field.{{ field.key }}">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
                         <input type="text" id="ms-preview-{{ field.key }}" class="form-control disabled ms-control preview-{{ field.key }}" value="{{ field.preview }}" disabled>
                         {% if field.error %}
-                        <span class="error-prompt date-error" style="display: none;">此格式可能無法被正確讀取</span>
+                        <span class="error-prompt date-error" style="display: none;" data-i18n="dataImport.formatWarning">此格式可能無法被正確讀取</span>
                         {% endif %}
                     </div>
                 </div>

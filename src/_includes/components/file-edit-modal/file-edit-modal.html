@@ -34,7 +34,7 @@
                         {% for field in editFields %}
                         <div class="form-group col-12-md">
                             <div class="label">
-                                <label for="fileEdit-{{ field.key }}" class="control-label">{{ field.label }}</label>
+                                <label for="fileEdit-{{ field.key }}" class="control-label" data-i18n="field.{{ field.key }}">{{ field.label }}</label>
                             </div>
                             <div class="field">
                                 {% if field.type == "textarea" %}
@@ -47,9 +47,9 @@ Dynamic languages such as JavaScript are more difficult to compile than statical
 is available, traditional compilers need to emit generic code that can handle all possible type combinations at runtime. We present an alternative compilation technique for dynamically-typed languages
 that identifies frequently executed loop traces at run-time and then generates machine code on the fly that is specialized for the actual dynamic types occurring on each path through the loop.</textarea>
                                 {% else %}
-                                <input type="text" id="fileEdit-{{ field.key }}" placeholder="請輸入"
+                                <input type="text" id="fileEdit-{{ field.key }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"
                                     class="form-control"{% if field.value %} value="{{ field.value }}"{% endif %}>
-                                <span class="error-prompt">錯誤訊息文字</span>
+                                <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                                 {% endif %}
                             </div>
                         </div>
