@@ -6,9 +6,8 @@ function showToast(message, type = 'success', duration = 3000) {
     // 舊簽名相容：showToast(msg, duration)
     if (typeof type === 'number') { duration = type; type = 'success'; }
 
-    const currentPath = window.location.pathname;
-    const isInSubfolder = currentPath.includes('/pages/');
-    const imagePath = isInSubfolder ? '../../images/' : './images/';
+    // permalink 一律扁平輸出到 dist/ 根（§1），故圖片路徑恆為 ./images/
+    const imagePath = './images/';
 
     const toast = document.createElement('div');
     toast.className = 'toast toast-' + type;

@@ -20,7 +20,11 @@ const langTogglePath = join(DIST, "js", "lang-toggle.js");
 if (existsSync(i18nPath) && existsSync(langTogglePath)) {
     const v = hash(i18nPath);
     const src = stripVer(readFileSync(langTogglePath, "utf8"));
-    writeFileSync(langTogglePath, src.replace("./i18n/en.json", `./i18n/en.json?v=${v}`));
+    // 只蓋「帶引號的那一個」——檔頭註解裡也提到 ./i18n/en.json，而 String.replace(字串,…)
+    // 只換第一個出現處，曾經因此蓋在註解上、真正的 fetch 一直沒有版號。
+    const target = '"./i18n/en.json"';
+    if (!src.includes(target)) throw new Error(`[hash-assets] 找不到 ${target}，i18n 蓋章會失效`);
+    writeFileSync(langTogglePath, src.split(target).join(`"./i18n/en.json?v=${v}"`));
 }
 
 // 2) 算出每支資產的 hash

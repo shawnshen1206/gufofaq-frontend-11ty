@@ -459,6 +459,71 @@ test("每個 openModal('X') 在同一頁上都要找得到 <dialog id=\"X\">", (
     assert.equal(hits.length, 0, `按鈕點了打不開：\n${fail(hits)}`);
 });
 
+test("HTML 註解的 <!-- --> 必須配對（斷掉的話註解內文會變成頁面上的可見文字）", () => {
+    // 曾經：把 upload-box 檔頭第一行改寫時多補了一個 -->，後面兩行說明文字就印到正式頁面上了。
+    const bad = srcHtml
+        .map((f) => [f, (read(f).match(/<!--/g) || []).length, (read(f).match(/-->/g) || []).length])
+        .filter(([, open, close]) => open !== close)
+        .map(([f, open, close]) => `${f}  <!-- ×${open}  --> ×${close}`);
+    assert.equal(bad.length, 0, fail(bad));
+});
+
+test("i18n 字典的快取失效真的有生效（dist 的 fetch 帶 ?v=）", () => {
+    // hash-assets.mjs 曾經用 String.replace(字串,…) 只換到第一個出現處——那是註解，
+    // 真正的 fetch 從來沒被蓋章，整個 cache-busting 形同虛設。
+    const js = read("dist/js/lang-toggle.js");
+    assert.match(js, /fetch\("\.\/i18n\/en\.json\?v=[a-f0-9]{8}"\)/, "lang-toggle.js 的 fetch 沒有 content hash");
+});
+
+test("§9 裸元素選擇器只准出現在 _normalize / _base", () => {
+    // 判斷巢狀一定要數大括號：_guideline.scss 縮排是平的，aside/section/footer 其實在 .guideline-page {} 內。
+    const ELEMENTS = new Set(["html", "body", "header", "footer", "aside", "main", "section", "nav",
+        "article", "ul", "ol", "li", "table", "thead", "tbody", "tr", "th", "td", "p", "a",
+        "h1", "h2", "h3", "h4", "h5", "h6", "img", "form", "div", "span"]);
+    const hits = [];
+    for (const f of srcScss.filter((p) => !/scss\/_(normalize|base)\.scss$/.test(p))) {
+        let depth = 0;
+        for (const [i, raw] of read(f).split(/\r?\n/).entries()) {
+            const code = raw.split("//")[0];
+            const open = (code.match(/\{/g) || []).length;
+            const close = (code.match(/\}/g) || []).length;
+            const brace = code.indexOf("{");
+            if (brace >= 0 && depth === 0) {
+                const sel = code.slice(0, brace).trim();
+                // 只看第一個 compound：`body.guideline-page` 是「限定」不是裸選擇器（§9 的 ✅ 範例）
+                const first = sel.split(/[\s,>+~]/)[0];
+                if (/^[a-z][a-z0-9]*$/.test(first) && ELEMENTS.has(first)) hits.push(`${f}:${i + 1}  ${sel}`);
+            }
+            depth += open - close;
+        }
+    }
+    assert.equal(hits.length, 0, `打包進單一 main.css 會洩漏到全站：\n${fail(hits)}`);
+});
+
+test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () => {
+    const src = read("src/scss/_var.scss");
+    // 用「選擇器所在的行」定位，不要用 indexOf——檔頭註解裡就提到了 [data-theme="dark"]
+    const rootAt = src.search(/^:root\s*\{/m);
+    const darkAt = src.search(/^\[data-theme="dark"\]\s*\{/m);
+    assert.ok(rootAt >= 0 && darkAt > rootAt, "_var.scss 找不到 :root / [data-theme=dark] 區塊");
+    const tokens = (body) => new Set([...body.matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]));
+    const light = tokens(src.slice(rootAt, darkAt));
+    const dark = tokens(src.slice(darkAt));
+    const NON_COLOR = new Set(["--fontFamily"]); // 字型不隨主題變
+    const onlyLight = [...light].filter((t) => !dark.has(t) && !NON_COLOR.has(t));
+    const onlyDark = [...dark].filter((t) => !light.has(t));
+    assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
+});
+
+test("§4 元件 scss 不得寫 [data-theme=dark] 分支（唯三例外）", () => {
+    // 色源檔（_var / _guideline-var）本來就是靠這個選擇器換膚，不在此限。
+    const ALLOW = /scss\/_(var|guideline-var|base|dark-icons)\.scss$|ui\/theme-toggle\//;
+    const hits = scanLines(srcScss.filter((f) => !ALLOW.test(f)), (line) =>
+        /\[data-theme/.test(line.split("//")[0]) ? "深色分支" : null
+    );
+    assert.equal(hits.length, 0, `元件只用 token，換膚交給 _var.scss：\n${fail(hits)}`);
+});
+
 test("§4 元件 scss 不得用 #id 選擇器（那是比 class 更緊的跨元件耦合）", () => {
     const files = srcScss.filter((f) => !/scss\/_(normalize|base)\.scss$/.test(f));
     const hits = scanLines(files, (line) => {

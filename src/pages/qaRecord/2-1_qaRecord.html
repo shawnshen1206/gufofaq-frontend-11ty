@@ -20,11 +20,12 @@ permalink: 2-1_qaRecord.html
 </div>
 
 <!-- 主要內容：聊天視窗 + 問答紀錄頁籤，真實頁 .chatroom-wrap 與 components/chatroom 完全一致（同一份真實頁抽出），直接 include；
-     右側 qa-record 頁籤區塊為單層 tab-group（非 ui/tab 展示片段的雙層 top/sub-tabs 結構），沿用 ui/tab 的 tab-wrap/tabs-title/tab-group/.tab class -->
+     右側頁籤區塊為單層 tab-group（非 ui/tab 展示片段的雙層 top/sub-tabs 結構），沿用 ui/tab 的 tab-wrap/tabs-title/tab-group/.tab class；
+     頁籤本身掛 ui/tab 的 .on-record 變體（見 components/qa-record-tabs） -->
 <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
     {% include "components/chatroom/chatroom.html" %}
 
-    <div class="qa-record">
+    <div>
         <div class="tab-wrap">
             <div class="tabs-title" data-i18n="qa.qaRecords">問答紀錄</div>
 

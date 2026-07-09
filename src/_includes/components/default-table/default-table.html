@@ -2,7 +2,7 @@
 <!-- 父層用「div.table-container」包覆，需左右滾動時加「.scrollTable」；主要表格用「table.default-table」；
      欄位排序在 th 內加 div.th-sort + img.sort；內容較多欄位用 div.ellipsis-2 包覆；
      功能欄按鈕用 div.btn-group 包覆；固定欄寬加 .fixed-layout；無外框加 .no-border（見下方 accordion 表格範例） -->
-{% set rows = [
+{% set demoTableRows = [
     {
         id: "12173",
         chatId: "6537",
@@ -60,7 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in rows %}
+            {% for row in demoTableRows %}
             <tr>
                 <td>{{ row.id }}</td>
                 <td>{{ row.chatId }}</td>

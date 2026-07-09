@@ -63,7 +63,7 @@
         }
     }
 
-    // 收合態：整個側欄滑出視窗右緣、切換鈕箭頭轉向（.collapsed 由業務 JS 切換）
+    // 收合態：整個側欄滑出視窗右緣、切換鈕箭頭轉向（.collapsed 由本元件的 qa-side-panel.js 切換）
     &.collapsed {
         right: -269px;
 

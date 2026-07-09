@@ -33,7 +33,8 @@
     padding-top: 56px;
 }
 
-.overlay {
+// 限定在 .mobile-nav 底下：.overlay 是很通用的名字，不限定會灌到任何用了這個 class 的元素上
+.mobile-nav .overlay {
     width: 100%;
     height: 100%;
     position: fixed;

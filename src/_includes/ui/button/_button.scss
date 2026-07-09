@@ -167,6 +167,7 @@
         background-image: url(../images/icon_delete.png);
     }
 
+    // 下載鈕：markup 由業務 js 在執行期產生（真 app 的 previewDataset.js），本專案沒有靜態 markup —— 不是死 CSS
     &.download {
         background-image: url(../images/icon_download.png);
     }
