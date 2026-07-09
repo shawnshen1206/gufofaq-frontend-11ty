@@ -1,5 +1,5 @@
 {# i18n：每個 label 帶 i18nKey，markup 渲染成 data-i18n；繁中文字即預設。
-   EN 項 langToggle:true＝語言切換鈕（class js-lang-toggle，label 由 lang-toggle.js 管理顯示目標語言），不帶 i18nKey；排在登出前，夜間鈕在最右。 #}
+   語言＋夜間切換抽到共用 components/header-controls（放在 nav 之後、漢堡之前，桌機/手機皆常駐）；此選單只剩導覽與登出。 #}
 {% set menuItems = [
   {
     label: "資料配置", i18nKey: "nav.dataConfig",
@@ -41,9 +41,6 @@
     ]
   },
   {
-    label: "EN", title: "English", href: "#", class: "js-lang-toggle", langToggle: true
-  },
-  {
     label: "登出", i18nKey: "nav.logout",
     href: "login.html",
     class: "logout"
@@ -75,7 +72,7 @@
                 {% endfor %}
             </ul>
         </nav>
-        {% include "ui/theme-toggle/theme-toggle.html" %}
+        {% include "components/header-controls/header-controls.html" %}
         <button type="button" class="nav-toggle" aria-label="開啟選單" data-i18n-aria-label="nav.openMenu"></button>
     </div>
 </header>
