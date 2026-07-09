@@ -12,7 +12,7 @@
 @use "../_includes/ui/modals/modals";
 
 // login 頁面專屬
-@use "../_includes/components/login-wrapper/login-wrapper";
+@use "../_includes/ui/login-wrapper/login-wrapper";
 
 // 404 頁面專屬
 @use "error-page";
@@ -43,36 +43,35 @@
 @use "../_includes/components/default-table/default-table";
 @use "../_includes/components/priority-table/priority-table";
 @use "../_includes/components/file-preview-modal/file-preview-modal";
-@use "../_includes/components/form-table/form-table";
-@use "../_includes/components/upload-card/upload-card";
-@use "../_includes/components/upload-box/upload-box";
+@use "../_includes/ui/form-table/form-table";
+@use "../_includes/ui/upload-card/upload-card";
+@use "../_includes/ui/upload-box/upload-box";
 @use "../_includes/components/success-box/success-box";
 @use "../_includes/components/step-nodes/step-nodes";
 @use "../_includes/components/step-btn-wrap/step-btn-wrap";
-@use "../_includes/components/block/block";
-@use "../_includes/components/chart-box/chart-box";
-@use "../_includes/components/countdown-box/countdown-box";
-@use "../_includes/components/storage-bar/storage-bar";
+@use "../_includes/ui/block/block";
+@use "../_includes/ui/chart-box/chart-box";
+@use "../_includes/ui/countdown-box/countdown-box";
+@use "../_includes/ui/storage-bar/storage-bar";
 @use "../_includes/components/editable-block/editable-block";
-@use "../_includes/components/select-btn-wrap/select-btn-wrap";
-@use "../_includes/components/chat-message/chat-message";
+@use "../_includes/ui/chat-message/chat-message";
 @use "../_includes/components/chatroom/chatroom";
 @use "../_includes/components/faq-chatroom/faq-chatroom";
-@use "../_includes/components/chatbot-shell/chatbot-shell";
+@use "../_includes/layouts/chatbot-shell/chatbot-shell";
 @use "../_includes/components/chatbot-header/chatbot-header";
 @use "../_includes/components/header-controls/header-controls";
-@use "../_includes/components/ab-compare/ab-compare";
+@use "../_includes/ui/ab-compare/ab-compare";
 @use "../_includes/components/faq-feedback-modal/faq-feedback-modal";
 @use "../_includes/components/faq-share-modal/faq-share-modal";
 @use "../_includes/components/prompt-edit/prompt-edit";
 @use "../_includes/components/qa-side-panel/qa-side-panel";
 @use "../_includes/components/multi-select-box/multi-select-box";
-@use "../_includes/components/feature-disabled-overlay/feature-disabled-overlay";
+@use "../_includes/ui/feature-disabled-overlay/feature-disabled-overlay";
 // 原第二支樣式表（真實 app css/style.css）已依 GUIDELINE §4 解散歸戶成下列三個純樣式元件
 // （:root 變數與 _var.scss 重複，直接沿用 _var）：
-@use "../_includes/components/filter-fields/filter-fields";
-@use "../_includes/components/prompt-card/prompt-card";
-@use "../_includes/components/ab-test-block/ab-test-block";
+@use "../_includes/ui/filter-fields/filter-fields";
+@use "../_includes/ui/prompt-card/prompt-card";
+@use "../_includes/ui/ab-test-block/ab-test-block";
 // sources-block、qa-detail-info：真實 scss 無專屬 class 規則（純語意/JS wrapper，視覺全由 block/default-table/accordion/form-table 提供），
 // 無 scss 檔可搬，故不新增 @use（同 disclaimer-modal 先例）
 

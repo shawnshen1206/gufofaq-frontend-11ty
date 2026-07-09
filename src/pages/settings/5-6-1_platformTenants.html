@@ -1,5 +1,5 @@
 ---
-layout: layouts/page-shell.html
+layout: layouts/page-shell/page-shell.html
 title: GufoFAQ::租戶功能開通
 titleKey: nav.tenantEnable
 pageHeading: 租戶功能開通
@@ -59,7 +59,7 @@ permalink: 5-6-1_platformTenants.html
                     <td class="text-center">{{ tenant.userCount }}</td>
                     {% for feature in features %}
                     <td class="text-center">
-                        <label class="switch" aria-label="{{ tenant.name }} {{ feature.label }} 開通切換">
+                        <label class="switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle">
                             <input type="checkbox" class="switch-checkbox" role="switch"{% if feature.key in tenant.features %} checked{% endif %}>
                             <span class="switch-box">
                                 <span class="switch-btn"></span>

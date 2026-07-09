@@ -15,8 +15,8 @@
             <span class="text-bold text-gray {{ sourcesInfoClass or 'sources-info' }}">{{ sourcesInfo or '(挑選規則 16取8；使用模型：GPT 4o)' }}</span>
         </div>
         <div class="flex-row align-items-center gap-8 flex-wrap">
-            <button class="button button-border button-sm js-expand-all" data-i18n="common.expandAll">全部展開</button>
-            <button class="button button-border button-sm js-collapse-all" data-i18n="common.collapseAll">全部收合</button>
+            <button type="button" class="button button-border button-sm js-expand-all" data-i18n="common.expandAll">全部展開</button>
+            <button type="button" class="button button-border button-sm js-collapse-all" data-i18n="common.collapseAll">全部收合</button>
             {% if sourcesRating %}
             <span class="divider-vertical lg"></span>
             <div class="flex-row align-items-center gap-2 sources-rating">

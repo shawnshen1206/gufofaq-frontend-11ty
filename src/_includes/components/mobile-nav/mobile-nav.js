@@ -24,8 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (navToggle && menuWrap && overlay) {
         navToggle.addEventListener("click", function () {
             navToggle.classList.toggle("active");
+            var open = navToggle.classList.contains("active");
+            navToggle.setAttribute("aria-expanded", open ? "true" : "false");
 
-            if (navToggle.classList.contains("active")) {
+            if (open) {
                 menuWrap.style.display = "block";
                 overlay.classList.add("active");
                 lockBodyScroll();
@@ -43,7 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             var submenu = link.parentElement.querySelector("ul");
             if (!submenu) return;
-            submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+            var open = submenu.style.display !== "block";
+            submenu.style.display = open ? "block" : "none";
+            link.setAttribute("aria-expanded", open ? "true" : "false");
         });
     });
 });

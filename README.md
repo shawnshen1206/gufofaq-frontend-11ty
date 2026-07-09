@@ -51,9 +51,9 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 ```
 src/
 ├── _includes/
-│   ├── layouts/            整頁模板（3 支，見下表）
-│   ├── ui/                 小元件（原子，不依賴其他元件）
-│   └── components/         大元件（會用到其他元件，或某大元件的專屬子片段）
+│   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
+│   ├── ui/                 不依賴其他元件的元件（35 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（31 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         scrollbar 等共用 mixin
@@ -87,9 +87,9 @@ dist/                       build 輸出（勿手改）
 
 | layout | 自動提供 | 用它的頁面 |
 |---|---|---|
-| `layouts/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 23 頁；front matter 必填 `titleKey` / `pageHeading` |
-| `layouts/chatbot-shell.html` | `<head>` + skip-link + `chatbot-header`（logo + 語言/夜間，無導覽）+ 滿版 `<main id="main">` + `footer` | 前台 FAQ 聊天頁 |
-| `layouts/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 登入頁、404、頁面目錄、元件總覽（各自在內容裡放唯一的 h1） |
+| `layouts/page-shell/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 23 頁；front matter 必填 `titleKey` / `pageHeading` |
+| `layouts/chatbot-shell/chatbot-shell.html` | `<head>` + skip-link + `chatbot-header`（logo + 語言/夜間，無導覽）+ 滿版 `<main id="main">` + `footer` | 前台 FAQ 聊天頁 |
+| `layouts/base/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 登入頁、404、頁面目錄、元件總覽（各自在內容裡放唯一的 h1） |
 
 深色模式與中英切換的旗標掛在 `<html data-theme>` / `<html lang>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化，`ui/theme-toggle`、`ui/lang-toggle` 負責切換；三個 layout 都吃得到。
 
@@ -105,7 +105,7 @@ dist/                       build 輸出（勿手改）
 | `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
-| `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
+| `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, placeholderKey?, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。`placeholder` 是繁中原文，`placeholderKey` 給它的 i18n key（js 產生的字串要走 `GufoI18n.t`，見 GUIDELINE §4-2）。 |
 | `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
 | `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 GUIDELINE §3-2 直接寫在元件 markup。 |
 | `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
@@ -122,10 +122,12 @@ dist/                       build 輸出（勿手改）
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-這類元件**不用 include**，直接在 markup 寫它的 class：`button`、`block`、`default-table`、`form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`（js 增強頁面上的 `.multiSelect`；元件自帶的 html 只是 showcase demo）、`login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
-另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
+這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`components/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
+另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`ui/prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 68 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`。
+**`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`intent-enable-modal`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
+
+> **上列不是完整清單**（`src/_includes/` 目前有 66 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 
@@ -145,13 +147,13 @@ dist/                       build 輸出（勿手改）
 
 ## 怎麼新增
 
-**新元件**：在 `ui/` 或 `components/` 建 `<name>/` 資料夾放 `<name>.html`(+`_<name>.scss`/`<name>.js`)。有 scss → `src/scss/main.scss` 加一行 `@use`；有 js → `eleventy.config.js` passthrough 與 `layouts/base.html` script 鏈各加一行。
+**新元件**：在 `ui/` 或 `components/` 建 `<name>/` 資料夾放 `<name>.html`(+`_<name>.scss`/`<name>.js`)。有 scss → `src/scss/main.scss` 加一行 `@use`；有 js → `eleventy.config.js` passthrough 與 `layouts/base/base.html` script 鏈各加一行。
 
 **新頁面**：在 `src/pages/<section>/` 建 `<name>.html`，front matter：
 
 ```njk
 ---
-layout: layouts/page-shell.html   # 管理端頁；前台 FAQ 用 chatbot-shell；登入/404 等特殊頁用 base.html
+layout: layouts/page-shell/page-shell.html   # 管理端頁；前台 FAQ 用 chatbot-shell；登入/404 等特殊頁用 base.html
 title: GufoFAQ::頁面標題
 titleKey: nav.xxx                 # 「頁面標題」那段的 i18n key（page-shell 頁必填）
 pageHeading: 頁面標題              # page-shell 用它產生本頁唯一的 <h1>（page-shell 頁必填）

@@ -1,5 +1,5 @@
 ---
-layout: layouts/page-shell.html
+layout: layouts/page-shell/page-shell.html
 title: GufoFAQ::帳號資訊
 titleKey: nav.accountInfo
 pageHeading: 帳號資訊
@@ -15,7 +15,7 @@ permalink: 5-1-1_accountInfo.html
 </div>
 
 <!-- 使用期倒數：與 components/countdown-box 完全一致（同一份真實頁抽出），直接 include -->
-{% include "components/countdown-box/countdown-box.html" %}
+{% include "ui/countdown-box/countdown-box.html" %}
 
 <!-- 帳號資訊：真實頁欄位多數為 disabled 唯讀（帳號/檢索模式/規格/資料儲存上限/資料取用規則/選用模型皆由後端配置決定，僅公司單位、
      系統提示詞可編輯），欄位不重複、無需 for 迴圈資料化，逐欄位沿用真實 class 手寫 -->
@@ -141,7 +141,7 @@ permalink: 5-1-1_accountInfo.html
         </div>
     </div>
     <div class="flex-row align-items-center justify-content-center gap-16">
-        <button class="button button-border" data-i18n="action.cancel">取消</button>
-        <button class="button button-primary" data-i18n="action.save">儲存</button>
+        <button type="button" class="button button-border" data-i18n="action.cancel">取消</button>
+        <button type="button" class="button button-primary" data-i18n="action.save">儲存</button>
     </div>
 </div>

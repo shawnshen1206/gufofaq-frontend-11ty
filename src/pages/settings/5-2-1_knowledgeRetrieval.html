@@ -1,5 +1,5 @@
 ---
-layout: layouts/page-shell.html
+layout: layouts/page-shell/page-shell.html
 title: GufoFAQ::知識檢索邏輯
 titleKey: nav.knowledgeRetrieval
 pageHeading: 知識檢索邏輯
@@ -59,8 +59,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
          高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 -->
     <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
-            <button id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
-            <button id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
+            <button type="button" id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
+            <button type="button" id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
         </div>
 
         {% set priorityLevels = [
@@ -177,7 +177,3 @@ permalink: 5-2-1_knowledgeRetrieval.html
     </div>
 </dialog>
 
-<!-- 知識檢索配置檢視 modal：依 Phase 3 任務指示複用已建立的 components/knowledge-retrieval-modal。
-     註：此 dialog 真實來源其實是 pages/qaTest/2-2-1_singleTest.html 的 #knowledgeModal（非本頁原生內容，本頁真實檔案內僅有上方 intentionModal），
-     內容與本頁「設置頁籤＋高/中/低優先級分類表」概念一致，故沿用同一元件、隨頁保留供後續串接觸發按鈕，本頁未新增外部未存在的觸發按鈕 -->
-{% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

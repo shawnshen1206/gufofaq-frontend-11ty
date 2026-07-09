@@ -49,6 +49,7 @@
                                                 id="applySample-{{ loop.index }}" class="form-control sample-count w100" value="{{ column.sampleMin }}" disabled>
                                             <span class="text-gray">/</span>
                                             <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"
+                                                aria-label="資料取樣數上限" data-i18n-aria-label="qaTest.sampleMax"
                                                 class="form-control sample-count w100" value="{{ column.sampleMax }}" disabled>
                                         </div>
                                     </div>
@@ -59,7 +60,7 @@
                                     </div>
                                     <div class="field">
                                         <textarea id="applyPrompt-{{ loop.index }}" rows="10" class="form-control disabled"
-                                            placeholder="請輸入提示詞" data-i18n-placeholder="settings.pleaseEnterPrompt" disabled>角色定位：
+                                            placeholder="請輸入您的提示詞" data-i18n-placeholder="settings.pleaseEnterPrompt" disabled>角色定位：
  你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
 知識來源限制：
  你的回答必須僅依據以下資料來源：

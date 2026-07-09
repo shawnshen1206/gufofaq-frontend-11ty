@@ -19,7 +19,7 @@
                         <label for="ms-{{ field.key }}" class="control-label" data-i18n="field.{{ field.key }}">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
-                        <select id="ms-{{ field.key }}" class="form-control multiSelect ms-control field-{{ field.key }}" multiple="multiple" data-placeholder="{{ field.placeholder }}">
+                        <select id="ms-{{ field.key }}" class="form-control multiSelect ms-control field-{{ field.key }}" multiple="multiple" data-placeholder="{{ field.placeholder }}"{% if field.placeholderKey %} data-placeholder-key="{{ field.placeholderKey }}"{% endif %}>
                             {% for option in field.options %}
                             <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>{{ option.label }}</option>
                             {% endfor %}

@@ -1,5 +1,5 @@
 ---
-layout: layouts/page-shell.html
+layout: layouts/page-shell/page-shell.html
 title: GufoFAQ::資料匯入
 titleKey: nav.dataImport
 pageHeading: 資料匯入
@@ -14,15 +14,16 @@ permalink: 1-1-1_dataImport.html
 </div>
 
 <!-- 選擇資料集：真實頁 pages/dataImport/1-1-1_dataImport.html 的「模擬select」觸發 datasetModal，
-     class 沿用真實系統（同 components/select-btn-wrap 的 .field.select-wrap 寫法），onclick="openModal(...)"
+     class 沿用真實系統（同 ui/form-control 的 .field.select-wrap 寫法），onclick="openModal(...)"
      沿用 ui/modals 既有 window.openModal 靜態呼叫方式（同 ui/link-modal 既有寫法） -->
 <div class="form-group row mt-10">
     <div class="label">
-        <label class="control-label" data-i18n="dataImport.datasetName">資料集名稱</label>
+        <label id="datasetNameLabel" class="control-label" data-i18n="dataImport.datasetName">資料集名稱</label>
     </div>
     <div class="field select-wrap">
-        <!-- 模擬 select：用真 <button> 而非 div[role=button]，否則 Enter/Space 不會觸發（原生按鈕免費具備） -->
-        <button type="button" aria-label="資料集名稱" data-i18n-aria-label="dataImport.datasetName" class="form-control select-md" onclick="openModal('datasetModal');">
+        <!-- 模擬 select：用真 <button type="button"> 而非 div[role=button]，否則 Enter/Space 不會觸發（原生按鈕免費具備）
+             可及名稱用 aria-labelledby 接上左側 label（label 無 for 可指，因為控制項不是表單元素） -->
+        <button type="button" aria-labelledby="datasetNameLabel" class="form-control select-md" onclick="openModal('datasetModal');">
             <span class="select-placeholder" data-i18n="dataImport.pleaseSelect">請選擇</span>
             <span class="select-value hidden"></span>
         </button>
@@ -31,6 +32,6 @@ permalink: 1-1-1_dataImport.html
 
 {# 簡化版靜態跳轉：卡片直接連到該類型上傳頁（excel→1-1-2、pdf/word/image→1-2-1） #}
 {% set uploadCardNav = true %}
-{% include "components/upload-card/upload-card.html" %}
+{% include "ui/upload-card/upload-card.html" %}
 
 {% include "components/select-dataset-modal/select-dataset-modal.html" %}

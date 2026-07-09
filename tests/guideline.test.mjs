@@ -65,7 +65,7 @@ test("§2 不得有 _data/ 資料檔（模板不吃 build data）", () => {
 // ─────────────────────────── §3 頁面規則 ───────────────────────────
 
 test("§3-1 走 page-shell 的頁面都要有 titleKey 與 pageHeading", () => {
-    const pages = gitFiles('"src/pages/**/*.html"').filter((f) => /^layout: layouts\/page-shell\.html\s*$/m.test(read(f)));
+    const pages = gitFiles('"src/pages/**/*.html"').filter((f) => /^layout: layouts\/page-shell\/page-shell\.html\s*$/m.test(read(f)));
     assert.ok(pages.length > 0, "找不到任何 page-shell 頁面");
     const miss = pages.filter((f) => !/^titleKey:/m.test(read(f)) || !/^pageHeading:/m.test(read(f)));
     assert.equal(miss.length, 0, `缺 titleKey / pageHeading：\n${miss.join("\n")}`);
@@ -95,8 +95,9 @@ test("§4-1 不得裸寫 outline: none（要蓋掉必須註記替代焦點環）
 
 test("§4-1 元件不得重寫 box-sizing: border-box（_base.scss 已全域給）", () => {
     const files = srcScss.filter((f) => !/scss\/_(base|normalize)\.scss$/.test(f));
+    // 含 vendor prefix：-webkit-box-sizing 一樣是重寫（曾經放行，讓 ui/switch 漏了兩年）
     const hits = scanLines(files, (line) =>
-        /box-sizing:\s*border-box/.test(line) && !/-webkit-/.test(line) ? "重複宣告" : null
+        /(?:-webkit-|-moz-|-ms-)?box-sizing:\s*border-box/.test(line) ? "重複宣告" : null
     );
     assert.equal(hits.length, 0, `多餘宣告：\n${fail(hits)}`);
 });
@@ -235,7 +236,7 @@ test("§5 不得有 jQuery 或任何第三方套件", () => {
 test("§5 元件 js 三方對齊：實體檔 ⇄ eleventy passthrough ⇄ base.html script", () => {
     const cfg = read("eleventy.config.js");
     const pass = [...cfg.matchAll(/"src\/_includes\/[^"]+\/([\w-]+)\.js":\s*"js\/([\w-]+)\.js"/g)].map((m) => m[2]);
-    const tags = [...read("src/_includes/layouts/base.html").matchAll(/src="\.\/js\/([\w-]+)\.js"/g)].map((m) => m[1]);
+    const tags = [...read("src/_includes/layouts/base/base.html").matchAll(/src="\.\/js\/([\w-]+)\.js"/g)].map((m) => m[1]);
     const compJs = srcJs.filter((f) => /_includes\/(ui|components)\//.test(f)).map((f) => basename(f, ".js"));
 
     const notRegistered = compJs.filter((n) => !pass.includes(n));
@@ -319,15 +320,26 @@ test("main.scss 有 @use 每一支元件 scss", () => {
 
 // GUIDELINE 只放規則（新增頁面/元件時它一個字都不用改）；會變動的清單住 README。
 // 枚舉清單最容易腐化，所以由測試盯著 README。
+const layoutDirs = readdirSync("src/_includes/layouts");
+
 test("README.md 有交代每一個 layout", () => {
     const doc = read("README.md");
-    const missing = readdirSync("src/_includes/layouts").filter((f) => f.endsWith(".html") && !doc.includes(f));
+    const missing = layoutDirs.filter((d) => !doc.includes(`layouts/${d}/${d}.html`));
     assert.equal(missing.length, 0, `README 沒提到這些 layout：${missing}`);
+});
+
+test("§1-1 每個 layout 一個資料夾，只放 <名>.html / _<名>.scss", () => {
+    const bad = layoutDirs.flatMap((d) =>
+        readdirSync(`src/_includes/layouts/${d}`)
+            .filter((f) => f !== `${d}.html` && f !== `_${d}.scss`)
+            .map((f) => `layouts/${d}/${f}`)
+    );
+    assert.equal(bad.length, 0, `layout 資料夾內有不該存在的檔案：\n${bad.join("\n")}`);
 });
 
 test("README.md 的數字（page-shell 頁數、元件數）與實況一致", () => {
     const doc = read("README.md");
-    const pages = gitFiles('"src/pages/**/*.html"').filter((f) => /^layout: layouts\/page-shell\.html\s*$/m.test(read(f))).length;
+    const pages = gitFiles('"src/pages/**/*.html"').filter((f) => /^layout: layouts\/page-shell\/page-shell\.html\s*$/m.test(read(f))).length;
     const comps = componentDirs.length;
     assert.ok(doc.includes(`管理端 ${pages} 頁`), `README 的頁數過期，實際 ${pages} 頁`);
     assert.ok(doc.includes(`${comps} 個元件`), `README 的元件數過期，實際 ${comps} 個`);
@@ -367,4 +379,146 @@ test("GUIDELINE.md 不放會腐化的枚舉（頁數、元件數）", () => {
     const doc = read("GUIDELINE.md");
     const bad = [/全\s*\d+\s*頁/, /目前有\s*\d+\s*個元件/, /\d+\s*個元件/].filter((re) => re.test(doc));
     assert.equal(bad.length, 0, `GUIDELINE 出現了會隨專案變動的數字，應移到 README：${bad}`);
+});
+
+// ─────────── 地毯式稽核抓到、但既有測試沒涵蓋的規則 ───────────
+
+test("§4 可點的東西一律用真 button，且不得省略 type", () => {
+    const hits = [];
+    for (const f of srcHtml)
+        for (const { tag, attrs, raw } of tagsOf(read(f)))
+            if (tag === "button" && !/\btype=/.test(attrs)) hits.push(`${f}  ${raw.slice(0, 90)}`);
+    assert.equal(hits.length, 0, `<button> 缺 type（預設是 submit，會誤送表單）：\n${fail(hits)}`);
+});
+
+test("§4-2 同一個 i18n key 的繁中原文全站必須一致", () => {
+    // 切回繁中的預設值是「以 key 為索引、從 DOM 就地擷取」，同 key 兩種繁中會互相覆蓋
+    const ATTRS = [["title", "title"], ["aria-label", "aria-label"], ["placeholder", "placeholder"], ["alt", "alt"], ["toast", "data-toast"]];
+    const seen = new Map(); // key -> Map(繁中 -> [出處])
+    const record = (key, zh, where) => {
+        if (!key || key.includes("{{") || !zh || !zh.trim()) return;
+        if (!seen.has(key)) seen.set(key, new Map());
+        const variants = seen.get(key);
+        if (!variants.has(zh)) variants.set(zh, []);
+        variants.get(zh).push(where);
+    };
+    for (const f of srcHtml) {
+        const html = read(f);
+        for (const m of html.matchAll(/data-i18n="([\w.]+)"[^>]*>([^<]*)/g)) record(m[1], m[2].trim(), f);
+        for (const { attrs } of tagsOf(html))
+            for (const [suffix, target] of ATTRS) {
+                const k = attrs.match(new RegExp(String.raw`data-i18n-${suffix}="([\w.]+)"`));
+                const v = attrs.match(new RegExp(String.raw`(?:^|\s)${target}="([^"]*)"`));
+                if (k && v) record(k[1], v[1].trim(), f);
+            }
+    }
+    const bad = [];
+    for (const [key, variants] of seen)
+        if (variants.size > 1)
+            bad.push(`${key}\n` + [...variants].map(([zh, files]) => `      「${zh}」 ← ${[...new Set(files)].join(", ")}`).join("\n"));
+    assert.equal(bad.length, 0, `同一個 key 出現多種繁中原文（切回繁中時會互相覆蓋）：\n${bad.join("\n")}`);
+});
+
+test("元件的 html 都必須被 include（不得有孤兒死碼）", () => {
+    const allMarkup = srcHtml.map(read).join("\n");
+    const orphans = componentDirs
+        .filter(({ name, path }) => existsSync(`${path}/${name}.html`))
+        .filter(({ bucket, name }) => !allMarkup.includes(`include "${bucket}/${name}/${name}.html"`))
+        .map(({ bucket, name }) => `${bucket}/${name}/${name}.html`);
+    assert.equal(orphans.length, 0, `沒有任何頁面/元件 include 它們（展示片段請在 component.html include）：\n${orphans.join("\n")}`);
+});
+
+test("src/images 每張圖都必須被引用", () => {
+    const corpus = [...srcHtml, ...srcJs, ...srcScss].map(read).join("\n");
+    const unused = readdirSync("src/images").filter((img) => !corpus.includes(img));
+    assert.equal(unused.length, 0, `未被任何 html/js/scss 引用的圖片：\n${unused.join("\n")}`);
+});
+
+test("§1-1 桶歸屬：components/ 要用到其他元件（或是專屬子片段）；ui/ 要零依賴", () => {
+    const SHOWCASE = new Set(["src/pages/components/component.html", "src/catalog.html"]);
+    const selectorClasses = (src) => {
+        const out = new Set();
+        for (const raw of src.split(/\r?\n/)) {
+            const code = raw.split("//")[0];
+            const i = code.indexOf("{");
+            if (i < 0 || /^\s*[@$]/.test(code.slice(0, i))) continue;
+            for (const m of code.slice(0, i).matchAll(/\.([A-Za-z][\w-]*)/g)) out.add(m[1]);
+        }
+        return out;
+    };
+    // class → 定義它的元件（多處定義＝歸屬不明，不當判斷依據）
+    const defs = new Map();
+    for (const { bucket, name, path } of componentDirs) {
+        const scss = `${path}/_${name}.scss`;
+        if (!existsSync(scss)) continue;
+        for (const cls of selectorClasses(read(scss))) {
+            if (!defs.has(cls)) defs.set(cls, new Set());
+            defs.get(cls).add(`${bucket}/${name}`);
+        }
+    }
+    const GLOBAL = new Set();
+    for (const f of srcScss.filter((p) => p.includes("src/scss/"))) for (const c of selectorClasses(read(f))) GLOBAL.add(c);
+    const ownerOf = (cls) => {
+        if (GLOBAL.has(cls) || cls.startsWith("js-")) return null;
+        const s = defs.get(cls);
+        return s && s.size === 1 ? [...s][0] : null;
+    };
+    const includedBy = new Map();
+    for (const f of srcHtml)
+        for (const m of read(f).matchAll(/include\s+"(?:ui|components)\/([\w-]+)\//g)) {
+            if (!includedBy.has(m[1])) includedBy.set(m[1], []);
+            includedBy.get(m[1]).push(f.replace(/\\/g, "/"));
+        }
+    // 生產 markup 具遞移性：被真實頁面 include 的是生產；被「生產元件」include 的也是。
+    // （accordion 只被 default-table include，而 default-table 只被 component.html include
+    //   ⇒ 整條鏈都是展示片段。）
+    const isPage = (f) => !f.includes("/_includes/");
+    const production = new Set();
+    for (let changed = true; changed; ) {
+        changed = false;
+        for (const { name } of componentDirs) {
+            if (production.has(name)) continue;
+            const live = (includedBy.get(name) || []).some((f) =>
+                isPage(f) ? !SHOWCASE.has(f) : production.has(basename(f, ".html"))
+            );
+            if (live) { production.add(name); changed = true; }
+        }
+    }
+
+    const bad = [];
+    for (const { bucket, name, path } of componentDirs) {
+        const self = `${bucket}/${name}`;
+        const htmlPath = `${path}/${name}.html`;
+        const scssPath = `${path}/_${name}.scss`;
+        const jsPath = `${path}/${name}.js`;
+        const subFragment = (includedBy.get(name) || []).some((f) => !isPage(f));
+
+        // depsAll：包含展示片段裡的 class（足以「證明」它用到別人）
+        // depsProd：只採生產 markup（要「證明它零依賴」時，不能拿展示片段的示範情境當罪證）
+        const depsAll = new Set();
+        const depsProd = new Set();
+        const addBoth = (o) => { if (o && o !== self) { depsAll.add(o); depsProd.add(o); } };
+
+        if (existsSync(htmlPath)) {
+            const html = read(htmlPath);
+            for (const m of html.matchAll(/include\s+"(ui|components)\/([\w-]+)\//g)) if (m[2] !== name) addBoth(`${m[1]}/${m[2]}`);
+            for (const m of html.matchAll(/class="([^"]*)"/g))
+                for (const cls of m[1].split(/\s+/)) {
+                    if (!cls || cls.includes("{")) continue;
+                    const o = ownerOf(cls);
+                    if (!o || o === self) continue;
+                    depsAll.add(o);
+                    if (production.has(name)) depsProd.add(o);
+                }
+        }
+        if (existsSync(scssPath))
+            for (const cls of selectorClasses(read(scssPath))) addBoth(ownerOf(cls));
+        if (existsSync(jsPath))
+            for (const [fn, o] of [["openModal", "ui/modals"], ["closeModal", "ui/modals"], ["showToast", "ui/toast"]])
+                if (new RegExp(String.raw`\b${fn}\s*\(`).test(read(jsPath))) addBoth(o);
+
+        if (bucket === "components" && depsAll.size === 0 && !subFragment) bad.push(`${self} 零依賴、也不是專屬子片段 → 應搬去 ui/`);
+        if (bucket === "ui" && depsProd.size > 0) bad.push(`${self} 用到 ${[...depsProd].join("、")} → 應搬去 components/`);
+    }
+    assert.equal(bad.length, 0, `桶放錯了：\n${bad.join("\n")}`);
 });

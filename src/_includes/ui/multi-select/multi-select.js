@@ -22,7 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var id = "ms-" + (++uid);
         function placeholder() {
-            return select.dataset.placeholder || t("common.pleaseSelect", "請選擇");
+            // 有 data-placeholder-key 就走 i18n（data-placeholder 當繁中原文的 fallback）；否則原字串照用
+            var zh = select.dataset.placeholder;
+            var key = select.dataset.placeholderKey;
+            if (key) return t(key, zh || "");
+            return zh || t("common.pleaseSelect", "請選擇");
         }
 
         // 包一層 wrapper；原生 select 藏起來但留在 DOM 內，繼續當唯一資料來源

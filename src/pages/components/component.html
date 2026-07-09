@@ -1,5 +1,5 @@
 ---
-layout: layouts/base.html
+layout: layouts/base/base.html
 title: GufoFAQ::元件庫
 permalink: component.html
 bodyClass: guideline-page
@@ -12,7 +12,7 @@ bodyClass: guideline-page
 ] %}
 {# 元件庫展示頁（style-guide catalog），取自真實 app pages/components/component.html。
    本頁有自己的版型（.full-container + aside 導覽 + .main-container 18 節），不是一般頁面 chrome，
-   故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base.html。
+   故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base/base.html。
    各節盡量 {% include %} 已建好的 ui/* 、components/* 展示檔（DRY，避免與其他頁面的元件標記漂移），
    純版面/文字類（欄位 Columns、文字與顏色）與跳窗展示版內容（previewModal）等無對應元件檔的原始展示，逐字手寫。 #}
 
@@ -43,6 +43,9 @@ bodyClass: guideline-page
             <li><a class="aside-link" href="#modalSection">Modal跳窗</a></li>
             <li><a class="aside-link" href="#informSection">檔案上傳</a></li>
             <li><a class="aside-link" href="#stepsSection">步驟</a></li>
+            <li><a class="aside-link" href="#blockSection">區塊Block</a></li>
+            <li><a class="aside-link" href="#toastSection">Toast通知</a></li>
+            <li><a class="aside-link" href="#tooltipSection">Tooltip提示</a></li>
         </ul>
     </aside>
     <div class="main-container">
@@ -59,7 +62,7 @@ bodyClass: guideline-page
             <div class="caption description">
                 <ul>
                     <li>css/main.css ---- 用在所有頁面</li>
-                    <li>js/*.js ---- 依頁面所需元件逐一登記，見 layouts/base.html</li>
+                    <li>js/*.js ---- 依頁面所需元件逐一登記，見 layouts/base/base.html</li>
                 </ul>
             </div>
             <div class="caption">
@@ -279,7 +282,7 @@ bodyClass: guideline-page
                         <div class="subtitle">Class：text-default</div>
                     </div>
                     <div class="col-3-md">
-                        <span class="divider-vertical"></span>
+                        {% include "ui/divider-vertical/divider-vertical.html" %}
                         <div class="subtitle">垂直分隔線，Class：divider-vertical</div>
                     </div>
                 </div>
@@ -400,7 +403,7 @@ bodyClass: guideline-page
                     <li>表單表格</li>
                 </ul>
             </div>
-            {% include "components/form-table/form-table.html" %}
+            {% include "ui/form-table/form-table.html" %}
             <div class="caption description mt-16">
                 <ul>
                     <li>表單表格是使用 div 模擬 table 的表格</li>
@@ -530,12 +533,12 @@ bodyClass: guideline-page
         <section id="informSection">
             <h2 class="section-title"><span>17</span><span>檔案上傳</span></h2>
             <div>
-                {% include "components/upload-card/upload-card.html" %}
+                {% include "ui/upload-card/upload-card.html" %}
                 <div class="subtitle">描述：檔案上傳選項，使用「.upload-card」這個class，最外層用「div.upload-card-list」包覆</div>
             </div>
             <br>
             <div>
-                {% include "components/upload-box/upload-box.html" %}
+                {% include "ui/upload-box/upload-box.html" %}
                 <div class="subtitle">描述：檔案上傳區，使用「.upload-box」這個class</div>
             </div>
             <br>
@@ -588,6 +591,42 @@ bodyClass: guideline-page
                     <li>5. 若只需要 "下一步" 按鈕，請在.step-btn-wrap加上「.no-prev」這個class，並移除 "上一步" 按鈕</li>
                 </ul>
             </div>
+        </section>
+
+        <section id="blockSection">
+            <h2 class="section-title"><span>19</span><span>區塊Block</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>1. 白底容器基底，使用「.block」這個class</li>
+                    <li>2. 尺寸變體：「.block-sm」（緊湊、直角）、「.block-lg」（寬鬆）</li>
+                    <li>3. 可再疊「.border」加外框、「.corner-md」加大圓角</li>
+                    <li>4. 語意變體由各自的元件提供，如：.sources-block／.prompt-card／.success-box／.ab-test-block</li>
+                </ul>
+            </div>
+            {% include "ui/block/block.html" %}
+        </section>
+
+        <section id="toastSection">
+            <h2 class="section-title"><span>20</span><span>Toast通知</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>1. 呼叫全域「showToast(message, type)」，或在任何按鈕加「data-toast」屬性自動觸發</li>
+                    <li>2. type：success（預設）／error／warning／info</li>
+                    <li>3. 容器由 layouts/base/base.html 提供（#toastContainer，掛 role="status" aria-live="polite"）</li>
+                </ul>
+            </div>
+            {% include "ui/toast/toast.html" %}
+        </section>
+
+        <section id="tooltipSection">
+            <h2 class="section-title"><span>21</span><span>Tooltip提示</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>1. 在 host 按鈕加「.has-tooltip」，內放「span.tooltip」放提示文字</li>
+                    <li>2. 純 CSS hover 顯示，無 js</li>
+                </ul>
+            </div>
+            {% include "ui/tooltip/tooltip.html" %}
         </section>
 
         <footer class="footer">

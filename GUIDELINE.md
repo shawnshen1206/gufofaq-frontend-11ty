@@ -25,7 +25,7 @@
 ```
 src/
 ├── _includes/
-│   ├── layouts/            ← 整頁模板（只放模板，不放元件）
+│   ├── layouts/            ← 整頁模板 + 模板專屬樣式 `_<模板名>.scss`（不放元件）
 │   ├── components/         ← 大元件：會用到其他元件的組合區塊
 │   │   └── <元件名>/       ←   一個元件 = 一個資料夾
 │   │       ├── <元件名>.html      ←   元件 HTML（唯一正本）
@@ -46,16 +46,22 @@ src/
 | 桶 | 判斷句 | 例 |
 |---|---|---|
 | `layouts/` | 是整頁的**模板**嗎？ | `base.html`、各種 `*-shell.html` |
-| `components/` | 它的 html / scss / js **會用到其他元件**，或是某大元件的**專屬子片段**嗎？（大） | header、sources-block、multi-select-box、mobile-nav |
-| `ui/` | **不依賴任何其他元件**的最小單位？（小） | button、modals、pagination |
+| `components/` | 它**會用到其他元件**，或是某大元件的**專屬子片段**嗎？ | header、sources-block、multi-select-box、mobile-nav |
+| `ui/` | **不依賴任何其他元件**？ | button、modals、pagination、block、storage-bar |
 
-「專屬子片段」指由某個大元件 include、不會單獨使用的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`、行為依賴 `modals.js`）、`disclaimer-modal`（footer 的免責聲明跳窗，套用 `modals` 的樣式）。它們放在 `components/` 而非 `ui/`。
+**「用到其他元件」三種形式**（任一成立即歸 `components/`）：`{% include %}` 它、在自己的 markup 寫它的 class（如 modal 寫 `.modals`）、js 呼叫它匯出的全域函式（如 `openModal()`）。
+
+**判斷依賴時只看 scss + js + 生產 markup。** `<元件名>.html` 有兩種身分：被真實頁面 include 的是**生產 markup**；只被元件總覽頁 include 的是**展示片段**——展示片段為了示範情境會用到別的元件，不算依賴（否則每個原子都會被推去 `components/`）。
+
+「專屬子片段」指由某個大元件 include、不會單獨使用的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`）、`step-nodes`（step-btn-wrap 的步驟點）。它們即使零依賴也放在 `components/`。
+
+**`layouts/` 的樣式跟模板同住**：模板不是元件（無 markup、無行為、只服務單一模板），它的專屬樣式放 `layouts/_<模板名>.scss`，不進 `components/` 也不進全域 `scss/`。
 
 ### 1-2. 元件檔案規則
 
 - html / scss / js 三種檔案**有才放**：純樣式元件只有 scss（button）、純行為元件只有 js + scss（accordion）
 - 有 scss → 在 `scss/main.scss` 對應分組加一行 `@use`
-- 有 js → 在 `eleventy.config.js` 的 passthrough 清單和 `layouts/base.html` 的 script 清單各加一行
+- 有 js → 在 `eleventy.config.js` 的 passthrough 清單和 `layouts/base/base.html` 的 script 清單各加一行
 - 同一個元件絕不複製貼上；要用就 include，修改只改它資料夾裡的那一份
 - 誰的按鈕開的彈窗，彈窗就 include 在誰裡面（例：footer 內含 disclaimer-modal）
 
@@ -86,7 +92,7 @@ src/
 
 ```yaml
 ---
-layout: layouts/page-shell.html        # 或 layouts/base.html
+layout: layouts/page-shell/page-shell.html        # 或 layouts/base/base.html
 title: GufoFAQ::頁面標題
 titleKey: nav.dataImport               # 「頁面標題」那段的 i18n key（見 §4-2）
 pageHeading: 資料匯入                   # 頁面標題（繁中原文），page-shell 用它產生本頁唯一的 <h1>
@@ -128,10 +134,10 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
   - 父 shell 定義、專屬子片段消費的版面 `custom property`（如 shell 的 `--header-height`）屬**允許的父子耦合**，不算跨元件洩漏
-- 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ab-test-block`），不放全域樣式表
+- 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
 - **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標同 gap：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
-- 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫）
+- 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫）——唯一例外是 `.text-default`：它是「強制回預設字色」的逃生口，工具層在 `main.scss` 早於元件層載入，不帶 `!important` 就壓不過元件色
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁的「04 欄位」節
 - **HTML 巢狀必須合法**：`span`／`p` 內不可放區塊元素（`div`、`ul`、`table`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
 - **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯（同一元件在頁面重複出現時，id 用迴圈變數組唯一值，見 `ui/form-control` 示範），沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
@@ -159,6 +165,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 
 - 可見文字：`<span data-i18n="qa.records">問答紀錄</span>`
 - 屬性：`data-i18n-title` / `-aria-label` / `-placeholder` / `-alt` / `-toast`（marker 後綴＝目標屬性）
+- **由元件 js 讀 `data-*` 資料槽再畫出來的文字**（如 multi-select 的 `data-placeholder`）不在上表的自動翻譯範圍：另給一個 `data-<槽名>-key` 帶 i18n key，元件 js 用它走 `GufoI18n.t(key, 繁中原文)`（見 §5）
 - 分頁標題：front matter 的 `titleKey`（見 §3-1）
 - **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
 - **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。`component.html`（元件總覽）與 `catalog.html`（頁面目錄，輸出成 index.html）是 showcase，不在 app 範圍
@@ -190,7 +197,7 @@ ui/pagination/
 ### 新增元件 js 的登記（各加一行）
 
 1. `eleventy.config.js`：passthrough 清單加 `"src/_includes/桶/元件/元件.js": "js/元件.js"`
-2. `layouts/base.html`：script 清單加 `<script defer src="./js/元件.js"></script>`
+2. `layouts/base/base.html`：script 清單加 `<script defer src="./js/元件.js"></script>`
 
 ### tag 多選（`ui/multi-select`）
 
@@ -217,7 +224,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 
 | 本專案 | React |
 |---|---|
-| `layouts/page-shell.html` | route layout（Next.js `layout.tsx`、React Router `<Outlet />` 外層） |
+| `layouts/page-shell/page-shell.html` | route layout（Next.js `layout.tsx`、React Router `<Outlet />` 外層） |
 | `components/xxx/`、`ui/xxx/` | 一個 component 資料夾（`Xxx.tsx` + 同名 scss） |
 | 元件的 `_xxx.scss` | **原樣複製**到元件旁 `import './xxx.scss'`，不改寫 |
 | 元件的 `xxx.js` | 行為規格：改寫成該元件的 `useState` / 事件處理（DOM 操作 → state 驅動） |

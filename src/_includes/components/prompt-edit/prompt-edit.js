@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 同步改寫 data-i18n key，切換語言時 lang-toggle 才會依「當下狀態」重譯
             toggle.textContent = open ? t(keyOpen, zhOpen) : t(keyClose, zhClose);
             toggle.setAttribute("data-i18n", open ? keyOpen : keyClose);
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
             content.innerHTML = "";
             if (open) {
                 var ta = document.createElement("textarea");

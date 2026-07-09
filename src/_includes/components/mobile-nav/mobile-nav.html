@@ -6,7 +6,7 @@
             {% for item in menuItems %}
             <li{% if item.hidden %} class="hidden"{% endif %}>
                 {% if item.submenu %}
-                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}">{{ item.label }}</a>
+                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}" aria-haspopup="true" aria-expanded="false">{{ item.label }}</a>
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>

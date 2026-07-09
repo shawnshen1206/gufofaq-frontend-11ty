@@ -132,7 +132,7 @@
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            color: var(--brand-hover);
+            color: var(--brand-text-hover);
         }
     }
 }
