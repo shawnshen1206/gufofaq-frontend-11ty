@@ -32,6 +32,13 @@
             overflow: hidden;
         }
     }
+
+    // 右側整組：選單（含語言 EN、登出）+ 夜間鈕全部靠右（logo 留在左）
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+    }
 }
 
 .desktop-nav {
@@ -71,8 +78,6 @@
                         background-repeat: no-repeat;
                         background-size: contain;
                         background-position: center;
-                        position: absolute;
-
                     }
                 }
 

@@ -1,5 +1,5 @@
-{# i18n：每個 label 帶 i18nKey，markup 渲染成 data-i18n；繁中文字即預設（見 ui/lang-toggle）。
-   EN 項 langToggle:true＝語言切換鈕（label 由 lang-toggle.js 管理，顯示目標語言），不帶 i18nKey。 #}
+{# i18n：每個 label 帶 i18nKey，markup 渲染成 data-i18n；繁中文字即預設。
+   EN 項 langToggle:true＝語言切換鈕（class js-lang-toggle，label 由 lang-toggle.js 管理顯示目標語言），不帶 i18nKey；排在登出前，夜間鈕在最右。 #}
 {% set menuItems = [
   {
     label: "資料配置", i18nKey: "nav.dataConfig",
@@ -41,11 +41,7 @@
     ]
   },
   {
-    label: "EN",
-    title: "English",
-    class: "dropdown js-lang-toggle",
-    href: "#",
-    langToggle: true
+    label: "EN", title: "English", href: "#", class: "js-lang-toggle", langToggle: true
   },
   {
     label: "登出", i18nKey: "nav.logout",
@@ -58,28 +54,30 @@
     <h1 class="logo">
         <a href="2-1_qaRecord.html" title="GufoFAQ 首頁">GufoFAQ</a>
     </h1>
-    <nav class="desktop-nav">
-        <ul class="main-menu">
-            {% for item in menuItems %}
-            <li{% if item.hidden %} class="hidden"{% endif %}>
-                {% if item.submenu %}
-                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}">{{ item.label }}</a>
-                <ul>
-                    {% for sub in item.submenu %}
-                    <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </nav>
-    {% include "ui/theme-toggle/theme-toggle.html" %}
-    <button type="button" class="nav-toggle" aria-label="開啟選單"></button>
+    <div class="header-right">
+        <nav class="desktop-nav">
+            <ul class="main-menu">
+                {% for item in menuItems %}
+                <li{% if item.hidden %} class="hidden"{% endif %}>
+                    {% if item.submenu %}
+                    <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}">{{ item.label }}</a>
+                    <ul>
+                        {% for sub in item.submenu %}
+                        <li{% if sub.hidden %} class="hidden"{% endif %}>
+                            <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% include "ui/theme-toggle/theme-toggle.html" %}
+        <button type="button" class="nav-toggle" aria-label="開啟選單"></button>
+    </div>
 </header>
 
 {% include "components/mobile-nav/mobile-nav.html" %}
