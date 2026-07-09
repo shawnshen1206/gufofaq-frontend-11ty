@@ -13,42 +13,56 @@
 
 ## ① Theme：把 `src/scss/_var.scss` 色盤 + 間距尺標搬進 Tailwind
 
-### 顏色 token（一字對應 `_var.scss`，維持單一色源）
+### 顏色 token（照搬 `_var.scss`，維持單一色源）
 
-Tailwind v4 `@theme`（建議，直接是 CSS 變數、和現有 `var(--color-*)` 語意一致）：
+`_var.scss` 是**單層語意 token**：直接給值、沒有 `--color-*` 原色層、沒有別名。淺色定義在 `:root`，深色在 `[data-theme="dark"]` **覆寫同一組名字**。
+
+> **值一律以 `_var.scss` 為準，逐字照搬——不要在本文件維護一份色值清單（會過期）。**
+
+Tailwind v4：把同一組名字加上 `--color-` 前綴放進 `@theme`，深色照樣覆寫同一批變數：
 
 ```css
 @theme {
-  --color-primary: #168ed1;
-  --color-primary-hover: #037ec3;
-  --color-primary-light: #e7f7ff;
-  --color-primary-dark: #13386f;
-  --color-success: #00b526;
-  --color-success-hover: #019520;
-  --color-info: #0d97e5;
-  --color-warning: #ffc700;
-  --color-warning-hover: #efbb00;
-  --color-danger: #f12929;
-  --color-danger-hover: #d41414;
-  --color-gray-100: #f9f9f9;
-  --color-gray-200: #f5f5f5;
-  --color-gray-300: #f1f1f1;
-  --color-gray-400: #e1e1e1;
-  --color-gray-500: #dfdfdf;
-  --color-gray-600: #6c6c6c;
-  --color-black: #222222;
-  --color-blockquote-bg: rgba(0, 0, 0, 0.02);
-  --color-gray-350: #efefef;  --color-gray-550: #888888;  --color-gray-700: #4e4e4e;  --color-gray-800: #333333;
-  --color-gray-blue: #b4bfc9; --color-gray-blue-dark: #323c4f; --color-tooltip-bg: #363636;
-  --color-orange: #fe790d;    --color-orange-hover: #e9710e;
-  --color-dark: #267594;      --color-dark-hover: #0c536e;   --color-toggle-on: #409144;
+  --color-surface: …;  --color-surface-raised: …;  --color-text: …;  --color-text-muted: …;
+  --color-brand: …;    --color-brand-text: …;      --color-danger: …; --color-danger-text: …;
+  /* …其餘 token 同名照搬（--on-accent、--border、--shadow、--tooltip-bg…） */
 }
-/* 語意別名：text-default=black、text-dark=gray-600、border-default=gray-400、bg-primary=#e7f7ff */
-/* 漸層 --color-primary-linear（header 底線、footer 背景）非顏色 token：設成一般 CSS 變數或用 bg-[linear-gradient(to_right,#0a62ac,#2ebbcf)] */
+[data-theme="dark"] {
+  --color-surface: …;  --color-brand: …;  --color-brand-text: …;  /* …只覆寫值，名字不變 */
+}
 ```
 （v3 則搬進 `tailwind.config` 的 `theme.extend.colors`，key 去掉 `--color-` 前綴。）
 
-語意 class 對應：`text-blue`→`text-primary`、`text-red`→`text-danger`、`text-gray`→`text-gray-600`、`text-default`→`text-black`。
+**深色模式不需要 `dark:` 變體。** 因為 token 是 CSS 變數、由 `[data-theme]` 覆寫，`bg-surface` / `text-text` 這些 utility 會自動換膚。**別把顏色寫成 `dark:bg-[#0f0f0f]` 這種硬值**——那會把單一色源打散。主題旗標掛 `<html data-theme>`，由 `base.html` 的 no-flash 內聯腳本初始化。
+
+三條不可違背的規則（同 GUIDELINE §4）：
+
+1. **填充與文字的 token 分家**：`bg-brand` / `border-brand`，但文字用 `text-brand-text`（`--brand`／`--brand-text` 在深色模式的值刻意不同——填充要深、文字要亮）。`--danger` / `--danger-text` 同理。
+2. **對比度**：白字（`--on-accent`）配任何有色填充 ≥ 4.5:1、填充對底色 ≥ 3:1。唯一例外是 `--warning` 黃底配 `--on-warning` 深字。
+3. **`color-scheme`**：`:root { color-scheme: light }` 與 `[data-theme="dark"] { color-scheme: dark }` 必須保留，否則原生 `<select>` 下拉、date picker、autofill、捲軸角落在深色下仍是白的。
+
+漸層 `--brand-gradient`（header 底線、footer 背景）不是顏色 token：設成一般 CSS 變數或用 `bg-[linear-gradient(...)]`。
+
+### 全域基底：Tailwind preflight 沒給的三條，必須自己帶過去
+
+preflight 已含 `box-sizing: border-box` 與 `img{max-width:100%}`，但下面三條**沒有**。它們在 `_base.scss`，是全站可及性/體感的地基，轉換時逐條搬進全域樣式層（v4 用 `@layer base`）：
+
+```css
+@layer base {
+  :root { color-scheme: light }
+  [data-theme="dark"] { color-scheme: dark }          /* 原生 select/date picker/autofill/捲軸角落 */
+
+  :where(a,button,input,select,textarea,summary,[tabindex]):focus-visible {
+    outline: 2px solid var(--color-brand-text); outline-offset: 2px;   /* 元件不得裸寫 outline:none */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important }
+  }
+}
+```
+
+另：所有 `100vh` 都寫成 `height:100vh; height:100dvh`（Tailwind 的 `h-screen` 是 `100vh`，要用 `h-dvh` 或 arbitrary）。
 
 ### 間距：px 命名 ÷ 4 = Tailwind 單位（完美整除，通常不需自訂 scale）
 
@@ -140,11 +154,11 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 ## ⑤ 逃生口 → 零 CSS 處理（**這裡最容易轉錯，逐項照做**）
 
 ### 5-1. 捲軸（`src/scss/_mixin.scss` 的 `scrollbar()/scrollbar_thin()/scrollbar_modal()`）
-用 `tailwind-scrollbar` plugin。用到的地方：**9 個元件**（form-control、chatroom、faq-chatroom、multi-select、tab、default-table、form-table、modals、mobile-nav）+ **整頁 html**（`_base.scss`）+ 元件庫頁（`_guideline.scss`）。多數用 `scrollbar_thin`/`scrollbar_modal`（thumb = `--color-gray-500`；`faq-chatroom` 的 `.faq-chat-scroll` 亦此類）→ 掛：
+用 `tailwind-scrollbar` plugin。用到的地方：**9 個元件**（form-control、chatroom、faq-chatroom、multi-select、tab、default-table、form-table、modals、mobile-nav）+ **整頁 html**（`_base.scss`）+ 元件庫頁（`_guideline.scss`）。多數用 `scrollbar_thin`/`scrollbar_modal`（thumb = `--scrollbar-thumb`；`faq-chatroom` 的 `.faq-chat-scroll` 亦此類）→ 掛：
 ```
-scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
+scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 ```
-**例外：整頁 `html` 與 `mobile-nav` 用的是完整 `scrollbar()`，thumb = `--color-primary-dark`** → 這兩處掛 `scrollbar-thumb-primary-dark`（別跟其他一樣上 gray-500）。thumb 顏色一律照該處 `@include` 的是哪個 mixin 決定。**不要略過捲軸樣式。**
+**例外：整頁 `html` 與 `mobile-nav` 用的是完整 `scrollbar()`，thumb = `--scrollbar-thumb-strong`**（別跟其他一樣上 `--scrollbar-thumb`）。thumb 顏色一律照該處 `@include` 的是哪個 mixin 決定。**不要略過捲軸樣式。**
 
 ### 5-2. markdown 產生的富文字（`.robot-msg`，住在共用 `src/_includes/components/chat-message/_chat-message.scss`）
 > **`.robot-msg` 由 `chatroom`（後台卡片）與 `faq-chatroom`（前台全高）兩個容器共用**：markdown renderer 的 `components` 對應放在**共用的 `ChatMessage` 元件**，別在兩個容器各複製一份。
@@ -152,8 +166,8 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 `.robot-msg` 對 `h1~h6/p/ul/ol/li/code/pre/blockquote/table/th/td/hr/a` 逐標籤上樣式，而**標題/清單/表格/程式碼那幾層在原始碼裡沒有實體標籤**（demo 是字面 `###`/`-` 文字，正式環境由 markdown renderer 產生）。兩種零 CSS 做法，擇一：
 
 > 注意：`.prompt-content`（`_prompt-card.scss`，只有 `line-height:1.625` + `p{margin:0}`）與 `.collapse-body`（`_collapse-text.scss`，只有 line-clamp + line-height）**不是** markdown 容器，別當 renderer 處理——直接用 `leading-[1.625]`/`line-clamp-3` 等 utility 即可。
-- **（建議）react-markdown 的 `components` 對應**：每個 tag 對到帶 Tailwind class 的 component，class 值照 `_chat-message.scss .robot-msg` 內對應標籤的宣告翻譯（如 `h3` 是 `1.25rem`→`text-xl`、`font-weight:600`→`font-semibold`、`line-height:1.3`→`leading-tight`；`code` bg `--color-gray-100`、色 `--color-primary-dark`；`table th/td` border `--color-gray-200`；`blockquote` bg `--color-blockquote-bg`…）。真正做到「每元素一 utility」。
-- **或 `prose`（typography plugin）**：`<div className="prose ...">`，再用 `prose-h3:text-xl prose-code:text-primary-dark prose-th:border-gray-200`… 等 modifier 校成 `_chatroom.scss` 的值。較快但要逐項校對，否則長相會跟 dist 不同。
+- **（建議）react-markdown 的 `components` 對應**：每個 tag 對到帶 Tailwind class 的 component，class 值照 `_chat-message.scss .robot-msg` 內對應標籤的宣告翻譯（如 `h3` 是 `1.25rem`→`text-xl`、`font-weight:600`→`font-semibold`、`line-height:1.3`→`leading-tight`）。**顏色一律照該處實際掛的語意 token**（`--border-subtle`、`--brand`、`--overlay-tint`…），不要改成 Tailwind 內建色階。真正做到「每元素一 utility」。
+- **或 `prose`（typography plugin）**：`<div className="prose ...">`，再用 `prose-h3:text-xl prose-th:border-border-subtle`… 等 modifier 校成 `_chat-message.scss` 的值。較快但要逐項校對，否則長相會跟 dist 不同。
 
 ### 5-3. 偽元素（`::before`/`::after`）——**清單要完整，別只處理明顯的幾個**
 純文字內容的可乾淨轉（`before:/after:` + `content`）：
@@ -176,15 +190,18 @@ scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent
 `writing-mode: vertical-rl`（`_qa-side-panel.scss` 側欄直書標題）→ Tailwind 無對應 utility，用 arbitrary property `[writing-mode:vertical-rl]`。
 
 ### 5-7. 漸層（**背景 vs 邊框是兩種不同的配方，別混用**）
-`--color-primary-linear` → theme 存成變數。兩種用法：
-- **背景漸層**（footer 背景、`chatbot-footer`、`faq-chatroom .avatar`）→ `bg-[image:var(--color-primary-linear)]` 或 `bg-[linear-gradient(to_right,#0a62ac,#2ebbcf)]`。
-- **漸層邊框**（`chatbot-header`/`header` 的 2px 底線用 `border-bottom:2px solid; border-image:var(--color-primary-linear) 1`）→ **不能用 `bg-`**（背景會填滿整塊，不是 2px 底線）。`border-image` 無 utility，用 arbitrary property：`border-b-2 border-solid [border-image:var(--color-primary-linear)_1]`。
+`--brand-gradient` → theme 存成一般 CSS 變數（不是顏色 token）。兩種用法：
+- **背景漸層**（`footer` 背景、`faq-chatroom .avatar`）→ `bg-[image:var(--brand-gradient)]`。
+- **漸層邊框**（`chatbot-header`/`header` 的 2px 底線用 `border-bottom:2px solid; border-image:var(--brand-gradient) 1`）→ **不能用 `bg-`**（背景會填滿整塊，不是 2px 底線）。`border-image` 無 utility，用 arbitrary property：`border-b-2 border-solid [border-image:var(--brand-gradient)_1]`。
 
-### 5-8. 版面用 custom property：shell 定義、子片段消費（別逐檔內聯 px）
-`chatbot-shell` 在 `.chatbot-wrap` 定義 `--header-height:72px`/`--footer-height:38px`，由**分屬 4 個 scss 檔**的 `.chatbot-header`（`height`）、`.chatbot-footer`（`height`）、`.chatbot-main`（`top`/`bottom`）消費。這是**跨檔的版面契約**——機械式 class→className 會把每個 `height`/`top`/`bottom` 各自轉、遺失共用變數或把 72/38 內聯到各處不一致。做法：把兩個變數保留成 CSS 變數（定義在 wrap 上，或塞進 `@theme`），子片段用 `top-[var(--header-height)]`/`bottom-[var(--footer-height)]`/`h-[var(--header-height)]`。
+### 5-8. 前台聊天頁的滿版版型（flex 直欄，別用絕對定位或高度魔術數字）
+`chatbot-shell` 是 **flex 直欄**：`.chatbot-wrap` 為 `h-screen`（實作用 `height:100vh; height:100dvh` 兩行，行動瀏覽器扣掉網址列），`chatbot-header` 與 `footer` 各自 `flex-shrink-0` 流在頂/底，中間 `.chatbot-main` 是 `flex-1 min-h-0 overflow-hidden`。
+- **`min-h-0` 不可省**：flex child 預設 `min-height:auto`，會被內容撐破而讓內部的 `.faq-chat-scroll` 捲不動。
+- 前台頁尾**直接沿用主站 `components/footer`**（沒有 `chatbot-footer` 這個元件）。
+- `body.chatbot-page { overflow: hidden }` 只限這頁，別寫成全域。
 
 ### 5-9. CSS 動畫（`@keyframes`）——**Tailwind 純 utility 表達不了具名 keyframe**
-`ui/modals` 的 `.modals` 開關用 `@keyframes modalFadeInDown/modalFadeOutUp` + `animation: … 0.3s`（`.show`/`.hide` 觸發；所有 modal 含 `faq-*-modal` 共用）。純 utility 無法表達具名 keyframe → 在 v4 `@theme`/`@keyframes` 註冊，或裝 `tailwindcss-animate` plugin；否則開關淡入淡出會被默默丟掉。另 `.modals::backdrop{background:rgba(0,0,0,.3)}` → 用原生 `backdrop:` variant：`backdrop:bg-black/30`。
+`ui/modals` 的 `.modals` 開關用 `@keyframes modalFadeInDown/modalFadeOutUp` + `animation: … 0.3s`（`.show`/`.hide` 觸發；所有 modal 含 `faq-*-modal` 共用）。純 utility 無法表達具名 keyframe → 在 v4 `@theme`/`@keyframes` 註冊，或裝 `tailwindcss-animate` plugin；否則開關淡入淡出會被默默丟掉。另 `.modals::backdrop` 初始 `transparent`、`.show` 時變 `var(--overlay)`（帶 transition）→ 用原生 `backdrop:` variant：`backdrop:bg-transparent` + `.show` 時 `backdrop:bg-overlay`。
 
 ---
 

@@ -92,15 +92,20 @@ gufofaq-frontend-11ty/
 ---
 layout: layouts/page-shell.html        # 或 layouts/base.html
 title: GufoFAQ::頁面標題
+titleKey: nav.dataImport               # 「頁面標題」那段的 i18n key（見 §4-2）
+pageHeading: 資料匯入                   # 頁面標題（繁中原文），page-shell 用它產生本頁唯一的 <h1>
 permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 # （頁面資料寫在這之後）
 ---
 ```
 
+- `titleKey`：切英文時 `<title>` 會變成 `GufoFAQ::` + 該 key 的英文。頁名與既有 key 的繁中相同就沿用，別另創。
+- `pageHeading`：**每頁必須恰好一個 `<h1>`**。`page-shell` 用 `pageHeading` 產生 `<h1 class="sr-only" data-i18n="{{ titleKey }}">`——多數頁面的視覺標題其實是麵包屑或資料值（檔名／資料集名），故 h1 走 sr-only。**logo 不是 h1**（它是回首頁的連結）。用 `base.html` 的頁面自己在內容裡放唯一的 h1。
+
 | layout | 自動提供 | 適用 |
 |---|---|---|
-| `layouts/page-shell.html` | `<head>` + header + main 容器 + footer + script 清單 | 一般頁面 |
-| `layouts/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 特殊版型（如登入頁） |
+| `layouts/page-shell.html` | `<head>` + skip-link + header + `<main id="main">`（含 h1）+ footer + script 清單 | 一般頁面 |
+| `layouts/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 特殊版型（如登入頁、404） |
 
 ### 3-2. 內容區規則
 
@@ -123,6 +128,8 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
 - SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 的語意 token（`--surface`／`--text`／`--brand`／`--border`／`--shadow`…），完全不寫裸 hex（含白色與陰影，無例外）**。token 是**單層、直接給值、無別名**（沒有 `--color-*` 原色層）；元件不碰色值、只掛語意 token。showcase 頁 `_guideline` 另有自己的 `--gl-*` 色盤（見 §9）
+- **顏色 token 的「填充」與「文字」必須分家**：同一個品牌色當**填充**要夠深（疊在上面的白字才讀得到），當**文字**在深色模式又要夠亮（黑底才讀得到）——這兩個需求互相矛盾，不能共用一個 token。故 `background-color`／`border-color` 用 `--brand`／`--danger`，`color:` 一律用 `--brand-text`／`--danger-text`。
+- **對比度是硬規則**：任何有色填充配 `--on-accent` 白字必須 ≥ 4.5:1（WCAG AA 內文），且填充對底色 ≥ 3:1（1.4.11 UI 元件）。填充天生太亮而放不下白字者（`--warning` 黃底）配 `--on-warning` 深字——這是唯一例外，不要擴大。**新增或調整任何顏色都要重算這兩個數字。**
 - **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**不需也不該在元件 scss 寫 `[data-theme=dark]` 分支**（唯二例外：`ui/theme-toggle` 的日／月圖示切換、光柵 PNG 圖示的深色 filter／換圖——這兩者 CSS token 換不動）。主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
@@ -134,6 +141,34 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁 §04
 - **HTML 巢狀必須合法**：行內元素（`span`、`a`…）內不可放區塊元素（`div`、`p`、`ul`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`
 - **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯（同一元件在頁面重複出現時，id 用迴圈變數組唯一值，見 `ui/form-control` 示範），沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
+- **不要用 div 假扮控制項**：可點的東西一律用真 `<button type="button">`／`<a>`。`div[role="button"][tabindex="0"]` 少了 Enter/Space（WCAG 2.1.1），原生按鈕免費具備。模擬 select 也用 `<button class="form-control">`
+- **狀態要寫進 ARIA**：可開合的控制項（下拉、accordion、側欄、多選）掛 `aria-expanded`，且**每一條改變狀態的路徑都要同步**（含「全部展開／收合」與「點外部收合」）；`<dialog>` 用 `aria-labelledby` 接上自己的 `.modals-title`；動態出現的訊息要在 live region 裡（toast 容器 `role="status" aria-live="polite"`、錯誤訊息 `role="alert"`）
+- **`<img>` 一律帶 `width`／`height`**（原生尺寸即可，CSS 仍可覆寫）：提供 aspect-ratio、消除版位跳動；再加 `decoding="async"`。站上圖多為首屏 icon，**不要**加 `loading="lazy"`
+
+### 4-1. 現代瀏覽器基底（`_base.scss` 提供，元件不得破壞）
+
+`_base.scss` 已一次給齊下列全域規則。**元件的職責是不要重寫、不要蓋掉它們**：
+
+| 全域規則 | 元件該怎麼配合 |
+|---|---|
+| `color-scheme: light` / `[data-theme="dark"] { color-scheme: dark }` | 不用管。這層讓原生 UA 元件（`<select>` 展開的選單、date/time picker、autofill 底色、捲軸角落）跟著主題走——**token 換不到這層** |
+| `*, ::before, ::after { box-sizing: border-box }` | **元件不要再寫 `box-sizing: border-box`**（少數要 `content-box` 才自行覆寫） |
+| `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式；複合元件（如 multi-select）把焦點環畫在外框 `:focus-within` 上 |
+| `@media (prefers-reduced-motion: reduce)` 關閉動畫／過渡 | 不用管，照常寫 transition |
+| `img, svg, video, canvas { max-width: 100% }` | 不用重複寫 |
+
+- **`100vh` 一律配 `100dvh`**：`height: 100vh; height: 100dvh;`（前者是舊瀏覽器 fallback）。行動瀏覽器的 `100vh` 含會伸縮的網址列，會把底部的輸入框／footer 裁掉。
+
+### 4-2. i18n（繁中＝原文，英文＝翻譯檔）
+
+**繁中是原文、留在字串出現的地方；英文放 `src/i18n/en.json`。** 不可把繁中抽進 `zh.json`——那會讓 HTML 變空殼、破壞無 JS 基準，也破壞「`data-i18n="key">文字</` → `{t("key")}`」的 React 轉換契約。
+
+- 可見文字：`<span data-i18n="qa.records">問答紀錄</span>`
+- 屬性：`data-i18n-title` / `-aria-label` / `-placeholder` / `-alt` / `-toast`（marker 後綴＝目標屬性）
+- 分頁標題：front matter 的 `titleKey`（見 §3-1）
+- **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
+- **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。`component.html`／`index.html`（頁面目錄）是 showcase，不在 app 範圍
+- 新增 key 就要在 `en.json` 補英文。**漏了不會壞，只會在英文模式默默顯示繁中**——所以驗收一定要 runtime 逐頁看（見 §8）
 
 ---
 
@@ -154,6 +189,9 @@ ui/pagination/
 - 只操作**自己元件**的 class；要操作別的元件，呼叫該元件 js 提供的函式（例：footer.js 呼叫 modals.js 的 `openModal()`）
 - 包在 `DOMContentLoaded` 裡綁定；同元件可能出現多次時用 `querySelectorAll().forEach()`
 - 跳窗用 `<dialog>` 元素 + `showModal()` / `close()`（標準 API，與既有切版相同）
+- **JS 不得寫死要顯示的字串。** 由 JS 產生／切換的文字（accordion 的展開↔收合、multi-select 的空狀態、prompt-edit 的按鈕字…）走 `window.GufoI18n.t(key, "繁中原文")`；除了寫入文字，**還要同步改寫該元素的 `data-i18n` / `data-i18n-title` key**，並監聽 `gufo:langchange` 依「當下狀態」重畫。否則英文模式下一互動就冒出繁中（`lang-toggle.js` 匯出這兩者）
+- **CSS 改不了 ARIA。** 用 CSS 做開合（`:hover` / `:focus-within`）時，配一支只做一件事的小 js 去同步 `aria-expanded`（見 `components/header/header.js`）
+- 把原生語意換掉就要自己補回來：`ui/multi-select` 把原生 `<select>` 設 `aria-hidden` + `tabindex="-1"` 移出無障礙樹，所以自訂控制項必須自帶 `role=combobox/listbox/option`、`aria-controls`／`aria-activedescendant`／`aria-selected`，與 ↑↓／Enter／Esc／Home／End 鍵盤操作
 
 ### 新增元件 js 的登記（各加一行）
 
@@ -191,12 +229,13 @@ ui/pagination/
 
 ### 自動引入
 
-`header`（內含 mobile-nav）、`footer`（內含 disclaimer-modal）由 `page-shell` 提供，頁面不需 include。
-含子元件的元件：`header`（含 `mobile-nav`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
+`header`（內含 mobile-nav、header-controls）、`footer`（內含 disclaimer-modal）由 `page-shell` 提供，頁面不需 include。
+含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`chatbot-header`（含 `header-controls`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）、`header-controls`（含 `theme-toggle`）。
+`components/header-controls`＝語言＋深淺切換的常駐控制群，**主站 header 與前台 chatbot-header 共用同一份**（語言鈕不在導覽選單裡，桌機/手機都常駐）。前台頁尾直接沿用主站 `components/footer`。
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-`button`、`block`、`default-table`、`form-group`、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`、`login-wrapper`（無 html，class 直接寫在 `src/index.html`）。
+`button`、`block`、`default-table`、`form-group`、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`、`login-wrapper`（無 html，class 直接寫在 `src/index.html`）、`error-page`（無 html，class 直接寫在 `src/404.html`）。
 另有三個由原 css/style.css 解散歸戶的純樣式元件（無 html，class 直接寫在使用頁）：`filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
 結構以 `src/pages/**` 與元件總覽頁為準（`multi-select` 無 html，靠 js 增強 `.multiSelect`）。
 
@@ -215,6 +254,8 @@ ui/pagination/
 | front matter 資料 + `{% for %}` | `data.map(item => <Row item={item} />)` |
 | `.open`、`.active`、`.done`、`.error` 狀態 class | `useState` 布林 / props（`className={open ? "x open" : "x"}`） |
 | `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件 |
+| `<a data-i18n="key">文字</a>` | `{t("key")}`（next-intl 等）；`src/i18n/en.json` 直接當英文 message catalog，繁中原文由 markup 抽出成 zh catalog |
+| `GufoI18n.t(key, "繁中")` / `gufo:langchange` / `lang-toggle.js` | **不帶過去**：runtime 就地切換是切版專用；React 用 i18n library 的 `t()` 與語言 context |
 | `ui/multi-select`（增強原生 `<select multiple>`） | `react-select`（isMulti）；value 陣列＝原生 select 的選取，行為（標籤／搜尋／複選）即規格 |
 | `_var.scss` 顏色變數 | 全域引入一次，元件照用 `var(--...)` |
 
@@ -229,15 +270,19 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 
 ## 8. 交付前檢查清單
 
-- [ ] `npm run build` 成功；`dist/` 每一頁雙擊可開、外觀與互動正確
+- [ ] `npm run check` 綠（stylelint 把關「零裸 hex／零裸色彩函式」＋ build）；`dist/` 每一頁雙擊可開、外觀與互動正確
 - [ ] 沒有 jQuery 與任何第三方 JS 套件；js 只用標準 DOM API
 - [ ] 每個有互動的元件：js 在自己資料夾，且已在 `eleventy.config.js` 與 `base.html` 登記
 - [ ] 重複區塊都是 include；重複列／選項用 `{% for %}` + front matter 資料
-- [ ] class 命名沿用既有系統；新顏色定義在 `_var.scss`
+- [ ] class 命名沿用既有系統；新顏色定義在 `_var.scss`（light + dark 都要給）
 - [ ] 放對桶：整頁模板 → `layouts/`；會用到其他元件 → `components/`；零依賴 → `ui/`
 - [ ] 只用了 §2 白名單內的模板語法
 - [ ] 沒有行內 style 的間距/顏色/字級（只允許 §4 的三種合法用途）；間距都在尺標上
 - [ ] HTML 巢狀合法（span 內無 div/p/ul）；圖示按鈕有可及名稱；label 有 for/id 或控制項有 aria-label；無空屬性
+- [ ] 每頁恰好一個 `<h1>`；沒有 `div[role=button]`；可開合控制項的 `aria-expanded` **每一條路徑**都同步；`<dialog>` 有 `aria-labelledby`
+- [ ] 沒有裸 `outline: none`；元件沒有重寫 `box-sizing`；`100vh` 都配了 `100dvh`；`<img>` 都有 `width`/`height`
+- [ ] 新顏色算過對比：白字 on 填充 ≥ 4.5:1、填充 on 底色 ≥ 3:1
+- [ ] 新 key 都補了 `en.json`；**英文模式下逐頁 runtime 驗過，而且要實際觸發互動**（展開 accordion、開多選下拉、切主題）——JS 產生的字串靜態掃描看不到
 
 ---
 
@@ -296,5 +341,28 @@ body.guideline-page { overflow: hidden; }
 ```
 
 > ⚠️ **裸元素選擇器（`html`/`body`/`aside`/`section`/`footer`…）只准出現在 `_normalize`/`_base`（全域 reset 的法定職責）。** 任何頁面專屬樣式（如元件庫頁 `_guideline`、目錄頁 `_catalog`）因為本專案把所有 scss 打包進單一 `main.css` 全站載入，裸選擇器會洩漏覆蓋全站——一律限定在該頁的 body class 底下。
+
+```scss
+/* ❌ 裸寫 outline: none —— 直接把 _base.scss 的全域焦點環蓋掉，鍵盤使用者看不到焦點在哪 */
+.multi-select-search { outline: none; }
+
+/* ✅ 要嘛不寫；複合元件把焦點環畫在外框上 */
+.multi-select-control:focus-within { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+```
+
+```js
+// ❌ JS 寫死顯示字串 —— 英文模式下一點就冒繁中（靜態掃描抓不到）
+btn.setAttribute("title", open ? "收合表格" : "展開表格");
+
+// ✅ 走 i18n，並同步 key 讓之後切語言能依「當下狀態」重譯
+var key = open ? "common.collapseRow" : "common.expandRow";
+btn.setAttribute("title", GufoI18n.t(key, open ? "收合表格" : "展開表格"));
+btn.setAttribute("data-i18n-title", key);
+document.addEventListener("gufo:langchange", redraw);
+```
+
+> ⚠️ **量測陷阱：元件多半有 `transition`，切換主題／狀態後「立刻」讀 `getComputedStyle` 會拿到過渡中途的舊值。** 驗對比度或焦點環時，先注入 `*{transition:none!important}` 再量。
+
+> ⚠️ **加全域規則前先做前後版面比對。** `*{box-sizing:border-box}` 這類規則會改變「原本沒宣告過」的元素的尺寸計算。做法：`git stash` → build → 用 playwright 擷取每個元素的 x/y/w/h 指紋 → 還原 → 再擷取 → 逐項比對，確認零位移再提交。
 
 > ⚠️ **Showcase 頁的專屬色走專用色檔、不寫裸 hex**：`_guideline`（styles `component.html`）的 chrome 色（gotop 鈕、section 分隔線、說明面板…）是 showcase 自己的色、非 app token——收進 `_var` 會汙染「app 唯一色源」，故獨立成 `_guideline-var.scss`（`--gl-*`，定義在 `.guideline-page` 上，零全站足跡）。**架構不妥協：一樣走變數、不寫裸 hex，只是換一支色源檔。**（`_catalog` 用色恰好都是 app 色，直接用 `_var` token 即可。）

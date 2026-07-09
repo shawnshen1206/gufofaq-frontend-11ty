@@ -11,14 +11,18 @@ GufoFAQ 前端的 **Eleventy (11ty) 切版專案**。由原本的 HTML + jQuery 
 
 ## 開始
 
-需求：**Node 20+**（CI 以 Node 22 建置）。
+需求：**Node 20+**（`package.json` 的 `engines` 有擋；`.nvmrc` 寫 22，CI 也讀它）。
 
 ```bash
 npm install
 
 npm run dev      # 開發：eleventy --serve + sass --watch 並行，改 html/scss 即時重載（http://localhost:8080）
-npm run build    # 產出：編譯 scss + eleventy → dist/
+npm run build    # 產出：編譯 scss + eleventy + 替資產加 content hash → dist/
+npm run lint:css # stylelint：把關「零裸 hex／零裸色彩函式」（顏色只准用 _var.scss 的語意 token）
+npm run check    # 交付前跑這個：lint:css + build
 ```
+
+`build` 最後會跑 `scripts/hash-assets.mjs`，替 `css`/`js`/`i18n` 加上 `?v=<content hash>` 查詢字串——GitHub Pages 的資產檔名固定又有邊緣快取，沒有這步的話改版後使用者會拿到「新 HTML + 舊 CSS/JS」。內容沒變 hash 就不變（冪等）。
 
 build 後每頁都在 `dist/` 根（如 `dist/component.html`、`dist/2-1_qaRecord.html`），雙擊或用任何靜態伺服器即可開。**想一頁看完所有元件 → 開 `dist/component.html`（元件總覽 / style guide）。**
 
@@ -26,7 +30,7 @@ build 後每頁都在 `dist/` 根（如 `dist/component.html`、`dist/2-1_qaReco
 
 ## 部署（GitHub Pages）
 
-push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)：`npm ci` → `npm run build` → 把 `dist/` 發布到 GitHub Pages。也可在 GitHub 的 **Actions** 頁手動觸發（workflow_dispatch）。
+push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)：`npm ci` → `npm run lint:css`（違規就擋下部署）→ `npm run build` → 把 `dist/` 發布到 GitHub Pages。也可在 GitHub 的 **Actions** 頁手動觸發（workflow_dispatch）。
 
 - **線上網址**：<https://shawnshen1206.github.io/gufofaq-frontend-11ty/>（進站是**頁面目錄**，可點去任一頁；登入頁在 `/login.html`、元件總覽在 `/component.html`）。
 - **一次性設定**：repo → **Settings → Pages → Build and deployment → Source** 選「**GitHub Actions**」。沒開的話 deploy job 會以 404 失敗（訊息會提示要啟用 Pages），開啟後對該次重跑（Re-run jobs）即可。
@@ -96,7 +100,7 @@ permalink: <name>.html            # 扁平輸出到 dist/ 根
 {# 頁面內容：用 {% include %} 組合元件、{% set %}+{% for %} 渲染重複列 #}
 ```
 
-交付前跑 `npm run build` 確認綠、`dist/` 每頁外觀與互動正確、無 jQuery / 第三方套件。
+交付前跑 `npm run check` 確認綠（stylelint + build）、`dist/` 每頁外觀與互動正確、無 jQuery / 第三方套件。完整清單見 [GUIDELINE.md §8](GUIDELINE.md)。
 
 ---
 
