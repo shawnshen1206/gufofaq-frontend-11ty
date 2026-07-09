@@ -40,7 +40,7 @@
 
     // 複合元件慣例：內層 .multi-select-search 不畫自己的 outline，焦點環畫在整個控制項外框
     &:focus-within {
-        outline: 2px solid var(--brand);
+        outline: 2px solid var(--brand-text);
         outline-offset: 2px;
     }
 
@@ -180,7 +180,7 @@
 
     &.selected {
         background-color: var(--brand-tint);
-        color: var(--brand);
+        color: var(--brand-text);
         font-weight: 500;
     }
 }

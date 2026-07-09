@@ -22,31 +22,36 @@
     --text-muted: #6c6c6c; // 次要 / placeholder / meta
     --on-accent: #ffffff; // 疊在有色填充上的白字 / 白圖示——兩主題都不翻
     --on-warning: #222222; // 疊在恆亮 warning 黃底上的深字（toast-warning）——兩主題都維持深
+    // ↑ 通則：所有有色填充都壓深到「白字 ≥ 4.5:1」（WCAG AA 內文）。唯獨 warning 黃底物理上放不下白字，故用深字。
 
     /* 邊框 border */
     --border: #e1e1e1; // 預設邊框 / 分隔線
     --border-subtle: #f1f1f1; // 更淡的邊框
 
-    /* 品牌 brand（fill 與 ink 分家：深色下品牌深藍當文字要提亮，當填充不需要） */
-    --brand: #168ed1; // 品牌填充（按鈕 / active）
-    --brand-hover: #037ec3;
-    --brand-ink: #13386f; // 品牌色文字 / 勾記 / 深品牌（深色下提亮）
+    /* 品牌 brand —— 填充(fill) 與 文字(text) 必須分家：
+       填充要「夠深」白字才讀得到；同一顏色當文字時在深色模式要「夠亮」黑底才讀得到。
+       這兩個需求在深色模式互相矛盾，故一律：background/border 用 --brand，color 用 --brand-text。 */
+    --brand: #1377b0; // 品牌填充（按鈕 / active）：白字 4.89:1
+    --brand-hover: #036ca8; // 5.65:1
+    --brand-text: #1377b0; // 品牌色文字 / 圖示（淺色下與填充同值即可讀：對頁底 4.65:1）
+    --brand-ink: #13386f; // 深品牌：勾記 / radio 圓點 / 步驟條（深色下提亮）
     --brand-tint: #e7f7ff; // 品牌淡藍底（使用者泡泡 / selected / chip）
     --brand-gradient: linear-gradient(to right, #0a62ac, #2ebbcf); // footer 底 / avatar / header 底線
 
-    /* 狀態 state（fill 與同色文字共用；深色略提亮） */
-    --success: #00b526;
-    --success-hover: #019520;
-    --danger: #f12929;
-    --danger-hover: #d41414;
-    --warning: #ffc700;
+    /* 狀態 state（皆為「填充」色，配 --on-accent 白字；warning 例外配 --on-warning 深字） */
+    --success: #00881d; // 白字 4.63:1
+    --success-hover: #01781a;
+    --danger: #e40f0f; // 白字 4.80:1
+    --danger-hover: #c51313;
+    --danger-text: #e40f0f; // 錯誤訊息 / 必填星號等「危險色文字」（深色下提亮）
+    --warning: #ffc700; // 黃底恆亮 → 配 --on-warning 深字
     --warning-hover: #efbb00;
-    --info: #0d97e5;
+    --info: #0b7bbb; // toast-info 填充，白字 4.60:1
 
-    /* 延伸 accent（orange / teal 按鈕） */
-    --accent-orange: #fe790d;
-    --accent-orange-hover: #e9710e;
-    --accent-teal: #267594; // button-dark 深青
+    /* 延伸 accent（orange / teal 按鈕，皆配白字） */
+    --accent-orange: #bf5601; // 白字 4.62:1
+    --accent-orange-hover: #a4500a;
+    --accent-teal: #267594; // button-dark 深青，白字 5.18:1
     --accent-teal-hover: #0c536e;
 
     /* 效果 effect */
@@ -89,27 +94,29 @@
     --border: #2e2e2e;
     --border-subtle: #242424;
 
-    /* 品牌 */
-    --brand: #2b90d0;
-    --brand-hover: #3a9fdd;
-    --brand-ink: #6fa8dd; // 品牌深藍當文字，黑底不可讀 → 提亮
+    /* 品牌：填充壓深（白字可讀，且仍 ≥3:1 於卡片底），文字提亮（黑底可讀）——hover 依深色慣例「提亮」 */
+    --brand: #2271a3; // 填充：白字 5.30:1，vs 卡片 3.21:1
+    --brand-hover: #1f79b1; // 4.74:1（比 base 亮）
+    --brand-text: #6fa8dd; // 品牌色文字：vs 卡片 6.75:1
+    --brand-ink: #6fa8dd; // 深品牌當文字，黑底不可讀 → 提亮
     --brand-tint: #16344a; // 淡藍底 → 深藍 tint
     --brand-gradient: linear-gradient(to right, #0a3f6e, #1c7f93);
 
-    /* 狀態：略提亮 */
-    --success: #2fbf50;
-    --success-hover: #27a544;
-    --danger: #f0555a;
-    --danger-hover: #e04045;
-    --warning: #e6b800;
+    /* 狀態：填充壓深到白字可讀；hover 提亮 */
+    --success: #1f8036; // 白字 5.00:1
+    --success-hover: #208637;
+    --danger: #d51319; // 白字 5.33:1
+    --danger-hover: #dd2b31;
+    --danger-text: #f0555a; // 危險色文字在黑底要亮：vs 卡片 4.99:1
+    --warning: #e6b800; // 黃底仍配 --on-warning 深字
     --warning-hover: #d6ab00;
-    --info: #38a5e5;
+    --info: #1778b2; // 白字 4.81:1
 
-    /* 延伸 accent */
-    --accent-orange: #ff8a2a;
-    --accent-orange-hover: #f07d1e;
-    --accent-teal: #3a9cbf; // 深青按鈕在黑底會糊 → 提亮
-    --accent-teal-hover: #2d8aab;
+    /* 延伸 accent（皆配白字） */
+    --accent-orange: #ba5400; // 白字 4.82:1
+    --accent-orange-hover: #b95b0c;
+    --accent-teal: #2b738d; // 白字 5.33:1
+    --accent-teal-hover: #297e9c;
 
     /* 效果：黑底陰影本就弱 → 加深；半透明黑 → 翻成半透明白 */
     --shadow: rgba(0, 0, 0, 0.6);

@@ -1,6 +1,6 @@
 // 逐位元照抄自真 app scss/component.scss 746-753（link-file 區塊），只搬檔案位置，宣告一字不改
 .link-file {
-    color: var(--brand);
+    color: var(--brand-text);
     word-break: break-all;
 
     &:hover {

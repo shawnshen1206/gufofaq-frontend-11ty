@@ -50,7 +50,7 @@
 }
 
 .button-border {
-    color: var(--brand);
+    color: var(--brand-text);
     background-color: var(--surface-input);
     border: 1px solid var(--brand);
 
@@ -126,7 +126,7 @@
 
 .button-edit-save {
     padding: 0;
-    color: var(--brand);
+    color: var(--brand-text);
     white-space: nowrap;
 
     &:not(.disabled),

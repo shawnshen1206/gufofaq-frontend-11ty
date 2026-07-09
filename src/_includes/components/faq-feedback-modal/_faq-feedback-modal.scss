@@ -40,7 +40,7 @@
 
         // 選中（.active，由 faq-feedback.js 加）
         &.active {
-            color: var(--brand);
+            color: var(--brand-text);
             background-color: var(--surface-sunken);
             border-color: var(--brand);
         }

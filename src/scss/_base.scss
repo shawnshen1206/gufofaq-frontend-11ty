@@ -26,7 +26,7 @@
 // 統一鍵盤焦點環：只在鍵盤操作時出現（滑鼠點擊不觸發）。
 // 元件不得裸寫 outline: none —— 要蓋掉請一併提供可見的 :focus-visible 樣式。
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-    outline: 2px solid var(--brand);
+    outline: 2px solid var(--brand-text);
     outline-offset: 2px;
 }
 
@@ -133,7 +133,7 @@ a {
 .page-title {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--brand);
+    color: var(--brand-text);
     text-align: left;
     word-break: break-all;
 }
