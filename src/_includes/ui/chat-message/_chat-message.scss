@@ -142,7 +142,7 @@
             text-decoration: underline;
 
             &:hover {
-                color: var(--brand-hover);
+                color: var(--brand-text-hover);
             }
         }
 
@@ -180,7 +180,7 @@
         max-width: 70%;
     }
 
-    // AB 雙欄比較（2-2-3）用：每欄一個 message-content，撐滿、無內距（供 components/ab-compare 掛用，§4）
+    // AB 雙欄比較（2-2-3）用：每欄一個 message-content，撐滿、無內距（供 ui/ab-compare 掛用，§4）
     &.in-compare {
         max-width: 100%;
         align-self: auto;

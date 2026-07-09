@@ -13,8 +13,7 @@ permalink: 1-1-6_uploadSuccess_excel.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條：真實頁 pages/dataImport/1-1-6_uploadSuccess_excel.html 4 步驟皆 done，
-     與 components/step-nodes 展示資料（僅步驟1 done）不同，故手寫本頁專屬狀態，不整包 include -->
+<!-- 步驟條：4 步驟皆 done。狀態資料由本頁 set，交給參數化的 components/step-nodes 渲染（§6） -->
 {% set steps = [
     { label: "上傳檔案", done: true, i18nKey: "step.upload" },
     { label: "預覽資料", done: true, i18nKey: "step.preview" },

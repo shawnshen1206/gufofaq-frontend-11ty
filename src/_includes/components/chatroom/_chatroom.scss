@@ -1,4 +1,4 @@
-// 後台單測/AB測的聊天視窗「容器」（固定 600px 卡片）。訊息泡泡本身抽到共用 components/chat-message。
+// 後台單測/AB測的聊天視窗「容器」（固定 600px 卡片）。訊息泡泡本身抽到共用 ui/chat-message。
 // 值以真 app 編譯 css 為準。
 @use "../../../scss/mixin" as *;
 

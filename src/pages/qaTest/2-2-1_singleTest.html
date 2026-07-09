@@ -20,8 +20,8 @@ permalink: 2-2-1_singleTest.html
 </div>
 
 <!-- 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
-     提示詞收合／展開編輯區塊（.prompt-edit）在真實 scss / 既有元件皆無對應片段，無中生有杜撰不如逐字保留，故此處逐字寫死，
-     JS 展開/收合、儲存/回復等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） -->
+     提示詞收合／展開編輯區塊抽成 components/prompt-edit（見下方 include）；
+     儲存/建版本等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） -->
 <div class="block">
     <div class="filter-fields flex-row gap-16 mobile-column">
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">

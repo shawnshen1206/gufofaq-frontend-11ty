@@ -15,7 +15,7 @@
 @use "../_includes/ui/login-wrapper/login-wrapper";
 
 // 404 頁面專屬
-@use "error-page";
+@use "../_includes/ui/error-page/error-page";
 
 // ui 原子
 @use "../_includes/ui/button/button";
@@ -39,7 +39,8 @@
 @use "../_includes/ui/toast/toast";
 @use "../_includes/ui/theme-toggle/theme-toggle";
 
-// 複合元件（components/）
+// 頁面級區塊（ui/ 與 components/ 都有——桶歸屬看依賴，載入順序看層疊，兩者無關）
+// ⚠️ 這份清單的順序＝層疊順序，不要為了「照桶排整齊」而重排
 @use "../_includes/components/default-table/default-table";
 @use "../_includes/components/priority-table/priority-table";
 @use "../_includes/components/file-preview-modal/file-preview-modal";

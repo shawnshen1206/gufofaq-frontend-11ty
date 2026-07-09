@@ -20,8 +20,8 @@ permalink: 2-2-3_abTest.html
 </div>
 
 <!-- 設定卡 A / B：兩欄結構完全對稱，僅標題與 selected 值不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
-     避免整段複製貼上；提示詞收合區塊（.prompt-edit）沿用 2-2-1_singleTest 逐字寫死的手法（真實系統無對應既有元件），
-     設定A 預設展開（data-default-open="true"），設定B 預設收合，與真實頁一致 -->
+     避免整段複製貼上；提示詞收合區塊用 components/prompt-edit（每圈重設 promptDefaultOpen）：
+     設定A 預設展開、設定B 預設收合，與真實頁一致 -->
 {% set abSides = [
     { side: "A", defaultOpen: true },
     { side: "B", defaultOpen: false }

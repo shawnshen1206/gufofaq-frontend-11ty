@@ -52,7 +52,7 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
-│   ├── ui/                 不依賴其他元件的元件（35 個）
+│   ├── ui/                 不依賴其他元件的元件（36 個）
 │   └── components/         會用到其他元件，或某大元件的專屬子片段（31 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
@@ -65,7 +65,6 @@ src/
 │   ├── _guideline.scss     元件總覽頁專用版型
 │   ├── _guideline-var.scss 元件總覽頁專用色盤（--gl-*，不進 _var）
 │   ├── _catalog.scss       頁面目錄頁專用
-│   ├── _error-page.scss    404 頁專用
 │   └── main.scss           @use 組裝清單（新增元件 scss 在這加一行）
 ├── i18n/en.json            英文翻譯（繁中是原文、留在 markup）
 ├── images/
@@ -111,6 +110,7 @@ dist/                       build 輸出（勿手改）
 | `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
 | `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
+| `components/delete-modal` | `deleteTargetId`（設了就渲染空 `<span id>`，由業務 js 填入待刪除項目名稱）／`deleteTargetName`（靜態示範名稱）／`deleteConfirmBinding`（true＝確認鈕交給業務 js 綁定、不自動關窗）。 |
 
 > 這些元件的資料**因使用它的頁面而異**，故由頁面在 include 前 `{% set %}` 提供，元件只負責 `{% for %}` 渲染——轉 React 即 props。（全站不變的結構性設定與純示範假資料可以住在元件裡，見 [GUIDELINE §6](GUIDELINE.md)。）
 
@@ -122,12 +122,12 @@ dist/                       build 輸出（勿手改）
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`components/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
+這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`components/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/index.html`）、`ui/error-page`（無 html，class 寫在 `src/404.html`）。
 另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`ui/prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`intent-enable-modal`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 66 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
+> **上列不是完整清單**（`src/_includes/` 目前有 67 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 

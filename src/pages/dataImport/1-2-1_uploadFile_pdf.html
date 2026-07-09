@@ -13,8 +13,8 @@ permalink: 1-2-1_uploadFile_pdf.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條：真實頁只有「上傳檔案」done + 僅「下一步」按鈕（無上一步），用 .lg 步驟樣式，
-     components/step-btn-wrap 註解本身即指名本頁為「只需要下一步按鈕」範例（.no-prev、移除上一步按鈕），故手寫不整包 include -->
+<!-- 步驟條 + 只有「下一步」：兩步、.lg 樣式。
+     stepNoPrev / stepNodesLg / stepNextHref 由本頁 set，交給參數化的 components/step-btn-wrap 渲染（§6） -->
 {% set steps = [
     { label: "上傳檔案", done: true, i18nKey: "step.upload" },
     { label: "送出資料", done: false, i18nKey: "step.submit" }
@@ -26,7 +26,7 @@ permalink: 1-2-1_uploadFile_pdf.html
     {% include "components/step-btn-wrap/step-btn-wrap.html" %}
 </div>
 
-<!-- 上傳區：真實頁 accept=".pdf" multiple、上限 30MB，與 components/upload-box 預設（.xlsx、單檔、10MB）不同，故手寫 -->
+<!-- 上傳區：真實頁 accept=".pdf" multiple、上限 30MB，與 ui/upload-box 預設（.xlsx、單檔、10MB）不同，故手寫 -->
 <div class="upload-box">
     <input type="file" id="fileInput" class="upload-input" accept=".pdf" multiple aria-label="上傳檔案" data-i18n-aria-label="dataImport.uploadFile" />
     <div class="upload-text">
@@ -103,29 +103,8 @@ permalink: 1-2-1_uploadFile_pdf.html
 {# 編輯 modal：整包 include components/file-edit-modal（14 固定槽自填；content 自 PDF 抽取為 disabled，其餘可填） #}
 {% include "components/file-edit-modal/file-edit-modal.html" %}
 
-<!-- 刪除 modal：真實頁 <p> 內含 span#deleteFileName（js 動態填入檔名），與 components/delete-modal
-     的靜態展示文字結構不同，故依真實頁手寫 -->
-<dialog class="modals" id="deleteModal" aria-labelledby="deleteModal-title">
-    <div class="modals-dialog modals-sm">
-        <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
-                <img src="./images/icon_close_blue.png" width="48" height="48" decoding="async" alt="">
-                <span class="sr-only" data-i18n="action.close">關閉</span>
-            </button>
-            <div class="modals-content">
-                <div class="modals-header">
-                    <h3 class="modals-title" id="deleteModal-title" data-i18n="action.delete">刪除</h3>
-                </div>
-                <div class="modals-body">
-                    <p class="text-center"><span data-i18n="common.confirmDelete">確定要刪除</span> <span id="deleteFileName"></span></p>
-                </div>
-                <div class="modals-footer">
-                    <div class="button-row center">
-                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
-                        <button type="button" class="button button-primary" data-i18n="action.confirm">確認</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</dialog>
+{# 刪除 modal：檔名由業務 js 填入 #deleteFileName、確認鈕由業務 js 綁定，故 set 這兩個參數；
+   markup 只有一份正本，見 components/delete-modal（§1-2／§6） #}
+{% set deleteTargetId = "deleteFileName" %}
+{% set deleteConfirmBinding = true %}
+{% include "components/delete-modal/delete-modal.html" %}

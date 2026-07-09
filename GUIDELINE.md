@@ -53,7 +53,7 @@ src/
 
 **判斷依賴時只看 scss + js + 生產 markup。** `<元件名>.html` 有兩種身分：被真實頁面 include 的是**生產 markup**；只被元件總覽頁 include 的是**展示片段**——展示片段為了示範情境會用到別的元件，不算依賴（否則每個原子都會被推去 `components/`）。
 
-「專屬子片段」指由某個大元件 include、不會單獨使用的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`）、`step-nodes`（step-btn-wrap 的步驟點）。它們即使零依賴也放在 `components/`。
+「專屬子片段」指**被另一個元件 include** 的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`）、`step-nodes`（step-btn-wrap 的步驟點，也可由頁面單獨 include）。它們即使零依賴也放在 `components/`。
 
 **`layouts/` 的樣式跟模板同住**：模板不是元件（無 markup、無行為、只服務單一模板），它的專屬樣式放 `layouts/_<模板名>.scss`，不進 `components/` 也不進全域 `scss/`。
 
@@ -128,10 +128,10 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
 - SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 的語意 token（`--surface`／`--text`／`--brand`／`--border`／`--shadow`…），完全不寫裸 hex（含白色與陰影，無例外）**。token 是**單層、直接給值、無別名**（沒有 `--color-*` 原色層）；元件不碰色值、只掛語意 token。showcase 頁 `_guideline` 另有自己的 `--gl-*` 色盤（見 §9）
-- **顏色 token 的「填充」與「文字」必須分家**：同一個品牌色當**填充**要夠深（疊在上面的白字才讀得到），當**文字**在深色模式又要夠亮（黑底才讀得到）——這兩個需求互相矛盾，不能共用一個 token。故 `background-color`／`border-color` 用 `--brand`／`--danger`，`color:` 一律用 `--brand-text`／`--danger-text`。
+- **顏色 token 的「填充」與「文字」必須分家**：同一個品牌色當**填充**要夠深（疊在上面的白字才讀得到），當**文字**在深色模式又要夠亮（黑底才讀得到）——這兩個需求互相矛盾，不能共用一個 token。故 `background-color`／`border-color` 用 `--brand`／`--danger`（hover 用 `--brand-hover`／`--danger-hover`），`color:` 一律用 `--brand-text`／`--danger-text`（hover 用 `--brand-text-hover`）。**填充族的 hover token 不可拿來當文字色**——它為了襯白字而壓深，在深色模式當文字讀不到。
 - **對比度是硬規則**：任何有色填充配 `--on-accent` 白字必須 ≥ 4.5:1（WCAG AA 內文），且填充對底色 ≥ 3:1（1.4.11 UI 元件）。填充天生太亮而放不下白字者（`--warning` 黃底）配 `--on-warning` 深字——這是唯一例外，不要擴大。**新增或調整任何顏色都要重算這兩個數字。**
 - **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**不需也不該在元件 scss 寫 `[data-theme=dark]` 分支**（唯二例外：`ui/theme-toggle` 的日／月圖示切換、光柵 PNG 圖示的深色 filter／換圖——這兩者 CSS token 換不動）。主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
-- 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`、`.filter-field`、`.ab-side`）
+- 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.chat-input-control`、`.chat-input-submit`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
   - 父 shell 定義、專屬子片段消費的版面 `custom property`（如 shell 的 `--header-height`）屬**允許的父子耦合**，不算跨元件洩漏
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
@@ -165,7 +165,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 
 - 可見文字：`<span data-i18n="qa.records">問答紀錄</span>`
 - 屬性：`data-i18n-title` / `-aria-label` / `-placeholder` / `-alt` / `-toast`（marker 後綴＝目標屬性）
-- **由元件 js 讀 `data-*` 資料槽再畫出來的文字**（如 multi-select 的 `data-placeholder`）不在上表的自動翻譯範圍：另給一個 `data-<槽名>-key` 帶 i18n key，元件 js 用它走 `GufoI18n.t(key, 繁中原文)`（見 §5）
+- **由元件 js 讀 `data-*` 資料槽再畫出來的文字**不在上表的自動翻譯範圍，繁中原文與 i18n key 要分別給：單一值用 `data-<槽名>` + `data-<槽名>-key`（`ui/multi-select` 的 placeholder）；兩態切換用 `data-text-<態>` + `data-key-<態>`（`components/prompt-edit` 的展開↔收合）。元件 js 拿 key 走 `GufoI18n.t(key, 繁中原文)`（見 §5）
 - 分頁標題：front matter 的 `titleKey`（見 §3-1）
 - **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
 - **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。`component.html`（元件總覽）與 `catalog.html`（頁面目錄，輸出成 index.html）是 showcase，不在 app 範圍
@@ -322,9 +322,10 @@ body.guideline-page { overflow: hidden; }
 
 ```scss
 /* ❌ 裸寫 outline: none —— 直接把 _base.scss 的全域焦點環蓋掉，鍵盤使用者看不到焦點在哪 */
-.multi-select-search { outline: none; }
+.some-inner-input { outline: none; }
 
-/* ✅ 要嘛不寫；複合元件把焦點環畫在外框上 */
+/* ✅ 要嘛不寫；複合元件把內層的環拿掉、改畫在外框上（見 ui/multi-select） */
+.multi-select-search { outline: none; } // 焦點環改畫在外框 :focus-within
 .multi-select-control:focus-within { outline: 2px solid var(--brand-text); outline-offset: 2px; }
 ```
 

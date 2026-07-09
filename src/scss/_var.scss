@@ -34,7 +34,7 @@
     --brand: #1377b0; // 品牌填充（按鈕 / active）：白字 4.89:1
     --brand-hover: #036ca8; // 5.65:1
     --brand-text: #1377b0; // 品牌色文字 / 圖示（淺色下與填充同值即可讀：對頁底 4.65:1）
-    --brand-text-hover: #036ca8; // 品牌色文字的 hover：對頁底 6.28:1
+    --brand-text-hover: #036ca8; // 品牌色文字的 hover：對卡片 5.65:1
     --brand-ink: #13386f; // 深品牌：勾記 / radio 圓點 / 步驟條（深色下提亮）
     --brand-tint: #e7f7ff; // 品牌淡藍底（使用者泡泡 / selected / chip）
     --brand-gradient: linear-gradient(to right, #0a62ac, #2ebbcf); // footer 底 / avatar / header 底線
@@ -99,7 +99,7 @@
     --brand: #2271a3; // 填充：白字 5.30:1，vs 卡片 3.21:1
     --brand-hover: #1f79b1; // 4.74:1（比 base 亮）
     --brand-text: #6fa8dd; // 品牌色文字：vs 卡片 6.75:1
-    --brand-text-hover: #8fbde8; // 品牌色文字的 hover：黑底要更亮，vs 卡片 8.94:1
+    --brand-text-hover: #8fbde8; // 品牌色文字的 hover：黑底要更亮，vs 卡片 8.61:1
     --brand-ink: #6fa8dd; // 深品牌當文字，黑底不可讀 → 提亮
     --brand-tint: #16344a; // 淡藍底 → 深藍 tint
     --brand-gradient: linear-gradient(to right, #0a3f6e, #1c7f93);

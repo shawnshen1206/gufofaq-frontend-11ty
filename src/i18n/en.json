@@ -316,7 +316,6 @@
   "settings.frontQaDefault": "Default for front-end Q&A",
   "settings.initialPassword": "Initial password",
   "settings.intentEnable": "Enable intent detection",
-  "settings.intentNoTaskDesc": "Dear customer, some folders have no task description set. Please set them, otherwise they will not be included in detection.",
   "settings.keyword": "Keyword",
   "settings.last24h": "Last 24 hours",
   "settings.lastMonth": "Last month",

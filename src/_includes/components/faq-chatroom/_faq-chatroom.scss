@@ -1,4 +1,4 @@
-// 前台 FAQ 聊天容器（全高、佔滿聊天區）。訊息泡泡沿用共用 components/chat-message；
+// 前台 FAQ 聊天容器（全高、佔滿聊天區）。訊息泡泡沿用共用 ui/chat-message；
 // 本檔只寫 FAQ 專屬：容器/捲動區/頭像/快速回覆/捲到底鈕/輸入列，全部 scope 在 .faq-chatroom 下，
 // 不與後台 components/chatroom 的同名容器（chatroom-block/chat-message-container/chat-input-container）相撞。
 // 輸入欄位用自有 slot class .faq-chat-field（同時掛 .form-group 以沿用其錯誤顯示行為），不覆寫 ui/form-control（§4）。
@@ -40,28 +40,6 @@
             background-repeat: no-repeat;
             background-size: contain;
             background-position: center;
-        }
-    }
-
-    // 快速回覆選項
-    .message-option-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-
-        .message-option {
-            display: inline-block;
-            width: 100%;
-            padding: 0.5rem 0.625rem;
-            border-radius: 8px;
-            background-color: var(--brand-tint);
-            color: var(--brand-text);
-            cursor: pointer;
-
-            &:hover {
-                text-decoration: underline;
-            }
         }
     }
 

@@ -500,7 +500,7 @@ bodyClass: guideline-page
                     <button type="button" class="button button-primary"
                         onclick="openModal('datasetModal');">開啟選擇資料集modal</button>
                     <button type="button" class="link-modal"
-                        onclick="openModal('previewModal');">檔案名稱.pdf</button>
+                        onclick="openModal('previewTextModal');">檔案名稱.pdf</button>
                     <button type="button" class="button-icon no-bg size-sm edit"
                         onclick="openModal('editModal');" title="編輯">
                         <span class="sr-only">編輯</span>
@@ -638,9 +638,9 @@ bodyClass: guideline-page
 {% include "components/select-dataset-modal/select-dataset-modal.html" %}
 
 <!-- 檔案預覽 modal：元件庫展示版（modals-md + 靜態長文 .file-content）。
-     與 components/file-preview-modal（modals-lg + iframe）不同——那份對應真實檔案匯入流程
-     pages/dataImport/1-2-1_uploadFile_pdf.html 的 #previewModal，此處逐字沿用展示頁版本，id 相同、故不重複掛載兩份 -->
-<dialog class="modals" id="previewModal" aria-labelledby="previewModal-title">
+     與 components/file-preview-modal（modals-lg + iframe，對應真實匯入流程的 #previewModal）是**兩個不同的 dialog**，
+     故用自己的 id #previewTextModal，不與元件搶同一個 id -->
+<dialog class="modals" id="previewTextModal" aria-labelledby="previewTextModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉">
@@ -649,7 +649,7 @@ bodyClass: guideline-page
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" id="previewModal-title">檔案名稱.pdf</h3>
+                    <h3 class="modals-title" id="previewTextModal-title">檔案名稱.pdf</h3>
                 </div>
                 <div class="modals-body">
                     <div class="file-content">

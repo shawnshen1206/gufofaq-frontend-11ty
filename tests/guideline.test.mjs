@@ -82,10 +82,28 @@ test("§3-1 每一頁恰好一個 <h1>", () => {
 // （「零裸 hex / 零裸色彩函式」由 stylelint 把關，見 .stylelintrc.json，不在此重複）
 
 test("§4 文字色要用 --brand-text / --danger-text，不可用填充 token", () => {
-    const hits = scanLines(srcScss, (line) =>
-        /(?<![-\w])color:\s*var\(--(brand|danger)\)/.test(line) ? "填充 token 當文字色" : null
-    );
+    // 填充族（含 -hover 變體）為了襯白字而壓深，拿來當文字色在深色模式讀不到。
+    const FILL = "brand|danger|success|info|warning|accent-orange|accent-teal";
+    const re = new RegExp(String.raw`(?<![-\w])color:\s*var\(--(?:${FILL})(?:-hover)?\)`);
+    const hits = scanLines(srcScss, (line) => (re.test(line) ? "填充 token 當文字色" : null));
     assert.equal(hits.length, 0, `深色模式下會讀不到：\n${fail(hits)}`);
+});
+
+test("§1-2 頁面不得手寫與既有 modal 元件同 id 的 <dialog>（元件只有一份正本）", () => {
+    // 一個 <dialog id> 是一個完整單位。頁面複製一份會得到兩份會分岔的正本
+    // （曾經：5-2-1 的 intentionModal、1-2-1 的 deleteModal 各自與元件的 i18n key 走鐘）。
+    const dialogIds = (html) => [...html.matchAll(/<dialog[^>]*\sid="([^"]+)"/g)].map((m) => m[1]);
+    const owned = new Map(); // dialog id -> 元件
+    for (const { bucket, name, path } of componentDirs) {
+        const html = `${path}/${name}.html`;
+        if (!existsSync(html)) continue;
+        for (const id of dialogIds(read(html))) owned.set(id, `${bucket}/${name}`);
+    }
+    const hits = [];
+    for (const p of srcHtml.filter((f) => !f.includes("_includes")))
+        for (const id of dialogIds(read(p)))
+            if (owned.has(id)) hits.push(`${p}  <dialog id="${id}"> 已有元件 ${owned.get(id)} —— 要用就 {% include %}`);
+    assert.equal(hits.length, 0, fail(hits));
 });
 
 test("§4-1 不得裸寫 outline: none（要蓋掉必須註記替代焦點環）", () => {

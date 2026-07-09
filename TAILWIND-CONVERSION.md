@@ -99,7 +99,7 @@ screens: {
 
 **⚠️ 但 code 裡還有一批「元件專屬」的一次性斷點，只設 992/768 的 agent 會在這些寬度做錯版面——轉各該元件時用 `max-[Npx]` arbitrary variant 處理：**
 - `1560px`（+ 降到 `1200px`）：`.wrap` 內容容器最大寬（`_base.scss`，每頁都用）、`countdown-box`。
-- `1040px`：`step-nodes`（步驟條）、`catalog`（目錄頁）。
+- `1040px`：`step-nodes`（步驟條）。（`catalog` 的 1040px 是容器 `max-width`，**不是**斷點 → `max-w-[1040px]`，不要做成 `max-[1040px]:` variant。）
 - `991px`/`767px`：`.message-content` 訊息氣泡最大寬（`_chat-message.scss`，共用泡泡）；`faq-share-modal` 亦有一個 767px。
 - `576px`：`countdown-box` 的一次性 `@media`。
 > ⚠️ `900px`/`560px`（`.modals-md`/`.modals-sm`）、`531px`/`480px`（login-wrapper）**不是斷點**，是元素的 `max-width` 屬性——別做成 `max-[900px]:` variant。
@@ -137,6 +137,7 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 | `sr-only` | `sr-only` | `col-N-md`(見 gotcha) | grid `col-span-N` 或 `w-[N/12]` |
 
 `!important`（`.text-center`/`mt-*`/`hidden` 帶）→ Tailwind utility 靠 layer 勝出，通常**不需**加 `!`。
+**例外 `.text-default`**：它是唯一帶 `!important` 的顏色工具，用途是壓過元件情境色（如 `3-1-6` 用它把 `.page-title` 的品牌色蓋回預設字色）→ 轉成 `!text-text`，不要漏掉 `!`。
 
 ### 4-2. 元件 scss → utility
 
@@ -162,7 +163,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 ```
 **例外：整頁 `html`、`mobile-nav`、元件庫頁用的是完整 `scrollbar()`，thumb = `--scrollbar-thumb-strong`**（別跟其他一樣上 `--scrollbar-thumb`）。thumb 顏色一律照該處 `@include` 的是哪個 mixin 決定。**不要略過捲軸樣式。**
 
-### 5-2. markdown 產生的富文字（`.robot-msg`，住在共用 `src/_includes/components/chat-message/_chat-message.scss`）
+### 5-2. markdown 產生的富文字（`.robot-msg`，住在共用 `src/_includes/ui/chat-message/_chat-message.scss`）
 > **`.robot-msg` 由 `chatroom`（後台卡片）與 `faq-chatroom`（前台全高）兩個容器共用**：markdown renderer 的 `components` 對應放在**共用的 `ChatMessage` 元件**，別在兩個容器各複製一份。
 
 `.robot-msg` 對 `h1~h6/p/ul/ol/li/code/pre/blockquote/table/th/td/hr/a` 逐標籤上樣式，而**標題/清單/表格/程式碼那幾層在原始碼裡沒有實體標籤**（demo 是字面 `###`/`-` 文字，正式環境由 markdown renderer 產生）。兩種零 CSS 做法，擇一：
@@ -222,7 +223,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 11. **實體元素的背景圖 icon 數量多別漏**（§5-5）：搜尋/時間框、`.button-icon` 約 13 個 sprite → `bg-[url()]` 或 SVG，且要改資產路徑。
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
-14. **高 z-index 超出 Tailwind 預設**：Tailwind 只出 `z-0..z-50`，但 code 有 toast `2000`、header `1000`、`feature-disabled-overlay`/`chatbot-header` `100`/`99`、`mobile-nav` `97~100`、`qa-side-panel` `10/2/1` → 一律 `z-[N]` arbitrary，別夾成 `z-50` 破壞疊層。
+14. **高 z-index 超出 Tailwind 預設**：Tailwind 只出 `z-0..z-50`，但 code 有 toast `2000`、header `1000`、`feature-disabled-overlay` `100`、`mobile-nav` `97~100`、`qa-side-panel` `10/2/1` → 一律 `z-[N]` arbitrary，別夾成 `z-50` 破壞疊層。
 15. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
 16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
 

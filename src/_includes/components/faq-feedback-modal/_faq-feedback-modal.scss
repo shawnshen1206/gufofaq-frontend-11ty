@@ -38,7 +38,7 @@
             border-color: var(--brand);
         }
 
-        // 選中（.active，由 faq-feedback.js 加）
+        // 選中（.active，由 faq-feedback-modal.js 加）
         &.active {
             color: var(--brand-text);
             background-color: var(--surface-sunken);

@@ -13,8 +13,8 @@ permalink: 1-2-6_uploadSuccess_pdf.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條：真實頁只有「上傳檔案」「送出資料」兩步、皆 done、用 .lg 樣式，
-     與 components/step-nodes 展示資料（4 步、僅步驟1 done、無 .lg）不同，故手寫 -->
+<!-- 步驟條：PDF 流程只有「上傳檔案」「送出資料」兩步、皆 done、用 .lg 樣式。
+     資料與 stepNodesLg 由本頁 set，交給參數化的 components/step-nodes 渲染（§6） -->
 {% set steps = [
     { label: "上傳檔案", done: true, i18nKey: "step.upload" },
     { label: "送出資料", done: true, i18nKey: "step.submit" }
