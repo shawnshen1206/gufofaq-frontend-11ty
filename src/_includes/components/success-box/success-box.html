@@ -4,7 +4,7 @@
 <div class="block block-lg corner-md success-box">
     <div class="success-message">
         <img src="./images/icon_check_green.png" alt="" class="icon">
-        <span>上傳成功</span>
+        <span data-i18n="comp.uploadSuccess">上傳成功</span>
     </div>
     <div class="success-desc">
         <p>檔案名稱：20251119105623_FAQ測試用.xlsx</p>
@@ -12,7 +12,7 @@
         <p>資料總量：90筆</p>
     </div>
     <div class="btn-row">
-        <a href="{{ successRetryHref or '#' }}" class="button button-border">再次上傳</a>
-        <a href="{{ successViewHref or '#' }}" class="button button-primary">查看資料</a>
+        <a href="{{ successRetryHref or '#' }}" class="button button-border" data-i18n="comp.uploadAgain">再次上傳</a>
+        <a href="{{ successViewHref or '#' }}" class="button button-primary" data-i18n="comp.viewData">查看資料</a>
     </div>
 </div>

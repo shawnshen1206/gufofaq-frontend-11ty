@@ -18,7 +18,7 @@ permalink: 5-3_statsModule.html
     <div class="flex-row column gap-16">
         <div class="form-group row flex-row mobile-column-xs gap-16">
             <div class="label mobile-align">
-                <label class="control-label">資料時間篩選</label>
+                <label class="control-label" data-i18n="settings.dataTimeFilter">資料時間篩選</label>
             </div>
             <div class="field w100">
                 <div class="flex-row gap-16 mobile-column flex-wrap field-with-input-group">
@@ -26,19 +26,19 @@ permalink: 5-3_statsModule.html
                         <div class="function">
                             <label class="form-radio border-wrap w100">
                                 <input type="radio" name="data-time">
-                                <span>近24小時</span>
+                                <span data-i18n="settings.last24h">近24小時</span>
                             </label>
                         </div>
                         <div class="function">
                             <label class="form-radio border-wrap w100">
                                 <input type="radio" name="data-time" checked>
-                                <span>上週</span>
+                                <span data-i18n="settings.lastWeek">上週</span>
                             </label>
                         </div>
                         <div class="function">
                             <label class="form-radio border-wrap w100">
                                 <input type="radio" name="data-time">
-                                <span>上個月</span>
+                                <span data-i18n="settings.lastMonth">上個月</span>
                             </label>
                         </div>
                     </div>
@@ -46,16 +46,16 @@ permalink: 5-3_statsModule.html
                         <div class="function">
                             <label class="form-radio">
                                 <input type="radio" name="data-time">
-                                <span>時間區間</span>
+                                <span data-i18n="settings.timeRange">時間區間</span>
                             </label>
                         </div>
                         <div class="function">
                             <div class="flex-row align-items-center gap-16 mobile-column-xs col-12-xs">
                                 <input type="text" class="form-control start-date with-input" placeholder="請選擇開始時間"
-                                    aria-label="開始時間" disabled>
-                                <span>至</span>
+                                    data-i18n-placeholder="settings.pleaseSelectStartTime" aria-label="開始時間" data-i18n-aria-label="settings.startTime" disabled>
+                                <span data-i18n="settings.to">至</span>
                                 <input type="text" class="form-control end-date with-input" placeholder="請選擇結束時間"
-                                    aria-label="結束時間" disabled>
+                                    data-i18n-placeholder="settings.pleaseSelectEndTime" aria-label="結束時間" data-i18n-aria-label="settings.endTime" disabled>
                             </div>
                         </div>
                     </div>
@@ -64,33 +64,33 @@ permalink: 5-3_statsModule.html
         </div>
         <div class="form-group row flex-row mobile-column-xs gap-16">
             <div class="label mobile-align">
-                <label class="control-label">查詢資料類型</label>
+                <label class="control-label" data-i18n="settings.queryDataType">查詢資料類型</label>
             </div>
             <div class="field flex-row gap-24 col-12-sm mobile-column-xs">
                 <div class="function">
                     <label class="form-radio">
                         <input type="radio" name="data-type" checked>
-                        <span>全部</span>
+                        <span data-i18n="common.all">全部</span>
                     </label>
                 </div>
                 <div class="function">
                     <label class="form-radio">
                         <input type="radio" name="data-type">
-                        <span>前台問答</span>
+                        <span data-i18n="settings.frontQa">前台問答</span>
                     </label>
                 </div>
                 <div class="function">
                     <label class="form-radio">
                         <input type="radio" name="data-type">
-                        <span>後台問答</span>
+                        <span data-i18n="settings.backQa">後台問答</span>
                     </label>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex-row align-items-center justify-content-center gap-16">
-        <button class="button button-border">取消</button>
-        <button class="button button-primary">查詢</button>
+        <button class="button button-border" data-i18n="action.cancel">取消</button>
+        <button class="button button-primary" data-i18n="action.query">查詢</button>
     </div>
 </div>
 
@@ -103,24 +103,24 @@ permalink: 5-3_statsModule.html
      沿用同一組 .chart-box/.chart-title/.chart/.chart-desc verbatim class 手寫 -->
 <div class="flex-row gap-24 mobile-column mt-16">
     <div class="chart-box">
-        <div class="chart-title">貢獻度排行與優先續建議</div>
+        <div class="chart-title" data-i18n="settings.contributionRanking">貢獻度排行與優先續建議</div>
         <div class="chart chart-auto" id="rankingTableWrap"></div>
         <div class="chart-desc">
-            <p><span class="bold">資料時間：</span><span id="desc2Time">-</span></p>
+            <p><span class="bold" data-i18n="settings.dataTimeLabel">資料時間：</span><span id="desc2Time">-</span></p>
             <div class="flex-row gap-10 flex-wrap">
-                <p><span class="bold">對話次數：</span><span id="desc2Qa">0</span></p>
-                <p><span class="bold">取用資料數：</span><span id="desc2Retrieved">0</span></p>
+                <p><span class="bold" data-i18n="settings.conversationCount">對話次數：</span><span id="desc2Qa">0</span></p>
+                <p><span class="bold" data-i18n="settings.retrievedCount">取用資料數：</span><span id="desc2Retrieved">0</span></p>
             </div>
         </div>
     </div>
     <div class="chart-box">
-        <div class="chart-title">近4周取用次數變化</div>
+        <div class="chart-title" data-i18n="settings.weeklyRetrievalTrend">近4周取用次數變化</div>
         <div class="chart"><canvas id="weeklyLine"></canvas></div>
         <div class="chart-desc">
-            <p><span class="bold">資料時間：</span><span id="desc3Time">-</span></p>
+            <p><span class="bold" data-i18n="settings.dataTimeLabel">資料時間：</span><span id="desc3Time">-</span></p>
             <div class="flex-row gap-10 flex-wrap">
-                <p><span class="bold">對話次數：</span><span id="desc3Qa">0</span></p>
-                <p><span class="bold">取用資料數：</span><span id="desc3Retrieved">0</span></p>
+                <p><span class="bold" data-i18n="settings.conversationCount">對話次數：</span><span id="desc3Qa">0</span></p>
+                <p><span class="bold" data-i18n="settings.retrievedCount">取用資料數：</span><span id="desc3Retrieved">0</span></p>
             </div>
         </div>
     </div>

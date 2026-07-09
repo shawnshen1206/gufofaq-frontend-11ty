@@ -2,38 +2,38 @@
 <dialog class="modals" id="likeModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉">
+            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
                 <img src="./images/icon_close_blue.png" alt="">
-                <span class="sr-only">關閉</span>
+                <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title">幫助我們改進</h3>
+                    <h3 class="modals-title" data-i18n="modals.helpUsImprove">幫助我們改進</h3>
                 </div>
                 <div class="modals-body">
-                    <span>這個回答對你有幫助嗎？<span class="text-red">(必填)</span></span>
-                    <div class="feedback-vote" role="group" aria-label="這個回答對你有幫助嗎">
-                        <button type="button" class="feedback-vote-btn like" data-vote="like" aria-pressed="false">
+                    <span>這個回答對你有幫助嗎？<span class="text-red" data-i18n="common.required">(必填)</span></span>
+                    <div class="feedback-vote" role="group" aria-label="這個回答對你有幫助嗎" data-i18n-aria-label="modals.feedbackHelpful">
+                        <button type="button" class="feedback-vote-btn like" data-vote="like" aria-pressed="false" data-i18n="modals.like">
                             <span class="feedback-vote-icon"></span>讚
                         </button>
-                        <button type="button" class="feedback-vote-btn dislike" data-vote="dislike" aria-pressed="false">
+                        <button type="button" class="feedback-vote-btn dislike" data-vote="dislike" aria-pressed="false" data-i18n="modals.dislike">
                             <span class="feedback-vote-icon"></span>倒讚
                         </button>
                     </div>
                     <div class="form-group mt-12">
                         <div class="label">
-                            <label for="feedbackText" class="control-label">意見回饋</label>
+                            <label for="feedbackText" class="control-label" data-i18n="modals.feedback">意見回饋</label>
                         </div>
                         <div class="field">
-                            <textarea class="form-control" id="feedbackText" rows="3" placeholder="請告訴我們原因（選填）"></textarea>
-                            <span class="error-prompt">輸入錯誤！</span>
+                            <textarea class="form-control" id="feedbackText" rows="3" placeholder="請告訴我們原因（選填）" data-i18n-placeholder="modals.feedbackReasonPlaceholder"></textarea>
+                            <span class="error-prompt" data-i18n="modals.inputError">輸入錯誤！</span>
                         </div>
                     </div>
                 </div>
                 <div class="modals-footer">
                     <div class="button-row center">
-                        <button type="button" class="button button-border btn-close-modals">取消</button>
-                        <button type="submit" class="button button-primary btn-close-modals">提交</button>
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="submit" class="button button-primary btn-close-modals" data-i18n="action.submit">提交</button>
                     </div>
                 </div>
             </div>

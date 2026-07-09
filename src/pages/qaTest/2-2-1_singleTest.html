@@ -24,8 +24,8 @@ permalink: 2-2-1_singleTest.html
     <div class="filter-fields flex-row gap-16 mobile-column">
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
             <div class="label flex-row">
-                <label for="knowledgeConfigSelect" class="control-label">知識檢索</label>
-                <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                <label for="knowledgeConfigSelect" class="control-label" data-i18n="qaTest.knowledgeRetrieval">知識檢索</label>
+                <button type="button" class="info-btn" title="配置說明" data-i18n-title="qaTest.configInfo" onclick="openModal('knowledgeModal');">
                     <img src="./images/icon_info.png" alt="" class="icon">
                 </button>
             </div>
@@ -40,7 +40,7 @@ permalink: 2-2-1_singleTest.html
         </div>
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
             <div class="label">
-                <label for="llmModelSelect" class="control-label">LLM模型</label>
+                <label for="llmModelSelect" class="control-label" data-i18n="qaTest.llmModel">LLM模型</label>
             </div>
             <div class="field">
                 <select class="form-control singleSelect" id="llmModelSelect">
@@ -52,13 +52,13 @@ permalink: 2-2-1_singleTest.html
         </div>
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
             <div class="label">
-                <label for="sampleSelectedInput" class="control-label">資料取樣數</label>
+                <label for="sampleSelectedInput" class="control-label" data-i18n="qaTest.sampleCount">資料取樣數</label>
             </div>
             <div class="field">
                 <div class="flex-row align-items-center gap-4">
-                    <input type="text" placeholder="請輸入" class="form-control" id="sampleSelectedInput" value="4">
+                    <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" id="sampleSelectedInput" value="4">
                     <span class="text-gray">/</span>
-                    <input type="text" placeholder="請輸入" class="form-control" id="sampleTotalInput" value="6" aria-label="資料取樣總數">
+                    <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" id="sampleTotalInput" value="6" aria-label="資料取樣總數" data-i18n-aria-label="qaTest.sampleTotal">
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@ permalink: 2-2-1_singleTest.html
 
     <!-- 套用為正式設定 -->
     <div class="flex-row justify-content-center mt-24">
-        <button type="button" class="button button-dark js-apply-production">套用為正式設定</button>
+        <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
     </div>
 </div>
 

@@ -19,25 +19,25 @@ permalink: 5-4-1_promptManagement.html
         <div class="filter-fields flex-row gap-16 mobile-column">
             <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label for="promptKeywordInput" class="control-label">關鍵字</label>
+                    <label for="promptKeywordInput" class="control-label" data-i18n="settings.keyword">關鍵字</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="promptKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" value="條列式">
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="promptKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword" value="條列式">
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label for="promptDateRangeInput" class="control-label">日期區間</label>
+                    <label for="promptDateRangeInput" class="control-label" data-i18n="settings.dateRange">日期區間</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="promptDateRangeInput" class="form-control calendar range-date" placeholder="起迄日">
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="promptDateRangeInput" class="form-control calendar range-date" placeholder="起迄日" data-i18n-placeholder="settings.dateRangePlaceholder">
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
                 <div class="label">
-                    <label for="promptVersionSelect" class="control-label">版本</label>
+                    <label for="promptVersionSelect" class="control-label" data-i18n="settings.version">版本</label>
                 </div>
                 <div class="field">
                     <select id="promptVersionSelect" class="form-control singleSelect">
@@ -50,11 +50,11 @@ permalink: 5-4-1_promptManagement.html
             </div>
         </div>
         <div class="flex-row flex-wrap gap-16 align-items-center">
-            <button type="button" class="button button-border js-filter-clear">清除</button>
-            <button type="button" class="button button-primary js-prompt-search">查詢</button>
+            <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
+            <button type="button" class="button button-primary js-prompt-search" data-i18n="action.query">查詢</button>
             <button type="button" class="button button-primary js-add-prompt">
                 <img src="./images/icon_add_white.png" alt="" class="icon">
-                新增提示詞
+                <span data-i18n="settings.addPrompt">新增提示詞</span>
             </button>
         </div>
     </div>
@@ -68,18 +68,18 @@ permalink: 5-4-1_promptManagement.html
         <div class="flex-row column gap-16">
             <div class="text-md text-blue">V4</div>
             <div>
-                <p class="prompt-text">儲存後將自動建立新版本，不覆蓋舊有版本</p>
+                <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
                 <div class="form-group">
                     <div class="field">
-                        <textarea class="form-control size-lg prompt-input js-prompt-input" placeholder="請輸入提示詞內容" aria-label="提示詞內容">角色定位：
+                        <textarea class="form-control size-lg prompt-input js-prompt-input" placeholder="請輸入提示詞內容" data-i18n-placeholder="settings.pleaseEnterPromptContent" aria-label="提示詞內容" data-i18n-aria-label="settings.promptContent">角色定位：
 你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
 知識來源限制：</textarea>
                     </div>
                 </div>
             </div>
             <div class="flex-row justify-content-center gap-16">
-                <button type="button" class="button button-border js-prompt-cancel">取消</button>
-                <button type="button" class="button button-primary js-prompt-save">儲存</button>
+                <button type="button" class="button button-border js-prompt-cancel" data-i18n="action.cancel">取消</button>
+                <button type="button" class="button button-primary js-prompt-save" data-i18n="action.save">儲存</button>
             </div>
         </div>
     </div>

@@ -3,11 +3,11 @@
      載入問答資料等屬業務邏輯不在此。內含 qa-record-tabs，其 qaRecordTabs 資料由頁面提供。
      參數：sidePanelHidden（true 時加 .hidden，如 AB測頁尚未支援、整個隱藏）。 -->
 <div class="qa-record qa-side-panel collapsed{% if sidePanelHidden %} hidden{% endif %}">
-    <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄">
-        <span class="qa-side-panel-title">問答紀錄</span>
+    <button type="button" class="qa-side-panel-toggle js-side-toggle" title="收合問答紀錄" data-i18n-title="comp.collapseQaRecord">
+        <span class="qa-side-panel-title" data-i18n="comp.qaRecord">問答紀錄</span>
     </button>
     <div class="qa-side-panel-body">
-        <button class="button button-orange w100">
+        <button class="button button-orange w100" data-i18n="comp.newConversation">
             <img src="./images/icon_add_white.png" alt="" class="icon">
             開啟新對話
         </button>

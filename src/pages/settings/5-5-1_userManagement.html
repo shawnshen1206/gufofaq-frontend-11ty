@@ -29,12 +29,12 @@ permalink: 5-5-1_userManagement.html
 
 <!-- 新增成員：電子郵件 + 初始密碼 + 能力勾選（ui/checkbox）+ 租戶管理者（ui/switch）+ 新增按鈕 -->
 <div class="block mb-16 flex-row column gap-16">
-    <div class="text-md text-bold">新增成員</div>
+    <div class="text-md text-bold" data-i18n="settings.addMember">新增成員</div>
     <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
         <div class="col-6-md col-12-sm">
             <div class="form-group">
                 <div class="label">
-                    <label for="newMemberEmailInput" class="control-label required">電子郵件</label>
+                    <label for="newMemberEmailInput" class="control-label required" data-i18n="common.email">電子郵件</label>
                 </div>
                 <div class="field">
                     <input type="email" id="newMemberEmailInput" placeholder="user@example.com" class="form-control">
@@ -44,32 +44,32 @@ permalink: 5-5-1_userManagement.html
         <div class="col-6-md col-12-sm">
             <div class="form-group">
                 <div class="label">
-                    <label for="newMemberPasswordInput" class="control-label required">初始密碼</label>
+                    <label for="newMemberPasswordInput" class="control-label required" data-i18n="settings.initialPassword">初始密碼</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="newMemberPasswordInput" placeholder="請輸入初始密碼" class="form-control">
+                    <input type="text" id="newMemberPasswordInput" placeholder="請輸入初始密碼" data-i18n-placeholder="settings.pleaseEnterInitialPassword" class="form-control">
                 </div>
             </div>
         </div>
     </div>
     <div class="flex-row flex-wrap gap-20 align-items-center">
-        <span class="text-bold">能力：</span>
+        <span class="text-bold" data-i18n="settings.capabilities">能力：</span>
         {% for cap in capabilities %}
         <label class="form-checkbox">
             <input type="checkbox" name="new_member_perm_{{ cap.key }}">
             <span>{{ cap.label }}</span>
         </label>
         {% endfor %}
-        <label class="switch" aria-label="租戶管理者切換">
+        <label class="switch" aria-label="租戶管理者切換" data-i18n-aria-label="settings.tenantAdminToggle">
             <input type="checkbox" class="switch-checkbox" role="switch">
             <span class="switch-box">
                 <span class="switch-btn"></span>
             </span>
         </label>
-        <span class="text-bold">租戶管理者</span>
+        <span class="text-bold" data-i18n="settings.tenantAdmin">租戶管理者</span>
         <button type="button" class="button button-primary">
             <img src="./images/icon_add_white.png" alt="" class="icon">
-            新增成員
+            <span data-i18n="settings.addMember">新增成員</span>
         </button>
     </div>
 </div>
@@ -77,7 +77,7 @@ permalink: 5-5-1_userManagement.html
 <!-- 成員清單：default-table；角色欄用 ui/switch（管理者切換），能力欄每一格用 ui/checkbox；
      管理者列的能力全開且鎖定（disabled），對齊 apps/web 行為 -->
 <div class="block flex-row column gap-16">
-    <div class="text-md text-bold">成員清單</div>
+    <div class="text-md text-bold" data-i18n="settings.memberList">成員清單</div>
     <div class="table-container scrollTable">
         <table class="default-table">
             <colgroup>
@@ -90,12 +90,12 @@ permalink: 5-5-1_userManagement.html
             </colgroup>
             <thead>
                 <tr>
-                    <th>電子郵件</th>
-                    <th>角色</th>
+                    <th data-i18n="common.email">電子郵件</th>
+                    <th data-i18n="settings.role">角色</th>
                     {% for cap in capabilities %}
                     <th>{{ cap.label }}</th>
                     {% endfor %}
-                    <th>操作</th>
+                    <th data-i18n="common.actions">操作</th>
                 </tr>
             </thead>
             <tbody>

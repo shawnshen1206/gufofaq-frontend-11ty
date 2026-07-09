@@ -2,28 +2,28 @@
 <dialog class="modals" id="shareModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉">
+            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
                 <img src="./images/icon_close_blue.png" alt="">
-                <span class="sr-only">關閉</span>
+                <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title">分享連結</h3>
+                    <h3 class="modals-title" data-i18n="modals.shareLink">分享連結</h3>
                 </div>
                 <div class="modals-body">
-                    <span>分享前，請確認此連結內容</span>
+                    <span data-i18n="modals.shareConfirmHint">分享前，請確認此連結內容</span>
                     <div class="share-text">
                         本連結內容由 AI 系統初步產出，僅作為草稿或參考依據使用，尚未經人工確認或修改，若需進一步採用，請先檢閱並確認內容之正確性與完整性。
                     </div>
                     <div class="share-link">
                         <textarea id="sharelink" class="form-control share-link-txt"
-                            aria-label="分享連結" readonly>https://gufofaq.com/s/t_688az1b69a88191bf23bd633dec</textarea>
-                        <button class="button button-primary share-link-btn" type="button" data-toast="連結已複製!">複製</button>
+                            aria-label="分享連結" data-i18n-aria-label="modals.shareLink" readonly>https://gufofaq.com/s/t_688az1b69a88191bf23bd633dec</textarea>
+                        <button class="button button-primary share-link-btn" type="button" data-toast="連結已複製!" data-i18n="action.copy">複製</button>
                     </div>
                 </div>
                 <div class="modals-footer">
                     <div class="button-row center">
-                        <button type="button" class="button button-border btn-close-modals">關閉</button>
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.close">關閉</button>
                     </div>
                 </div>
             </div>

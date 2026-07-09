@@ -19,32 +19,32 @@ permalink: 4-1_qaHistory.html
         <div class="flex-row gap-8 mobile-column sm-gap-16">
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label for="startDateInput" class="control-label required">開始時間</label>
+                    <label for="startDateInput" class="control-label required" data-i18n="qa.startTime">開始時間</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="startDateInput" class="form-control time start-date" placeholder="開始時間" required>
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="startDateInput" class="form-control time start-date" placeholder="開始時間" data-i18n-placeholder="qa.startTime" required>
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label for="endDateInput" class="control-label required">結束時間</label>
+                    <label for="endDateInput" class="control-label required" data-i18n="qa.endTime">結束時間</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="endDateInput" class="form-control time end-date" placeholder="結束時間" required>
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="endDateInput" class="form-control time end-date" placeholder="結束時間" data-i18n-placeholder="qa.endTime" required>
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-4-md col-12-sm">
                 <div class="label">
-                    <label for="userTypeSelect" class="control-label required">使用者類型</label>
+                    <label for="userTypeSelect" class="control-label required" data-i18n="qa.userType">使用者類型</label>
                 </div>
                 <div class="field">
                     <select id="userTypeSelect" class="form-control singleSelect user-type-select" required>
                         <option></option>
-                        <option value="全部" selected>全部</option>
-                        <option value="前台問答">前台問答</option>
-                        <option value="後台問答">後台問答</option>
+                        <option value="全部" selected data-i18n="common.all">全部</option>
+                        <option value="前台問答" data-i18n="qa.frontendQa">前台問答</option>
+                        <option value="後台問答" data-i18n="qa.backendQa">後台問答</option>
                     </select>
                 </div>
             </div>
@@ -52,49 +52,49 @@ permalink: 4-1_qaHistory.html
         <div class="flex-row gap-8 mobile-column sm-gap-16">
             <div class="form-group col-12-sm flex-1">
                 <div class="label">
-                    <label for="keywordInput" class="control-label">關鍵字</label>
+                    <label for="keywordInput" class="control-label" data-i18n="qa.keyword">關鍵字</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="keywordInput" placeholder="請輸入" class="form-control keyword-input">
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="keywordInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control keyword-input">
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label for="chatLogSnInput" class="control-label">對話編號</label>
+                    <label for="chatLogSnInput" class="control-label" data-i18n="qa.conversationId">對話編號</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="chatLogSnInput" placeholder="請輸入" class="form-control chat-log-sn">
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="chatLogSnInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control chat-log-sn">
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label for="chatRoomSnInput" class="control-label">聊天室編號</label>
+                    <label for="chatRoomSnInput" class="control-label" data-i18n="qa.chatroomId">聊天室編號</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="chatRoomSnInput" placeholder="請輸入" class="form-control chat-room-sn">
-                    <span class="error-prompt">錯誤訊息文字</span>
+                    <input type="text" id="chatRoomSnInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control chat-room-sn">
+                    <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
             <div class="form-group col-12-sm w-200">
                 <div class="label">
-                    <label for="ratingSelect" class="control-label">滿意度</label>
+                    <label for="ratingSelect" class="control-label" data-i18n="qa.rating">滿意度</label>
                 </div>
                 <div class="field">
                     <select id="ratingSelect" class="form-control singleSelect rating-select">
                         <option></option>
-                        <option value="讚">讚</option>
-                        <option value="倒讚">倒讚</option>
-                        <option value="無意見">無意見</option>
+                        <option value="讚" data-i18n="qa.ratingLike">讚</option>
+                        <option value="倒讚" data-i18n="qa.ratingDislike">倒讚</option>
+                        <option value="無意見" data-i18n="qa.ratingNoOpinion">無意見</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="flex-row align-items-center justify-content-center gap-16">
-            <button class="button button-border">清除</button>
-            <button class="button button-primary">查詢</button>
-            <button class="button button-green">下載</button>
+            <button class="button button-border" data-i18n="action.clear">清除</button>
+            <button class="button button-primary" data-i18n="action.query">查詢</button>
+            <button class="button button-green" data-i18n="action.download">下載</button>
         </div>
     </div>
 </div>
@@ -147,14 +147,14 @@ permalink: 4-1_qaHistory.html
         </colgroup>
         <thead>
             <tr>
-                <th>對話編號</th>
-                <th>聊天室編號</th>
-                <th>使用者對話內容</th>
-                <th>AI對話內容</th>
-                <th>使用者類型</th>
-                <th>滿意度</th>
+                <th data-i18n="qa.conversationId">對話編號</th>
+                <th data-i18n="qa.chatroomId">聊天室編號</th>
+                <th data-i18n="qa.userMessage">使用者對話內容</th>
+                <th data-i18n="qa.aiMessage">AI對話內容</th>
+                <th data-i18n="qa.userType">使用者類型</th>
+                <th data-i18n="qa.rating">滿意度</th>
                 <th>
-                    <div class="th-sort">
+                    <div class="th-sort" data-i18n="qa.conversationDate">
                         對話日期
                         <img src="./images/icon_ascending order.png" alt="排序" class="sort">
                     </div>

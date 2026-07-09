@@ -29,14 +29,14 @@ permalink: 2-2-3_abTest.html
     <div class="ab-side" data-ab-side="{{ ab.side }}">
         <div class="flex-row align-items-center gap-10 mb-10">
             <span class="text-lg text-bold text-blue">設定{{ ab.side }}</span>
-            <button type="button" class="button button-dark js-apply-production">套用為正式設定</button>
+            <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
         </div>
 
         <div class="select-row flex-row column gap-16">
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label flex-row">
-                    <label for="abKnowledgeSelect-{{ ab.side }}" class="control-label">知識檢索</label>
-                    <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                    <label for="abKnowledgeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.knowledgeRetrieval">知識檢索</label>
+                    <button type="button" class="info-btn" title="配置說明" data-i18n-title="qaTest.configInfo" onclick="openModal('knowledgeModal');">
                         <img src="./images/icon_info.png" alt="" class="icon">
                     </button>
                 </div>
@@ -51,7 +51,7 @@ permalink: 2-2-3_abTest.html
             </div>
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label">
-                    <label for="abLlmSelect-{{ ab.side }}" class="control-label">LLM模型</label>
+                    <label for="abLlmSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.llmModel">LLM模型</label>
                 </div>
                 <div class="field">
                     <select id="abLlmSelect-{{ ab.side }}" class="form-control singleSelect js-llm-select">
@@ -63,15 +63,15 @@ permalink: 2-2-3_abTest.html
             </div>
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label">
-                    <label for="abSampleSelected-{{ ab.side }}" class="control-label">資料取樣數</label>
+                    <label for="abSampleSelected-{{ ab.side }}" class="control-label" data-i18n="qaTest.sampleCount">資料取樣數</label>
                 </div>
                 <div class="field">
                     <div class="flex-row align-items-center gap-4">
-                        <input type="text" id="abSampleSelected-{{ ab.side }}" placeholder="請輸入" class="form-control sample-count w100 js-sample-selected"
+                        <input type="text" id="abSampleSelected-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-selected"
                             value="4">
                         <span class="text-gray">/</span>
-                        <input type="text" placeholder="請輸入" class="form-control sample-count w100 js-sample-total"
-                            value="6" aria-label="資料取樣總數">
+                        <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-total"
+                            value="6" aria-label="資料取樣總數" data-i18n-aria-label="qaTest.sampleTotal">
                     </div>
                 </div>
             </div>
@@ -123,10 +123,10 @@ permalink: 2-2-3_abTest.html
                                             </div>
                                             <div class="message-icon">
                                                 <button class="button-icon copy copyBtn has-tooltip" data-toast="文字已複製!">
-                                                    <span class="tooltip">複製</span>
+                                                    <span class="tooltip" data-i18n="action.copy">複製</span>
                                                 </button>
                                                 <button class="button-icon watch watchBtn has-tooltip">
-                                                    <span class="tooltip">查看來源</span>
+                                                    <span class="tooltip" data-i18n="qaTest.viewSource">查看來源</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -147,10 +147,10 @@ permalink: 2-2-3_abTest.html
                                             </div>
                                             <div class="message-icon">
                                                 <button class="button-icon copy copyBtn has-tooltip" data-toast="文字已複製!">
-                                                    <span class="tooltip">複製</span>
+                                                    <span class="tooltip" data-i18n="action.copy">複製</span>
                                                 </button>
                                                 <button class="button-icon watch watchBtn has-tooltip">
-                                                    <span class="tooltip">查看來源</span>
+                                                    <span class="tooltip" data-i18n="qaTest.viewSource">查看來源</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -167,11 +167,11 @@ permalink: 2-2-3_abTest.html
                 <div class="input-wrap">
                     <div class="form-group chat-input-field">
                         <div class="field">
-                            <textarea class="form-control chat-input-control" placeholder="輸入問題" aria-label="輸入問題"></textarea>
-                            <span class="error-prompt">錯誤訊息文字</span>
+                            <textarea class="form-control chat-input-control" placeholder="輸入問題" data-i18n-placeholder="qaTest.inputQuestion" aria-label="輸入問題" data-i18n-aria-label="qaTest.inputQuestion"></textarea>
+                            <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
                         </div>
                     </div>
-                    <button type="submit" class="button button-primary">送出</button>
+                    <button type="submit" class="button button-primary" data-i18n="action.submit">送出</button>
                 </div>
             </div>
         </div>

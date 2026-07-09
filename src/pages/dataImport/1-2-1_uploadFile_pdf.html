@@ -26,10 +26,10 @@ permalink: 1-2-1_uploadFile_pdf.html
 
 <!-- 上傳區：真實頁 accept=".pdf" multiple、上限 30MB，與 components/upload-box 預設（.xlsx、單檔、10MB）不同，故手寫 -->
 <div class="upload-box">
-    <input type="file" id="fileInput" class="upload-input" accept=".pdf" multiple aria-label="上傳檔案" />
+    <input type="file" id="fileInput" class="upload-input" accept=".pdf" multiple aria-label="上傳檔案" data-i18n-aria-label="dataImport.uploadFile" />
     <div class="upload-text">
-        <div class="upload-message">點選或拖曳檔案至該區域上傳</div>
-        <div class="upload-desc">支援上傳pdf檔案，檔案最大不超過30MB</div>
+        <div class="upload-message" data-i18n="dataImport.uploadHint">點選或拖曳檔案至該區域上傳</div>
+        <div class="upload-desc" data-i18n="dataImport.uploadDescPdf">支援上傳pdf檔案，檔案最大不超過30MB</div>
     </div>
 </div>
 
@@ -61,11 +61,11 @@ permalink: 1-2-1_uploadFile_pdf.html
         </colgroup>
         <thead>
             <tr>
-                <th>檔案名稱</th>
-                <th>標題</th>
-                <th>時間</th>
-                <th>檔案大小</th>
-                <th>功能</th>
+                <th data-i18n="dataImport.fileName">檔案名稱</th>
+                <th data-i18n="dataImport.title">標題</th>
+                <th data-i18n="dataImport.time">時間</th>
+                <th data-i18n="common.fileSize">檔案大小</th>
+                <th data-i18n="common.functions">功能</th>
             </tr>
         </thead>
         <tbody>
@@ -106,21 +106,21 @@ permalink: 1-2-1_uploadFile_pdf.html
 <dialog class="modals" id="deleteModal">
     <div class="modals-dialog modals-sm">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉">
+            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
                 <img src="./images/icon_close_blue.png" alt="">
-                <span class="sr-only">關閉</span>
+                <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title">刪除</h3>
+                    <h3 class="modals-title" data-i18n="action.delete">刪除</h3>
                 </div>
                 <div class="modals-body">
                     <p class="text-center">確定要刪除 <span id="deleteFileName"></span></p>
                 </div>
                 <div class="modals-footer">
                     <div class="button-row center">
-                        <button type="button" class="button button-border btn-close-modals">取消</button>
-                        <button type="button" class="button button-primary">確認</button>
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary" data-i18n="action.confirm">確認</button>
                     </div>
                 </div>
             </div>

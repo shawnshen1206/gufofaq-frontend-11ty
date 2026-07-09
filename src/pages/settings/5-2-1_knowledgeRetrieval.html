@@ -14,8 +14,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
 <div id="contentWrapper" class="feature-disabled-wrap">
     <div id="featureDisabledOverlay" class="feature-disabled-overlay">
         <div class="feature-disabled-box">
-            <div class="feature-disabled-title">功能未啟用</div>
-            <div class="feature-disabled-desc">此功能目前尚未開放使用</div>
+            <div class="feature-disabled-title" data-i18n="settings.featureDisabled">功能未啟用</div>
+            <div class="feature-disabled-desc" data-i18n="settings.featureDisabledDesc">此功能目前尚未開放使用</div>
         </div>
     </div>
 
@@ -38,7 +38,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
         </div>
         <div class="form-group row mobile-col-xs">
             <div class="label">
-                <label class="control-label">前台問答預設使用</label>
+                <label class="control-label" data-i18n="settings.frontQaDefault">前台問答預設使用</label>
             </div>
             <div class="field">
                 <div class="flex-row flex-wrap gap-24">
@@ -57,8 +57,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
          高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 -->
     <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
-            <button id="openPrioritySwitch" class="button button-border">啟用全部意圖判斷</button>
-            <button id="closePrioritySwitch" class="button button-border">停用全部意圖判斷</button>
+            <button id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
+            <button id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
         </div>
 
         {% set priorityLevels = [
@@ -104,7 +104,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
 
         <div class="flex-row column gap-16">
             <div class="flex-row align-items-center gap-12">
-                <div class="tablelist-title">未使用</div>
+                <div class="tablelist-title" data-i18n="settings.unused">未使用</div>
             </div>
             {# 未使用分類：真實頁初始為空狀態 → 空 rows 渲染空表 #}
             {% set rows = [] %}
@@ -133,8 +133,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
     ] %}
     <div class="block flex-row column gap-16 mt-16">
         <div class="flex-row column gap-8">
-            <div class="tablelist-title">欄位命名</div>
-            <div class="text-gray">為此設定的 14 個欄位槽命名「此設定的顯示名」</div>
+            <div class="tablelist-title" data-i18n="settings.fieldNaming">欄位命名</div>
+            <div class="text-gray" data-i18n="settings.fieldNamingDesc">為此設定的 14 個欄位槽命名「此設定的顯示名」</div>
         </div>
         <div class="flex-row flex-wrap gap-16">
             {% for slot in fieldSlots %}
@@ -156,16 +156,16 @@ permalink: 5-2-1_knowledgeRetrieval.html
 <dialog class="modals" id="intentionModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉">
+            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
                 <img src="./images/icon_close_blue.png" alt="">
-                <span class="sr-only">關閉</span>
+                <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title">意圖判斷啟用</h3>
+                    <h3 class="modals-title" data-i18n="settings.intentEnable">意圖判斷啟用</h3>
                 </div>
                 <div class="modals-body">
-                    <p class="text-center">親愛的客戶您好，尚有資料夾未設定任務描述，請進行設定否則將不會被列入判斷。</p>
+                    <p class="text-center" data-i18n="settings.intentNoTaskDesc">親愛的客戶您好，尚有資料夾未設定任務描述，請進行設定否則將不會被列入判斷。</p>
                 </div>
             </div>
         </div>

@@ -15,13 +15,13 @@ permalink: 3-1-1_datasetList.html
 <div class="flex-row justify-content-between flex-wrap gap-16 mobile-column my-16">
     <div class="form-group w-search">
         <div class="field">
-            <input type="text" placeholder="搜尋..." class="form-control search" aria-label="搜尋">
-            <span class="error-prompt">錯誤訊息文字</span>
+            <input type="text" placeholder="搜尋..." data-i18n-placeholder="dataset.searchPlaceholder" class="form-control search" aria-label="搜尋" data-i18n-aria-label="action.search">
+            <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
         </div>
     </div>
     <div class="flex-row gap-16 justify-content-end flex-wrap">
         {% include "components/storage-bar/storage-bar.html" %}
-        <a href="3-1-2_dataImport_input.html" class="button button-primary flex-shrink-0">
+        <a href="3-1-2_dataImport_input.html" class="button button-primary flex-shrink-0" data-i18n="action.addDataset">
             <img src="./images/icon_add_white.png" alt="" class="icon">新增資料集
         </a>
     </div>
@@ -71,13 +71,13 @@ permalink: 3-1-1_datasetList.html
         </colgroup>
         <thead>
             <tr>
-                <th>資料集名稱</th>
-                <th>檔案類型</th>
-                <th>建立時間</th>
-                <th>最後更新時間</th>
-                <th class="text-center">檔案大小</th>
-                <th class="text-center">資料筆數</th>
-                <th>功能</th>
+                <th data-i18n="dataset.datasetName">資料集名稱</th>
+                <th data-i18n="dataset.fileType">檔案類型</th>
+                <th data-i18n="common.createdAt">建立時間</th>
+                <th data-i18n="dataset.lastUpdatedAt">最後更新時間</th>
+                <th class="text-center" data-i18n="common.fileSize">檔案大小</th>
+                <th class="text-center" data-i18n="dataset.rowCount">資料筆數</th>
+                <th data-i18n="common.functions">功能</th>
             </tr>
         </thead>
         <tbody>
@@ -116,8 +116,8 @@ permalink: 3-1-1_datasetList.html
                 <td class="text-center">{{ row.count }} 筆</td>
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除">
-                            <span class="sr-only">刪除</span>
+                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除" data-i18n-title="action.delete">
+                            <span class="sr-only" data-i18n="action.delete">刪除</span>
                         </button>
                     </div>
                 </td>

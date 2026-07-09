@@ -44,13 +44,13 @@ permalink: 3-1-3_previewDataset.html
 <div class="flex-row justify-content-between flex-wrap gap-16 mobile-column my-16">
     <div class="form-group w-search">
         <div class="field">
-            <input type="text" placeholder="搜尋檔案..." class="form-control search" aria-label="搜尋檔案">
+            <input type="text" placeholder="搜尋檔案..." data-i18n-placeholder="dataset.searchFilePlaceholder" class="form-control search" aria-label="搜尋檔案" data-i18n-aria-label="dataset.searchFile">
         </div>
     </div>
     <div class="flex-row gap-16 justify-content-end align-items-center flex-wrap">
         <p class="text-gray m-0">共 128.45 MB</p>
-        <button type="button" class="button button-red delete-selected-btn">刪除</button>
-        <a href="#" class="button button-primary add-file-btn flex-shrink-0">
+        <button type="button" class="button button-red delete-selected-btn" data-i18n="action.delete">刪除</button>
+        <a href="#" class="button button-primary add-file-btn flex-shrink-0" data-i18n="dataset.addFile">
             <img src="./images/icon_add_white.png" alt="" class="icon">新增檔案
         </a>
     </div>
@@ -77,14 +77,14 @@ permalink: 3-1-3_previewDataset.html
             <tr>
                 <th class="check-cell">
                     <label class="form-checkbox in-cell">
-                        <input type="checkbox" class="check-all" aria-label="全選">
+                        <input type="checkbox" class="check-all" aria-label="全選" data-i18n-aria-label="dataset.selectAll">
                     </label>
                 </th>
-                <th>檔案名稱</th>
-                <th>建立時間</th>
-                <th class="text-center">檔案大小</th>
-                <th class="text-center">資料筆數</th>
-                <th>功能</th>
+                <th data-i18n="dataset.fileName">檔案名稱</th>
+                <th data-i18n="common.createdAt">建立時間</th>
+                <th class="text-center" data-i18n="common.fileSize">檔案大小</th>
+                <th class="text-center" data-i18n="dataset.rowCount">資料筆數</th>
+                <th data-i18n="common.functions">功能</th>
             </tr>
         </thead>
         <tbody>
@@ -92,7 +92,7 @@ permalink: 3-1-3_previewDataset.html
             <tr>
                 <td class="check-cell">
                     <label class="form-checkbox in-cell">
-                        <input type="checkbox" class="check-one" aria-label="選取此列">
+                        <input type="checkbox" class="check-one" aria-label="選取此列" data-i18n-aria-label="dataset.selectRow">
                     </label>
                 </td>
                 <td>
@@ -103,8 +103,8 @@ permalink: 3-1-3_previewDataset.html
                 <td class="text-center">{{ file.count }} 筆</td>
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除">
-                            <span class="sr-only">刪除</span>
+                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除" data-i18n-title="action.delete">
+                            <span class="sr-only" data-i18n="action.delete">刪除</span>
                         </button>
                     </div>
                 </td>
