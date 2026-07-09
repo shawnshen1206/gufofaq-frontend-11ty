@@ -5,9 +5,11 @@ titleKey: auth.login
 permalink: login.html
 ---
 <div class="login-wrapper">
+    {# 本頁唯一的 h1：視覺上以 logo 呈現，故 h1 用 .sr-only 提供頁面主題給輔具 #}
+    <h1 class="sr-only" data-i18n="auth.login">登入</h1>
     <div class="login-left">
         <div class="login-box">
-            <img src="./images/logo_login.png" alt="GufoFAQ" class="logo">
+            <img src="./images/logo_login.png" width="960" height="144" decoding="async" alt="GufoFAQ" class="logo">
 
             <form class="form-group-wrap" id="loginForm">
                 <div class="form-group">
@@ -15,8 +17,8 @@ permalink: login.html
                         <label for="email" class="control-label" data-i18n="common.account">帳號</label>
                     </div>
                     <div class="field">
-                        <input type="email" id="email" name="email" placeholder="請輸入帳號" data-i18n-placeholder="faq.enterAccount" class="form-control input" required autocomplete="email">
-                        <span class="error-prompt" id="emailError"></span>
+                        <input type="email" id="email" name="email" aria-describedby="emailError" placeholder="請輸入帳號" data-i18n-placeholder="faq.enterAccount" class="form-control input" required autocomplete="email">
+                        <span class="error-prompt" role="alert" id="emailError"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -24,8 +26,8 @@ permalink: login.html
                         <label for="password" class="control-label" data-i18n="common.password">密碼</label>
                     </div>
                     <div class="field">
-                        <input type="password" id="password" name="password" placeholder="請輸入密碼" data-i18n-placeholder="faq.enterPassword" class="form-control input" required autocomplete="current-password">
-                        <span class="error-prompt" id="passwordError"></span>
+                        <input type="password" id="password" name="password" aria-describedby="passwordError" placeholder="請輸入密碼" data-i18n-placeholder="faq.enterPassword" class="form-control input" required autocomplete="current-password">
+                        <span class="error-prompt" role="alert" id="passwordError"></span>
                     </div>
                 </div>
 
@@ -38,7 +40,7 @@ permalink: login.html
     </div>
 
     <div class="login-right">
-        <img src="./images/img_login.png" alt="" class="side-img">
+        <img src="./images/img_login.png" width="1062" height="1000" decoding="async" alt="" class="side-img">
     </div>
 </div>
 
@@ -47,7 +49,7 @@ permalink: login.html
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
-                <img src="./images/icon_close_blue.png" alt="">
+                <img src="./images/icon_close_blue.png" width="48" height="48" decoding="async" alt="">
                 <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">

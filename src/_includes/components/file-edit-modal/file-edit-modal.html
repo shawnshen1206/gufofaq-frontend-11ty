@@ -22,7 +22,7 @@
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
-                <img src="./images/icon_close_blue.png" alt="">
+                <img src="./images/icon_close_blue.png" width="48" height="48" decoding="async" alt="">
                 <span class="sr-only" data-i18n="action.close">關閉</span>
             </button>
             <div class="modals-content">
@@ -49,7 +49,7 @@ that identifies frequently executed loop traces at run-time and then generates m
                                 {% else %}
                                 <input type="text" id="fileEdit-{{ field.key }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"
                                     class="form-control"{% if field.value %} value="{{ field.value }}"{% endif %}>
-                                <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
+                                <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                                 {% endif %}
                             </div>
                         </div>

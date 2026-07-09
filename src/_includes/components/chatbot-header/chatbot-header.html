@@ -1,8 +1,9 @@
 <!-- 前台 FAQ chatbot 的頁首：logo + 右側控制群（無 Manager 導覽，故不套整個 header 元件、只留 logo）。
      語言＋深淺切換沿用共用 components/header-controls（與主站 header 同一份）。 -->
 <header class="chatbot-header">
-    <h1 class="logo">
+    {# logo 不是頁面標題 —— 用 div；本頁 h1 由 chatbot-shell 提供 #}
+    <div class="logo">
         <a href="#" title="GufoFAQ logo">GufoFAQ</a>
-    </h1>
+    </div>
     {% include "components/header-controls/header-controls.html" %}
 </header>

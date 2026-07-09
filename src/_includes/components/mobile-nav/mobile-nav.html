@@ -10,7 +10,7 @@
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}" data-i18n-title="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}" data-i18n-title="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" width="52" height="28" decoding="async" alt="BETA" class="beta-icon">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>

@@ -2,6 +2,7 @@
 layout: layouts/page-shell.html
 title: GufoFAQ::AB測試
 titleKey: nav.abTest
+pageHeading: AB測試
 permalink: 2-2-3_abTest.html
 ---
 {% set qaRecordTabs = [
@@ -38,7 +39,7 @@ permalink: 2-2-3_abTest.html
                 <div class="label ab-field-label flex-row">
                     <label for="abKnowledgeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.knowledgeRetrieval">知識檢索</label>
                     <button type="button" class="info-btn" title="配置說明" data-i18n-title="qaTest.configInfo" onclick="openModal('knowledgeModal');">
-                        <img src="./images/icon_info.png" alt="" class="icon">
+                        <img src="./images/icon_info.png" width="48" height="48" decoding="async" alt="" class="icon">
                     </button>
                 </div>
                 <div class="field">
@@ -169,7 +170,7 @@ permalink: 2-2-3_abTest.html
                     <div class="form-group chat-input-field">
                         <div class="field">
                             <textarea class="form-control chat-input-control" placeholder="輸入問題" data-i18n-placeholder="qaTest.inputQuestion" aria-label="輸入問題" data-i18n-aria-label="qaTest.inputQuestion"></textarea>
-                            <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
+                            <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                         </div>
                     </div>
                     <button type="submit" class="button button-primary" data-i18n="action.submit">送出</button>

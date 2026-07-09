@@ -2,6 +2,7 @@
 layout: layouts/page-shell.html
 title: GufoFAQ::資料集列表
 titleKey: nav.datasetList
+pageHeading: 資料集列表
 permalink: 3-1-1_datasetList.html
 ---
 {% set breadcrumbItems = [
@@ -17,13 +18,13 @@ permalink: 3-1-1_datasetList.html
     <div class="form-group w-search">
         <div class="field">
             <input type="text" placeholder="搜尋..." data-i18n-placeholder="dataset.searchPlaceholder" class="form-control search" aria-label="搜尋" data-i18n-aria-label="action.search">
-            <span class="error-prompt" data-i18n="common.errorText">錯誤訊息文字</span>
+            <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
         </div>
     </div>
     <div class="flex-row gap-16 justify-content-end flex-wrap">
         {% include "components/storage-bar/storage-bar.html" %}
         <a href="3-1-2_dataImport_input.html" class="button button-primary flex-shrink-0" data-i18n="action.addDataset">
-            <img src="./images/icon_add_white.png" alt="" class="icon">新增資料集
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">新增資料集
         </a>
     </div>
 </div>
@@ -90,23 +91,23 @@ permalink: 3-1-1_datasetList.html
                 <td>
                     <div class="file-number-group">
                         <div class="item">
-                            <img src="./images/icon_XLSX_s.png" alt="XLSX" class="icon">
+                            <img src="./images/icon_XLSX_s.png" width="60" height="76" decoding="async" alt="XLSX" class="icon">
                             <span class="number">{{ row.fileTypes.xlsx }}</span>
                         </div>
                         <div class="item">
-                            <img src="./images/icon_PDF_s.png" alt="PDF" class="icon">
+                            <img src="./images/icon_PDF_s.png" width="60" height="76" decoding="async" alt="PDF" class="icon">
                             <span class="number">{{ row.fileTypes.pdf }}</span>
                         </div>
                         <div class="item">
-                            <img src="./images/icon_doc_s.png" alt="Word" class="icon">
+                            <img src="./images/icon_doc_s.png" width="60" height="76" decoding="async" alt="Word" class="icon">
                             <span class="number">{{ row.fileTypes.word }}</span>
                         </div>
                         <div class="item">
-                            <img src="./images/icon_API_s.png" alt="API" class="icon">
+                            <img src="./images/icon_API_s.png" width="60" height="76" decoding="async" alt="API" class="icon">
                             <span class="number">{{ row.fileTypes.api }}</span>
                         </div>
                         <div class="item">
-                            <img src="./images/icon_img_s.png" alt="圖片" data-i18n-alt="common.image" class="icon">
+                            <img src="./images/icon_img_s.png" width="60" height="76" decoding="async" alt="圖片" data-i18n-alt="common.image" class="icon">
                             <span class="number">{{ row.fileTypes.img }}</span>
                         </div>
                     </div>

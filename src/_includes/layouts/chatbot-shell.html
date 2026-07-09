@@ -8,6 +8,8 @@ layout: layouts/base.html
 <div class="chatbot-wrap">
     {% include "components/chatbot-header/chatbot-header.html" %}
     <main class="chatbot-main" id="main" tabindex="-1">
+        {# 本頁唯一的 h1：前台聊天頁沒有視覺標題，用品牌名提供給輔具（logo 已從 h1 降級為 div） #}
+        <h1 class="sr-only">GufoFAQ</h1>
         {{ content | safe }}
     </main>
     {% include "components/footer/footer.html" %}

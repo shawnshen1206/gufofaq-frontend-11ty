@@ -8,6 +8,12 @@ layout: layouts/base.html
 
 <main class="main" id="main" tabindex="-1">
     <div class="wrap">
+        {# 每頁唯一的 <h1>（頁名來自 front matter 的 pageHeading）。
+           多數頁面的視覺標題其實是麵包屑或資料值（檔名/資料集名），故 h1 以 .sr-only 提供給輔具——
+           不這麼做的話，用標題導覽的報讀器只會聽到 logo，抓不到頁面主題。logo 已從 h1 降級為 div。 #}
+        {% if pageHeading %}
+        <h1 class="sr-only"{% if titleKey %} data-i18n="{{ titleKey }}"{% endif %}>{{ pageHeading }}</h1>
+        {% endif %}
         {{ content | safe }}
     </div>
 </main>

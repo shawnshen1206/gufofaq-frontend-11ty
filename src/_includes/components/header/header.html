@@ -48,9 +48,10 @@
 ] %}
 
 <header class="header">
-    <h1 class="logo">
+    {# logo 是回首頁的連結，不是頁面標題 —— 故用 div 而非 h1；每頁的 h1 由 page-shell 依 pageHeading 產生 #}
+    <div class="logo">
         <a href="2-1_qaRecord.html" title="GufoFAQ 首頁" data-i18n-title="header.logoHome">GufoFAQ</a>
-    </h1>
+    </div>
     <div class="header-right">
         <nav class="desktop-nav" aria-label="主要選單" data-i18n-aria-label="nav.mainMenu">
             <ul class="main-menu">
@@ -61,7 +62,7 @@
                     <ul>
                         {% for sub in item.submenu %}
                         <li{% if sub.hidden %} class="hidden"{% endif %}>
-                            <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}" data-i18n-title="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
+                            <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}" data-i18n-title="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" width="52" height="28" decoding="async" alt="BETA" class="beta-icon">{% endif %}</a>
                         </li>
                         {% endfor %}
                     </ul>
