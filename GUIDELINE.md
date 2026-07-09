@@ -2,15 +2,17 @@
 
 本文件是這個專案的**規範**：定義檔案結構、語法白名單、各層級的規則，以及與 React 的對應關係。
 適用對象：維護本專案的人與協作的 AI，以及將本專案轉換成 React 的人與 AI。
-本專案 `gufofaq-frontend-11ty` 是 GufoFAQ 前端切版的**唯一正本**：源自原 `GufoFAQ_Frontend_New`（HTML+jQuery 切版）依本規範轉成的 11ty 版本，原專案只是歷史出處，不再是需要逐字對齊的真相來源。標準實作見 `src/pages/**` 全 23 頁（如 `src/pages/qaHistory/4-2_qaHistory_detail.html`、`src/pages/dataImport/1-1-4_columnSelect_excel.html`）與 `src/_includes/{ui,components}/` 元件庫；**元件總覽頁**見 `src/pages/components/component.html`（build 後開 `dist/component.html`，一頁看完所有元件）。
-執行方式見 [README.md](README.md)。
+本專案是 GufoFAQ 前端切版的**唯一正本**。
 
-> 註：本專案頁面原始碼放在 `src/pages/<section>/` 保持分類，但 front matter 的 `permalink` 一律輸出**扁平檔名**到 `dist/` 根，確保每頁的 `./css`、`./js`、`../images` 路徑一致。§1 檔案結構圖示以方法為準；本專案 scss 另含 `_normalize`（reset）、`_guideline`（元件總覽頁樣式）兩個從真 app 補入的檔。（真 app 的第二支樣式表 css/style.css 已依 §4 解散歸戶成 `filter-fields`／`prompt-card`／`ab-test-block` 三個純樣式元件，不再單獨存在。）
+> **本文件只放規則。** 規則的定義是：**新增一個頁面或元件時，本文件一個字都不用改**。
+> 會隨專案變動的東西（檔案清單、元件清單、頁面清單、layout 各自提供什麼）一律放 [README.md](README.md)。
+>
+> **規則多數已寫成測試**（`tests/guideline.test.mjs`，`npm test` 與 CI 都會跑）。改完 `npm run check` 要綠。
 
 核心原則（工作約定）：
 
 1. **共同語言**：class 命名沿用既有設計系統的詞彙（`.header`、`.modals`、`.form-group`…），新元件跟隨同樣風格——命名是共同語言，不另立一套。
-2. **規範優先於歷史**：寫法標準以本 GUIDELINE 為準（§2 語法白名單、§4 HTML/CSS、§5 JS）。不以「與原始切版逐字一致」為目標；動到舊程式碼時發現違反規範的寫法，就地修正——檔頭可註記出處，但「逐字照抄」不是豁免理由。
+2. **本文件是唯一標準**：寫法一律以本 GUIDELINE 為準（§2 語法白名單、§4 HTML/CSS、§5 JS）。動到既有程式碼時，發現不符規範的寫法就地修正——「本來就這樣寫」不是豁免理由。
 3. **元件只有一份正本**：檔案組織照 §1（一個元件一個資料夾，html + scss + js 同住）；要用就 include，要改就改它資料夾裡那一份。
 4. **維持可轉換**：架構保持 React-friendly——include＝元件、set＝props、front matter + `{% for %}`＝資料渲染（§7 是轉換對照契約）；行為一律原生 JS（§5），不引入第三方前端套件。
 
@@ -18,38 +20,32 @@
 
 ## 1. 檔案結構
 
+**慣例**（實際檔案清單見 [README.md](README.md)——那裡才是隨專案變動的現況；本節只定義結構規則）：
+
 ```
-gufofaq-frontend-11ty/
-├── src/
-│   ├── _includes/
-│   │   ├── layouts/                   ← 整頁模板（只放模板，不放元件）
-│   │   │   ├── base.html              ←   <head> + 全頁框架 + script 清單
-│   │   │   └── page-shell.html        ←   一般頁外殼：header + main 容器 + footer
-│   │   │                                  （骨架樣式在 scss/ 的 _base/_style，layouts/ 只放模板）
-│   │   ├── components/                ← 大元件：會用到其他元件的組合區塊
-│   │   │   └── <元件名>/              ←   一個元件 = 一個資料夾
-│   │   │       ├── <元件名>.html      ←     元件 HTML（唯一正本）
-│   │   │       ├── _<元件名>.scss     ←     元件樣式（有才放）
-│   │   │       └── <元件名>.js        ←     元件行為（有才放）
-│   │   └── ui/                        ← 小元件：不依賴其他元件的積木
-│   ├── scss/
-│   │   ├── _var.scss                  ←   設計 token（語意色 + [data-theme=dark] 深色覆寫；全站唯一色源，單層直值）
-│   │   ├── _mixin.scss                ←   scrollbar 等共用 mixin
-│   │   ├── _base.scss                 ←   html/body/標籤預設
-│   │   ├── _utilities.scss            ←   text-*、flex-row、gap-*、col-*、mt-*/mb-*/my-* 等工具 class
-│   │   └── main.scss                  ←   只放 @use 組裝清單
-│   ├── images/
-│   ├── index.html                     ← 登入頁（permalink 輸出成 login.html）
-│   ├── catalog.html                   ← 部署站台首頁＝頁面目錄（permalink 輸出成 index.html；showcase 入口，性質同 component.html，非 app 一部分）
-│   └── pages/<section>/<頁面>.html     ← 頁面 = 選 layout + 元件組合（permalink 輸出扁平檔名到 dist/ 根）
-└── dist/                              ← build 輸出（不可手動編輯）
+src/
+├── _includes/
+│   ├── layouts/            ← 整頁模板（只放模板，不放元件）
+│   ├── components/         ← 大元件：會用到其他元件的組合區塊
+│   │   └── <元件名>/       ←   一個元件 = 一個資料夾
+│   │       ├── <元件名>.html      ←   元件 HTML（唯一正本）
+│   │       ├── _<元件名>.scss     ←   元件樣式（有才放；要在 main.scss @use）
+│   │       └── <元件名>.js        ←   元件行為（有才放；要三方登記，見 §5）
+│   └── ui/                 ← 小元件：不依賴其他元件的積木
+├── scss/                   ← 全域層：token / mixin / reset / base / utilities / main（元件樣式不放這）
+├── i18n/en.json            ← 英文翻譯（繁中是原文、留在 markup，見 §4-2）
+├── images/
+└── pages/<section>/<頁面>.html   ← 頁面 = 選 layout + 元件組合
 ```
+
+- 頁面原始碼依 section 分資料夾，但 `permalink` 一律輸出**扁平檔名**到 `dist/` 根，確保每頁的 `./css`、`./js`、`./images` 相對路徑一致。
+- `dist/` 是 build 產物，不可手動編輯。
 
 ### 1-1. 放置規則（三個桶）
 
 | 桶 | 判斷句 | 例 |
 |---|---|---|
-| `layouts/` | 是整頁的**模板**嗎？ | base、page-shell |
+| `layouts/` | 是整頁的**模板**嗎？ | `base.html`、各種 `*-shell.html` |
 | `components/` | 它的 html / scss / js **會用到其他元件**，或是某大元件的**專屬子片段**嗎？（大） | header、sources-block、multi-select-box、mobile-nav |
 | `ui/` | **不依賴任何其他元件**的最小單位？（小） | button、modals、pagination |
 
@@ -100,12 +96,10 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 ```
 
 - `titleKey`：切英文時 `<title>` 會變成 `GufoFAQ::` + 該 key 的英文。頁名與既有 key 的繁中相同就沿用，別另創。
-- `pageHeading`：**每頁必須恰好一個 `<h1>`**。`page-shell` 用 `pageHeading` 產生 `<h1 class="sr-only" data-i18n="{{ titleKey }}">`——多數頁面的視覺標題其實是麵包屑或資料值（檔名／資料集名），故 h1 走 sr-only。**logo 不是 h1**（它是回首頁的連結）。用 `base.html` 的頁面自己在內容裡放唯一的 h1。
+- `pageHeading`：**每頁必須恰好一個 `<h1>`**（有測試把關）。`page-shell` 用它產生 `<h1 class="sr-only" data-i18n="{{ titleKey }}">`——多數頁面的視覺標題其實是麵包屑或資料值（檔名／資料集名），故 h1 走 sr-only。**logo 不是 h1**（它是回首頁的連結）。
+- `titleKey` / `pageHeading` **只有走 `page-shell` 的頁面必填**（它靠這兩個欄位產生 h1）；用其他 layout 的頁面，自己在內容裡放唯一的 h1。
 
-| layout | 自動提供 | 適用 |
-|---|---|---|
-| `layouts/page-shell.html` | `<head>` + skip-link + header + `<main id="main">`（含 h1）+ footer + script 清單 | 一般頁面 |
-| `layouts/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 特殊版型（如登入頁、404） |
+> 各 layout 分別自動提供什麼、目前有哪些頁面用哪個 layout —— 見 [README.md](README.md)。
 
 ### 3-2. 內容區規則
 
@@ -139,7 +133,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
 - 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫）
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁 §04
-- **HTML 巢狀必須合法**：行內元素（`span`、`a`…）內不可放區塊元素（`div`、`p`、`ul`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`
+- **HTML 巢狀必須合法**：`span`／`p` 內不可放區塊元素（`div`、`ul`、`table`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
 - **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯（同一元件在頁面重複出現時，id 用迴圈變數組唯一值，見 `ui/form-control` 示範），沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
 - **不要用 div 假扮控制項**：可點的東西一律用真 `<button type="button">`／`<a>`。`div[role="button"][tabindex="0"]` 少了 Enter/Space（WCAG 2.1.1），原生按鈕免費具備。模擬 select 也用 `<button class="form-control">`
 - **狀態要寫進 ARIA**：可開合的控制項（下拉、accordion、側欄、多選）掛 `aria-expanded`，且**每一條改變狀態的路徑都要同步**（含「全部展開／收合」與「點外部收合」）；`<dialog>` 用 `aria-labelledby` 接上自己的 `.modals-title`；動態出現的訊息要在 live region 裡（toast 容器 `role="status" aria-live="polite"`、錯誤訊息 `role="alert"`）
@@ -200,7 +194,7 @@ ui/pagination/
 
 ### tag 多選（`ui/multi-select`）
 
-切版需要展示互動，所以 tag 式多選由本範本提供：在原生 `<select multiple class="multiSelect">` 上加 `ui/multi-select/multi-select.js`，增強成標籤（可 `×` 移除）＋下拉複選（不關閉）＋搜尋過濾＋placeholder。**原生 `<select>` 仍是唯一資料來源**——操作都寫回它的 `option.selected` 並觸發 `change`。轉 React 時對應 `react-select`（isMulti），value 陣列＝原生 select 的選取。
+tag 式多選由本範本提供（切版需要展示互動）：在原生 `<select multiple class="multiSelect">` 上加 `ui/multi-select/multi-select.js`，增強成標籤（可 `×` 移除）＋下拉複選（不關閉）＋搜尋過濾＋placeholder。**原生 `<select>` 仍是唯一資料來源**——操作都寫回它的 `option.selected` 並觸發 `change`。轉 React 時對應 `react-select`（isMulti），value 陣列＝原生 select 的選取。
 
 ### 不在切版範圍的互動
 
@@ -208,39 +202,16 @@ ui/pagination/
 
 ---
 
-## 6. 元件使用一覽
+## 6. 元件的資料契約
 
-### 帶資料的元件
+- **元件不自帶資料。** 資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供（依 §3-2「重複資料放頁面」），元件只負責 `{% for %}` 渲染——轉 React 即 props。元件總覽頁也照此規則供資料。
+- 同頁重複使用同一元件時，**每次 include 前重新 set 全部參數**（§2：`set` 是全域的，上一次的值會留著）。
+- 元件吃哪些參數、include 了哪些子元件——寫在**該元件 html 的檔頭註解**（唯一正本），不在本文件維護清單。
+- 有些元件不用 include，直接在 markup 寫它的 class（`button`、`modals`…）；有些由 layout 自動提供（`header`、`footer`）。
 
-| 元件 | 參數／資料 |
-|---|---|
-| `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href。 |
-| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
-| `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
-| `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
-| `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
-| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
-| `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 §3-2 直接寫在元件 markup。 |
-| `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
-| `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
-| `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
-
-> 說明：上列資料型元件的資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供（依 §3-2「重複資料放頁面」），元件本身**不自帶資料**、只負責 `{% for %}` 渲染——與範例方法一致，轉 React 即 props。（元件總覽頁 `component.html` 也是以 `{% set %}` 供這些元件示範資料，不由元件自帶。）
-
-### 自動引入
-
-`header`（內含 mobile-nav、header-controls）、`footer`（內含 disclaimer-modal）由 `page-shell` 提供，頁面不需 include。
-含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`chatbot-header`（含 `header-controls`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）、`header-controls`（含 `theme-toggle`）。
-`components/header-controls`＝語言＋深淺切換的常駐控制群，**主站 header 與前台 chatbot-header 共用同一份**（語言鈕不在導覽選單裡，桌機/手機都常駐）。前台頁尾直接沿用主站 `components/footer`。
-
-### 純樣式 / 純行為元件（直接寫 class）
-
-`button`、`block`、`default-table`、`form-group`、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`、`login-wrapper`（無 html，class 直接寫在 `src/index.html`）、`error-page`（無 html，class 直接寫在 `src/404.html`）。
-另有三個由原 css/style.css 解散歸戶的純樣式元件（無 html，class 直接寫在使用頁）：`filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
-結構以 `src/pages/**` 與元件總覽頁為準（`multi-select` 無 html，靠 js 增強 `.multiSelect`）。
+> 目前有哪些元件、各自吃什麼參數、誰內含誰 —— 見 [README.md](README.md) 的「元件使用一覽」。
 
 ---
-
 ## 7. React 轉換對照
 
 | 本專案 | React |
@@ -319,7 +290,7 @@ btn.addEventListener("click", function () { btn.classList.toggle("open"); });
 ```
 
 ```scss
-/* ❌ 在 A 元件的 scss 裡改 B 元件（即使真 app 是這樣寫、即使「忠於真 app」——§4 無例外） */
+/* ❌ 在 A 元件的 scss 裡改 B 元件（§4 無例外） */
 .sources-block .button { padding: 0; }
 .qa-record .tab { color: ...; }         /* ❌ 跨元件覆寫 */
 
@@ -327,11 +298,10 @@ btn.addEventListener("click", function () { btn.classList.toggle("open"); });
 .tab.on-record { color: ...; }          /* ✅ 由 ui/tab 提供變體，qa-record-tabs markup 掛用 */
 ```
 
-> ⚠️ **移植陷阱：真 app 的 scss 源碼會漏規則，「編譯後的 css」才是最終真相。** 從 `GufoFAQ_Frontend_New` 搬樣式時，**不要只照 `scss/component.scss` 抄**——它有一批宣告只存在**編譯後的 `css/component.css`**（scss 源碼是舊的/漏的）。本專案已因此踩過多次：`divider-vertical`（整個規則漏抓→分隔線全站不可見）、`footer`（漏 `flex-wrap`/`gap`）、`info-btn`/`ab-compare`（整個元件樣式漏）、`.control-label`（漏 `line-height:normal`→整列偏高）、`.button`（`line-height` 舊值）、`.breadcrumb ul`（`justify-content` 舊值 flex-end）、多個元件的 `height`/`max-height`/斷點。**搬任何樣式後，以 `css/component.css` 對照驗證值**（或直接以編譯 css 為來源）。
 
 ```scss
 /* ❌ 頁面/元件庫專屬 scss 用「裸元素選擇器」——打包進全站 main.css 會洩漏、影響每一頁 */
-body { overflow: hidden; }   /* 這條原是元件庫頁專用，卻關掉了全站每頁的捲動 */
+body { overflow: hidden; }   /* 頁面專屬規則洩漏出去，會關掉全站每一頁的捲動 */
 aside { height: 100vh; }
 footer { ... }
 

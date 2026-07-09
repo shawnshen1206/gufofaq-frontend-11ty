@@ -13,9 +13,11 @@
     "build:html": "eleventy",
     "build:css": "sass src/scss/main.scss:dist/css/main.css --style=compressed --no-source-map",
     "build:hash": "node scripts/hash-assets.mjs",
-    "build": "run-s build:css build:html build:hash",
+    "build": "run-s build:clean build:css build:html build:hash",
     "lint:css": "stylelint \"src/**/*.scss\"",
-    "check": "run-s lint:css build"
+    "check": "run-s lint:css build test",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "build:clean": "node scripts/clean-dist.mjs"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",

@@ -17,12 +17,14 @@ GufoFAQ 前端的 **Eleventy (11ty) 切版專案**。由原本的 HTML + jQuery 
 npm install
 
 npm run dev      # 開發：eleventy --serve + sass --watch 並行，改 html/scss 即時重載（http://localhost:8080）
-npm run build    # 產出：編譯 scss + eleventy + 替資產加 content hash → dist/
+npm run build    # 產出：清 dist → 編譯 scss → eleventy → 替資產加 content hash
 npm run lint:css # stylelint：把關「零裸 hex／零裸色彩函式」（顏色只准用 _var.scss 的語意 token）
-npm run check    # 交付前跑這個：lint:css + build
+npm test         # 把 GUIDELINE.md 的規則跑成測試（tests/guideline.test.mjs，需先 build）
+npm run check    # 交付前跑這個：lint:css → build → test
 ```
 
-`build` 最後會跑 `scripts/hash-assets.mjs`，替 `css`/`js`/`i18n` 加上 `?v=<content hash>` 查詢字串——GitHub Pages 的資產檔名固定又有邊緣快取，沒有這步的話改版後使用者會拿到「新 HTML + 舊 CSS/JS」。內容沒變 hash 就不變（冪等）。
+- `build` 最後會跑 `scripts/hash-assets.mjs`，替 `css`/`js`/`i18n` 加上 `?v=<content hash>` 查詢字串——GitHub Pages 的資產檔名固定又有邊緣快取，沒有這步的話改版後使用者會拿到「新 HTML + 舊 CSS/JS」。內容沒變 hash 就不變（冪等）。
+- `npm test` 用 Node 內建的 `node:test`（零依賴），把規範裡機器可驗的條文變成斷言：每頁一個 `<h1>`、`<dialog>` 的 `aria-labelledby` 指向存在的 id、元件 js 三方登記、`data-i18n` key 都在 `en.json`…。**規則改了就改測試，不要只改 md。**
 
 build 後每頁都在 `dist/` 根（如 `dist/component.html`、`dist/2-1_qaRecord.html`），雙擊或用任何靜態伺服器即可開。**想一頁看完所有元件 → 開 `dist/component.html`（元件總覽 / style guide）。**
 
@@ -30,9 +32,11 @@ build 後每頁都在 `dist/` 根（如 `dist/component.html`、`dist/2-1_qaReco
 
 ## 部署（GitHub Pages）
 
-push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)：`npm ci` → `npm run lint:css`（違規就擋下部署）→ `npm run build` → 把 `dist/` 發布到 GitHub Pages。也可在 GitHub 的 **Actions** 頁手動觸發（workflow_dispatch）。
+push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)：`npm ci` → `npm run check`（lint + build + test，任何一關紅就擋下部署）→ 把 `dist/` 發布到 GitHub Pages。也可在 GitHub 的 **Actions** 頁手動觸發（workflow_dispatch）。
 
 - **線上網址**：<https://shawnshen1206.github.io/gufofaq-frontend-11ty/>（進站是**頁面目錄**，可點去任一頁；登入頁在 `/login.html`、元件總覽在 `/component.html`）。
+- 站台全頁掛 `<meta name="robots" content="noindex, nofollow">`：它是公開的切版預覽、內含假的後台畫面，不希望被搜尋引擎收錄。
+- `src/404.html` 會輸出到站台根層，GitHub Pages 找不到路徑時自動回傳它。
 - **一次性設定**：repo → **Settings → Pages → Build and deployment → Source** 選「**GitHub Actions**」。沒開的話 deploy job 會以 404 失敗（訊息會提示要啟用 Pages），開啟後對該次重跑（Re-run jobs）即可。
 - `dist/` 在 `.gitignore` 內、不進版控——由流程現建現部署，不需 `gh-pages` 分支。
 - 全站用相對路徑，在 `/gufofaq-frontend-11ty/` 子路徑下可直接運作，不需額外 base path 設定。
@@ -42,45 +46,99 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 
 ## 結構
 
+> 這裡是**專案現況**（會隨新增頁面/元件而變）。**規則**在 [`GUIDELINE.md`](GUIDELINE.md)——那份不會因為多切一頁就要改。
+
 ```
 src/
 ├── _includes/
-│   ├── layouts/            整頁模板：base.html（純外框）、page-shell.html（header+main+footer 外殼）
-│   ├── ui/                 小元件（原子）：button, form-control, checkbox, radio, switch,
-│   │                        multi-select, tab, accordion, pagination, breadcrumb, tooltip,
-│   │                        link-file, link-modal, list-style, toast, modals, divider-vertical
-│   └── components/         大元件：header, mobile-nav, footer, disclaimer-modal,
-│                            default-table, priority-table, form-table, upload-*, step-*,
-│                            chatroom, sources-block, qa-detail-info, qa-record-tabs,
-│                            prompt-edit, multi-select-box, block, chart-box, countdown-box, storage-bar,
-│                            editable-block, select-btn-wrap, success-box, feature-disabled-overlay,
-│                            login-wrapper, file-preview-modal, 以及其餘 *-modal；
-│                            純樣式（只有 scss、class 寫在頁面）：filter-fields, prompt-card, ab-test-block
-├── scss/
-│   ├── _var.scss           顏色 / 字型 tokens（:root CSS 變數，全站唯一顏色定義處）
-│   ├── _mixin.scss  _normalize.scss  _base.scss
+│   ├── layouts/            整頁模板（3 支，見下表）
+│   ├── ui/                 小元件（原子，不依賴其他元件）
+│   └── components/         大元件（會用到其他元件，或某大元件的專屬子片段）
+├── scss/                   全域層（元件樣式住在元件資料夾）
+│   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
+│   ├── _mixin.scss         scrollbar 等共用 mixin
+│   ├── _normalize.scss     vendor reset
+│   ├── _base.scss          標籤預設 + 現代瀏覽器基底（color-scheme / :focus-visible / reduced-motion / box-sizing）
 │   ├── _utilities.scss     工具 class：text-*/flex-row/gap-*/col-*/mt-*/mb-*/my-*/flex-1…
-│   ├── _guideline.scss     元件總覽頁專用樣式
-│   └── main.scss           @use 組裝清單（新增元件在這加一行）
-├── images/                 圖片資產
-├── catalog.html            部署站台首頁：頁面目錄（permalink 輸出成 index.html；showcase 用，非 app 一部分）
-├── index.html              登入頁原始碼（permalink 輸出成 login.html）
-└── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名
-    └── dataImport/ dataset/ qaHistory/ qaRecord/ qaTest/ settings/ components/
+│   ├── _form-check.scss    checkbox / radio 共用外框
+│   ├── _dark-icons.scss    深色下光柵 PNG 圖示的反相
+│   ├── _guideline.scss     元件總覽頁專用版型
+│   ├── _guideline-var.scss 元件總覽頁專用色盤（--gl-*，不進 _var）
+│   ├── _catalog.scss       頁面目錄頁專用
+│   ├── _error-page.scss    404 頁專用
+│   └── main.scss           @use 組裝清單（新增元件 scss 在這加一行）
+├── i18n/en.json            英文翻譯（繁中是原文、留在 markup）
+├── images/
+├── index.html              登入頁（permalink → login.html）
+├── 404.html                GitHub Pages 的 404 fallback
+├── catalog.html            部署站台首頁＝頁面目錄（permalink → index.html；showcase，非 app 一部分）
+└── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名到 dist/ 根
+    ├── dataImport/(7) dataset/(5) qaHistory/(2) qaRecord/(1) qaTest/(2) settings/(6)   ← 管理端，走 page-shell
+    ├── faq/(1)                                                                        ← 前台 FAQ，走 chatbot-shell
+    └── components/(1)                                                                 ← 元件總覽（showcase），走 base
+tests/guideline.test.mjs    GUIDELINE 規則的可執行版本（npm test）
+scripts/                    build 前後處理：clean-dist、hash-assets
 dist/                       build 輸出（勿手改）
 ```
 
 一元件一資料夾：`<name>/<name>.html` + `_<name>.scss`（有才放）+ `<name>.js`（有才放）。
 
+### Layout
+
+| layout | 自動提供 | 用它的頁面 |
+|---|---|---|
+| `layouts/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 23 頁；front matter 必填 `titleKey` / `pageHeading` |
+| `layouts/chatbot-shell.html` | `<head>` + skip-link + `chatbot-header`（logo + 語言/夜間，無導覽）+ 滿版 `<main id="main">` + `footer` | 前台 FAQ 聊天頁 |
+| `layouts/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 登入頁、404、頁面目錄、元件總覽（各自在內容裡放唯一的 h1） |
+
+深色模式與中英切換的旗標掛在 `<html data-theme>` / `<html lang>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化，`ui/theme-toggle`、`ui/lang-toggle` 負責切換；三個 layout 都吃得到。
+
+---
+
+## 元件使用一覽
+
+### 帶資料的元件（頁面 include 前 `{% set %}` 提供，元件不自帶資料——見 GUIDELINE §6）
+
+| 元件 | 參數／資料 |
+|---|---|
+| `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href。 |
+| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
+| `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
+| `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
+| `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
+| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
+| `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 §3-2 直接寫在元件 markup。 |
+| `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
+| `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
+| `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
+
+> 資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供，元件不自帶資料——轉 React 即 props。規則見 [GUIDELINE §6](GUIDELINE.md)。
+
+### 自動引入
+
+`header` 與 `footer` 由 `page-shell` 自動提供；`chatbot-header` 與 `footer` 由 `chatbot-shell` 自動提供。頁面都不需 include。
+含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
+`components/header-controls`＝語言＋深淺切換的常駐控制群，**主站 header 與前台 chatbot-header 共用同一份**（語言鈕不在導覽選單裡，桌機/手機都常駐）。前台頁尾直接沿用主站 `components/footer`。
+
+### 純樣式 / 純行為元件（直接寫 class）
+
+這類元件**不用 include**，直接在 markup 寫它的 class：`button`、`block`、`default-table`、`form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`（無 html，靠 js 增強 `.multiSelect`）、`login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
+另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
+
+> **上列不是完整清單**（`src/_includes/` 目前有 68 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`。
+
 ---
 
 ## 慣例（完整規範見 [`GUIDELINE.md`](GUIDELINE.md)）
 
-- **CSS 免翻譯**：交付的 SCSS 就是正式最終樣式。顏色用 `_var.scss` 的 `var(--color-*)`；**間距 / 顏色 / 字級 / 排版一律用工具或元件 class，不寫 inline style**（間距 `mt-*`/`mb-*`/`my-*`/`gap-*`；表格欄寬 `<col style="width">` 與資料驅動值等少數例外見 §4）。
+- **CSS 免翻譯**：交付的 SCSS 就是正式最終樣式。顏色一律用 `_var.scss` 的**語意 token**（`var(--surface)`／`var(--text)`／`var(--brand)`…，單層直值、無原色層），零裸 hex（stylelint 會擋）；**間距 / 顏色 / 字級 / 排版一律用工具或元件 class，不寫 inline style**。
+- **填充色與文字色是不同 token**：`background`/`border` 用 `--brand`，`color` 用 `--brand-text`（深色模式兩者的需求相反）。
+- **深色模式＝覆寫 token，不改元件**：深色由 `[data-theme="dark"]` 覆寫同一組語意 token，元件自動換膚。
+- **中英切換**：繁中是原文、留在 markup（`data-i18n="key">文字</`），英文放 `src/i18n/en.json`；JS 產生的字串要走 `GufoI18n.t(key, "繁中原文")`。
 - **class 命名沿用既有系統**；狀態用 class（`.active/.open/.done/.error/.disabled`）。頁面專屬的一次性樣式也歸戶成純樣式元件，不放全域樣式表。
 - **模板只用 4 種語法**：front matter、`{% include %}`、`{% set %}`、`{% for %}`(+`{% if %}`)。（HTML 註解 `<!-- -->` 內**不要**寫 `{% %}`/`{{ }}`——會被 nunjucks 解析；要註解模板碼用 `{# #}`。）
 - **JS 只用標準 DOM API**，行為跟元件住一起；**禁 jQuery 與任何第三方套件**。
-- **可及性**：圖示按鈕給可及名稱（`title`+`.sr-only` 或 `aria-label`）；label 以 `for`/`id` 關聯（同元件重複出現時用迴圈變數組唯一 id），無可見 label 的控制項加 `aria-label`；HTML 巢狀要合法（`span`/`a` 內不放區塊元素）。
+- **可及性**：每頁恰好一個 `<h1>`；可點的東西用真 `<button>`；圖示按鈕給可及名稱；label 以 `for`/`id` 關聯；可開合控制項要同步 `aria-expanded`；HTML 巢狀要合法（`span`/`p` 內不放區塊元素——`<a>` 是 transparent content model，可以）。
 - 不在切版範圍（保留原生元素、之後由 React 套件實作）：日期選擇、多選下拉的資料邏輯、表單驗證、資料載入 / SSE / 圖表。
 
 ---
@@ -93,14 +151,16 @@ dist/                       build 輸出（勿手改）
 
 ```njk
 ---
-layout: layouts/page-shell.html   # 一般頁；登入等特殊頁用 layouts/base.html
+layout: layouts/page-shell.html   # 管理端頁；前台 FAQ 用 chatbot-shell；登入/404 等特殊頁用 base.html
 title: GufoFAQ::頁面標題
+titleKey: nav.xxx                 # 「頁面標題」那段的 i18n key（page-shell 頁必填）
+pageHeading: 頁面標題              # page-shell 用它產生本頁唯一的 <h1>（page-shell 頁必填）
 permalink: <name>.html            # 扁平輸出到 dist/ 根
 ---
 {# 頁面內容：用 {% include %} 組合元件、{% set %}+{% for %} 渲染重複列 #}
 ```
 
-交付前跑 `npm run check` 確認綠（stylelint + build）、`dist/` 每頁外觀與互動正確、無 jQuery / 第三方套件。完整清單見 [GUIDELINE.md §8](GUIDELINE.md)。
+交付前跑 `npm run check`（stylelint → build → test）確認綠、`dist/` 每頁外觀與互動正確、無 jQuery / 第三方套件。完整清單見 [GUIDELINE.md §8](GUIDELINE.md)。
 
 ---
 

@@ -50,7 +50,7 @@
     <a href="{% if uploadCardNav %}{{ card.href }}{% else %}javascript:void(0){% endif %}" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}" data-i18n-title="{{ card.titleI18n }}">
         <div class="upload-content">
             <div class="upload-header">
-                <img src="./images/{{ card.icon }}" alt="{{ card.iconAlt }}" class="upload-icon" />
+                <img src="./images/{{ card.icon }}" width="60" height="76" decoding="async" alt="{{ card.iconAlt }}" class="upload-icon" />
                 <p class="upload-title">{{ card.title }}</p>
             </div>
             <p class="upload-desc" data-i18n="{{ card.descI18n }}">{{ card.desc }}</p>
