@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::資料集列表
+titleKey: nav.datasetList
 permalink: 3-1-1_datasetList.html
 ---
 {% set breadcrumbItems = [
@@ -105,7 +106,7 @@ permalink: 3-1-1_datasetList.html
                             <span class="number">{{ row.fileTypes.api }}</span>
                         </div>
                         <div class="item">
-                            <img src="./images/icon_img_s.png" alt="圖片" class="icon">
+                            <img src="./images/icon_img_s.png" alt="圖片" data-i18n-alt="common.image" class="icon">
                             <span class="number">{{ row.fileTypes.img }}</span>
                         </div>
                     </div>
@@ -113,7 +114,7 @@ permalink: 3-1-1_datasetList.html
                 <td>{{ row.createdAt }}</td>
                 <td>{{ row.updatedAt }}</td>
                 <td class="text-center">{{ row.sizeMB }} MB</td>
-                <td class="text-center">{{ row.count }} 筆</td>
+                <td class="text-center">{{ row.count }} <span data-i18n="dataset.recordsUnit">筆</span></td>
                 <td>
                     <div class="btn-group">
                         <button type="button" class="button-icon no-bg size-sm delete" title="刪除" data-i18n-title="action.delete">

@@ -8,16 +8,18 @@
     var root = document.documentElement;
     var enDict = null;
     var defaults = { text: {}, attr: {} };
-    var ATTRS = ["placeholder", "title", "aria-label"];
+    // [ 標記後綴, 目標屬性 ]：data-i18n-<後綴> 的 key 用來翻譯「目標屬性」的值
+    var ATTRS = [["placeholder", "placeholder"], ["title", "title"], ["aria-label", "aria-label"], ["toast", "data-toast"], ["alt", "alt"]];
 
     function collectDefaults() {
+        defaults.title = document.title; // <title>（分頁標題）預設繁中原文
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
             defaults.text[el.getAttribute("data-i18n")] = el.textContent;
         });
-        ATTRS.forEach(function (a) {
-            document.querySelectorAll("[data-i18n-" + a + "]").forEach(function (el) {
-                var k = el.getAttribute("data-i18n-" + a);
-                (defaults.attr[a] = defaults.attr[a] || {})[k] = el.getAttribute(a);
+        ATTRS.forEach(function (pair) {
+            document.querySelectorAll("[data-i18n-" + pair[0] + "]").forEach(function (el) {
+                var k = el.getAttribute("data-i18n-" + pair[0]);
+                (defaults.attr[pair[0]] = defaults.attr[pair[0]] || {})[k] = el.getAttribute(pair[1]);
             });
         });
     }
@@ -27,14 +29,21 @@
         return null; // 回繁中時用 defaults
     }
 
-    // 只更新第一個文字節點，保留元素子節點（如 AB測試的 beta 徽章 <img>）。
+    // 只更新承載標籤的文字節點，保留元素子節點（如 AB測試的 beta 徽章 <img>、步驟鈕的方向箭頭 <img>）。
+    // 取「第一個非純空白」文字節點：img 在文字前時（<img>上一步）第一個文字節點是換行縮排空白，
+    // 若換到它會漏掉真正的標籤；故優先挑有內容的節點，退回第一個文字節點。
     // 直接設 el.textContent 會清掉所有子元素，把 <img> 一起洗掉。
     function setText(el, value) {
         if (value == null) return;
-        var tn = null;
+        var tn = null, firstText = null;
         for (var i = 0; i < el.childNodes.length; i++) {
-            if (el.childNodes[i].nodeType === 3) { tn = el.childNodes[i]; break; }
+            var nd = el.childNodes[i];
+            if (nd.nodeType === 3) {
+                if (firstText == null) firstText = nd;
+                if (nd.nodeValue.trim() !== "") { tn = nd; break; }
+            }
         }
+        tn = tn || firstText;
         if (tn) tn.nodeValue = value;
         else el.insertBefore(document.createTextNode(value), el.firstChild);
     }
@@ -45,16 +54,22 @@
             var v = pick(k, lang);
             setText(el, v != null ? v : defaults.text[k]);
         });
-        ATTRS.forEach(function (a) {
-            document.querySelectorAll("[data-i18n-" + a + "]").forEach(function (el) {
-                var k = el.getAttribute("data-i18n-" + a);
+        ATTRS.forEach(function (pair) {
+            document.querySelectorAll("[data-i18n-" + pair[0] + "]").forEach(function (el) {
+                var k = el.getAttribute("data-i18n-" + pair[0]);
                 var v = pick(k, lang);
-                el.setAttribute(a, v != null ? v : (defaults.attr[a] || {})[k]);
+                el.setAttribute(pair[1], v != null ? v : (defaults.attr[pair[0]] || {})[k]);
             });
         });
+        // <title>（分頁標題）：<html data-title-i18n="key"> 提供頁名 key，切英文＝GufoFAQ::+英文頁名
+        var tk = root.getAttribute("data-title-i18n");
+        if (tk) {
+            var tv = pick(tk, lang);
+            document.title = tv != null ? "GufoFAQ::" + tv : defaults.title;
+        }
         root.setAttribute("lang", lang === "en" ? "en" : "zh-Hant");
         document.querySelectorAll(".js-lang-toggle").forEach(function (b) {
-            b.textContent = lang === "en" ? "繁中" : "EN";
+            b.textContent = lang === "en" ? "中文" : "EN";
         });
     }
 

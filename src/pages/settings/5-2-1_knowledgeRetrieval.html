@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::知識檢索邏輯
+titleKey: nav.knowledgeRetrieval
 permalink: 5-2-1_knowledgeRetrieval.html
 ---
 {% set breadcrumbItems = [
@@ -23,16 +24,16 @@ permalink: 5-2-1_knowledgeRetrieval.html
 
     <!-- 設置頁籤（沿用 ui/tab）+ 前台問答預設使用（沿用 ui/radio），兩者共用同一份「設置一/二/三」清單資料化 -->
     {% set settingTabs = [
-      { label: "設置一", active: true },
-      { label: "設置二" },
-      { label: "設置三" }
+      { label: "設置一", active: true, i18nKey: "settings.config1" },
+      { label: "設置二", i18nKey: "settings.config2" },
+      { label: "設置三", i18nKey: "settings.config3" }
     ] %}
     <div class="page-title-wrap flex-row flex-wrap gap-16 mb-8">
         <div class="tab-row fit-content">
             <div class="tab-group">
                 {% for tab in settingTabs %}
                 <button type="button" class="tab tab-md{% if tab.active %} active{% endif %}"
-                    data-setting-sn="{{ loop.index }}" title="{{ tab.label }}">{{ tab.label }}</button>
+                    data-setting-sn="{{ loop.index }}" title="{{ tab.label }}" data-i18n="{{ tab.i18nKey }}" data-i18n-title="{{ tab.i18nKey }}">{{ tab.label }}</button>
                 {% endfor %}
             </div>
         </div>
@@ -45,7 +46,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
                     {% for tab in settingTabs %}
                     <label class="form-radio">
                         <input type="radio" name="frontEnd_qa"{% if tab.active %} checked{% endif %}>
-                        <span>{{ tab.label }}</span>
+                        <span data-i18n="{{ tab.i18nKey }}">{{ tab.label }}</span>
                     </label>
                     {% endfor %}
                 </div>
@@ -64,6 +65,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
         {% set priorityLevels = [
           {
             title: "高優先級",
+            i18nKey: "settings.priorityHigh",
             rows: [
               { category: "入出國與法規", description: "處理入境、出境、簽證、停留等問題", prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。", priority: "高優先級" },
               { category: "證件與資料申請", description: "協助查詢入出國紀錄、統一證號等申辦方式", prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。", priority: "高優先級" }
@@ -71,12 +73,14 @@ permalink: 5-2-1_knowledgeRetrieval.html
           },
           {
             title: "中優先級",
+            i18nKey: "settings.priorityMedium",
             rows: [
               { category: "婚姻與家庭", description: "涉外婚姻登記、外籍配偶居留等問題", prompt: "我是移民署的智能客服，協助說明涉外婚姻登記、外籍配偶居留申請相關規定。", priority: "中優先級" }
             ]
           },
           {
             title: "低優先級",
+            i18nKey: "settings.priorityLow",
             rows: [
               { category: "權益與申訴服務類", description: "", prompt: "", priority: "低優先級" }
             ]
@@ -85,10 +89,10 @@ permalink: 5-2-1_knowledgeRetrieval.html
         {% for level in priorityLevels %}
         <div class="flex-row column gap-16 priority-box">
             <div class="flex-row align-items-center gap-12">
-                <div class="tablelist-title">{{ level.title }}</div>
+                <div class="tablelist-title" data-i18n="{{ level.i18nKey }}">{{ level.title }}</div>
                 <div class="tablelist-asking flex-row align-items-center gap-8">
-                    意圖判斷啟用
-                    <label class="switch priority-switch" aria-label="啟用切換">
+                    <span data-i18n="settings.intentEnable">意圖判斷啟用</span>
+                    <label class="switch priority-switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle">
                         <input type="checkbox" class="switch-checkbox" role="switch">
                         <span class="switch-box">
                             <span class="switch-btn"></span>
@@ -140,10 +144,10 @@ permalink: 5-2-1_knowledgeRetrieval.html
             {% for slot in fieldSlots %}
             <div class="form-group col-6-md col-12-sm">
                 <div class="label label-md">
-                    <label for="fieldName-{{ slot.key }}" class="control-label">{{ slot.defaultLabel }}</label>
+                    <label for="fieldName-{{ slot.key }}" class="control-label" data-i18n="field.{{ slot.key }}">{{ slot.defaultLabel }}</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="fieldName-{{ slot.key }}" placeholder="此設定的顯示名"
+                    <input type="text" id="fieldName-{{ slot.key }}" placeholder="此設定的顯示名" data-i18n-placeholder="settings.displayNamePlaceholder"
                         class="form-control" value="{{ slot.label }}">
                 </div>
             </div>

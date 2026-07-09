@@ -1,9 +1,9 @@
 <!-- 資料驅動頁碼列；頁面 include 前 set pages（[{ number, active }]，可含 { ellipsis: true } 呈現省略號）。
      可輸入頁碼版 .pagination-input（第 X 個對話…）為另一種互動變體，行為見 pagination.js；示範見 component.html、實用於 4-2，markup 各自就地寫，不併入本檔。 -->
-<div class="pagination" role="navigation" aria-label="頁碼分頁">
+<div class="pagination" role="navigation" aria-label="頁碼分頁" data-i18n-aria-label="pagination.nav">
     <ul>
         <li class="prev disabled">
-            <a href="#" aria-label="上一頁不可用" aria-disabled="true" tabindex="-1">
+            <a href="#" aria-label="上一頁不可用" data-i18n-aria-label="pagination.prevDisabled" aria-disabled="true" tabindex="-1">
                 <img src="./images/icon_arrow_left_gray.png" alt="">
             </a>
         </li>
@@ -12,12 +12,12 @@
         <li class="ellipsis">...</li>
         {% else %}
         <li{% if page.active %} class="active"{% endif %}>
-            <a href="#" aria-label="第{{ page.number }}頁"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
+            <a href="#"{% if page.active %} aria-current="page"{% endif %}>{{ page.number }}</a>
         </li>
         {% endif %}
         {% endfor %}
         <li class="next">
-            <a href="#" aria-label="下一頁">
+            <a href="#" aria-label="下一頁" data-i18n-aria-label="action.nextPage">
                 <img src="./images/icon_arrow_right_blue.png" alt="">
             </a>
         </li>

@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::提示詞管理
+titleKey: nav.promptMgmt
 permalink: 5-4-1_promptManagement.html
 ---
 {% set breadcrumbItems = [
@@ -85,9 +86,9 @@ permalink: 5-4-1_promptManagement.html
     </div>
 
     {% set versions = [
-      { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204次" },
-      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:38", refCount: "14次" },
-      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/18 15:02:32", refCount: "300次" }
+      { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204" },
+      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:38", refCount: "14" },
+      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/18 15:02:32", refCount: "300" }
     ] %}
     {% for v in versions %}
     <div class="block prompt-card">
@@ -95,9 +96,9 @@ permalink: 5-4-1_promptManagement.html
             <div class="flex-row justify-content-between align-items-center flex-wrap gap-16">
                 <div class="text-md text-blue">{{ v.label }}（{{ v.timeRange }}）</div>
                 <div class="flex-row align-items-center gap-8">
-                    <span>被問答引用次數：{{ v.refCount }}</span>
+                    <span><span data-i18n="settings.referencedCount">被問答引用次數：</span> {{ v.refCount }} <span data-i18n="settings.timesUnit">次</span></span>
                     <span class="divider-vertical"></span>
-                    <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="提示詞已複製！">
+                    <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="提示詞已複製！" data-i18n-toast="common.copied">
                         <span class="tooltip" data-i18n="action.copy">複製</span>
                     </button>
                 </div>

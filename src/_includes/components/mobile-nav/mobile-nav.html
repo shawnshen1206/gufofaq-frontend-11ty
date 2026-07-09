@@ -6,16 +6,16 @@
             {% for item in menuItems %}
             <li{% if item.hidden %} class="hidden"{% endif %}>
                 {% if item.submenu %}
-                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}">{{ item.label }}</a>
+                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}">{{ item.label }}</a>
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}" data-i18n-title="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>
                 {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
                 {% endif %}
             </li>
             {% endfor %}

@@ -1,14 +1,14 @@
 <!-- 知識檢索配置檢視 modal，取自真實 app pages/qaTest/2-2-1_singleTest.html #knowledgeModal（與 component.html、pages/qaTest/2-2-3_abTest.html 版本一致，class/id 沿用真實系統）；
      body 為「設置一/二/三」.tab 切換（用法同 ui/tab）+ 三組高/中/低優先級分類表（用法同 components/priority-table 已建立的 .tablelist-title + .default-table.priority-table 分組表格結構） -->
 {% set settingTabs = [
-    { label: "設置一", active: true },
-    { label: "設置二（預設）" },
-    { label: "設置三" }
+    { label: "設置一", labelKey: "modals.settingOne", active: true },
+    { label: "設置二（預設）", labelKey: "modals.settingTwoDefault" },
+    { label: "設置三", labelKey: "modals.settingThree" }
 ] %}
 {% set priorityGroups = [
-    { title: "高優先級（意圖判斷開啟）", categories: ["入出國與法規", "證件與資料申請", "權益與申訴服務類"] },
-    { title: "中優先級（意圖判斷開啟）", categories: ["婚姻與家庭"] },
-    { title: "低優先級（意圖判斷關閉）", categories: ["其他"] }
+    { title: "高優先級（意圖判斷開啟）", titleKey: "modals.highPriorityIntentOn", categories: ["入出國與法規", "證件與資料申請", "權益與申訴服務類"] },
+    { title: "中優先級（意圖判斷開啟）", titleKey: "modals.midPriorityIntentOn", categories: ["婚姻與家庭"] },
+    { title: "低優先級（意圖判斷關閉）", titleKey: "modals.lowPriorityIntentOff", categories: ["其他"] }
 ] %}
 <dialog class="modals" id="knowledgeModal">
     <div class="modals-dialog modals-md">
@@ -26,7 +26,7 @@
                     <div class="tab-row fit-content mb-16">
                         <div class="tab-group">
                             {% for tab in settingTabs %}
-                            <button type="button" class="tab{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
+                            <button type="button" class="tab{% if tab.active %} active{% endif %}" title="{{ tab.label }}" data-i18n-title="{{ tab.labelKey }}" data-i18n="{{ tab.labelKey }}">{{ tab.label }}</button>
                             {% endfor %}
                         </div>
                     </div>
@@ -35,12 +35,12 @@
                     <div class="flex-row column gap-24">
                         {% for group in priorityGroups %}
                         <div>
-                            <div class="tablelist-title">{{ group.title }}</div>
+                            <div class="tablelist-title" data-i18n="{{ group.titleKey }}">{{ group.title }}</div>
                             <div class="table-container scrollTable">
                                 <table class="default-table priority-table">
                                     <thead>
                                         <tr>
-                                            <th>分類名稱</th>
+                                            <th data-i18n="field.categoryName">分類名稱</th>
                                         </tr>
                                     </thead>
                                     <tbody>

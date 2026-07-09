@@ -11,7 +11,7 @@
 <div class="editable-block">
     <div class="form-group edit-field-group">
         <div class="label flex-row align-items-center">
-            <label {% if editId %}for="{{ editId }}" {% endif %}class="control-label">{{ editLabel }}</label>
+            <label {% if editId %}for="{{ editId }}" {% endif %}class="control-label"{% if editLabelKey %} data-i18n="{{ editLabelKey }}"{% endif %}>{{ editLabel }}</label>
             <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯" data-i18n-title="action.edit"><span
                     class="sr-only" data-i18n="action.edit">編輯</span></button>
             <div class="flex-row gap-4">
@@ -23,7 +23,7 @@
         </div>
         <div class="field">
             <textarea rows="{{ editRows or 10 }}" class="form-control size-sm edit-field disabled"
-                placeholder="{{ editPlaceholder }}" {% if editId %}id="{{ editId }}"{% else %}aria-label="{{ editLabel }}"{% endif %} disabled>{{ editValue }}</textarea>
+                placeholder="{{ editPlaceholder }}"{% if editPlaceholderKey %} data-i18n-placeholder="{{ editPlaceholderKey }}"{% endif %} {% if editId %}id="{{ editId }}"{% else %}aria-label="{{ editLabel }}"{% if editLabelKey %} data-i18n-aria-label="{{ editLabelKey }}"{% endif %}{% endif %} disabled>{{ editValue }}</textarea>
         </div>
     </div>
 </div>
@@ -31,7 +31,7 @@
 <div class="editable-block">
     <span class="display-text">{{ editValue }}</span>
     <input type="text" class="form-control edit-field" value="{{ editValue }}" style="display: none;"
-        aria-label="{{ editLabel }}">
+        aria-label="{{ editLabel }}"{% if editLabelKey %} data-i18n-aria-label="{{ editLabelKey }}"{% endif %}>
     <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯" data-i18n-title="action.edit"><span
             class="sr-only" data-i18n="action.edit">編輯</span></button>
     <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認" data-i18n-title="action.confirm" style="display: none;"><span

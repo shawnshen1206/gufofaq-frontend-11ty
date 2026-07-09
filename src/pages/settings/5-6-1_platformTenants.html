@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::租戶功能開通
+titleKey: nav.tenantEnable
 permalink: 5-6-1_platformTenants.html
 ---
 {% set breadcrumbItems = [
@@ -16,10 +17,10 @@ permalink: 5-6-1_platformTenants.html
      真正把關在 product（require_platform_admin），本頁僅提供管理介面。
      功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 -->
 {% set features = [
-  { key: "data", label: "資料匯入／資料集管理" },
-  { key: "ask", label: "問答（後台測試區）" },
-  { key: "history", label: "歷史紀錄" },
-  { key: "settings", label: "設定類（提示詞／檢索設定）" }
+  { key: "data", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
+  { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
+  { key: "history", label: "歷史紀錄", i18nKey: "settings.capHistory" },
+  { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" }
 ] %}
 {% set tenants = [
   { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings"] },
@@ -45,7 +46,7 @@ permalink: 5-6-1_platformTenants.html
                     <th data-i18n="settings.tenant">租戶</th>
                     <th data-i18n="settings.userCount">使用者數</th>
                     {% for feature in features %}
-                    <th class="text-center">{{ feature.label }}</th>
+                    <th class="text-center" data-i18n="{{ feature.i18nKey }}">{{ feature.label }}</th>
                     {% endfor %}
                     <th data-i18n="common.actions">操作</th>
                 </tr>

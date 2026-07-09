@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::對話詳細內容
+titleKey: qa.detailPageTitle
 permalink: 4-2_qaHistory_detail.html
 ---
 {# 對話詳細資訊 + 參考來源資料——依 §3-2/§6 由頁面提供，元件只負責渲染 #}
@@ -39,8 +40,8 @@ permalink: 4-2_qaHistory_detail.html
 ] %}
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
-  { label: "問答紀錄", href: "4-1_qaHistory.html" },
-  { label: "檢視對話詳細內容" }
+  { label: "問答紀錄", href: "4-1_qaHistory.html", i18nKey: "qa.qaRecords" },
+  { label: "檢視對話詳細內容", i18nKey: "qa.qaDetailTitle" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -50,17 +51,17 @@ permalink: 4-2_qaHistory_detail.html
     <div class="page-title-wrap">
         <div class="pagination-input" data-total="12">
             <button type="button" class="pager-btn prev" disabled>
-                <img src="./images/icon_arrow_left_blue.png" alt="上一頁" class="icon">
+                <img src="./images/icon_arrow_left_blue.png" alt="上一頁" data-i18n-alt="action.prevPage" class="icon">
             </button>
 
-            <span class="pager-text">第</span>
+            <span class="pager-text" data-i18n="qa.detailConvNo">第</span>
 
             <input class="pager-input form-control" type="text" value="1" aria-label="頁碼" data-i18n-aria-label="qa.pageNumber">
 
-            <span class="pager-text">個對話，共<span class="total">12</span>個</span>
+            <span class="pager-text"><span data-i18n="qa.detailConvOf">個對話，共</span> <span class="total">12</span> <span data-i18n="qa.detailConvItems">個</span></span>
 
             <button type="button" class="pager-btn next">
-                <img src="./images/icon_arrow_right_blue.png" alt="下一頁" class="icon">
+                <img src="./images/icon_arrow_right_blue.png" alt="下一頁" data-i18n-alt="action.nextPage" class="icon">
             </button>
         </div>
     </div>

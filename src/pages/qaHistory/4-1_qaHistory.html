@@ -1,11 +1,12 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::歷史問答紀錄
+titleKey: qa.qaHistoryTitle
 permalink: 4-1_qaHistory.html
 ---
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
-  { label: "歷史問答紀錄" }
+  { label: "歷史問答紀錄", i18nKey: "qa.qaHistoryTitle" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -133,7 +134,7 @@ permalink: 4-1_qaHistory.html
         href: "4-2_qaHistory_detail.html?sn=12175"
     }
 ] %}
-<div class="data-info">共{{ rows.length }}筆資料</div>
+<div class="data-info"><span data-i18n="qa.totalOf">共</span> {{ rows.length }} <span data-i18n="qa.records">筆資料</span></div>
 <div class="table-container scrollTable">
     <table class="default-table">
         <colgroup>
@@ -156,7 +157,7 @@ permalink: 4-1_qaHistory.html
                 <th>
                     <div class="th-sort" data-i18n="qa.conversationDate">
                         對話日期
-                        <img src="./images/icon_ascending order.png" alt="排序" class="sort">
+                        <img src="./images/icon_ascending order.png" alt="排序" data-i18n-alt="common.sort" class="sort">
                     </div>
                 </th>
             </tr>

@@ -10,18 +10,18 @@
 <div class="block block-sm mt-16">
     <div class="form-table-wrap">
         <div class="form-table-group">
-            <div class="subtitle">滿意度回饋</div>
+            <div class="subtitle" data-i18n="qa.satisfactionFeedback">滿意度回饋</div>
             <div class="form-table">
                 <div class="row mobile-column">
                     <div class="col col-6-md col-12-sm">
-                        <div class="th">使用者滿意度</div>
+                        <div class="th" data-i18n="qa.userSatisfaction">使用者滿意度</div>
                         <div class="td">
                             <span class="text-bold">{{ conversation.satisfaction.label }}</span>
                             <img src="{{ conversation.satisfaction.icon }}" alt="" class="icon">
                         </div>
                     </div>
                     <div class="col col-6-md col-12-sm">
-                        <div class="th">意見回饋</div>
+                        <div class="th" data-i18n="modals.feedback">意見回饋</div>
                         <div class="td">{{ conversation.feedback }}</div>
                     </div>
                 </div>
@@ -29,33 +29,33 @@
         </div>
 
         <div class="form-table-group">
-            <div class="subtitle">基本對話資訊</div>
+            <div class="subtitle" data-i18n="qa.basicConversationInfo">基本對話資訊</div>
             <div class="form-table">
                 <div class="row mobile-column">
                     <div class="col col-12-md">
-                        <div class="th">聊天室編號</div>
+                        <div class="th" data-i18n="qa.chatroomId">聊天室編號</div>
                         <div class="td">{{ conversation.chatroomId }}</div>
                     </div>
                 </div>
                 <div class="row mobile-column">
                     <div class="col col-4-md col-12-sm">
-                        <div class="th">對話編號</div>
+                        <div class="th" data-i18n="qa.conversationId">對話編號</div>
                         <div class="td">{{ conversation.id }}</div>
                     </div>
                     <div class="col col-4-md col-12-sm">
-                        <div class="th">對話時間</div>
+                        <div class="th" data-i18n="qa.conversationTime">對話時間</div>
                         <div class="td">{{ conversation.time }}</div>
                     </div>
                     <div class="col col-4-md col-12-sm">
-                        <div class="th">有無進行意圖判斷</div>
+                        <div class="th" data-i18n="qa.hasIntentDetection">有無進行意圖判斷</div>
                         <div class="td">{{ conversation.intent }}</div>
                     </div>
                     <div class="col col-12-md">
-                        <div class="th">使用者對話內容</div>
+                        <div class="th" data-i18n="qa.userMessage">使用者對話內容</div>
                         <div class="td">{{ conversation.userMessage }}</div>
                     </div>
                     <div class="col col-12-md">
-                        <div class="th">AI對話內容</div>
+                        <div class="th" data-i18n="qa.aiMessage">AI對話內容</div>
                         <div class="td">
                             您好！關於新住民結婚的注意事項，以下是一些重要的要點：
                             <p>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div class="col col-12-md">
-                        <div class="th">提示詞</div>
+                        <div class="th" data-i18n="comp.prompt">提示詞</div>
                         <div class="td">
                             <div class="collapse-text">
                                 <div class="collapse-body">你是一位熟悉台灣新住民婚姻登記流程的行政資訊助手，負責針對使用者提出的「新住民結婚注意事項」提供清楚、簡潔且實用的說明。<br>
@@ -127,7 +127,7 @@
                                     如果你要拿這個去做提示詞設計，我建議還可以再補一條：<br>
                                     「若涉及台灣行政流程，應優先提供實務上最常見的申辦方式與文件需求。」<br>
                                     加上這句之後，回答就不會只停留在概念整理，而會更接近真正可執行的行政指引。</div>
-                                <button type="button" class="collapse-toggle">展開</button>
+                                <button type="button" class="collapse-toggle" data-i18n="common.expand">展開</button>
                             </div>
                         </div>
                     </div>

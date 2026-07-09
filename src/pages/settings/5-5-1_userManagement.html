@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::使用者管理
+titleKey: nav.userMgmt
 permalink: 5-5-1_userManagement.html
 ---
 {% set breadcrumbItems = [
@@ -16,10 +17,10 @@ permalink: 5-5-1_userManagement.html
      真正把關在 product（require_admin / require_capability），本頁僅提供管理介面。
      能力鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 -->
 {% set capabilities = [
-  { key: "data", label: "資料匯入／資料集管理" },
-  { key: "ask", label: "問答（後台測試區）" },
-  { key: "history", label: "歷史紀錄" },
-  { key: "settings", label: "設定類（提示詞／檢索設定）" }
+  { key: "data", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
+  { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
+  { key: "history", label: "歷史紀錄", i18nKey: "settings.capHistory" },
+  { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" }
 ] %}
 {% set members = [
   { email: "admin@example.com", isAdmin: true, permissions: [] },
@@ -57,7 +58,7 @@ permalink: 5-5-1_userManagement.html
         {% for cap in capabilities %}
         <label class="form-checkbox">
             <input type="checkbox" name="new_member_perm_{{ cap.key }}">
-            <span>{{ cap.label }}</span>
+            <span data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
         </label>
         {% endfor %}
         <label class="switch" aria-label="租戶管理者切換" data-i18n-aria-label="settings.tenantAdminToggle">
@@ -93,7 +94,7 @@ permalink: 5-5-1_userManagement.html
                     <th data-i18n="common.email">電子郵件</th>
                     <th data-i18n="settings.role">角色</th>
                     {% for cap in capabilities %}
-                    <th>{{ cap.label }}</th>
+                    <th data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</th>
                     {% endfor %}
                     <th data-i18n="common.actions">操作</th>
                 </tr>
@@ -117,7 +118,7 @@ permalink: 5-5-1_userManagement.html
                     <td class="text-center">
                         <label class="form-checkbox">
                             <input type="checkbox"{% if member.isAdmin or (cap.key in member.permissions) %} checked{% endif %}{% if member.isAdmin %} disabled{% endif %}>
-                            <span class="sr-only">{{ cap.label }}</span>
+                            <span class="sr-only" data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
                         </label>
                     </td>
                     {% endfor %}

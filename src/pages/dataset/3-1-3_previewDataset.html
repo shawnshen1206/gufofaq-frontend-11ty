@@ -1,6 +1,7 @@
 ---
 layout: layouts/page-shell.html
 title: GufoFAQ::資料集列表
+titleKey: nav.datasetList
 permalink: 3-1-3_previewDataset.html
 ---
 <!-- 麵包屑 + 資料集名稱（editable-block）：真實頁第三層麵包屑與資料集名稱皆為 js previewDataset.js 載入後動態填字（原文「載入中...」），
@@ -15,6 +16,7 @@ permalink: 3-1-3_previewDataset.html
     {# 資料集名稱：editable-block 樣式一（單行 text） #}
     {% set editType = "text" %}
     {% set editLabel = "資料集名稱" %}
+    {% set editLabelKey = "dataset.datasetName" %}
     {% set editValue = "客服問答知識庫" %}
     {% include "components/editable-block/editable-block.html" %}
 </div>
@@ -24,16 +26,20 @@ permalink: 3-1-3_previewDataset.html
     <div class="flex-1">
         {% set editType = "textarea" %}
         {% set editLabel = "任務描述" %}
+        {% set editLabelKey = "comp.taskDescription" %}
         {% set editId = "editTaskDesc" %}
         {% set editPlaceholder = "請輸入任務描述" %}
+        {% set editPlaceholderKey = "comp.enterTaskDesc" %}
         {% set editValue = "回答客服常見問題，內容涵蓋帳號、訂單與退換貨相關問題。" %}
         {% include "components/editable-block/editable-block.html" %}
     </div>
     <div class="flex-1">
         {% set editType = "textarea" %}
         {% set editLabel = "任務對應提示詞" %}
+        {% set editLabelKey = "comp.taskPrompt" %}
         {% set editId = "editTaskPrompt" %}
         {% set editPlaceholder = "請輸入任務對應提示詞" %}
+        {% set editPlaceholderKey = "comp.enterTaskPrompt" %}
         {% set editValue = "你是客服助理，請根據提供的資料集內容，以親切、精簡的語氣回答使用者的問題。" %}
         {% include "components/editable-block/editable-block.html" %}
     </div>
@@ -48,7 +54,7 @@ permalink: 3-1-3_previewDataset.html
         </div>
     </div>
     <div class="flex-row gap-16 justify-content-end align-items-center flex-wrap">
-        <p class="text-gray m-0">共 128.45 MB</p>
+        <p class="text-gray m-0"><span data-i18n="common.total">共</span> 128.45 MB</p>
         <button type="button" class="button button-red delete-selected-btn" data-i18n="action.delete">刪除</button>
         <a href="#" class="button button-primary add-file-btn flex-shrink-0" data-i18n="dataset.addFile">
             <img src="./images/icon_add_white.png" alt="" class="icon">新增檔案
@@ -100,7 +106,7 @@ permalink: 3-1-3_previewDataset.html
                 </td>
                 <td>{{ file.createdAt }}</td>
                 <td class="text-center">{{ file.sizeMB }} MB</td>
-                <td class="text-center">{{ file.count }} 筆</td>
+                <td class="text-center">{{ file.count }} <span data-i18n="dataset.recordsUnit">筆</span></td>
                 <td>
                     <div class="btn-group">
                         <button type="button" class="button-icon no-bg size-sm delete" title="刪除" data-i18n-title="action.delete">

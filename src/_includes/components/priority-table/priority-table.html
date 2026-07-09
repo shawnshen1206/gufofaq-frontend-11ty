@@ -16,11 +16,11 @@
         </colgroup>
         <thead>
             <tr>
-                <th>分類名稱</th>
-                <th>任務描述</th>
-                <th>任務對應提示詞</th>
-                <th class="text-center">功能</th>
-                <th>變更優先級</th>
+                <th data-i18n="comp.categoryName">分類名稱</th>
+                <th data-i18n="comp.taskDescription">任務描述</th>
+                <th data-i18n="comp.taskPrompt">任務對應提示詞</th>
+                <th class="text-center" data-i18n="common.functions">功能</th>
+                <th data-i18n="comp.changePriority">變更優先級</th>
             </tr>
         </thead>
         <tbody>
@@ -34,20 +34,20 @@
                     <div class="ellipsis-2">{{ row.prompt }}</div>
                 </td>
                 <td class="text-center">
-                    <button class="button button-edit-save js-edit-btn" title="編輯">
+                    <button class="button button-edit-save js-edit-btn" title="編輯" data-i18n-title="action.edit">
                         <img src="./images/icon_edit_blue.png" alt="" class="icon">
-                        <span class="sr-only">編輯</span>
+                        <span class="sr-only" data-i18n="action.edit">編輯</span>
                     </button>
                 </td>
                 <td>
                     <div class="form-group">
                         <div class="field">
-                            <select class="form-control select-sm singleSelect" aria-label="變更優先級">
+                            <select class="form-control select-sm singleSelect" aria-label="變更優先級" data-i18n-aria-label="comp.changePriority">
                                 <option></option>
-                                <option value="高優先級"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
-                                <option value="中優先級"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
-                                <option value="低優先級"{% if row.priority == "低優先級" %} selected{% endif %}>低優先級</option>
-                                <option value="不使用"{% if row.priority == "不使用" %} selected{% endif %}>不使用</option>
+                                <option value="高優先級" data-i18n="comp.highPriority"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
+                                <option value="中優先級" data-i18n="comp.mediumPriority"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
+                                <option value="低優先級" data-i18n="comp.lowPriority"{% if row.priority == "低優先級" %} selected{% endif %}>低優先級</option>
+                                <option value="不使用" data-i18n="comp.doNotUse"{% if row.priority == "不使用" %} selected{% endif %}>不使用</option>
                             </select>
                         </div>
                     </div>
