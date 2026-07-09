@@ -27,11 +27,23 @@
         return null; // 回繁中時用 defaults
     }
 
+    // 只更新第一個文字節點，保留元素子節點（如 AB測試的 beta 徽章 <img>）。
+    // 直接設 el.textContent 會清掉所有子元素，把 <img> 一起洗掉。
+    function setText(el, value) {
+        if (value == null) return;
+        var tn = null;
+        for (var i = 0; i < el.childNodes.length; i++) {
+            if (el.childNodes[i].nodeType === 3) { tn = el.childNodes[i]; break; }
+        }
+        if (tn) tn.nodeValue = value;
+        else el.insertBefore(document.createTextNode(value), el.firstChild);
+    }
+
     function apply(lang) {
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
             var k = el.getAttribute("data-i18n");
             var v = pick(k, lang);
-            el.textContent = v != null ? v : defaults.text[k];
+            setText(el, v != null ? v : defaults.text[k]);
         });
         ATTRS.forEach(function (a) {
             document.querySelectorAll("[data-i18n-" + a + "]").forEach(function (el) {

@@ -64,10 +64,17 @@
         color: var(--on-accent);
     }
 
-    // 問答紀錄側欄用的頁籤變體：未激活為主色藍字（激活態沿用上面的 .active）。
+    // 問答紀錄側欄用的頁籤變體：未激活為主色藍字。
     // 由 components/qa-record-tabs 掛用，取代原本 .qa-record .tab 的跨元件覆寫（§4）。
     &.on-record {
         color: var(--brand);
+
+        // 選中：改用淺藍 tint 底 + 深藍字（取代通用 .active 的實心藍白字），
+        // 讓選中的問答紀錄仍讀得清楚（see-through 感），而非藍底把字蓋掉。
+        &.active {
+            background-color: var(--brand-tint);
+            color: var(--brand-ink);
+        }
     }
 }
 
