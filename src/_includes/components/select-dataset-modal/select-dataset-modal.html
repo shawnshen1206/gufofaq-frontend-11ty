@@ -8,7 +8,7 @@
     { name: "dataset_DD", label: "資料集DD" },
     { name: "dataset_EE", label: "資料集EE" }
 ] %}
-<dialog class="modals" id="datasetModal">
+<dialog class="modals" id="datasetModal" aria-labelledby="datasetModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -17,7 +17,7 @@
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="modals.selectDataset">選擇資料集</h3>
+                    <h3 class="modals-title" id="datasetModal-title" data-i18n="modals.selectDataset">選擇資料集</h3>
                 </div>
                 <div class="modals-body">
                     <div class="dataset-box-wrap">

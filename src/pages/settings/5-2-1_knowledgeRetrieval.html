@@ -157,7 +157,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
 </div>
 
 <!-- 意圖判斷啟用 modal：真實頁本體 dialog（驗證未設定任務描述時提示），逐字保留 -->
-<dialog class="modals" id="intentionModal">
+<dialog class="modals" id="intentionModal" aria-labelledby="intentionModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -166,7 +166,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="settings.intentEnable">意圖判斷啟用</h3>
+                    <h3 class="modals-title" id="intentionModal-title" data-i18n="settings.intentEnable">意圖判斷啟用</h3>
                 </div>
                 <div class="modals-body">
                     <p class="text-center" data-i18n="settings.intentNoTaskDesc">親愛的客戶您好，尚有資料夾未設定任務描述，請進行設定否則將不會被列入判斷。</p>

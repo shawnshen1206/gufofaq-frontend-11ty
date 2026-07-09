@@ -178,6 +178,12 @@
         background-color: var(--surface-hover);
     }
 
+    // 鍵盤游標（↑↓ 移動）所在的選項：焦點留在搜尋框，故需自畫，見 aria-activedescendant
+    &.active {
+        background-color: var(--surface-hover);
+        box-shadow: inset 3px 0 0 0 var(--brand);
+    }
+
     &.selected {
         background-color: var(--brand-tint);
         color: var(--brand-text);

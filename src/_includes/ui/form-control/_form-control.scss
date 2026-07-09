@@ -154,6 +154,12 @@
     }
 }
 
+// 模擬 select 用的真 <button>：抵銷按鈕預設的置中對齊，讓文字像 input 一樣靠左
+button.form-control {
+    text-align: start;
+    cursor: pointer;
+}
+
 textarea.form-control {
     height: 12.5rem; // 200px
     line-height: 1.375;

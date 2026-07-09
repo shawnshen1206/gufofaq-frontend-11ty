@@ -1,5 +1,5 @@
 <!-- 前台 FAQ 分享連結 modal（訊息「分享」鈕開啟）。沿用 ui/modals 結構；複製鈕 data-toast 由 toast.js 觸發。 -->
-<dialog class="modals" id="shareModal">
+<dialog class="modals" id="shareModal" aria-labelledby="shareModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -8,7 +8,7 @@
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="modals.shareLink">分享連結</h3>
+                    <h3 class="modals-title" id="shareModal-title" data-i18n="modals.shareLink">分享連結</h3>
                 </div>
                 <div class="modals-body">
                     <span data-i18n="modals.shareConfirmHint">分享前，請確認此連結內容</span>

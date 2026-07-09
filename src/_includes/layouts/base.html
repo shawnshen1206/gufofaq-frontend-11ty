@@ -35,8 +35,10 @@
         {{ content | safe }}
     </div>
 
-    <div id="toastContainer"></div>
+    <!-- toast 由 toast.js 動態塞入；role=status + aria-live 讓螢幕報讀器會念出來（error 型仍屬 polite，避免打斷輸入） -->
+    <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true"></div>
 
+    <script defer src="./js/header.js"></script>
     <script defer src="./js/mobile-nav.js"></script>
     <script defer src="./js/modals.js"></script>
     <script defer src="./js/footer.js"></script>

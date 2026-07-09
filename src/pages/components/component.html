@@ -599,7 +599,7 @@ bodyClass: guideline-page
 <!-- 檔案預覽 modal：元件庫展示版（modals-md + 靜態長文 .file-content）。
      與 components/file-preview-modal（modals-lg + iframe）不同——那份對應真實檔案匯入流程
      pages/dataImport/1-2-1_uploadFile_pdf.html 的 #previewModal，此處逐字沿用展示頁版本，id 相同、故不重複掛載兩份 -->
-<dialog class="modals" id="previewModal">
+<dialog class="modals" id="previewModal" aria-labelledby="previewModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉">
@@ -608,7 +608,7 @@ bodyClass: guideline-page
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title">檔案名稱.pdf</h3>
+                    <h3 class="modals-title" id="previewModal-title">檔案名稱.pdf</h3>
                 </div>
                 <div class="modals-body">
                     <div class="file-content">

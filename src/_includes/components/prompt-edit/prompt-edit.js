@@ -2,13 +2,20 @@
 // 收合時顯示首行預覽，並切換按鈕文字（data-text-open/close）。工具列（取消/儲存…）由 CSS 依 .open 顯示。
 // 改寫自真實 app singleTest.js 的 prompt-edit 行為（原 jQuery），純視覺切換，不含儲存 API。
 document.addEventListener("DOMContentLoaded", function () {
+    function t(key, zh) {
+        return (window.GufoI18n && window.GufoI18n.t) ? window.GufoI18n.t(key, zh) : zh;
+    }
+
     document.querySelectorAll(".prompt-edit").forEach(function (box) {
         var toggle = box.querySelector(".js-prompt-toggle");
         var content = box.querySelector(".prompt-edit-content");
         if (!toggle || !content) return;
 
-        var openText = toggle.getAttribute("data-text-open") || "完成編輯";
-        var closeText = toggle.getAttribute("data-text-close") || "展開編輯";
+        // 繁中原文與 i18n key 都由 markup 提供（data-text-* / data-key-*），JS 不寫死字串
+        var zhOpen = toggle.getAttribute("data-text-open") || "完成編輯";
+        var zhClose = toggle.getAttribute("data-text-close") || "展開編輯";
+        var keyOpen = toggle.getAttribute("data-key-open") || "action.finishEdit";
+        var keyClose = toggle.getAttribute("data-key-close") || "action.expandEdit";
 
         function fullText() { return box.getAttribute("data-full-text") || ""; }
         function saveFromTextarea() {
@@ -18,12 +25,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function render() {
             var open = box.classList.contains("open");
-            toggle.textContent = open ? openText : closeText;
+            // 同步改寫 data-i18n key，切換語言時 lang-toggle 才會依「當下狀態」重譯
+            toggle.textContent = open ? t(keyOpen, zhOpen) : t(keyClose, zhClose);
+            toggle.setAttribute("data-i18n", open ? keyOpen : keyClose);
             content.innerHTML = "";
             if (open) {
                 var ta = document.createElement("textarea");
                 ta.className = "form-control size-lg";
-                ta.setAttribute("aria-label", "提示詞");
+                ta.setAttribute("aria-label", t("comp.prompt", "提示詞"));
+                ta.setAttribute("data-i18n-aria-label", "comp.prompt");
                 ta.value = fullText();
                 content.appendChild(ta);
             } else {
@@ -53,6 +63,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         box.querySelectorAll(".js-prompt-cancel, .js-prompt-reset").forEach(function (b) {
             b.addEventListener("click", function () { box.classList.remove("open"); render(); });
+        });
+
+        // 切換語言後依「當下開合狀態」重畫按鈕文字（展開編輯 ↔ 完成編輯）
+        document.addEventListener("gufo:langchange", function () {
+            var open = box.classList.contains("open");
+            toggle.textContent = open ? t(keyOpen, zhOpen) : t(keyClose, zhClose);
         });
     });
 });

@@ -3,11 +3,11 @@
 <div class="select-btn-wrap">
     <div class="form-group select-field">
         <div class="field select-wrap">
-            <!-- 模擬select -->
-            <div tabindex="0" role="button" class="form-control select-md">
+            <!-- 模擬 select：用真 <button> 而非 div[role=button]，否則 Enter/Space 不會觸發（原生按鈕免費具備） -->
+            <button type="button" class="form-control select-md">
                 <span class="select-placeholder" data-i18n="comp.pleaseSelectDataset">請選擇資料集</span>
                 <span class="select-value hidden"></span>
-            </div>
+            </button>
         </div>
     </div>
     <button type="button" class="button button-primary select-submit" data-i18n="action.query">查詢</button>

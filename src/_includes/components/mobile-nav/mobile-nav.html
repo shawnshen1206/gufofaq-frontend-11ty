@@ -1,5 +1,5 @@
 {# menuItems 由 header.html 在 include 本元件前 {% set %}，兩者共用同一份選單資料，這裡不重新宣告 #}
-<div class="mobile-nav">
+<nav class="mobile-nav" aria-label="行動版選單" data-i18n-aria-label="nav.mobileMenu">
     <div class="overlay"></div>
     <div class="mobile-menu-wrap">
         <ul class="mobile-menu">
@@ -21,4 +21,4 @@
             {% endfor %}
         </ul>
     </div>
-</div>
+</nav>

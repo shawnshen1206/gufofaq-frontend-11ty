@@ -10,7 +10,7 @@
     { title: "中優先級（意圖判斷開啟）", titleKey: "modals.midPriorityIntentOn", categories: ["婚姻與家庭"] },
     { title: "低優先級（意圖判斷關閉）", titleKey: "modals.lowPriorityIntentOff", categories: ["其他"] }
 ] %}
-<dialog class="modals" id="knowledgeModal">
+<dialog class="modals" id="knowledgeModal" aria-labelledby="knowledgeModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -19,7 +19,7 @@
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="modals.knowledgeRetrieval">知識檢索</h3>
+                    <h3 class="modals-title" id="knowledgeModal-title" data-i18n="modals.knowledgeRetrieval">知識檢索</h3>
                 </div>
                 <div class="modals-body">
                     <!-- 設置分頁 -->

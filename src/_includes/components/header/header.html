@@ -52,12 +52,12 @@
         <a href="2-1_qaRecord.html" title="GufoFAQ 首頁" data-i18n-title="header.logoHome">GufoFAQ</a>
     </h1>
     <div class="header-right">
-        <nav class="desktop-nav">
+        <nav class="desktop-nav" aria-label="主要選單" data-i18n-aria-label="nav.mainMenu">
             <ul class="main-menu">
                 {% for item in menuItems %}
                 <li{% if item.hidden %} class="hidden"{% endif %}>
                     {% if item.submenu %}
-                    <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}">{{ item.label }}</a>
+                    <a href="#" class="dropdown" title="{{ item.label }}" aria-haspopup="true" aria-expanded="false" data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}">{{ item.label }}</a>
                     <ul>
                         {% for sub in item.submenu %}
                         <li{% if sub.hidden %} class="hidden"{% endif %}>

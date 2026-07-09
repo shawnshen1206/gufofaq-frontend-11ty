@@ -51,6 +51,25 @@ canvas {
     }
 }
 
+// 跳過導覽連結：平時藏在畫面上方（絕對定位、不佔版位），只有鍵盤聚焦時滑入
+.skip-link {
+    position: absolute;
+    top: -4rem;
+    left: 0.5rem;
+    z-index: 2000;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: var(--surface-raised);
+    color: var(--brand-text);
+    font-weight: 500;
+    box-shadow: 0 2px 8px 0 var(--shadow-strong);
+    transition: top 0.15s ease;
+
+    &:focus {
+        top: 0.5rem;
+    }
+}
+
 /*===============================
     樣式共用
 ================================*/

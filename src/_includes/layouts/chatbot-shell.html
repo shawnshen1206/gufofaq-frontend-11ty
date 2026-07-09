@@ -3,10 +3,12 @@ layout: layouts/base.html
 ---
 {# 前台公開 FAQ chatbot 的整頁外殼（平行於 page-shell，但無 Manager 導航；chrome 為 FAQ 專屬）。
    使用頁面 front matter 需設 bodyClass: chatbot-page（讓 body 不整頁捲動，見 _chatbot-shell.scss）。 #}
+<a class="skip-link" href="#main" data-i18n="a11y.skipToContent">跳到主要內容</a>
+
 <div class="chatbot-wrap">
     {% include "components/chatbot-header/chatbot-header.html" %}
-    <div class="chatbot-main">
+    <main class="chatbot-main" id="main" tabindex="-1">
         {{ content | safe }}
-    </div>
+    </main>
     {% include "components/footer/footer.html" %}
 </div>

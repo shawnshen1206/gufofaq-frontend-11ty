@@ -126,8 +126,11 @@
                 }
             }
 
-            // 原本靠 superfish JS 展開；切版改為 CSS-hover，視覺結果相同
-            &:hover>ul {
+            // 原本靠 superfish JS 展開；切版改為 CSS-hover，視覺結果相同。
+            // :focus-within 讓鍵盤 tab 到觸發鈕就能展開（只有 :hover 的話鍵盤完全打不開子選單）；
+            // aria-expanded 由 header.js 同步（CSS 改不了 ARIA）。
+            &:hover>ul,
+            &:focus-within>ul {
                 display: block;
             }
         }

@@ -29,6 +29,14 @@
         return null; // 回繁中時用 defaults
     }
 
+    // 給「由 JS 產生 / 切換的字串」用的翻譯器（例：accordion 的展開↔收合、multi-select 的空狀態）。
+    // 這些字串不在 markup 裡，collectDefaults 擷取不到，故呼叫端必須自帶繁中原文當 fallback。
+    // 元件在收到 gufo:langchange 事件時，要用本函式重畫自己當下的動態文字。
+    function t(key, zhFallback) {
+        var v = pick(key, current());
+        return v != null ? v : zhFallback;
+    }
+
     // 只更新承載標籤的文字節點，保留元素子節點（如 AB測試的 beta 徽章 <img>、步驟鈕的方向箭頭 <img>）。
     // 取「第一個非純空白」文字節點：img 在文字前時（<img>上一步）第一個文字節點是換行縮排空白，
     // 若換到它會漏掉真正的標籤；故優先挑有內容的節點，退回第一個文字節點。
@@ -71,11 +79,16 @@
         document.querySelectorAll(".js-lang-toggle").forEach(function (b) {
             b.textContent = lang === "en" ? "中文" : "EN";
         });
+        // 通知「文字由 JS 產生」的元件重畫自己的動態標籤
+        document.dispatchEvent(new CustomEvent("gufo:langchange", { detail: { lang: lang } }));
     }
 
     function current() {
         return root.getAttribute("lang") === "en" ? "en" : DEFAULT;
     }
+
+    // 對外極小 API：只給「文字由 JS 產生」的元件用（見 t() 註解）。轉 React 時整支 runtime 不帶過去。
+    window.GufoI18n = { t: t, lang: current };
 
     function withEn(cb) {
         if (enDict) return cb();

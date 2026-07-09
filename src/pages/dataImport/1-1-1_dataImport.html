@@ -20,11 +20,11 @@ permalink: 1-1-1_dataImport.html
         <label class="control-label" data-i18n="dataImport.datasetName">資料集名稱</label>
     </div>
     <div class="field select-wrap">
-        <!-- 模擬select -->
-        <div tabindex="0" role="button" aria-label="資料集名稱" data-i18n-aria-label="dataImport.datasetName" class="form-control select-md" onclick="openModal('datasetModal');">
+        <!-- 模擬 select：用真 <button> 而非 div[role=button]，否則 Enter/Space 不會觸發（原生按鈕免費具備） -->
+        <button type="button" aria-label="資料集名稱" data-i18n-aria-label="dataImport.datasetName" class="form-control select-md" onclick="openModal('datasetModal');">
             <span class="select-placeholder" data-i18n="dataImport.pleaseSelect">請選擇</span>
             <span class="select-value hidden"></span>
-        </div>
+        </button>
     </div>
 </div>
 

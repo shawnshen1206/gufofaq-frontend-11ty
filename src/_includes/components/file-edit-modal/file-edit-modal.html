@@ -18,7 +18,7 @@
     { key: "note4", label: "備註4" },
     { key: "note5", label: "備註5" }
 ] %}
-<dialog class="modals" id="editModal">
+<dialog class="modals" id="editModal" aria-labelledby="editModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -27,7 +27,7 @@
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="action.edit">編輯</h3>
+                    <h3 class="modals-title" id="editModal-title" data-i18n="action.edit">編輯</h3>
                 </div>
                 <div class="modals-body">
                     <div class="flex-row column gap-8">

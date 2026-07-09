@@ -1,6 +1,19 @@
 // accordion 手風琴：改寫自真實 app js/main.js「表格 accordion 控制」（原用 jQuery + slideUp/slideDown），改用原生 DOM API + display 切換
 // 只轉切版互動（開合本身），資料載入/API 等業務邏輯不在此列
+//
+// a11y：按鈕的 aria-expanded 必須反映實際狀態——單筆開合與「全部展開／收合」都走同一組 open/close，避免批次操作後狀態殘留。
+// i18n：展開↔收合的標籤由 JS 切換，故除了寫入文字，也同步改寫 data-i18n / data-i18n-title 的 key，
+//       這樣之後切換語言時 lang-toggle 的 apply() 會依「當下狀態的 key」重譯（見 gufo:langchange）。
 document.addEventListener("DOMContentLoaded", function () {
+    var KEY_EXPAND = "common.expandRow";
+    var KEY_COLLAPSE = "common.collapseRow";
+    var ZH_EXPAND = "展開表格";
+    var ZH_COLLAPSE = "收合表格";
+
+    function t(key, zh) {
+        return (window.GufoI18n && window.GufoI18n.t) ? window.GufoI18n.t(key, zh) : zh;
+    }
+
     // §1 原子解耦：掃描 accordion 自有的 .js-accordion 根，不再綁定 components/ 的 .sources-block
     var blocks = document.querySelectorAll(".js-accordion");
 
@@ -17,69 +30,56 @@ document.addEventListener("DOMContentLoaded", function () {
             return detailRow.querySelector(".accordion-content");
         }
 
-        function setSrOnly(btn, text) {
+        // 一次寫齊：aria 狀態、可見/輔具標籤、以及供 lang-toggle 重譯用的 i18n key
+        function label(btn, open) {
+            var key = open ? KEY_COLLAPSE : KEY_EXPAND;
+            var text = open ? t(KEY_COLLAPSE, ZH_COLLAPSE) : t(KEY_EXPAND, ZH_EXPAND);
+            btn.setAttribute("aria-expanded", open ? "true" : "false");
+            btn.setAttribute("title", text);
+            btn.setAttribute("data-i18n-title", key);
             var srOnly = btn.querySelector(".sr-only");
-            if (srOnly) srOnly.textContent = text;
+            if (srOnly) {
+                srOnly.textContent = text;
+                srOnly.setAttribute("data-i18n", key);
+            }
         }
 
-        function openAccordion(btn) {
+        function setOpen(btn, open) {
+            btn.classList.toggle("open", open);
+            label(btn, open);
             var content = findContent(btn);
-            btn.classList.add("open");
-            btn.setAttribute("aria-expanded", "true");
-            btn.setAttribute("title", "收合表格");
-            setSrOnly(btn, "收合表格");
-            if (content) content.style.display = "block";
+            if (content) content.style.display = open ? "block" : "none";
         }
 
-        function closeAccordion(btn) {
-            var content = findContent(btn);
-            btn.classList.remove("open");
-            btn.setAttribute("aria-expanded", "false");
-            btn.setAttribute("title", "展開表格");
-            setSrOnly(btn, "展開表格");
-            if (content) content.style.display = "none";
-        }
+        // 初始態：內容已隱藏 → aria-expanded=false（markup 未帶時補上，讓輔具在首次互動前就知道可展開）
+        block.querySelectorAll(".accordion-btn").forEach(function (btn) {
+            setOpen(btn, false);
+        });
 
         // 單筆開關
         block.addEventListener("click", function (event) {
             var btn = event.target.closest(".accordion-btn");
             if (!btn || !block.contains(btn)) return;
-
-            if (btn.classList.contains("open")) {
-                closeAccordion(btn);
-            } else {
-                openAccordion(btn);
-            }
+            setOpen(btn, !btn.classList.contains("open"));
         });
 
-        // 全部展開
-        var expandAll = block.querySelector(".js-expand-all");
-        if (expandAll) {
-            expandAll.addEventListener("click", function () {
-                block.querySelectorAll(".accordion-btn").forEach(function (btn) {
-                    btn.classList.add("open");
-                    btn.setAttribute("title", "收合表格");
-                    setSrOnly(btn, "收合表格");
-                });
-                block.querySelectorAll(".accordion-content").forEach(function (content) {
-                    content.style.display = "block";
-                });
+        function setAll(open) {
+            block.querySelectorAll(".accordion-btn").forEach(function (btn) {
+                setOpen(btn, open);
             });
         }
 
-        // 全部收合
+        var expandAll = block.querySelector(".js-expand-all");
+        if (expandAll) expandAll.addEventListener("click", function () { setAll(true); });
+
         var collapseAll = block.querySelector(".js-collapse-all");
-        if (collapseAll) {
-            collapseAll.addEventListener("click", function () {
-                block.querySelectorAll(".accordion-btn").forEach(function (btn) {
-                    btn.classList.remove("open");
-                    btn.setAttribute("title", "展開表格");
-                    setSrOnly(btn, "展開表格");
-                });
-                block.querySelectorAll(".accordion-content").forEach(function (content) {
-                    content.style.display = "none";
-                });
+        if (collapseAll) collapseAll.addEventListener("click", function () { setAll(false); });
+
+        // 切換語言後，依各按鈕「當下狀態」重畫標籤
+        document.addEventListener("gufo:langchange", function () {
+            block.querySelectorAll(".accordion-btn").forEach(function (btn) {
+                label(btn, btn.classList.contains("open"));
             });
-        }
+        });
     });
 });

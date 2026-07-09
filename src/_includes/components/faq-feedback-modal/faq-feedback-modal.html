@@ -1,5 +1,5 @@
 <!-- 前台 FAQ 回饋 modal（讚/倒讚後開啟，讓人填理由）。沿用 ui/modals 結構；讚/倒讚二選一由 faq-feedback.js 控制。 -->
-<dialog class="modals" id="likeModal">
+<dialog class="modals" id="likeModal" aria-labelledby="likeModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -8,7 +8,7 @@
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="modals.helpUsImprove">幫助我們改進</h3>
+                    <h3 class="modals-title" id="likeModal-title" data-i18n="modals.helpUsImprove">幫助我們改進</h3>
                 </div>
                 <div class="modals-body">
                     <span><span data-i18n="modals.feedbackHelpful">這個回答對你有幫助嗎？</span><span class="text-red" data-i18n="common.required">(必填)</span></span>

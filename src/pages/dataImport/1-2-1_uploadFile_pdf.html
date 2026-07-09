@@ -104,7 +104,7 @@ permalink: 1-2-1_uploadFile_pdf.html
 
 <!-- 刪除 modal：真實頁 <p> 內含 span#deleteFileName（js 動態填入檔名），與 components/delete-modal
      的靜態展示文字結構不同，故依真實頁手寫 -->
-<dialog class="modals" id="deleteModal">
+<dialog class="modals" id="deleteModal" aria-labelledby="deleteModal-title">
     <div class="modals-dialog modals-sm">
         <div class="modals-wrap">
             <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
@@ -113,7 +113,7 @@ permalink: 1-2-1_uploadFile_pdf.html
             </button>
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" data-i18n="action.delete">刪除</h3>
+                    <h3 class="modals-title" id="deleteModal-title" data-i18n="action.delete">刪除</h3>
                 </div>
                 <div class="modals-body">
                     <p class="text-center"><span data-i18n="common.confirmDelete">確定要刪除</span> <span id="deleteFileName"></span></p>
