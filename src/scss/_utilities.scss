@@ -232,7 +232,6 @@ $margins: (4, 8, 10, 12, 16, 20, 24, 32, 40); // mt-*/mb-*/my-*
 @for $i from 12 through 1 {
     .col-#{$i}-md {
         width: calc(100% * #{$i} / 12 - var(--flex-gap, 0rem) * #{12 - $i} / 12);
-        box-sizing: border-box;
     }
 }
 

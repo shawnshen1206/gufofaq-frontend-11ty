@@ -31,7 +31,6 @@
     z-index: 100;
     width: 100%;
     padding-top: 56px;
-    box-sizing: border-box;
 }
 
 .overlay {
@@ -55,6 +54,7 @@
 .mobile-menu-wrap {
     width: 100%;
     max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 56px); // 行動瀏覽器：扣掉會伸縮的網址列
     overflow: auto;
     background-color: var(--surface-raised);
     position: relative;
@@ -73,7 +73,6 @@
         a {
             display: block;
             padding: 0.75rem 1.5rem;
-            box-sizing: border-box;
 
             &.dropdown {
                 &::after {
@@ -98,7 +97,6 @@
 
                 a {
                     padding: 0.75rem 3rem;
-                    box-sizing: border-box;
                 }
 
                 &:last-child {

@@ -1,14 +1,71 @@
-// 從 component.scss 的「樣式共用」與「main主要內容區」區段逐字抽出（verbatim）
+// 全站基底：取自真實 app component.scss 的「樣式共用」與「main主要內容區」，
+// 另補上現代瀏覽器基底（color-scheme／focus-visible／reduced-motion／box-sizing／媒體元素）。
 @use "mixin" as *;
 
+/*===============================
+    現代瀏覽器基底
+================================*/
+
+// 讓原生 UA 元件跟著主題走：<select> 展開的選單、date/time picker、autofill 底色、
+// 捲軸與其角落、number spinner。這層換不到 token，只能靠 color-scheme。
+:root {
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+// 全域 border-box：元件內不必再逐條宣告（少數需要 content-box 者自行覆寫即可）
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+// 統一鍵盤焦點環：只在鍵盤操作時出現（滑鼠點擊不觸發）。
+// 元件不得裸寫 outline: none —— 要蓋掉請一併提供可見的 :focus-visible 樣式。
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+// 媒體元素不溢出容器
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+// 尊重「減少動效」系統偏好（前庭敏感／暈動症）
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/*===============================
+    樣式共用
+================================*/
+
+// 原有 `transition: font-size 0.3s ease` 已移除：全站無任何字級調整功能，
+// 卻對每個元素掛上過渡（效能負擔且無人使用）。
 * {
-    transition: font-size 0.3s ease;
     font-family: var(--fontFamily);
 }
 
 html {
     @include scrollbar();
     width: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -17,7 +74,6 @@ body {
     width: 100%;
     line-height: 1.375;
     color: var(--text);
-    box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -37,7 +93,8 @@ a {
 .full-wrap {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; // 舊瀏覽器 fallback
+    min-height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
     width: 100%;
 }
 
@@ -45,7 +102,6 @@ a {
     max-width: 1560px;
     width: 100%;
     margin: 0 auto;
-    box-sizing: border-box;
 
     @media screen and (max-width: 1560px) {
         max-width: 1200px;
@@ -57,10 +113,8 @@ a {
 ================================*/
 
 .main {
-    box-sizing: border-box;
     flex: 1 0 auto;
     padding: 1rem 2.5rem 2.5rem 2.5rem;
-    box-sizing: border-box;
     background-color: var(--surface);
 }
 

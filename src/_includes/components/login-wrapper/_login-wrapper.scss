@@ -2,6 +2,7 @@
 .login-wrapper {
     display: flex;
     height: 100vh;
+    height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
 
     .login-left {
         width: 50%;

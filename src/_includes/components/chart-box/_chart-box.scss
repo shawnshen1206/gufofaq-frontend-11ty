@@ -4,7 +4,6 @@
     border-radius: 8px;
     padding: 1rem;
     padding-bottom: 0.5rem;
-    box-sizing: border-box;
     flex: 1 1 0%;
 
     .chart-title {
@@ -13,7 +12,6 @@
         text-align: left;
         color: var(--text);
         padding: 0.46875rem 0;
-        box-sizing: border-box;
     }
 
     // .chart-wrap 讓兩張圖並排：真實 app 的 scss/component.scss 源碼漏了這條，只存在於已編譯的 css/component.css（line 3339-3348），

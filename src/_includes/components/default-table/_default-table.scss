@@ -30,7 +30,6 @@
                 font-weight: 500;
                 color: var(--text);
                 background-color: var(--surface-sunken);
-                box-sizing: border-box;
 
                 word-break: break-all;
 
@@ -48,7 +47,6 @@
                 // line-height: normal;
                 vertical-align: middle;
                 background-color: var(--surface-raised);
-                box-sizing: border-box;
 
                 // §4 隔離：cell 內文字編輯區用 textarea 標籤選取，不指名 ui/form-control 的 .form-control
                 textarea {
@@ -108,7 +106,6 @@
         display: flex;
         gap: 10px;
         padding: 10px 10px 10px 0;
-        box-sizing: border-box;
         align-items: center;
     }
 
@@ -129,7 +126,6 @@
     text-align: left;
     color: var(--brand);
     padding: 11.625px 0;
-    box-sizing: border-box;
 }
 
 // 表格中檔案數量組

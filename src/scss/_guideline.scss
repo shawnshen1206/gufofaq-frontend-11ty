@@ -52,14 +52,14 @@ body.guideline-page {
         display: flex;
         width: 100%;
         height: 100vh;
-        box-sizing: border-box;
+        height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
 
     .main-container {
         width: calc(100% - 200px);
         height: 100vh;
+        height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
         padding: 1rem;
         background-color: var(--gl-bg);
-        box-sizing: border-box;
         overflow: auto;
         @include scrollbar();
         position: relative;
@@ -69,9 +69,9 @@ body.guideline-page {
 aside {
     width: 200px;
     height: 100vh;
+    height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
     // padding-top: 56px;
     background-color: var(--gl-aside-bg);
-    box-sizing: border-box;
     overflow-y: auto;
     flex-shrink: 0;
     @include scrollbar();
@@ -91,7 +91,6 @@ aside {
                 color: var(--gl-nav-link);
                 padding: 0.75em 1em;
                 text-decoration: none;
-                box-sizing: border-box;
                 transition: all 0.3s;
 
                 &:hover {
@@ -288,7 +287,6 @@ section {
     color: var(--gl-gotop-ink);
     box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
     border-radius: 2px;
-    box-sizing: border-box;
 }
 
 .btn_gotop.show {

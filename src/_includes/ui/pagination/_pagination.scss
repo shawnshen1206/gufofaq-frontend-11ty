@@ -7,7 +7,6 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    box-sizing: border-box;
 
     ul {
         padding: 0;
@@ -31,7 +30,6 @@
                 color: var(--brand);
                 background-color: transparent;
                 padding: 0.625rem;
-                box-sizing: border-box;
                 border-radius: 4px;
                 transition: background-color 0.3s ease;
 
@@ -82,7 +80,6 @@
                 color: var(--brand);
                 background-color: transparent;
                 padding: 0.625rem;
-                box-sizing: border-box;
                 border-radius: 4px;
             }
         }
@@ -92,7 +89,6 @@
 // 4-1 資料筆數
 .data-info {
     padding: 1rem 0;
-    box-sizing: border-box;
     font-size: 1rem;
     font-weight: 600;
     text-align: left;
@@ -133,7 +129,6 @@
     width: 60px;
     text-align: center;
     padding: 0.25rem 0.5rem;
-    box-sizing: border-box;
     font-size: 1rem;
     line-height: 1.375;
     color: var(--text);

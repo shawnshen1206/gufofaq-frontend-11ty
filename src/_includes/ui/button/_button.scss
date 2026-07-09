@@ -15,7 +15,6 @@
     line-height: normal; // 真 app 編譯 css 為 normal（scss 源碼舊值 1.375 會讓按鈕偏高）
     cursor: pointer;
     text-decoration: none;
-    box-sizing: border-box;
     transition: all 0.3s;
 
     &.disabled,

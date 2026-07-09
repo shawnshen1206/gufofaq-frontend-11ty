@@ -102,8 +102,8 @@
     border: 1px solid var(--border);
     background-color: var(--surface-input);
     transition: all 0.3s;
-    box-sizing: border-box;
-    outline: none;
+    // 不裸寫 outline: none —— 焦點環由 _base.scss 的全域 :focus-visible 提供（僅鍵盤操作時出現）；
+    // 滑鼠/鍵盤共通的「作用中欄位」視覺仍沿用下方 &:focus 的邊框變色。
     position: relative;
 
     &::placeholder {
