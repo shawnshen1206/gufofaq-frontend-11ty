@@ -14,7 +14,7 @@
             font-size: 1.125rem;
             font-weight: 600;
             text-align: left;
-            color: var(--color-text-default);
+            color: var(--text);
             padding-bottom: 0.5rem;
             box-sizing: border-box;
         }
@@ -49,9 +49,9 @@
             font-size: 1rem;
             font-weight: 500;
             text-align: left;
-            color: var(--color-text-default);
-            border: 1px solid var(--color-border-default);
-            background-color: var(--color-gray-300);
+            color: var(--text);
+            border: 1px solid var(--border);
+            background-color: var(--surface-sunken);
             display: flex;
             align-items: center;
         }
@@ -61,10 +61,10 @@
             box-sizing: border-box;
             font-size: 1rem;
             text-align: left;
-            color: var(--color-text-default);
+            color: var(--text);
             flex-grow: 1;
             min-width: 0;
-            border: 1px solid var(--color-border-default);
+            border: 1px solid var(--border);
 
 
             &:has(.icon) {

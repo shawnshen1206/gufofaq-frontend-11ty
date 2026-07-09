@@ -14,7 +14,7 @@
 
     &.by-robot {
         .message-content {
-            background-color: var(--color-gray-300);
+            background-color: var(--surface-sunken);
         }
     }
 
@@ -22,7 +22,7 @@
         flex-direction: row-reverse;
 
         .message-content {
-            background-color: var(--color-bg-primary);
+            background-color: var(--brand-tint);
         }
     }
 }
@@ -32,7 +32,7 @@
     box-sizing: border-box;
     border-radius: 8px;
     font-size: 1rem;
-    color: var(--color-text-default);
+    color: var(--text);
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -96,8 +96,8 @@
         }
 
         code {
-            background-color: var(--color-gray-100);
-            color: var(--color-primary-dark);
+            background-color: var(--surface-sunken);
+            color: var(--brand-ink);
             padding: 0.125rem 0.25rem;
             border-radius: 3px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -105,8 +105,8 @@
         }
 
         pre {
-            background-color: var(--color-gray-100);
-            border-left: 4px solid var(--color-primary);
+            background-color: var(--surface-sunken);
+            border-left: 4px solid var(--brand);
             padding: 0.75rem;
             margin: 0.5rem 0;
             border-radius: 4px;
@@ -121,10 +121,10 @@
         }
 
         blockquote {
-            border-left: 4px solid var(--color-gray-300);
+            border-left: 4px solid var(--border-subtle);
             margin: 0.5rem 0;
             padding: 0.5rem 1rem;
-            background-color: var(--color-blockquote-bg);
+            background-color: var(--overlay-tint);
             font-style: italic;
         }
 
@@ -139,18 +139,18 @@
         }
 
         a {
-            color: var(--color-primary);
+            color: var(--brand);
             text-decoration: underline;
 
             &:hover {
-                color: var(--color-primary-hover);
+                color: var(--brand-hover);
             }
         }
 
         hr {
             border: none;
             height: 1px;
-            background-color: var(--color-gray-200);
+            background-color: var(--border-subtle);
             margin: 1rem 0;
         }
 
@@ -161,13 +161,13 @@
 
             th,
             td {
-                border: 1px solid var(--color-gray-200);
+                border: 1px solid var(--border-subtle);
                 padding: 0.5rem;
                 text-align: left;
             }
 
             th {
-                background-color: var(--color-gray-100);
+                background-color: var(--surface-sunken);
                 font-weight: 600;
             }
         }
@@ -191,7 +191,7 @@
 }
 
 .message-time {
-    color: var(--color-text-dark);
+    color: var(--text-muted);
     display: flex;
     align-self: flex-end;
 

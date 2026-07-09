@@ -24,6 +24,7 @@ permalink: 3-1-3_previewDataset.html
     <div class="flex-1">
         {% set editType = "textarea" %}
         {% set editLabel = "任務描述" %}
+        {% set editId = "editTaskDesc" %}
         {% set editPlaceholder = "請輸入任務描述" %}
         {% set editValue = "回答客服常見問題，內容涵蓋帳號、訂單與退換貨相關問題。" %}
         {% include "components/editable-block/editable-block.html" %}
@@ -31,6 +32,7 @@ permalink: 3-1-3_previewDataset.html
     <div class="flex-1">
         {% set editType = "textarea" %}
         {% set editLabel = "任務對應提示詞" %}
+        {% set editId = "editTaskPrompt" %}
         {% set editPlaceholder = "請輸入任務對應提示詞" %}
         {% set editValue = "你是客服助理，請根據提供的資料集內容，以親切、精簡的語氣回答使用者的問題。" %}
         {% include "components/editable-block/editable-block.html" %}

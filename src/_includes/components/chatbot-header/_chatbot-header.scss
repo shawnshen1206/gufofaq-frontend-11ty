@@ -8,9 +8,9 @@
     display: flex;
     align-items: center;
     padding: 0.5rem 1.5rem;
-    background-color: #fff;
+    background-color: var(--surface-raised);
     border-bottom: 2px solid;
-    border-image: var(--color-primary-linear) 1;
+    border-image: var(--brand-gradient) 1;
     box-sizing: border-box;
     z-index: 99;
 

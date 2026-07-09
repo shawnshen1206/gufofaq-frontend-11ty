@@ -5,9 +5,9 @@
 .tooltip {
     padding: 0.375rem 0.4375rem;
     white-space: nowrap;
-    color: #fff;
+    color: var(--tooltip-text);
     font-size: 0.875rem;
-    background-color: var(--color-tooltip-bg);
+    background-color: var(--tooltip-bg);
     border-radius: 4px;
     box-sizing: border-box;
     pointer-events: none;
@@ -21,8 +21,9 @@
     z-index: 10;
 }
 
-// 顯示由觸發按鈕 hover 驅動：只用 button 標籤 + 自己的 .tooltip，不指名別元件的 class（§4 隔離；
-// 原本寫在 ui/button 的 .button-icon:has(.tooltip):hover 已移來這裡，改由 tooltip 自負責）
-button:hover .tooltip {
+// 顯示由 host hover 驅動：host（放 tooltip 的按鈕）掛 tooltip 自有的 .has-tooltip 觸發 class，
+// 只用 tooltip 自己的 class——不寫裸 button 選擇器（§4 裸元素選擇器只准 _normalize/_base），也不指名別元件的 .button-icon。
+// 轉 Tailwind：.has-tooltip → group、.has-tooltip:hover .tooltip → group-hover:opacity-100。
+.has-tooltip:hover .tooltip {
     opacity: 1;
 }

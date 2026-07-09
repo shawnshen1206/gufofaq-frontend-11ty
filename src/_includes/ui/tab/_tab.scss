@@ -7,7 +7,7 @@
 .tab-wrap {
     padding: 0.625rem;
     border-radius: 4px;
-    background-color: var(--color-gray-350);
+    background-color: var(--surface-sunken);
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -24,7 +24,7 @@
 
 .tabs-title {
     text-align: center;
-    color: var(--color-gray-700);
+    color: var(--text-strong);
     font-size: 1.125rem;
     font-weight: 500;
 }
@@ -48,10 +48,10 @@
     width: 100%;
     padding: 0.625rem 1rem;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: var(--surface-raised);
     border: none;
     font-size: 1rem;
-    color: var(--color-text-dark);
+    color: var(--text-muted);
     line-height: 1.375;
     text-align: center;
     cursor: pointer;
@@ -60,21 +60,21 @@
     flex-shrink: 0;
 
     &.active {
-        background-color: var(--color-primary);
-        color: #fff;
+        background-color: var(--brand);
+        color: var(--on-accent);
     }
 
     // 問答紀錄側欄用的頁籤變體：未激活為主色藍字（激活態沿用上面的 .active）。
     // 由 components/qa-record-tabs 掛用，取代原本 .qa-record .tab 的跨元件覆寫（§4）。
     &.on-record {
-        color: var(--color-primary);
+        color: var(--brand);
     }
 }
 
 .tab-row {
     padding: 0.25rem 0.3125rem;
     border-radius: 2px;
-    background-color: #fff;
+    background-color: var(--surface-raised);
     box-sizing: border-box;
 
     .tab-group {

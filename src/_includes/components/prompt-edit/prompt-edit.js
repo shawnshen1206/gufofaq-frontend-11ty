@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (open) {
                 var ta = document.createElement("textarea");
                 ta.className = "form-control size-lg";
+                ta.setAttribute("aria-label", "提示詞");
                 ta.value = fullText();
                 content.appendChild(ta);
             } else {

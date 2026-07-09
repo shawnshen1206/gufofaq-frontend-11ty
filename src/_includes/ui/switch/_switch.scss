@@ -18,10 +18,10 @@ label.switch {
         opacity: 0;
 
         &:checked+.switch-box {
-            background-color: var(--color-toggle-on);
+            background-color: var(--toggle-on);
 
             .switch-btn {
-                background-color: #fff;
+                background-color: var(--control-knob);
                 left: calc(var(--switchWidth) - var(--switchPaddingHorizontal) - var(--switchBtn));
             }
         }
@@ -31,7 +31,7 @@ label.switch {
         display: inline-block;
         width: var(--switchWidth);
         height: var(--switchHeight);
-        background-color: var(--color-gray-600);
+        background-color: var(--control-track);
         padding: var(--switchPaddingVertical) var(--switchPaddingHorizontal);
         border-radius: 1000px;
         vertical-align: middle;
@@ -44,7 +44,7 @@ label.switch {
             display: block;
             width: var(--switchBtn);
             height: var(--switchBtn);
-            background-color: #fff;
+            background-color: var(--control-knob);
             border-radius: 50%;
             margin-left: 0px;
             transition: 0.3s;

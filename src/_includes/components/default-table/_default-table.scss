@@ -21,15 +21,15 @@
 
     thead {
         tr {
-            border: 1px solid var(--color-border-default);
+            border: 1px solid var(--border);
 
             th {
                 padding: 0.59375rem 0.625rem; // 9.5px 10px
                 text-align: left;
                 font-size: 1rem;
                 font-weight: 500;
-                color: var(--color-text-default);
-                background-color: var(--color-gray-200);
+                color: var(--text);
+                background-color: var(--surface-sunken);
                 box-sizing: border-box;
 
                 word-break: break-all;
@@ -40,14 +40,14 @@
 
     tbody {
         tr {
-            border: 1px solid var(--color-border-default);
+            border: 1px solid var(--border);
             height: auto;
 
             td {
                 padding: 0.59375rem 0.625rem;
                 // line-height: normal;
                 vertical-align: middle;
-                background-color: #fff;
+                background-color: var(--surface-raised);
                 box-sizing: border-box;
 
                 // §4 隔離：cell 內文字編輯區用 textarea 標籤選取，不指名 ui/form-control 的 .form-control
@@ -127,7 +127,7 @@
 .tablelist-title {
     font-size: 1.125rem;
     text-align: left;
-    color: var(--color-primary);
+    color: var(--brand);
     padding: 11.625px 0;
     box-sizing: border-box;
 }

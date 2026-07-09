@@ -7,7 +7,7 @@
     width: fit-content;
     padding: 0.5625rem 1rem;
     font-size: 1rem;
-    color: var(--color-text-default);
+    color: var(--text);
     background-color: transparent;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -37,86 +37,86 @@
 }
 
 .button-primary {
-    color: #fff;
-    background-color: var(--color-primary);
-    border: 1px solid var(--color-primary);
+    color: var(--on-accent);
+    background-color: var(--brand);
+    border: 1px solid var(--brand);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            background-color: var(--color-primary-hover);
-            border: 1px solid var(--color-primary-hover);
+            background-color: var(--brand-hover);
+            border: 1px solid var(--brand-hover);
         }
     }
 }
 
 .button-border {
-    color: var(--color-primary);
-    background-color: #fff;
-    border: 1px solid var(--color-primary);
+    color: var(--brand);
+    background-color: var(--surface-input);
+    border: 1px solid var(--brand);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            color: #fff;
-            background-color: var(--color-primary);
-            border: 1px solid var(--color-primary);
+            color: var(--on-accent);
+            background-color: var(--brand);
+            border: 1px solid var(--brand);
         }
     }
 }
 
 .button-orange {
-    color: #fff;
-    background-color: var(--color-orange);
-    border: 1px solid var(--color-orange);
+    color: var(--on-accent);
+    background-color: var(--accent-orange);
+    border: 1px solid var(--accent-orange);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            background-color: var(--color-orange-hover);
-            border: 1px solid var(--color-orange-hover);
+            background-color: var(--accent-orange-hover);
+            border: 1px solid var(--accent-orange-hover);
         }
     }
 }
 
 .button-green {
-    color: #fff;
-    background-color: var(--color-success);
-    border: 1px solid var(--color-success);
+    color: var(--on-accent);
+    background-color: var(--success);
+    border: 1px solid var(--success);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            background-color: var(--color-success-hover);
-            border: 1px solid var(--color-success-hover);
+            background-color: var(--success-hover);
+            border: 1px solid var(--success-hover);
         }
     }
 }
 
 .button-red {
-    color: #fff;
-    background-color: var(--color-danger);
-    border: 1px solid var(--color-danger);
+    color: var(--on-accent);
+    background-color: var(--danger);
+    border: 1px solid var(--danger);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            background-color: var(--color-danger-hover);
-            border: 1px solid var(--color-danger-hover);
+            background-color: var(--danger-hover);
+            border: 1px solid var(--danger-hover);
         }
     }
 }
 
 .button-dark {
-    color: #fff;
-    background-color: var(--color-dark);
-    border: 1px solid var(--color-dark);
+    color: var(--on-accent);
+    background-color: var(--accent-teal);
+    border: 1px solid var(--accent-teal);
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            background-color: var(--color-dark-hover);
-            border: 1px solid var(--color-dark-hover);
+            background-color: var(--accent-teal-hover);
+            border: 1px solid var(--accent-teal-hover);
         }
     }
 }
@@ -127,13 +127,13 @@
 
 .button-edit-save {
     padding: 0;
-    color: var(--color-primary);
+    color: var(--brand);
     white-space: nowrap;
 
     &:not(.disabled),
     &:not(:disabled) {
         &:hover {
-            color: var(--color-primary-hover);
+            color: var(--brand-hover);
         }
     }
 }
@@ -194,7 +194,7 @@
     }
 
     &:hover {
-        background-color: var(--color-gray-300);
+        background-color: var(--surface-hover);
     }
 
     // tooltip 的 hover 顯示規則已移到 ui/tooltip/_tooltip.scss（§4：本元件不再指名 .tooltip）

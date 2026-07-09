@@ -4,7 +4,7 @@
 
 .chatroom-wrap {
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--surface-raised);
     height: 600px; // 真 app 編譯 css 為 600px（scss 源碼舊值 690px）
     flex: 1;
     display: flex;
@@ -45,12 +45,12 @@
             width: fit-content;
             padding: 0.5rem 1rem;
             border-radius: 30px;
-            border: 1px solid var(--color-border-default);
+            border: 1px solid var(--border);
             box-sizing: border-box;
             font-size: 0.875rem;
-            color: var(--color-gray-700);
+            color: var(--text-strong);
             text-align: center;
-            background-color: #fff;
+            background-color: var(--surface-raised);
         }
     }
 }

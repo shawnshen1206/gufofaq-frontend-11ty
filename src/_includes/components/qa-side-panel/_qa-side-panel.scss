@@ -15,13 +15,13 @@
         padding: 0.625rem 0.75rem;
         box-sizing: border-box;
         border-radius: 4px 0 0 4px;
-        background-color: #fff;
+        background-color: var(--surface-raised);
         border: none;
         font-size: 16px;
         font-weight: 500;
-        color: var(--color-primary);
+        color: var(--brand);
         cursor: pointer;
-        box-shadow: -2px 2px 3px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: -2px 2px 3px 0px var(--shadow);
         z-index: 2;
 
         &::after {
@@ -47,10 +47,10 @@
         flex-direction: column;
         gap: 0.75rem;
         border-radius: 0 4px 4px 4px;
-        background-color: #fff;
+        background-color: var(--surface-raised);
         padding: 0.75rem;
         box-sizing: border-box;
-        box-shadow: -2px 2px 3px 1px rgba(0, 0, 0, 0.1);
+        box-shadow: -2px 2px 3px 1px var(--shadow);
         z-index: 1;
 
         // 內嵌 qa-record-tabs 的 tab-wrap 高度上限。§4：不可在本元件 scss 覆寫 ui/tab 的 .tab-wrap，

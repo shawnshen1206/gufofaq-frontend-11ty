@@ -17,6 +17,7 @@
 // ui 原子
 @use "../_includes/ui/button/button";
 @use "../_includes/ui/form-control/form-control";
+@use "form-check"; // checkbox / radio 共用外框 base（單一正本）
 @use "../_includes/ui/checkbox/checkbox";
 @use "../_includes/ui/radio/radio";
 @use "../_includes/ui/switch/switch";
@@ -33,6 +34,7 @@
 @use "../_includes/ui/collapse-text/collapse-text";
 @use "../_includes/ui/list-style/list-style";
 @use "../_includes/ui/toast/toast";
+@use "../_includes/ui/theme-toggle/theme-toggle";
 
 // 複合元件（components/）
 @use "../_includes/components/default-table/default-table";
@@ -72,7 +74,11 @@
 // 無 scss 檔可搬，故不新增 @use（同 disclaimer-modal 先例）
 
 // 元件庫展示頁（component.html）專屬版型/說明樣式，放在最後避免與一般頁面規則衝突
+@use "guideline-var"; // showcase 頁專屬色盤（--gl-*，不進 _var）
 @use "guideline";
 
 // 部署站台首頁（catalog.html）專屬樣式，同 guideline 為 showcase 專用
 @use "catalog";
+
+// 深色模式：光柵 PNG 圖示反相（第一版實驗，最終不理想的再換深色版資產）
+@use "dark-icons";

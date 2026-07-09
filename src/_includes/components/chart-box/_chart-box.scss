@@ -1,6 +1,6 @@
 // 逐字複製自真實 app 的 scss/component.scss「block / box 區塊」區段（verbatim，只搬移位置，line 3112-3147）
 .chart-box {
-    background-color: #fff;
+    background-color: var(--surface-raised);
     border-radius: 8px;
     padding: 1rem;
     padding-bottom: 0.5rem;
@@ -11,7 +11,7 @@
         font-size: 1.125rem;
         font-weight: 600;
         text-align: left;
-        color: var(--color-text-default);
+        color: var(--text);
         padding: 0.46875rem 0;
         box-sizing: border-box;
     }

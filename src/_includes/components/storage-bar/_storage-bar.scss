@@ -10,13 +10,13 @@
     .bar {
         width: 200px;
         height: 6px;
-        background-color: var(--color-gray-blue);
+        background-color: var(--control-track-alt);
         border-radius: 100px;
         overflow: hidden;
 
         .bar-fill {
             height: 100%;
-            background-color: var(--color-primary-dark);
+            background-color: var(--brand-ink);
             border-radius: 100px;
             transition: width 0.3s ease;
         }
@@ -25,6 +25,6 @@
     .text {
         white-space: nowrap;
         font-size: 1rem;
-        color: var(--color-text-dark);
+        color: var(--text-muted);
     }
 }

@@ -73,7 +73,7 @@
 }
 
 .control-label {
-    color: var(--color-text-default);
+    color: var(--text);
     font-size: 1rem;
     font-weight: 500;
     display: inline-flex;
@@ -87,7 +87,7 @@
             content: "*";
             display: inline-flex;
             font-weight: 500;
-            color: var(--color-danger);
+            color: var(--danger);
         }
     }
 }
@@ -97,34 +97,34 @@
     font-size: 1rem;
     line-height: 1.375;
     padding: 0.625rem 0.5rem;
-    color: var(--color-text-default);
+    color: var(--text);
     border-radius: 4px;
-    border: 1px solid var(--color-border-default);
-    background-color: #fff;
+    border: 1px solid var(--border);
+    background-color: var(--surface-input);
     transition: all 0.3s;
     box-sizing: border-box;
     outline: none;
     position: relative;
 
     &::placeholder {
-        color: var(--color-text-dark);
+        color: var(--text-muted);
     }
 
     &.disabled,
     &:disabled {
-        background-color: var(--color-gray-300);
-        color: var(--color-text-dark);
+        background-color: var(--surface-disabled);
+        color: var(--text-muted);
         cursor: not-allowed;
     }
 
     &:focus {
-        border: solid 1px var(--color-info);
+        border: solid 1px var(--info);
     }
 
     &:not(.disabled),
     &:not(:disabled) {
         &.error {
-            border: solid 1px var(--color-danger);
+            border: solid 1px var(--danger);
         }
     }
 
@@ -157,7 +157,7 @@
 textarea.form-control {
     height: 12.5rem; // 200px
     line-height: 1.375;
-    color: var(--color-text-default);
+    color: var(--text);
     white-space: pre-wrap;
     overflow: auto;
     margin: 0;
@@ -178,7 +178,7 @@ textarea.form-control {
 .error-prompt {
     display: none;
     font-size: 0.875rem;
-    color: var(--color-danger);
+    color: var(--danger);
     margin-top: 0.25rem;
 }
 
@@ -214,10 +214,10 @@ textarea.form-control {
     }
 
     .select-value {
-        color: var(--color-black);
+        color: var(--text);
     }
 
     .select-placeholder {
-        color: var(--color-gray-550);
+        color: var(--text-muted);
     }
 }

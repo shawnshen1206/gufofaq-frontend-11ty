@@ -1,52 +1,54 @@
+{# i18n：每個 label 帶 i18nKey，markup 渲染成 data-i18n；繁中文字即預設（見 ui/lang-toggle）。
+   EN 項 langToggle:true＝語言切換鈕（label 由 lang-toggle.js 管理，顯示目標語言），不帶 i18nKey。 #}
 {% set menuItems = [
   {
-    label: "資料配置",
+    label: "資料配置", i18nKey: "nav.dataConfig",
     submenu: [
-      { label: "資料匯入", href: "1-1-1_dataImport.html" },
-      { label: "資料集列表", href: "3-1-1_datasetList.html" }
+      { label: "資料匯入", i18nKey: "nav.dataImport", href: "1-1-1_dataImport.html" },
+      { label: "資料集列表", i18nKey: "nav.datasetList", href: "3-1-1_datasetList.html" }
     ]
   },
   {
-    label: "服務預覽",
+    label: "服務預覽", i18nKey: "nav.servicePreview",
     submenu: [
-      { label: "前台對話預覽", href: "2-1_qaRecord.html" },
-      { label: "歷史紀錄", href: "4-1_qaHistory.html?source=frontend" }
+      { label: "前台對話預覽", i18nKey: "nav.frontPreview", href: "2-1_qaRecord.html" },
+      { label: "歷史紀錄", i18nKey: "nav.history", href: "4-1_qaHistory.html?source=frontend" }
     ]
   },
   {
-    label: "問答測試區",
+    label: "問答測試區", i18nKey: "nav.qaTest",
     submenu: [
-      { label: "單測", href: "2-2-1_singleTest.html" },
-      { label: "AB測試", href: "2-2-3_abTest.html", beta: true },
-      { label: "模擬聊天", href: "#", hidden: true },
-      { label: "歷史紀錄", href: "4-1_qaHistory.html?source=backend" }
+      { label: "單測", i18nKey: "nav.singleTest", href: "2-2-1_singleTest.html" },
+      { label: "AB測試", i18nKey: "nav.abTest", href: "2-2-3_abTest.html", beta: true },
+      { label: "模擬聊天", i18nKey: "nav.mockChat", href: "#", hidden: true },
+      { label: "歷史紀錄", i18nKey: "nav.history", href: "4-1_qaHistory.html?source=backend" }
     ]
   },
   {
-    label: "設定",
+    label: "設定", i18nKey: "nav.settings",
     submenu: [
-      { label: "帳號資訊", href: "5-1-1_accountInfo.html" },
-      { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html" },
-      { label: "統計模組", href: "5-3_statsModule.html" },
-      { label: "提示詞管理", href: "5-4-1_promptManagement.html" },
-      { label: "使用者管理", href: "5-5-1_userManagement.html" }
+      { label: "帳號資訊", i18nKey: "nav.accountInfo", href: "5-1-1_accountInfo.html" },
+      { label: "知識檢索邏輯", i18nKey: "nav.knowledgeRetrieval", href: "5-2-1_knowledgeRetrieval.html" },
+      { label: "統計模組", i18nKey: "nav.statsModule", href: "5-3_statsModule.html" },
+      { label: "提示詞管理", i18nKey: "nav.promptMgmt", href: "5-4-1_promptManagement.html" },
+      { label: "使用者管理", i18nKey: "nav.userMgmt", href: "5-5-1_userManagement.html" }
     ]
   },
   {
-    label: "平台管理",
+    label: "平台管理", i18nKey: "nav.platformMgmt",
     submenu: [
-      { label: "租戶功能開通", href: "5-6-1_platformTenants.html" }
+      { label: "租戶功能開通", i18nKey: "nav.tenantEnable", href: "5-6-1_platformTenants.html" }
     ]
   },
   {
     label: "EN",
     title: "English",
-    class: "dropdown",
+    class: "dropdown js-lang-toggle",
     href: "#",
-    hidden: true
+    langToggle: true
   },
   {
-    label: "登出",
+    label: "登出", i18nKey: "nav.logout",
     href: "login.html",
     class: "logout"
   }
@@ -61,21 +63,22 @@
             {% for item in menuItems %}
             <li{% if item.hidden %} class="hidden"{% endif %}>
                 {% if item.submenu %}
-                <a href="#" class="dropdown" title="{{ item.label }}">{{ item.label }}</a>
+                <a href="#" class="dropdown" title="{{ item.label }}" data-i18n="{{ item.i18nKey }}">{{ item.label }}</a>
                 <ul>
                     {% for sub in item.submenu %}
                     <li{% if sub.hidden %} class="hidden"{% endif %}>
-                        <a href="{{ sub.href }}" title="{{ sub.label }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
+                        <a href="{{ sub.href }}" title="{{ sub.label }}" data-i18n="{{ sub.i18nKey }}">{{ sub.label }}{% if sub.beta %}<img src="./images/icon_beta.png" alt="BETA" class="beta-icon">{% endif %}</a>
                     </li>
                     {% endfor %}
                 </ul>
                 {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}">{{ item.label }}</a>
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
                 {% endif %}
             </li>
             {% endfor %}
         </ul>
     </nav>
+    {% include "ui/theme-toggle/theme-toggle.html" %}
     <button type="button" class="nav-toggle" aria-label="開啟選單"></button>
 </header>
 

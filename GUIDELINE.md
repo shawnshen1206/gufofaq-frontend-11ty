@@ -33,7 +33,7 @@ gufofaq-frontend-11ty/
 │   │   │       └── <元件名>.js        ←     元件行為（有才放）
 │   │   └── ui/                        ← 小元件：不依賴其他元件的積木
 │   ├── scss/
-│   │   ├── _var.scss                  ←   顏色變數（全站唯一的顏色定義處）
+│   │   ├── _var.scss                  ←   設計 token（語意色 + [data-theme=dark] 深色覆寫；全站唯一色源，單層直值）
 │   │   ├── _mixin.scss                ←   scrollbar 等共用 mixin
 │   │   ├── _base.scss                 ←   html/body/標籤預設
 │   │   ├── _utilities.scss            ←   text-*、flex-row、gap-*、col-*、mt-*/mb-*/my-* 等工具 class
@@ -122,7 +122,8 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
-- SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 變數，不寫裸 hex**（`#fff`、陰影 `rgba` 除外）
+- SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 的語意 token（`--surface`／`--text`／`--brand`／`--border`／`--shadow`…），完全不寫裸 hex（含白色與陰影，無例外）**。token 是**單層、直接給值、無別名**（沒有 `--color-*` 原色層）；元件不碰色值、只掛語意 token。showcase 頁 `_guideline` 另有自己的 `--gl-*` 色盤（見 §9）
+- **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**不需也不該在元件 scss 寫 `[data-theme=dark]` 分支**（唯二例外：`ui/theme-toggle` 的日／月圖示切換、光柵 PNG 圖示的深色 filter／換圖——這兩者 CSS token 換不動）。主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.select-submit`、`.chat-input-control`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
   - 父 shell 定義、專屬子片段消費的版面 `custom property`（如 shell 的 `--header-height`）屬**允許的父子耦合**，不算跨元件洩漏
@@ -295,3 +296,5 @@ body.guideline-page { overflow: hidden; }
 ```
 
 > ⚠️ **裸元素選擇器（`html`/`body`/`aside`/`section`/`footer`…）只准出現在 `_normalize`/`_base`（全域 reset 的法定職責）。** 任何頁面專屬樣式（如元件庫頁 `_guideline`、目錄頁 `_catalog`）因為本專案把所有 scss 打包進單一 `main.css` 全站載入，裸選擇器會洩漏覆蓋全站——一律限定在該頁的 body class 底下。
+
+> ⚠️ **Showcase 頁的專屬色走專用色檔、不寫裸 hex**：`_guideline`（styles `component.html`）的 chrome 色（gotop 鈕、section 分隔線、說明面板…）是 showcase 自己的色、非 app token——收進 `_var` 會汙染「app 唯一色源」，故獨立成 `_guideline-var.scss`（`--gl-*`，定義在 `.guideline-page` 上，零全站足跡）。**架構不妥協：一樣走變數、不寫裸 hex，只是換一支色源檔。**（`_catalog` 用色恰好都是 app 色，直接用 `_var` token 即可。）

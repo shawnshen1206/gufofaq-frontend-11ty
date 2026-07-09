@@ -1,0 +1,21 @@
+{
+  "nav.dataConfig": "Data Config",
+  "nav.dataImport": "Data Import",
+  "nav.datasetList": "Datasets",
+  "nav.servicePreview": "Service Preview",
+  "nav.frontPreview": "Front-end Preview",
+  "nav.history": "History",
+  "nav.qaTest": "Q&A Testing",
+  "nav.singleTest": "Single Test",
+  "nav.abTest": "A/B Test",
+  "nav.mockChat": "Mock Chat",
+  "nav.settings": "Settings",
+  "nav.accountInfo": "Account",
+  "nav.knowledgeRetrieval": "Knowledge Retrieval",
+  "nav.statsModule": "Statistics",
+  "nav.promptMgmt": "Prompt Management",
+  "nav.userMgmt": "User Management",
+  "nav.platformMgmt": "Platform Admin",
+  "nav.tenantEnable": "Tenant Features",
+  "nav.logout": "Logout"
+}
