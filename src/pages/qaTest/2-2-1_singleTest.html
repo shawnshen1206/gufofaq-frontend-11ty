@@ -9,9 +9,9 @@ permalink: 2-2-1_singleTest.html
     { label: "問答紀錄3", active: true }
 ] %}
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "問答測試區", href: "" },
-  { label: "單測" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "問答測試區", href: "", i18nKey: "nav.qaTest" },
+  { label: "單測", i18nKey: "nav.singleTest" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}

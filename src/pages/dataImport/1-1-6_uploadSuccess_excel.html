@@ -4,8 +4,8 @@ title: GufoFAQ::資料匯入
 permalink: 1-1-6_uploadSuccess_excel.html
 ---
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "資料匯入" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "資料匯入", i18nKey: "nav.dataImport" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -14,10 +14,10 @@ permalink: 1-1-6_uploadSuccess_excel.html
 <!-- 步驟條：真實頁 pages/dataImport/1-1-6_uploadSuccess_excel.html 4 步驟皆 done，
      與 components/step-nodes 展示資料（僅步驟1 done）不同，故手寫本頁專屬狀態，不整包 include -->
 {% set steps = [
-    { label: "上傳檔案", done: true },
-    { label: "預覽資料", done: true },
-    { label: "欄位對應", done: true },
-    { label: "送出資料", done: true }
+    { label: "上傳檔案", done: true, i18nKey: "step.upload" },
+    { label: "預覽資料", done: true, i18nKey: "step.preview" },
+    { label: "欄位對應", done: true, i18nKey: "step.mapping" },
+    { label: "送出資料", done: true, i18nKey: "step.submit" }
 ] %}
 <div class="mt-10 mb-32">
     {% include "components/step-nodes/step-nodes.html" %}

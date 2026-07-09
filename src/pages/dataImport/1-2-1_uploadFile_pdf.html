@@ -4,8 +4,8 @@ title: GufoFAQ::資料匯入
 permalink: 1-2-1_uploadFile_pdf.html
 ---
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "資料匯入" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "資料匯入", i18nKey: "nav.dataImport" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -14,8 +14,8 @@ permalink: 1-2-1_uploadFile_pdf.html
 <!-- 步驟條：真實頁只有「上傳檔案」done + 僅「下一步」按鈕（無上一步），用 .lg 步驟樣式，
      components/step-btn-wrap 註解本身即指名本頁為「只需要下一步按鈕」範例（.no-prev、移除上一步按鈕），故手寫不整包 include -->
 {% set steps = [
-    { label: "上傳檔案", done: true },
-    { label: "送出資料", done: false }
+    { label: "上傳檔案", done: true, i18nKey: "step.upload" },
+    { label: "送出資料", done: false, i18nKey: "step.submit" }
 ] %}
 {% set stepNoPrev = true %}
 {% set stepNodesLg = true %}
@@ -81,11 +81,11 @@ permalink: 1-2-1_uploadFile_pdf.html
                 <td>{{ file.sizeMB }}MB</td>
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="button-icon no-bg size-sm edit btn-edit-file" title="編輯">
-                            <span class="sr-only">編輯</span>
+                        <button type="button" class="button-icon no-bg size-sm edit btn-edit-file" title="編輯" data-i18n-title="action.edit">
+                            <span class="sr-only" data-i18n="action.edit">編輯</span>
                         </button>
-                        <button type="button" class="button-icon no-bg size-sm delete btn-delete-file" title="刪除">
-                            <span class="sr-only">刪除</span>
+                        <button type="button" class="button-icon no-bg size-sm delete btn-delete-file" title="刪除" data-i18n-title="action.delete">
+                            <span class="sr-only" data-i18n="action.delete">刪除</span>
                         </button>
                     </div>
                 </td>

@@ -4,9 +4,9 @@ title: GufoFAQ::使用者管理
 permalink: 5-5-1_userManagement.html
 ---
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "設定", href: "" },
-  { label: "使用者管理" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "使用者管理", i18nKey: "nav.userMgmt" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -104,13 +104,13 @@ permalink: 5-5-1_userManagement.html
                     <td>{{ member.email }}</td>
                     <td>
                         <div class="flex-row align-items-center gap-8">
-                            <label class="switch" aria-label="租戶管理者切換">
+                            <label class="switch" aria-label="租戶管理者切換" data-i18n-aria-label="settings.tenantAdminToggle">
                                 <input type="checkbox" class="switch-checkbox" role="switch"{% if member.isAdmin %} checked{% endif %}>
                                 <span class="switch-box">
                                     <span class="switch-btn"></span>
                                 </span>
                             </label>
-                            <span>{% if member.isAdmin %}管理者{% else %}成員{% endif %}</span>
+                            <span data-i18n="{% if member.isAdmin %}role.admin{% else %}role.member{% endif %}">{% if member.isAdmin %}管理者{% else %}成員{% endif %}</span>
                         </div>
                     </td>
                     {% for cap in capabilities %}
@@ -123,7 +123,7 @@ permalink: 5-5-1_userManagement.html
                     {% endfor %}
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="button button-border button-sm">儲存</button>
+                            <button type="button" class="button button-border button-sm" data-i18n="action.save">儲存</button>
                         </div>
                     </td>
                 </tr>

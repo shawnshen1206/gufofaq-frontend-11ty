@@ -6,8 +6,8 @@ permalink: 3-1-3_previewDataset.html
 <!-- 麵包屑 + 資料集名稱（editable-block）：真實頁第三層麵包屑與資料集名稱皆為 js previewDataset.js 載入後動態填字（原文「載入中...」），
      改用範例資料「客服問答知識庫」呈現載入完成狀態，與 3-1-1_datasetList.html 的範例資料集同名以求前後頁一致 -->
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "資料集列表", href: "3-1-1_datasetList.html" },
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
   { label: "客服問答知識庫" }
 ] %}
 <div class="flex-row column gap-16">

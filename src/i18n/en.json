@@ -9,6 +9,8 @@
   "action.download": "Download",
   "action.edit": "Edit",
   "action.expandEdit": "Expand",
+  "action.nextStep": "Next",
+  "action.prevStep": "Previous",
   "action.query": "Search",
   "action.resetDefault": "Reset to default",
   "action.save": "Save",
@@ -105,7 +107,7 @@
   "nav.accountInfo": "Account",
   "nav.dataConfig": "Data Config",
   "nav.dataImport": "Data Import",
-  "nav.datasetList": "Datasets",
+  "nav.datasetList": "Dataset list",
   "nav.frontPreview": "Front-end Preview",
   "nav.history": "History",
   "nav.home": "Home",
@@ -147,6 +149,8 @@
   "qaTest.sampleCount": "Sample size",
   "qaTest.sampleTotal": "Total sample size",
   "qaTest.viewSource": "View source",
+  "role.admin": "Admin",
+  "role.member": "Member",
   "settings.accountInfo": "Account information",
   "settings.addMember": "Add member",
   "settings.addPrompt": "Add prompt",
@@ -206,5 +210,9 @@
   "settings.userCount": "Users",
   "settings.vector": "Vector",
   "settings.version": "Version",
-  "settings.weeklyRetrievalTrend": "Retrieval count over the last 4 weeks"
+  "settings.weeklyRetrievalTrend": "Retrieval count over the last 4 weeks",
+  "step.mapping": "Field mapping",
+  "step.preview": "Preview",
+  "step.submit": "Submit",
+  "step.upload": "Upload"
 }

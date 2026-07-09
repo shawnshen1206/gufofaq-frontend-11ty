@@ -5,9 +5,9 @@
     <div class="wrap">
         <ul>
             {% for item in breadcrumbItems %}
-            <li>
+            <li{% if loop.last and item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>
                 {% if not loop.last %}
-                <a href="{{ item.href or '' }}" title="{{ item.label }}">{{ item.label }}</a>
+                <a href="{{ item.href or '' }}" title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
                 {% else %}
                 {{ item.label }}
                 {% endif %}

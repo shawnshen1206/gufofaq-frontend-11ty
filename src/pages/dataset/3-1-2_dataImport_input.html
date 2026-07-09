@@ -6,9 +6,9 @@ permalink: 3-1-2_dataImport_input.html
 <!-- 麵包屑：真實頁 pages/dataset/3-1-2_dataImport_input.html 第三層為靜態文字「資料集列表」（與第二層同名，
      真實頁面本身如此，非本次轉換誤植），逐字沿用 -->
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "資料集列表", href: "3-1-1_datasetList.html" },
-  { label: "資料集列表" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
+  { label: "資料集列表", i18nKey: "nav.datasetList" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}

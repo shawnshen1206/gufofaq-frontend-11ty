@@ -4,9 +4,9 @@ title: GufoFAQ::租戶功能開通
 permalink: 5-6-1_platformTenants.html
 ---
 {% set breadcrumbItems = [
-  { label: "首頁", href: "2-1_qaRecord.html" },
-  { label: "平台管理", href: "" },
-  { label: "租戶功能開通" }
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "平台管理", href: "", i18nKey: "nav.platformMgmt" },
+  { label: "租戶功能開通", i18nKey: "nav.tenantEnable" }
 ] %}
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
@@ -67,7 +67,7 @@ permalink: 5-6-1_platformTenants.html
                     {% endfor %}
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="button button-border button-sm">儲存</button>
+                            <button type="button" class="button button-border button-sm" data-i18n="action.save">儲存</button>
                         </div>
                     </td>
                 </tr>

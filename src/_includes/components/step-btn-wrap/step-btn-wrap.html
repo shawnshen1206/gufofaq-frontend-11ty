@@ -4,12 +4,12 @@
      頁面 set stepPrevHref / stepNextHref 即直接連到該頁，未設則維持 "#"（btn-prev/btn-next 仍為 JS hook）。 -->
 <div class="step-btn-wrap{% if stepNoPrev %} no-prev{% endif %}">
     {% if not stepNoPrev %}
-    <a href="{{ stepPrevHref or '#' }}" class="button button-primary btn-prev">
+    <a href="{{ stepPrevHref or '#' }}" class="button button-primary btn-prev" data-i18n="action.prevStep">
         <img src="./images/icon_back.png" alt="" class="icon">上一步
     </a>
     {% endif %}
     {% include "components/step-nodes/step-nodes.html" %}
-    <a href="{{ stepNextHref or '#' }}" class="button button-primary align-self-end btn-next">
+    <a href="{{ stepNextHref or '#' }}" class="button button-primary align-self-end btn-next" data-i18n="action.nextStep">
         下一步<img src="./images/icon_next.png" alt="" class="icon">
     </a>
 </div>

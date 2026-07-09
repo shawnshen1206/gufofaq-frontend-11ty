@@ -2,6 +2,6 @@
      頁面 include 前 set steps（[{ label, done }]）+ 選填 stepNodesLg（true 加 .lg 大尺寸變體）。資料由頁面提供，本元件不自帶。 -->
 <div class="step-nodes">
     {% for step in steps %}
-    <div class="step-node{% if stepNodesLg %} lg{% endif %}{% if step.done %} done{% endif %}">{{ step.label }}</div>
+    <div class="step-node{% if stepNodesLg %} lg{% endif %}{% if step.done %} done{% endif %}"{% if step.i18nKey %} data-i18n="{{ step.i18nKey }}"{% endif %}>{{ step.label }}</div>
     {% endfor %}
 </div>
