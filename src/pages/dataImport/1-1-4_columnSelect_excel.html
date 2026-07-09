@@ -3,7 +3,9 @@ layout: layouts/page-shell.html
 title: GufoFAQ::資料匯入
 permalink: 1-1-4_columnSelect_excel.html
 ---
-{# 欄位對應資料（多選/預覽兩欄共用）——依 §3-2/§6 由頁面提供，components/multi-select-box 只負責 for 渲染 #}
+{# 欄位對應資料（多選/預覽兩欄共用）——依 §3-2/§6 由頁面提供，components/multi-select-box 只負責 for 渲染。
+   固定 14 槽 schema（title/content/source/date/category/number/flag/tags/privilege/note1..note5），
+   使用者把 Excel 欄位（options）對應到這 14 個槽；label 用各槽預設顯示名。示例列數依 §3-2 精簡（每槽 3 個候選欄）。 #}
 {% set fields = [
     {
         key: "title",
@@ -12,47 +14,153 @@ permalink: 1-1-4_columnSelect_excel.html
         options: [
             { value: "0", label: "客服問題", selected: true },
             { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結" }
+            { value: "2", label: "標題欄" }
         ],
         preview: "如何申請入出國許可證"
-    },
-    {
-        key: "date",
-        label: "日期",
-        placeholder: "YYYY/MM/DD HH:mm:ss || YYYY-MM-DD HH:mm:ss",
-        options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間", selected: true },
-            { value: "3", label: "圖片連結" }
-        ],
-        preview: "2024/12/01 13:29:24",
-        error: true
     },
     {
         key: "content",
         label: "內容",
         placeholder: "建議選擇「內容」屬性欄位",
         options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆", selected: true },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結" }
+            { value: "0", label: "客服回覆", selected: true },
+            { value: "1", label: "客服問題" },
+            { value: "2", label: "內文" }
         ],
         preview: "請攜帶護照及財力證明至服務站辦理"
     },
     {
-        key: "image",
-        label: "圖片網址",
-        placeholder: "建議選擇「圖片網址」屬性欄位",
+        key: "source",
+        label: "來源",
+        placeholder: "建議選擇「來源」屬性欄位",
         options: [
-            { value: "0", label: "客服問題" },
-            { value: "1", label: "客服回覆" },
-            { value: "2", label: "建立時間" },
-            { value: "3", label: "圖片連結", selected: true }
+            { value: "0", label: "來源網址", selected: true },
+            { value: "1", label: "資料來源" },
+            { value: "2", label: "出處" }
         ],
-        preview: "https://example.com/image.png"
+        preview: "移民署官方網站"
+    },
+    {
+        key: "date",
+        label: "日期",
+        placeholder: "YYYY/MM/DD HH:mm:ss || YYYY-MM-DD HH:mm:ss",
+        options: [
+            { value: "0", label: "建立時間", selected: true },
+            { value: "1", label: "更新時間" },
+            { value: "2", label: "日期" }
+        ],
+        preview: "2024/12/01 13:29:24",
+        error: true
+    },
+    {
+        key: "category",
+        label: "分類",
+        placeholder: "建議選擇「分類」屬性欄位",
+        options: [
+            { value: "0", label: "分類", selected: true },
+            { value: "1", label: "類別" },
+            { value: "2", label: "資料夾" }
+        ],
+        preview: "入出國與法規"
+    },
+    {
+        key: "number",
+        label: "數值",
+        placeholder: "建議選擇「數值」屬性欄位",
+        options: [
+            { value: "0", label: "數值", selected: true },
+            { value: "1", label: "編號" },
+            { value: "2", label: "分數" }
+        ],
+        preview: "100"
+    },
+    {
+        key: "flag",
+        label: "標記",
+        placeholder: "建議選擇「標記」屬性欄位",
+        options: [
+            { value: "0", label: "狀態標記", selected: true },
+            { value: "1", label: "旗標" },
+            { value: "2", label: "審核狀態" }
+        ],
+        preview: "已審核"
+    },
+    {
+        key: "tags",
+        label: "標籤",
+        placeholder: "建議選擇「標籤」屬性欄位",
+        options: [
+            { value: "0", label: "標籤", selected: true },
+            { value: "1", label: "關鍵字" },
+            { value: "2", label: "tag" }
+        ],
+        preview: "簽證,居留"
+    },
+    {
+        key: "privilege",
+        label: "權限",
+        placeholder: "建議選擇「權限」屬性欄位",
+        options: [
+            { value: "0", label: "權限", selected: true },
+            { value: "1", label: "存取層級" },
+            { value: "2", label: "可見範圍" }
+        ],
+        preview: "公開"
+    },
+    {
+        key: "note1",
+        label: "備註1",
+        placeholder: "建議選擇「備註1」屬性欄位",
+        options: [
+            { value: "0", label: "備註1", selected: true },
+            { value: "1", label: "備註" },
+            { value: "2", label: "附註" }
+        ],
+        preview: "備註內容一"
+    },
+    {
+        key: "note2",
+        label: "備註2",
+        placeholder: "建議選擇「備註2」屬性欄位",
+        options: [
+            { value: "0", label: "備註2", selected: true },
+            { value: "1", label: "備註" },
+            { value: "2", label: "附註" }
+        ],
+        preview: "備註內容二"
+    },
+    {
+        key: "note3",
+        label: "備註3",
+        placeholder: "建議選擇「備註3」屬性欄位",
+        options: [
+            { value: "0", label: "備註3", selected: true },
+            { value: "1", label: "備註" },
+            { value: "2", label: "附註" }
+        ],
+        preview: "備註內容三"
+    },
+    {
+        key: "note4",
+        label: "備註4",
+        placeholder: "建議選擇「備註4」屬性欄位",
+        options: [
+            { value: "0", label: "備註4", selected: true },
+            { value: "1", label: "備註" },
+            { value: "2", label: "附註" }
+        ],
+        preview: "備註內容四"
+    },
+    {
+        key: "note5",
+        label: "備註5",
+        placeholder: "建議選擇「備註5」屬性欄位",
+        options: [
+            { value: "0", label: "備註5", selected: true },
+            { value: "1", label: "備註" },
+            { value: "2", label: "附註" }
+        ],
+        preview: "備註內容五"
     }
 ] %}
 {% set breadcrumbItems = [
