@@ -461,10 +461,20 @@ test("每個 openModal('X') 在同一頁上都要找得到 <dialog id=\"X\">", (
 
 test("HTML 註解的 <!-- --> 必須配對（斷掉的話註解內文會變成頁面上的可見文字）", () => {
     // 曾經：把 upload-box 檔頭第一行改寫時多補了一個 -->，後面兩行說明文字就印到正式頁面上了。
-    const bad = srcHtml
-        .map((f) => [f, (read(f).match(/<!--/g) || []).length, (read(f).match(/-->/g) || []).length])
-        .filter(([, open, close]) => open !== close)
-        .map(([f, open, close]) => `${f}  <!-- ×${open}  --> ×${close}`);
+    // 用狀態機依序掃，不要只比數量——`--> <!--` 數量相等但一樣是壞的。
+    const bad = [];
+    for (const f of srcHtml) {
+        const src = read(f);
+        let i = 0, open = false, line = 1;
+        while (i < src.length) {
+            if (src[i] === "\n") line++;
+            if (!open && src.startsWith("<!--", i)) { open = true; i += 4; continue; }
+            if (!open && src.startsWith("-->", i)) { bad.push(`${f}:${line}  孤兒的 -->`); break; }
+            if (open && src.startsWith("-->", i)) { open = false; i += 3; continue; }
+            i++;
+        }
+        if (open) bad.push(`${f}  有 <!-- 沒有收尾的 -->`);
+    }
     assert.equal(bad.length, 0, fail(bad));
 });
 
@@ -490,9 +500,12 @@ test("§9 裸元素選擇器只准出現在 _normalize / _base", () => {
             const brace = code.indexOf("{");
             if (brace >= 0 && depth === 0) {
                 const sel = code.slice(0, brace).trim();
-                // 只看第一個 compound：`body.guideline-page` 是「限定」不是裸選擇器（§9 的 ✅ 範例）
-                const first = sel.split(/[\s,>+~]/)[0];
-                if (/^[a-z][a-z0-9]*$/.test(first) && ELEMENTS.has(first)) hits.push(`${f}:${i + 1}  ${sel}`);
+                // 逗號分隔的每一組都要看（`.a, body {` 的 body 一樣會洩漏）；
+                // 每組只取第一個 compound——`body.guideline-page` 是「限定」不是裸選擇器（§9 的 ✅ 範例）
+                for (const group of sel.split(",")) {
+                    const first = group.trim().split(/[\s>+~]/)[0];
+                    if (/^[a-z][a-z0-9]*$/.test(first) && ELEMENTS.has(first)) hits.push(`${f}:${i + 1}  ${group.trim()}`);
+                }
             }
             depth += open - close;
         }
@@ -506,22 +519,94 @@ test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () =>
     const rootAt = src.search(/^:root\s*\{/m);
     const darkAt = src.search(/^\[data-theme="dark"\]\s*\{/m);
     assert.ok(rootAt >= 0 && darkAt > rootAt, "_var.scss 找不到 :root / [data-theme=dark] 區塊");
+    // 用大括號配對切出區塊，不要一路切到檔尾——日後在 dark 之後再加第三個區塊就會被誤算進來
+    const blockAt = (start) => {
+        let depth = 0;
+        for (let i = src.indexOf("{", start); i < src.length; i++) {
+            if (src[i] === "{") depth++;
+            else if (src[i] === "}" && --depth === 0) return src.slice(start, i);
+        }
+        throw new Error("_var.scss 大括號不平衡");
+    };
     const tokens = (body) => new Set([...body.matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]));
-    const light = tokens(src.slice(rootAt, darkAt));
-    const dark = tokens(src.slice(darkAt));
+    const light = tokens(blockAt(rootAt));
+    const dark = tokens(blockAt(darkAt));
     const NON_COLOR = new Set(["--fontFamily"]); // 字型不隨主題變
     const onlyLight = [...light].filter((t) => !dark.has(t) && !NON_COLOR.has(t));
     const onlyDark = [...dark].filter((t) => !light.has(t));
     assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
 });
 
-test("§4 元件 scss 不得寫 [data-theme=dark] 分支（唯三例外）", () => {
-    // 色源檔（_var / _guideline-var）本來就是靠這個選擇器換膚，不在此限。
+test("§4 元件 scss 不得寫 [data-theme=dark] 分支（元件只有 theme-toggle 與 dark-icons 兩個例外）", () => {
+    // 色源檔（_var / _guideline-var）與 _base 的 color-scheme 本來就是靠這個選擇器換膚，不算元件。
     const ALLOW = /scss\/_(var|guideline-var|base|dark-icons)\.scss$|ui\/theme-toggle\//;
     const hits = scanLines(srcScss.filter((f) => !ALLOW.test(f)), (line) =>
         /\[data-theme/.test(line.split("//")[0]) ? "深色分支" : null
     );
     assert.equal(hits.length, 0, `元件只用 token，換膚交給 _var.scss：\n${fail(hits)}`);
+});
+
+test("§4 文字族 token 不可拿去當 background-color / border-color", () => {
+    // 既有測試擋的是反方向（填充 token 當 color:）。文字 token 為了在黑底可讀而提亮，
+    // 當填充時白字會讀不到——兩個方向都要擋。
+    const TEXT = "text|text-strong|text-muted|brand-text|danger-text|brand-text-hover";
+    const re = new RegExp(String.raw`(?:background-color|border-color|border(?:-top|-right|-bottom|-left)?)\s*:[^;]*var\(--(?:${TEXT})\)`);
+    const hits = scanLines(srcScss, (line) => (re.test(line.split("//")[0]) ? "文字 token 當填充/邊框" : null));
+    assert.equal(hits.length, 0, `白字疊上去會讀不到：\n${fail(hits)}`);
+});
+
+test("§4 對比度硬規則：白字疊有色填充 ≥ 4.5:1（--warning 配 --on-warning 是唯一例外）", () => {
+    // §4 說「新增或調整任何顏色都要重算這兩個數字」——與其相信 _var.scss 的手寫註解，不如每次 CI 實算。
+    const lin = (c) => (c /= 255) <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    const lum = (hex) => {
+        const n = parseInt(hex.slice(1), 16);
+        return 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+    };
+    const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+    const src = read("src/scss/_var.scss");
+    const blockAt = (start) => {
+        let depth = 0;
+        for (let i = src.indexOf("{", start); i < src.length; i++) {
+            if (src[i] === "{") depth++;
+            else if (src[i] === "}" && --depth === 0) return src.slice(start, i);
+        }
+        throw new Error("_var.scss 大括號不平衡");
+    };
+    const vars = (body) => Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)].map((m) => [m[1], m[2]]));
+
+    const FILL = ["--brand", "--brand-hover", "--success", "--success-hover", "--danger", "--danger-hover",
+        "--info", "--accent-orange", "--accent-orange-hover", "--accent-teal", "--accent-teal-hover"];
+    const TEXT_ON = ["--brand-text", "--brand-text-hover", "--danger-text", "--text", "--text-muted"];
+
+    const bad = [];
+    for (const [mode, at] of [["light", /^:root\s*\{/m], ["dark", /^\[data-theme="dark"\]\s*\{/m]]) {
+        const t = vars(blockAt(src.search(at)));
+        for (const f of FILL) {
+            const r = ratio(t["--on-accent"], t[f]);
+            if (r < 4.5) bad.push(`${mode} ${f} 白字對比 ${r.toFixed(2)} < 4.5`);
+        }
+        const warn = ratio(t["--on-warning"], t["--warning"]);
+        if (warn < 4.5) bad.push(`${mode} --warning 配 --on-warning 深字對比 ${warn.toFixed(2)} < 4.5`);
+        for (const c of TEXT_ON) for (const bg of ["--surface", "--surface-raised"]) {
+            const r = ratio(t[c], t[bg]);
+            if (r < 4.5) bad.push(`${mode} ${c} on ${bg} 內文對比 ${r.toFixed(2)} < 4.5`);
+        }
+    }
+    assert.equal(bad.length, 0, `WCAG AA 內文門檻：\n${fail(bad)}`);
+});
+
+test("§4 工具層：文字大小/顏色工具不帶 !important（唯一例外 .text-default）", () => {
+    let cur = null;
+    const hits = [];
+    read("src/scss/_utilities.scss").split(/\r?\n/).forEach((raw, i) => {
+        const line = raw.split("//")[0];
+        const sel = line.match(/^\.([\w-]+)[\s,{]/);
+        if (sel) cur = sel[1];
+        if (/(?:^|\s)(color|font-size|font-weight)\s*:[^;]*!important/.test(line) && cur !== "text-default")
+            hits.push(`_utilities.scss:${i + 1}  .${cur}  ${line.trim()}`);
+    });
+    assert.equal(hits.length, 0, `元件情境要能覆寫它們：\n${fail(hits)}`);
 });
 
 test("§4 元件 scss 不得用 #id 選擇器（那是比 class 更緊的跨元件耦合）", () => {
