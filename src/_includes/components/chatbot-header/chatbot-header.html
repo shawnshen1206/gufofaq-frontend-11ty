@@ -1,6 +1,12 @@
-<!-- 前台 FAQ chatbot 的頁首：只有 logo（無導航；與 Manager 的 components/header 結構不同，故為獨立元件） -->
+<!-- 前台 FAQ chatbot 的頁首：logo + 語言/深淺切換（無 Manager 導航；與 components/header 結構不同，故為獨立元件）。
+     切換鈕沿用全站機制：.js-lang-toggle 由 lang-toggle.js 綁定並管理標籤（EN↔中文）；theme-toggle 元件切 <html data-theme>。
+     兩支 JS 由 base.html 載入（chatbot-shell 亦走 base.html），故此處只放按鈕。 -->
 <header class="chatbot-header">
     <h1 class="logo">
         <a href="#" title="GufoFAQ logo">GufoFAQ</a>
     </h1>
+    <div class="chatbot-header-right">
+        <button type="button" class="lang-toggle js-lang-toggle">EN</button>
+        {% include "ui/theme-toggle/theme-toggle.html" %}
+    </div>
 </header>
