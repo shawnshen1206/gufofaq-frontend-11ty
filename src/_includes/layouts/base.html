@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 本站是公開的切版預覽（含假的內部後台畫面），不希望被搜尋引擎收錄。
+         用 noindex 而非 robots.txt Disallow：Disallow 會讓爬蟲讀不到這行 noindex，反而可能只收 URL。 -->
+    <meta name="robots" content="noindex, nofollow">
+    <!-- 行動瀏覽器網址列顏色：由下方 no-flash 腳本 / theme-toggle.js 跟著 data-theme 更新 -->
+    <meta name="theme-color" content="#ffffff">
     <!-- no-flash：在套用 CSS 前先定 <html data-theme>（讀 localStorage → 否則跟系統），避免載入白閃。切換行為見 theme-toggle.js -->
     <script>
         (function () {
@@ -13,6 +18,8 @@
                     t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
                 }
                 document.documentElement.setAttribute("data-theme", t);
+                var m = document.querySelector('meta[name="theme-color"]');
+                if (m) m.setAttribute("content", t === "dark" ? "#1c1c1c" : "#ffffff"); // = --surface-raised（header 底色）
                 var l = localStorage.getItem("lang");
                 document.documentElement.setAttribute("lang", l === "en" ? "en" : "zh-Hant");
             } catch (e) { }

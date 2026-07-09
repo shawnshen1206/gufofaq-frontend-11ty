@@ -14,6 +14,9 @@
 // login 頁面專屬
 @use "../_includes/components/login-wrapper/login-wrapper";
 
+// 404 頁面專屬
+@use "error-page";
+
 // ui 原子
 @use "../_includes/ui/button/button";
 @use "../_includes/ui/form-control/form-control";

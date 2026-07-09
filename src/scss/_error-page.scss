@@ -1,0 +1,26 @@
+// 404 頁：置中的錯誤碼 + 說明 + 回首頁（版型只有這頁用，故獨立一支）
+.error-page {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2.5rem 1.5rem;
+    background-color: var(--surface);
+    text-align: center;
+
+    .error-code {
+        margin: 0;
+        font-size: 4rem;
+        font-weight: 500;
+        line-height: 1;
+        color: var(--brand-text);
+    }
+
+    .error-message {
+        margin: 0;
+        font-size: 1.125rem;
+        color: var(--text-muted);
+    }
+}

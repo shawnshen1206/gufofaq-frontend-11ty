@@ -8,10 +8,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
     }
 
+    // 行動瀏覽器網址列顏色跟著主題（值＝--surface-raised，即 header 底色）
+    function apply(theme) {
+        root.setAttribute("data-theme", theme);
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute("content", theme === "dark" ? "#1c1c1c" : "#ffffff");
+    }
+
     document.querySelectorAll(".theme-toggle").forEach(function (btn) {
         btn.addEventListener("click", function () {
             var next = current() === "dark" ? "light" : "dark";
-            root.setAttribute("data-theme", next);
+            apply(next);
             try {
                 localStorage.setItem("theme", next);
             } catch (e) { }
@@ -23,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var mq = window.matchMedia("(prefers-color-scheme: dark)");
         mq.addEventListener("change", function (e) {
             if (!localStorage.getItem("theme")) {
-                root.setAttribute("data-theme", e.matches ? "dark" : "light");
+                apply(e.matches ? "dark" : "light");
             }
         });
     } catch (e) { }

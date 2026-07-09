@@ -3,17 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "description": "GufoFAQ react-friendly 11ty 切版交付專案",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "run-p dev:html dev:css",
     "dev:html": "eleventy --serve",
     "dev:css": "sass --watch src/scss/main.scss:dist/css/main.css",
     "build:html": "eleventy",
     "build:css": "sass src/scss/main.scss:dist/css/main.css --style=compressed --no-source-map",
-    "build": "run-s build:css build:html"
+    "build:hash": "node scripts/hash-assets.mjs",
+    "build": "run-s build:css build:html build:hash",
+    "lint:css": "stylelint \"src/**/*.scss\"",
+    "check": "run-s lint:css build"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "sass": "^1.83.0"
+    "postcss-scss": "^4.0.9",
+    "sass": "^1.83.0",
+    "stylelint": "^17.14.0"
   }
 }

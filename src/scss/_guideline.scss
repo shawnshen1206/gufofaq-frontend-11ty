@@ -35,7 +35,7 @@
 
     /*firefox scrollbar*/
     scrollbar-width: thin;
-    scrollbar-color: var(--gl-scrollbar-thumb) #fff;
+    scrollbar-color: var(--gl-scrollbar-thumb) var(--surface-raised);
 }
 
 // 以下所有規則限定在元件庫展示頁（body.guideline-page）。
@@ -95,7 +95,7 @@ aside {
 
                 &:hover {
                     background-color: var(--gl-dark);
-                    color: #fff;
+                    color: var(--on-accent);
                 }
             }
         }
@@ -285,7 +285,7 @@ section {
     transition: all 0.3s;
     background-color: var(--gl-gotop-bg);
     color: var(--gl-gotop-ink);
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px 0 var(--shadow);
     border-radius: 2px;
 }
 
@@ -310,7 +310,7 @@ footer {
     justify-content: center;
     border-top: 1px solid var(--gl-footer-border);
     padding-top: 1rem;
-    color: #fff;
+    color: var(--on-accent);
 }
 
 
@@ -325,7 +325,7 @@ footer {
 .form-table-wrap {
     .form-table-group {
         .subtitle {
-            background-color: #fff;
+            background-color: var(--surface-raised);
             border-radius: 0;
             padding-top: 0;
             padding-left: 0;
