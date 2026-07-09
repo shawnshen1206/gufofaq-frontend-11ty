@@ -1,6 +1,23 @@
-<!-- 檔案編輯 modal，取自真實 app pages/components/component.html #editModal（class/id 沿用真實系統，完整欄位展示版：標題/時間/頻道/類型/供應商/內容）；
-     真實功能頁 pages/dataImport/1-2-1_uploadFile_pdf.html 的 #editModal 為精簡版（僅標題/時間/自訂欄位 div#editCusFields/內容，id 供 js 動態填值/渲染自訂欄位），
-     本元件採 component.html 展示版之完整欄位結構，時間欄位 input.start-date 保留 data-modal（真實頁面 flatpickr 掛載點，靜態外觀、不引入 vendor） -->
+<!-- 檔案編輯 modal（PDF 自填），class/id 沿用真實 app pages/components/component.html #editModal 系統。
+     固定 14 槽 schema（title/content/source/date/category/number/flag/tags/privilege/note1..note5）：每槽一個輸入框供逐筆手填，label 用各槽預設顯示名。
+     內容（content）由 PDF 自動擷取，故 render 成 disabled textarea（沿用真實系統 .form-control.disabled + disabled 屬性）；
+     其餘槽為可填 input。資料驅動：set editFields + for 內嵌渲染欄位列（依 §9，元件內部 for 不再巢狀 include 子元件）。 -->
+{% set editFields = [
+    { key: "title", label: "標題", value: "檔案名稱.pdf" },
+    { key: "content", label: "內容", type: "textarea", disabled: true },
+    { key: "source", label: "來源" },
+    { key: "date", label: "日期" },
+    { key: "category", label: "分類" },
+    { key: "number", label: "數值" },
+    { key: "flag", label: "標記" },
+    { key: "tags", label: "標籤" },
+    { key: "privilege", label: "權限" },
+    { key: "note1", label: "備註1" },
+    { key: "note2", label: "備註2" },
+    { key: "note3", label: "備註3" },
+    { key: "note4", label: "備註4" },
+    { key: "note5", label: "備註5" }
+] %}
 <dialog class="modals" id="editModal">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
@@ -14,150 +31,29 @@
                 </div>
                 <div class="modals-body">
                     <div class="flex-row column gap-8">
+                        {% for field in editFields %}
                         <div class="form-group col-12-md">
                             <div class="label">
-                                <label for="fileEditTitle" class="control-label">標題</label>
+                                <label for="fileEdit-{{ field.key }}" class="control-label">{{ field.label }}</label>
                             </div>
                             <div class="field">
-                                <input type="text" id="fileEditTitle" placeholder="請輸入" class="form-control" value="檔案名稱.pdf">
-                                <span class="error-prompt">錯誤訊息文字</span>
-                            </div>
-                        </div>
-                        <div class="col-12-md flex-row gap-8 mobile-column">
-                            <div class="form-group col-6-md col-12-sm">
-                                <div class="label">
-                                    <label for="fileEditTime" class="control-label">時間</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="fileEditTime" class="form-control time start-date" placeholder="請選擇時間"
-                                        data-modal>
-                                    <span class="error-prompt">錯誤訊息文字</span>
-                                </div>
-                            </div>
-                            <div class="form-group col-6-md col-12-sm">
-                                <div class="label">
-                                    <label for="fileEditChannel" class="control-label">頻道</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="fileEditChannel" placeholder="請輸入" class="form-control">
-                                    <span class="error-prompt">錯誤訊息文字</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12-md flex-row gap-8 mobile-column">
-                            <div class="form-group col-6-md col-12-sm">
-                                <div class="label">
-                                    <label for="fileEditType" class="control-label">類型</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="fileEditType" placeholder="請輸入" class="form-control">
-                                    <span class="error-prompt">錯誤訊息文字</span>
-                                </div>
-                            </div>
-                            <div class="form-group col-6-md col-12-sm">
-                                <div class="label">
-                                    <label for="fileEditSupplier" class="control-label">供應商</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="fileEditSupplier" placeholder="請輸入" class="form-control">
-                                    <span class="error-prompt">錯誤訊息文字</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12-md">
-                            <div class="form-group">
-                                <div class="label">
-                                    <label for="fileEditContent" class="control-label">內容</label>
-                                </div>
-                                <div class="field">
-                                    <textarea id="fileEditContent" rows="10" class="form-control disabled"
-                                        placeholder="請輸入您推薦這篇文章的原因" disabled>Andreas Gal∗+, Brendan Eich∗, Mike Shaver∗, David Anderson∗, David Mandelin∗,
+                                {% if field.type == "textarea" %}
+                                <textarea id="fileEdit-{{ field.key }}" rows="10" class="form-control disabled"
+                                    placeholder="自 PDF 自動擷取，無需填寫" disabled>Andreas Gal∗+, Brendan Eich∗, Mike Shaver∗, David Anderson∗, David Mandelin∗,
 Mohammad R. Haghighat$, Blake Kaplan∗, Graydon Hoare∗, Boris Zbarsky∗, Jason Orendorff∗,
 Jesse Ruderman∗, Edwin Smith#, Rick Reitmaier#, Michael Bebenita+, Mason Chang+#, Michael Franz+
-Mozilla Corporation∗
-{gal,brendan,shaver,danderson,dmandelin,mrbkap,graydon,bz,jorendorff,jruderman}@mozilla.com
-Adobe Corporation#
-{edwsmith,rreitmai}@adobe.com
-Intel Corporation$
-{mohammad.r.haghighat}@intel.com
-University of California, Irvine+
-{mbebenit,changm,franz}@uci.edu
 Abstract
-Dynamic languages such as JavaScript are more difficult to com-
-pile than statically typed ones. Since no concrete type information
-is available, traditional compilers need to emit generic code that can
-handle all possible type combinations at runtime. We present an al-
-ternative compilation technique for dynamically-typed languages
-that identifies frequently executed loop traces at run-time and then
-generates machine code on the fly that is specialized for the ac-
-tual dynamic types occurring on each path through the loop. Our
-method provides cheap inter-procedural type specialization, and an
-elegant and efficient way of incrementally compiling lazily discov-
-ered alternative paths through nested loops. We have implemented
-a dynamic compiler for JavaScript based on our technique and we
-have measured speedups of 10x and more for certain benchmark
-programs.
-Categories and Subject Descriptors D.3.4 [Programming Lan-
-guages]: Processors — Incremental compilers, code generation.
-General Terms Design, Experimentation, Measurement, Perfor-
-mance.
-Keywords JavaScript, just-in-time compilation, trace trees.
-1. Introduction
-Dynamic languages such as JavaScript, Python, and Ruby, are pop-
-ular since they are expressive, accessible to non-experts, and make
-deployment as easy as distributing a source file. They are used for
-small scripts as well as for complex applications. JavaScript, for
-example, is the de facto standard for client-side web programming
-Permission to make digital or hard copies of all or part of this work for personal or
-classroom use is granted without fee provided that copies are not made or distributed
-for profit or commercial advantage and that copies bear this notice and the full citation
-on the first page. To copy otherwise, to republish, to post on servers or to redistribute
-to lists, requires prior specific permission and/or a fee.
-PLDI’09, June 15–20, 2009, Dublin, Ireland.
-Copyright c© 2009 ACM 978-1-60558-392-1/09/06. . . $5.00
-and is used for the application logic of browser-based productivity
-applications such as Google Mail, Google Docs and Zimbra Col-
-laboration Suite. In this domain, in order to provide a fluid user
-experience and enable a new generation of applications, virtual ma-
-chines must provide a low startup time and high performance.
-Compilers for statically typed languages rely on type informa-
-tion to generate efficient machine code. In a dynamically typed pro-
-gramming language such as JavaScript, the types of expressions
-may vary at runtime. This means that the compiler can no longer
-easily transform operations into machine instructions that operate
-on one specific type. Without exact type information, the compiler
-must emit slower generalized machine code that can deal with all
-potential type combinations. While compile-time static type infer-
-ence might be able to gather type information to generate opti-
-mized machine code, traditional static analysis is very expensive
-and hence not well suited for the highly interactive environment of
-a web browser.
-We present a trace-based compilation technique for dynamic
-languages that reconciles speed of compilation with excellent per-
-formance of the generated machine code. Our system uses a mixed-
-mode execution approach: the system starts running JavaScript in a
-fast-starting bytecode interpreter. As the program runs, the system
-identifies hot (frequently executed) bytecode sequences, records
-them, and compiles them to fast native code. We call such a se-
-quence of instructions a trace.
-Unlike method-based dynamic compilers, our dynamic com-
-piler operates at the granularity of individual loops. This design
-choice is based on the expectation that programs spend most of
-their time in hot loops. Even in dynamically typed languages, we
-expect hot loops to be mostly type-stable, meaning that the types of
-values are invariant. (12) For example, we would expect loop coun-
-ters that start as integers to remain integers for all iterations. When
-both of these expectations hold, a trace-based compiler can cover
-the program execution with a small number of type-specialized, ef-
-ficiently compiled traces.
-Each compiled trace covers one path through the program with
-one mapping of values to types. When the VM executes a compiled
-trace, it cannot guarantee that the same path will be followed
-or that the same types will occur in subsequent loop iterations.</textarea>
-                                </div>
+Dynamic languages such as JavaScript are more difficult to compile than statically typed ones. Since no concrete type information
+is available, traditional compilers need to emit generic code that can handle all possible type combinations at runtime. We present an alternative compilation technique for dynamically-typed languages
+that identifies frequently executed loop traces at run-time and then generates machine code on the fly that is specialized for the actual dynamic types occurring on each path through the loop.</textarea>
+                                {% else %}
+                                <input type="text" id="fileEdit-{{ field.key }}" placeholder="請輸入"
+                                    class="form-control"{% if field.value %} value="{{ field.value }}"{% endif %}>
+                                <span class="error-prompt">錯誤訊息文字</span>
+                                {% endif %}
                             </div>
                         </div>
-
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="modals-footer">
