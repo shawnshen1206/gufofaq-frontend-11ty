@@ -6,7 +6,7 @@
 
 .faq-chatroom {
     width: 100%;
-    background-color: var(--color-gray-100);
+    background-color: var(--surface);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@
         min-width: 32px;
         height: 32px;
         border-radius: 100px;
-        background-image: var(--color-primary-linear);
+        background-image: var(--brand-gradient);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -56,8 +56,8 @@
             width: 100%;
             padding: 0.5rem 0.625rem;
             border-radius: 8px;
-            background-color: var(--color-bg-primary);
-            color: var(--color-primary);
+            background-color: var(--brand-tint);
+            color: var(--brand);
             box-sizing: border-box;
             cursor: pointer;
 
@@ -75,8 +75,8 @@
         padding: 0.5rem;
         border-radius: 8px;
         border: 0;
-        box-shadow: 0 0 6px 0 var(--color-border-default);
-        background-color: #fff;
+        box-shadow: 0 0 6px 0 var(--shadow);
+        background-color: var(--surface-raised);
         position: absolute;
         bottom: 92px;
         right: 1.5rem;

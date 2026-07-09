@@ -36,7 +36,7 @@
 
     .txt {
         font-size: 1rem;
-        color: var(--color-text-default);
+        color: var(--text);
 
         @media screen and (max-width: 576px) {
             height: auto;
@@ -48,6 +48,6 @@
     .day {
         font-size: 2.5rem;
         font-weight: 500;
-        color: var(--color-primary);
+        color: var(--brand);
     }
 }

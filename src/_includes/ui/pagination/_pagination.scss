@@ -28,7 +28,7 @@
                 height: 2rem;
                 font-size: 1rem;
                 text-align: center;
-                color: var(--color-primary);
+                color: var(--brand);
                 background-color: transparent;
                 padding: 0.625rem;
                 box-sizing: border-box;
@@ -42,8 +42,8 @@
 
             &.active {
                 a {
-                    color: #fff;
-                    background-color: var(--color-primary);
+                    color: var(--on-accent);
+                    background-color: var(--brand);
                 }
             }
 
@@ -58,8 +58,8 @@
             &:not(.prev):not(.next) {
                 a {
                     &:hover {
-                        color: #fff;
-                        background-color: var(--color-primary);
+                        color: var(--on-accent);
+                        background-color: var(--brand);
                     }
                 }
             }
@@ -79,7 +79,7 @@
                 font-size: 1rem;
                 font-weight: bold;
                 text-align: center;
-                color: var(--color-primary);
+                color: var(--brand);
                 background-color: transparent;
                 padding: 0.625rem;
                 box-sizing: border-box;
@@ -96,7 +96,7 @@
     font-size: 1rem;
     font-weight: 600;
     text-align: left;
-    color: var(--color-gray-blue-dark);
+    color: var(--text);
 }
 
 // 輸入版頁碼
@@ -136,8 +136,8 @@
     box-sizing: border-box;
     font-size: 1rem;
     line-height: 1.375;
-    color: var(--color-text-default);
+    color: var(--text);
     border-radius: 4px;
-    border: solid 1px var(--color-border-default);
-    background-color: #fff;
+    border: solid 1px var(--border);
+    background-color: var(--surface-input);
 }

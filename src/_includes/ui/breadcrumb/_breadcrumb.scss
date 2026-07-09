@@ -15,20 +15,20 @@
         flex-wrap: wrap;
 
         li {
-            color: var(--color-text-dark);
+            color: var(--text-muted);
             word-break: break-all;
 
             +li {
                 &::before {
                     text-align: center;
-                    color: var(--color-text-dark);
+                    color: var(--text-muted);
                     padding: 0 0.5rem;
                     content: "/";
                 }
             }
 
             a {
-                color: var(--color-text-dark);
+                color: var(--text-muted);
                 text-decoration: none;
 
                 &:hover {

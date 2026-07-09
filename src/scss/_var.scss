@@ -1,49 +1,131 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// 設計 token（全站唯一色源，單一層、直接給值、無別名）
+// ─────────────────────────────────────────────────────────────────────────────
+// 元件一律只用本檔的語意 token（--surface / --text / --brand …），不寫裸 hex、不留原色別名層。
+// 深色（護眼／半夜關燈）由 [data-theme="dark"] 覆寫同一組 token → 全站換膚。
+// showcase 頁（component.html / catalog.html）另有自己的 --gl-* 色盤（見 _guideline-var.scss）。
+
 :root {
     --fontFamily: NotoSans, "PingFangTC", Microsoft JhengHei, "微軟正黑體", "Helvetica", "sans-serif";
 
-    /*語意化顏色變數*/
-    --color-primary: #168ed1;
-    --color-primary-hover: #037ec3;
-    --color-primary-light: #e7f7ff;
-    --color-primary-dark: #13386f;
-    --color-primary-linear: linear-gradient(to right, #0a62ac, #2ebbcf);
+    /* 表面 surface（raised 比 base 亮＝用亮度表現抬升） */
+    --surface: #f9f9f9; // app / 頁面底
+    --surface-raised: #ffffff; // 卡片 / block / modal / 下拉 / header / 側欄
+    --surface-sunken: #f5f5f5; // 表頭 / chip / tab 條 / 內嵌面板 / code
+    --surface-hover: #f1f1f1; // hover 列 / hover 項底
+    --surface-disabled: #efefef; // disabled 控制項底
+    --surface-input: #ffffff; // 表單控制項底
 
-    --color-success: #00b526;
-    --color-success-hover: #019520;
+    /* 文字 text */
+    --text: #222222; // 主要內文
+    --text-strong: #4e4e4e; // 較重次級文字：頁籤標題、日期、標題
+    --text-muted: #6c6c6c; // 次要 / placeholder / meta
+    --on-accent: #ffffff; // 疊在有色填充上的白字 / 白圖示——兩主題都不翻
+    --on-warning: #222222; // 疊在恆亮 warning 黃底上的深字（toast-warning）——兩主題都維持深
 
-    --color-info: #0d97e5;
+    /* 邊框 border */
+    --border: #e1e1e1; // 預設邊框 / 分隔線
+    --border-subtle: #f1f1f1; // 更淡的邊框
 
-    --color-warning: #ffc700;
-    --color-warning-hover: #efbb00;
+    /* 品牌 brand（fill 與 ink 分家：深色下品牌深藍當文字要提亮，當填充不需要） */
+    --brand: #168ed1; // 品牌填充（按鈕 / active）
+    --brand-hover: #037ec3;
+    --brand-ink: #13386f; // 品牌色文字 / 勾記 / 深品牌（深色下提亮）
+    --brand-tint: #e7f7ff; // 品牌淡藍底（使用者泡泡 / selected / chip）
+    --brand-gradient: linear-gradient(to right, #0a62ac, #2ebbcf); // footer 底 / avatar / header 底線
 
-    --color-danger: #f12929;
-    --color-danger-hover: #d41414;
+    /* 狀態 state（fill 與同色文字共用；深色略提亮） */
+    --success: #00b526;
+    --success-hover: #019520;
+    --danger: #f12929;
+    --danger-hover: #d41414;
+    --warning: #ffc700;
+    --warning-hover: #efbb00;
+    --info: #0d97e5;
 
-    --color-gray-100: #f9f9f9;
-    --color-gray-200: #f5f5f5;
-    --color-gray-300: #f1f1f1;
-    --color-gray-400: #e1e1e1;
-    --color-gray-500: #dfdfdf;
-    --color-gray-600: #6c6c6c;
-    --color-black: #222222;
+    /* 延伸 accent（orange / teal 按鈕） */
+    --accent-orange: #fe790d;
+    --accent-orange-hover: #e9710e;
+    --accent-teal: #267594; // button-dark 深青
+    --accent-teal-hover: #0c536e;
 
-    --color-text-default: var(--color-black);
-    --color-text-dark: var(--color-gray-600);
-    --color-bg-primary: #e7f7ff;
-    --color-border-default: var(--color-gray-400);
-    --color-blockquote-bg: rgba(0, 0, 0, 0.02); // markdown 引言區塊背景（半透明黑，疊在任何底色上）
+    /* 效果 effect */
+    --shadow: rgba(0, 0, 0, 0.1); // box-shadow 顏色
+    --shadow-strong: rgba(0, 0, 0, 0.15); // 較重陰影
+    --overlay: rgba(0, 0, 0, 0.3); // modal backdrop / 遮罩
+    --overlay-tint: rgba(0, 0, 0, 0.02); // 疊底半透明（blockquote）
 
-    /* 延伸色：原本散在 verbatim atom 的原色 hex 收成 token（§4；值沿用原 hex） */
-    --color-gray-350: #efefef; // tab/priority-table 表面、checkbox/radio disabled 底（#ebebeb 併入，差不多）
-    --color-gray-550: #888888; // 模擬 select 的 placeholder（form-control）
-    --color-gray-700: #4e4e4e; // 深灰文字：tab 標題、chatroom 日期、login
-    --color-gray-800: #333333; // feature-disabled 標題
-    --color-gray-blue: #b4bfc9; // storage-bar 底軌
-    --color-gray-blue-dark: #323c4f; // pagination 資訊列文字
-    --color-tooltip-bg: #363636; // tooltip 底色
-    --color-orange: #fe790d; // button-orange
-    --color-orange-hover: #e9710e; // button-orange hover
-    --color-dark: #267594; // button-dark
-    --color-dark-hover: #0c536e; // button-dark hover
-    --color-toggle-on: #409144; // switch 開啟態底色
+    /* 控制項零件 control */
+    --scrollbar-thumb: #dfdfdf; // 細捲軸 thumb（元件 / modal）
+    --scrollbar-thumb-strong: #13386f; // 整頁 / mobile-nav 捲軸 thumb
+    --control-track: #6c6c6c; // switch off 軌道
+    --control-track-alt: #b4bfc9; // storage-bar 空軌
+    --control-knob: #ffffff; // switch 把手 / checkbox 勾記
+    --toggle-on: #409144; // switch on 底
+
+    /* tooltip（淺色本就是深泡泡；深色反相成淺泡泡才跳得出來） */
+    --tooltip-bg: #363636;
+    --tooltip-text: #ffffff;
+}
+
+// 深色（護眼：近黑底、字用調暗米白防光暈、accent 略提亮、整體降亮度）
+[data-theme="dark"] {
+    /* 表面：近黑，raised 逐階提亮表現抬升 */
+    --surface: #0f0f0f;
+    --surface-raised: #1c1c1c;
+    --surface-sunken: #171717;
+    --surface-hover: #262626;
+    --surface-disabled: #232323;
+    --surface-input: #1a1a1a;
+
+    /* 文字：調暗米白，非純白（半夜關燈防光暈） */
+    --text: #c9c9c9;
+    --text-strong: #e2e2e2;
+    --text-muted: #8a8a8a;
+    --on-accent: #ffffff; // 彩底上白字不翻
+    --on-warning: #1f1f1f; // 黃底恆亮，深字維持
+
+    /* 邊框：低對比 */
+    --border: #2e2e2e;
+    --border-subtle: #242424;
+
+    /* 品牌 */
+    --brand: #2b90d0;
+    --brand-hover: #3a9fdd;
+    --brand-ink: #6fa8dd; // 品牌深藍當文字，黑底不可讀 → 提亮
+    --brand-tint: #16344a; // 淡藍底 → 深藍 tint
+    --brand-gradient: linear-gradient(to right, #0a3f6e, #1c7f93);
+
+    /* 狀態：略提亮 */
+    --success: #2fbf50;
+    --success-hover: #27a544;
+    --danger: #f0555a;
+    --danger-hover: #e04045;
+    --warning: #e6b800;
+    --warning-hover: #d6ab00;
+    --info: #38a5e5;
+
+    /* 延伸 accent */
+    --accent-orange: #ff8a2a;
+    --accent-orange-hover: #f07d1e;
+    --accent-teal: #3a9cbf; // 深青按鈕在黑底會糊 → 提亮
+    --accent-teal-hover: #2d8aab;
+
+    /* 效果：黑底陰影本就弱 → 加深；半透明黑 → 翻成半透明白 */
+    --shadow: rgba(0, 0, 0, 0.6);
+    --shadow-strong: rgba(0, 0, 0, 0.7);
+    --overlay: rgba(0, 0, 0, 0.6);
+    --overlay-tint: rgba(255, 255, 255, 0.05);
+
+    /* 控制項零件 */
+    --scrollbar-thumb: #3a3a3a;
+    --scrollbar-thumb-strong: #4a6a8a;
+    --control-track: #444444;
+    --control-track-alt: #33414d;
+    --control-knob: #e8e8e8;
+    --toggle-on: #4aa257;
+
+    /* tooltip 反相成淺泡泡 */
+    --tooltip-bg: #e5e5e5;
+    --tooltip-text: #1f1f1f;
 }

@@ -129,6 +129,7 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 - **變體 class → props / CVA**：本專案已把跨元件覆寫改成變體（`.button-primary/-border/-orange/-dark/-red/-green`、`.divider-vertical.sm/.lg`、`.link-modal.on-dark`、`.tab.on-record`、`.message-content.in-compare`、`.list-style-disc.line-loose`、`.block-sm/-lg`、`.form-control.select-sm/-md`、`.size-sm/-lg`…）。**直接把每個變體對成一個 prop/variant，不要回去讀後代選擇器**。
 - **狀態 class → conditional className**：`.active/.open/.done/.collapsed/.disabled/.error` → React state/props（`className={clsx('tab', open && 'active-utils')}`）。
 - **`:has()` → state**：`.form-group:has(.error) .error-prompt{display:block}`、`td:has(.form-checkbox)` → 用 state/prop 判斷，比 `has-[]` variant 清楚。
+- **host hover 顯示子元素**（tooltip：`.has-tooltip:hover .tooltip{opacity:1}`）→ host 掛 `group`、子元素 `opacity-0 group-hover:opacity-100`。`.has-tooltip` 是 tooltip 自有的觸發 class（掛在放 tooltip 的按鈕上），不是裸 `button:hover`、也不指名別元件 class。
 - **目標：轉出的 React 零行內 `style`。** 切版 §4 那三種「合法行內」各自這樣轉（別照抄成 `style`）：
   - `<col style="width:180px">` 欄寬 → arbitrary-value **class** `w-[180px]`（`min-width` → `min-w-[180px]`）。**不是行內。**
   - JS 切換的 `display`（初始 `display:none`）→ conditional **className**（`hidden` / `block`），由 state 決定，不用 `style={{display}}`。

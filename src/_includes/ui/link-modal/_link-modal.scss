@@ -1,7 +1,7 @@
 // 逐位元照抄自真 app scss/component.scss 755-771（link-modal 區塊，含原註解），只搬檔案位置，宣告一字不改
 // 連結樣式的按鈕
 .link-modal {
-    color: var(--color-primary);
+    color: var(--brand);
     text-decoration: none;
     cursor: pointer;
     background: none;
@@ -18,6 +18,6 @@
 
     // 深色背景（如 footer）用的變體：由本元件自己提供，父元件只加 class、不從外部改本元件樣式（§4）
     &.on-dark {
-        color: #fff;
+        color: var(--on-accent);
     }
 }

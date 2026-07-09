@@ -13,7 +13,7 @@
     /* Handle */
     &::-webkit-scrollbar-thumb {
         border-radius: 3px;
-        background-color: rgba(#4f4f4f, 0.5);
+        background-color: var(--gl-scrollbar-thumb);
     }
 
     /* Track */
@@ -35,7 +35,7 @@
 
     /*firefox scrollbar*/
     scrollbar-width: thin;
-    scrollbar-color: rgba(#4f4f4f, 0.5) #fff;
+    scrollbar-color: var(--gl-scrollbar-thumb) #fff;
 }
 
 // 以下所有規則限定在元件庫展示頁（body.guideline-page）。
@@ -58,7 +58,7 @@ body.guideline-page {
         width: calc(100% - 200px);
         height: 100vh;
         padding: 1rem;
-        background-color: #fcfcfc;
+        background-color: var(--gl-bg);
         box-sizing: border-box;
         overflow: auto;
         @include scrollbar();
@@ -70,7 +70,7 @@ aside {
     width: 200px;
     height: 100vh;
     // padding-top: 56px;
-    background-color: #fffaf2;
+    background-color: var(--gl-aside-bg);
     box-sizing: border-box;
     overflow-y: auto;
     flex-shrink: 0;
@@ -88,14 +88,14 @@ aside {
                 display: block;
                 width: 100%;
                 font-size: 1rem;
-                color: #6c6c6c;
+                color: var(--gl-nav-link);
                 padding: 0.75em 1em;
                 text-decoration: none;
                 box-sizing: border-box;
                 transition: all 0.3s;
 
                 &:hover {
-                    background-color: #4f4f4f;
+                    background-color: var(--gl-dark);
                     color: #fff;
                 }
             }
@@ -115,17 +115,17 @@ section {
     z-index: 1;
 
     >span:first-child {
-        color: #4f4f4f;
-        border-right: 3px solid #4f4f4f;
+        color: var(--gl-dark);
+        border-right: 3px solid var(--gl-dark);
         padding-right: 10px;
-        background-color: #fcfcfc;
+        background-color: var(--gl-bg);
     }
 
     >span:nth-child(2) {
-        color: #000;
+        color: var(--gl-title);
         padding-left: 10px;
         padding-right: 20px;
-        background-color: #fcfcfc;
+        background-color: var(--gl-bg);
     }
 
     &::before {
@@ -133,7 +133,7 @@ section {
         display: block;
         width: 100%;
         height: 1px;
-        background-color: #3153ba;
+        background-color: var(--gl-divider);
         opacity: 0.3;
         position: absolute;
         top: 50%;
@@ -169,7 +169,7 @@ section {
                 content: "";
                 width: 10px;
                 height: 10px;
-                background: #3C4C5E;
+                background: var(--gl-bullet);
                 position: absolute;
                 left: -24px;
                 top: 50%;
@@ -180,7 +180,7 @@ section {
 
     &.description {
         font-size: 1rem;
-        background-color: rgba(#b4bfc9, 0.5);
+        background-color: var(--gl-panel-bg);
         border-radius: 4px;
         padding: 10px;
 
@@ -193,7 +193,7 @@ section {
                     content: "";
                     width: 6px;
                     height: 6px;
-                    background: #3C4C5E;
+                    background: var(--gl-bullet);
                     position: absolute;
                     left: -18px;
                     top: 50%;
@@ -210,8 +210,8 @@ section {
 
 .subtitle {
     font-size: 1rem;
-    background-color: rgba(#b4bfc9, 0.5);
-    color: #151515;
+    background-color: var(--gl-panel-bg);
+    color: var(--gl-panel-text);
     border-radius: 4px;
     padding: 10px;
     margin-top: 1em;
@@ -231,13 +231,13 @@ section {
     display: flex;
     align-items: center;
     font-size: 1.25rem;
-    color: #4f4f4f;
+    color: var(--gl-dark);
 }
 
 .example-box {
     width: 100%;
     height: 60px;
-    background-color: #ccc;
+    background-color: var(--gl-example-bg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -284,8 +284,8 @@ section {
     z-index: 99;
     opacity: 0;
     transition: all 0.3s;
-    background-color: #CBCBCB;
-    color: #222A32;
+    background-color: var(--gl-gotop-bg);
+    color: var(--gl-gotop-ink);
     box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     box-sizing: border-box;
@@ -303,14 +303,14 @@ section {
     height: 0;
     border-style: solid;
     border-width: 0 5px 6px 5px;
-    border-color: transparent transparent #222A32 transparent;
+    border-color: transparent transparent var(--gl-gotop-ink) transparent;
 }
 
 footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid #d2d2d2;
+    border-top: 1px solid var(--gl-footer-border);
     padding-top: 1rem;
     color: #fff;
 }

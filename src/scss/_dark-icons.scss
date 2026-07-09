@@ -1,0 +1,25 @@
+// 深色模式：光柵 PNG 圖示的第一版處理 —— 直接反相看看（GUIDELINE §4 允許的「圖示深色 filter」例外）。
+// invert(1) hue-rotate(180deg)：單色黑 icon 變白；彩色 icon 保留大致色相、只反轉亮度。
+// ⚠️ 這是「先看效果」的實驗版：白色系 icon（icon_add_white）已排除；彩色 icon / logo / 頭像 用此法仍可能失真，
+//    最終視覺不理想的那幾個再改出深色版資產。button-icon 內的 .tooltip 於 hover 時會被連帶反相（已回正）。
+[data-theme="dark"] {
+
+    .button-icon,
+    img.icon:not([src*="white"]),
+    .beta-icon,
+    .modals-close img,
+    .form-control.search,
+    .form-control.time,
+    .dropdown::after,
+    .select-wrap::after,
+    .multi-select-control::after,
+    .collapse-toggle::after,
+    .qa-side-panel-toggle::after {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    // button-icon 內的 tooltip 泡泡不該被父層反相 → 再反相一次回正
+    .button-icon .tooltip {
+        filter: invert(1) hue-rotate(180deg);
+    }
+}

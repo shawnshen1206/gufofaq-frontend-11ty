@@ -1,30 +1,9 @@
-// 逐字複製自真實 app 的 scss/component.scss「checkbox & radio」區段（verbatim，只搬移位置）
-// 註：.form-checkbox, .form-radio 為共用選擇器，checkbox 與 radio 兩個 atom 各自都需要，故此規則同時複製到兩邊（原樣、非改寫）。
-.form-checkbox,
-.form-radio {
-    display: inline-flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    user-select: none;
-    box-sizing: border-box;
-
-    &:has(:disabled) {
-        cursor: not-allowed;
-    }
-
-    >span {
-        line-height: 1.375;
-        white-space: nowrap;
-    }
-}
-
-
+// radio atom：外框排版 base 見共用的 scss/_form-check.scss（與 checkbox 共用，§4 不在此寫 checkbox 的 class）。
+// 以下只寫 radio 自己的 class 與其 input 控制項樣式。逐字取自真實 app scss/component.scss。
 .form-radio {
     &.border-wrap {
-        border: 1px solid var(--color-border-default);
-        background-color: #fff;
+        border: 1px solid var(--border);
+        background-color: var(--surface-input);
         border-radius: 4px;
         padding: 0.625rem 1rem;
         min-width: 130px;
@@ -36,8 +15,8 @@ input[type="radio"] {
     appearance: none;
     width: 16px;
     height: 16px;
-    background-color: #fff;
-    border: 1px solid var(--color-border-default);
+    background-color: var(--surface-input);
+    border: 1px solid var(--border);
     border-radius: 50%;
     margin: 0;
     box-sizing: border-box;
@@ -54,7 +33,7 @@ input[type="radio"] {
         display: block;
         width: 8px;
         height: 8px;
-        background-color: #fff;
+        background-color: var(--control-knob);
         border-radius: 50%;
         position: absolute;
         top: 50%;
@@ -64,18 +43,18 @@ input[type="radio"] {
     }
 
     &:checked {
-        background-color: #fff;
-        border-color: var(--color-border-default);
+        background-color: var(--surface-input);
+        border-color: var(--border);
 
         &::before {
-            background-color: var(--color-primary-dark);
+            background-color: var(--brand-ink);
             transform: translate(-50%, -50%) scale(1);
         }
     }
 
     &:disabled {
-        background-color: var(--color-gray-350);
-        border-color: var(--color-border-default);
+        background-color: var(--surface-disabled);
+        border-color: var(--border);
         cursor: not-allowed;
 
         &::before {
@@ -84,11 +63,11 @@ input[type="radio"] {
 
         &:checked {
             cursor: not-allowed;
-            background-color: var(--color-gray-350);
-            border-color: var(--color-gray-350);
+            background-color: var(--surface-disabled);
+            border-color: var(--border-subtle);
 
             &::before {
-                background-color: #fff;
+                background-color: var(--control-knob);
                 transform: translate(-50%, -50%) scale(1);
             }
         }

@@ -11,9 +11,9 @@
         gap: 0.375rem;
         padding: 0.5rem 1rem;
         font-size: 1rem;
-        color: var(--color-text-dark);
-        background-color: #fff;
-        border: 1px solid var(--color-gray-300);
+        color: var(--text-muted);
+        background-color: var(--surface-input);
+        border: 1px solid var(--border-subtle);
         border-radius: 100px;
         cursor: pointer;
         transition: all 0.3s;
@@ -35,14 +35,14 @@
         }
 
         &:hover {
-            border-color: var(--color-primary);
+            border-color: var(--brand);
         }
 
         // 選中（.active，由 faq-feedback.js 加）
         &.active {
-            color: var(--color-primary);
-            background-color: var(--color-gray-100);
-            border-color: var(--color-primary);
+            color: var(--brand);
+            background-color: var(--surface-sunken);
+            border-color: var(--brand);
         }
     }
 }

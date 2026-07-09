@@ -5,7 +5,7 @@
 
     .login-left {
         width: 50%;
-        background-color: var(--color-gray-100);
+        background-color: var(--surface);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -39,7 +39,7 @@
                     margin-left: auto;
                     background: none;
                     border: none;
-                    color: var(--color-gray-700);
+                    color: var(--text-strong);
                     cursor: pointer;
                     margin-bottom: 24px;
                     font-size: 1rem;
@@ -63,7 +63,7 @@
 
     .login-right {
         width: 50%;
-        background-color: var(--color-gray-300);
+        background-color: var(--surface-sunken);
         display: flex;
         align-items: center;
         justify-content: center;

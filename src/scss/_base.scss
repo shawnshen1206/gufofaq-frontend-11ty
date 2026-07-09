@@ -16,7 +16,7 @@ body {
     font-size: 1rem;
     width: 100%;
     line-height: 1.375;
-    color: var(--color-text-default);
+    color: var(--text);
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
@@ -31,7 +31,7 @@ ol {
 
 a {
     text-decoration: none;
-    color: var(--color-text-default);
+    color: var(--text);
 }
 
 .full-wrap {
@@ -61,7 +61,7 @@ a {
     flex: 1 0 auto;
     padding: 1rem 2.5rem 2.5rem 2.5rem;
     box-sizing: border-box;
-    background-color: var(--color-gray-100);
+    background-color: var(--surface);
 }
 
 .page-title-wrap {
@@ -79,7 +79,7 @@ a {
 .page-title {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--color-primary);
+    color: var(--brand);
     text-align: left;
     word-break: break-all;
 }

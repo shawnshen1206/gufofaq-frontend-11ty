@@ -14,13 +14,13 @@
 .catalog-title {
     font-size: 1.75rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--brand-ink);
     margin: 0;
 }
 
 .catalog-sub {
     margin: 0.5rem 0 0;
-    color: var(--color-text-dark);
+    color: var(--text-muted);
     line-height: 1.6;
 }
 
@@ -31,19 +31,19 @@
 }
 
 .catalog-card {
-    border: 1px solid var(--color-border-default);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--surface-raised);
     padding: 1.25rem;
     box-sizing: border-box;
 }
 
 .catalog-card-title {
     font-weight: 600;
-    color: var(--color-text-default);
+    color: var(--text);
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-gray-400);
+    border-bottom: 1px solid var(--border);
 }
 
 .catalog-links {
@@ -53,11 +53,11 @@
 }
 
 .catalog-links a {
-    color: var(--color-primary);
+    color: var(--brand);
     width: fit-content;
 
     &:hover {
-        color: var(--color-primary-hover);
+        color: var(--brand-hover);
         text-decoration: underline;
     }
 }

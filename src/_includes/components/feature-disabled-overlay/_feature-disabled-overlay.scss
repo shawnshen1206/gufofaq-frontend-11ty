@@ -17,7 +17,7 @@
     align-items: center;
     justify-content: center;
     min-height: 400px;
-    background-color: rgba(128, 128, 128, 0.7);
+    background-color: var(--overlay);
 
     &.active {
         display: flex;
@@ -27,19 +27,19 @@
 .feature-disabled-box {
     padding: 40px 60px;
     border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: var(--surface-raised);
+    box-shadow: 0 4px 12px var(--shadow-strong);
     text-align: center;
 }
 
 .feature-disabled-title {
     font-size: 24px;
     font-weight: 600;
-    color: var(--color-gray-800);
+    color: var(--text-strong);
 }
 
 .feature-disabled-desc {
     margin-top: 12px;
     font-size: 16px;
-    color: var(--color-text-dark);
+    color: var(--text-muted);
 }

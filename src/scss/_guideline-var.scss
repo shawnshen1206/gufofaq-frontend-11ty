@@ -1,0 +1,20 @@
+// component.html（元件總覽 showcase 頁）專屬色盤。
+// 這些是 showcase 頁自己的 chrome 色（側欄／區塊標題／go-top／footer／說明面板），非 app 設計 token——
+// 放這支專用檔、不進 _var.scss，讓「app 唯一色源」保持乾淨；但一樣走變數、不寫裸 hex（架構不妥協）。
+// 定義在 .guideline-page 上：只在 showcase 頁生效、零全站足跡。
+.guideline-page {
+    --gl-bg: #fcfcfc; // 主內容區 / 區塊標題底
+    --gl-aside-bg: #fffaf2; // 側欄底
+    --gl-nav-link: #6c6c6c; // 側欄連結文字
+    --gl-dark: #4f4f4f; // 深色 ink：側欄 hover 底、區塊標題重點、頁標題
+    --gl-scrollbar-thumb: rgba(79, 79, 79, 0.5); // 捲軸 thumb（= #4f4f4f @ 50%）
+    --gl-divider: #3153ba; // 區塊標題分隔線
+    --gl-title: #000; // 區塊標題主字
+    --gl-bullet: #3c4c5e; // 說明清單項目符號
+    --gl-panel-bg: rgba(180, 191, 201, 0.5); // 說明面板底（= #b4bfc9 @ 50%）
+    --gl-panel-text: #151515; // 說明面板文字
+    --gl-example-bg: #ccc; // 版位示意方塊底
+    --gl-gotop-bg: #cbcbcb; // go-top 鈕底
+    --gl-gotop-ink: #222a32; // go-top 鈕字 / 箭頭
+    --gl-footer-border: #d2d2d2; // footer 上邊框
+}

@@ -1,0 +1,40 @@
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background-color: var(--surface-hover);
+        color: var(--brand);
+    }
+
+    .theme-toggle-icon {
+        display: block;
+    }
+
+    // 淺色：顯示月亮（點了轉深）；太陽藏起來
+    .icon-sun {
+        display: none;
+    }
+}
+
+// 深色：顯示太陽（點了轉淺）；月亮藏起來
+[data-theme="dark"] .theme-toggle {
+    .icon-sun {
+        display: block;
+    }
+
+    .icon-moon {
+        display: none;
+    }
+}

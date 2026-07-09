@@ -80,15 +80,15 @@ $margins: (4, 8, 10, 12, 16, 20, 24, 32, 40); // mt-*/mb-*/my-*
 }
 
 .text-red {
-    color: var(--color-danger);
+    color: var(--danger);
 }
 
 .text-blue {
-    color: var(--color-primary);
+    color: var(--brand);
 }
 
 .text-gray {
-    color: var(--color-text-dark);
+    color: var(--text-muted);
 }
 
 // 「粗體」沿用真實 app 的視覺定義 = 500（medium）；class 名是設計系統既有詞彙，勿改名、勿改值
@@ -147,7 +147,7 @@ $margins: (4, 8, 10, 12, 16, 20, 24, 32, 40); // mt-*/mb-*/my-*
 }
 
 .text-default {
-    color: var(--color-text-default) !important;
+    color: var(--text) !important;
 }
 
 /*===============================

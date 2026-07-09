@@ -2,6 +2,9 @@ module.exports = function (eleventyConfig) {
     // 圖片直接複製到 dist/images
     eleventyConfig.addPassthroughCopy({ "src/images": "images" });
 
+    // i18n 翻譯檔（英文）直接複製到 dist/i18n，供 lang-toggle.js runtime fetch（非 build data，不碰 §2）
+    eleventyConfig.addPassthroughCopy({ "src/i18n": "i18n" });
+
     // 元件 JS 逐一登記，複製到 dist/js
     eleventyConfig.addPassthroughCopy({
         "src/_includes/components/mobile-nav/mobile-nav.js": "js/mobile-nav.js",
@@ -19,6 +22,8 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/faq-chatroom/faq-chatroom.js": "js/faq-chatroom.js",
         "src/_includes/components/faq-feedback-modal/faq-feedback-modal.js": "js/faq-feedback-modal.js",
         "src/_includes/ui/toast/toast.js": "js/toast.js",
+        "src/_includes/ui/theme-toggle/theme-toggle.js": "js/theme-toggle.js",
+        "src/_includes/ui/lang-toggle/lang-toggle.js": "js/lang-toggle.js",
     });
 
     // 開發時 sass 另外編譯 dist/css，讓 eleventy --serve 監看 css 變動也即時重載
