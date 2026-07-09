@@ -100,7 +100,7 @@ screens: {
 **⚠️ 但 code 裡還有一批「元件專屬」的一次性斷點，只設 992/768 的 agent 會在這些寬度做錯版面——轉各該元件時用 `max-[Npx]` arbitrary variant 處理：**
 - `1560px`（+ 降到 `1200px`）：`.wrap` 內容容器最大寬（`_base.scss`，每頁都用）、`countdown-box`。
 - `1040px`：`step-nodes`（步驟條）、`catalog`（目錄頁）。
-- `991px`/`767px`：`.message-content` 訊息氣泡最大寬（`_chat-message.scss`，共用泡泡）。
+- `991px`/`767px`：`.message-content` 訊息氣泡最大寬（`_chat-message.scss`，共用泡泡）；`faq-share-modal` 亦有一個 767px。
 - `576px`：`countdown-box` 的一次性 `@media`。
 > ⚠️ `900px`/`560px`（`.modals-md`/`.modals-sm`）、`531px`/`480px`（login-wrapper）**不是斷點**，是元素的 `max-width` 屬性——別做成 `max-[900px]:` variant。
 > 做法：轉某元件時，**讀它自己的 `@media` 值**，逐一對成 `max-[992px]:`/`max-[1560px]:`… 別只靠 named screens。

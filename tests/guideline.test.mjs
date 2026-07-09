@@ -255,6 +255,57 @@ test("§5 dist/js 不得有孤兒（沒被 passthrough 的舊產物）", () => {
     assert.equal(orphan.length, 0, `dist 未清乾淨，殘留：${orphan}`);
 });
 
+// ─────────────────────────── §1 檔案結構 ───────────────────────────
+
+const componentDirs = ["ui", "components"].flatMap((bucket) =>
+    readdirSync(`src/_includes/${bucket}`).map((name) => ({ bucket, name, path: `src/_includes/${bucket}/${name}` }))
+);
+
+test("§1-2 元件資料夾內只放 <名>.html / _<名>.scss / <名>.js", () => {
+    const bad = componentDirs.flatMap(({ bucket, name, path }) =>
+        readdirSync(path)
+            .filter((f) => f !== `${name}.html` && f !== `_${name}.scss` && f !== `${name}.js`)
+            .map((f) => `${bucket}/${name}/${f}`)
+    );
+    assert.equal(bad.length, 0, `命名不符或多餘的檔：\n${fail(bad)}`);
+});
+
+test("§1-1 ui/ 的元件不得 include 其他元件（它是零依賴的積木）", () => {
+    const bad = [];
+    for (const f of srcHtml.filter((f) => f.startsWith("src/_includes/ui/")))
+        for (const m of read(f).matchAll(/\{%\s*include\s+"([^"]+)"/g)) bad.push(`${f}  include ${m[1]}`);
+    assert.equal(bad.length, 0, `會用到其他元件的要搬去 components/：\n${fail(bad)}`);
+});
+
+// ─────────────────────────── 其餘 §2 / §4 / §5 ───────────────────────────
+
+test("§2 HTML 註解 <!-- --> 內不得寫 {% %} / {{ }}（會被 nunjucks 解析）", () => {
+    const bad = [];
+    for (const f of srcHtml)
+        for (const m of read(f).matchAll(/<!--[\s\S]*?-->/g))
+            if (/\{%|\{\{/.test(m[0])) bad.push(`${f}  ${m[0].replace(/\s+/g, " ").slice(0, 70)}`);
+    assert.equal(bad.length, 0, `模板碼要用 {# #} 註解：\n${fail(bad)}`);
+});
+
+test("§4 元件 scss 不得拿別的元件 class 當祖先選擇器（跨元件覆寫）", () => {
+    const names = new Set(componentDirs.map((c) => c.name));
+    const bad = [];
+    for (const { name, path } of componentDirs) {
+        const f = `${path}/_${name}.scss`;
+        if (!existsSync(f)) continue;
+        read(f).split(/\r?\n/).forEach((line, i) => {
+            const m = line.match(/^\s*\.([\w-]+)\s+\.([\w-]+)/);
+            if (m && names.has(m[1]) && m[1] !== name) bad.push(`${f}:${i + 1}  ${line.trim()}`);
+        });
+    }
+    assert.equal(bad.length, 0, `改別人的樣式要用 owning 元件的 variant/slot class：\n${fail(bad)}`);
+});
+
+test("§5 元件 js 都在 DOMContentLoaded 內綁定", () => {
+    const bad = srcJs.filter((f) => f.startsWith("src/_includes/") && !read(f).includes("DOMContentLoaded"));
+    assert.equal(bad.length, 0, fail(bad));
+});
+
 // ─────────────────────────── 跨檔一致性 ───────────────────────────
 
 test("main.scss 有 @use 每一支元件 scss", () => {
@@ -272,6 +323,44 @@ test("README.md 有交代每一個 layout", () => {
     const doc = read("README.md");
     const missing = readdirSync("src/_includes/layouts").filter((f) => f.endsWith(".html") && !doc.includes(f));
     assert.equal(missing.length, 0, `README 沒提到這些 layout：${missing}`);
+});
+
+test("README.md 的數字（page-shell 頁數、元件數）與實況一致", () => {
+    const doc = read("README.md");
+    const pages = gitFiles('"src/pages/**/*.html"').filter((f) => /^layout: layouts\/page-shell\.html\s*$/m.test(read(f))).length;
+    const comps = componentDirs.length;
+    assert.ok(doc.includes(`管理端 ${pages} 頁`), `README 的頁數過期，實際 ${pages} 頁`);
+    assert.ok(doc.includes(`${comps} 個元件`), `README 的元件數過期，實際 ${comps} 個`);
+});
+
+test("md 的 §N 引用都指向 GUIDELINE 存在的章節，README 的引用要標明 GUIDELINE", () => {
+    const guideline = read("GUIDELINE.md");
+    const sections = new Set(
+        [...guideline.matchAll(/^#{2,3} (\d+)(?:-(\d+))?\./gm)].map((m) => (m[2] ? `${m[1]}-${m[2]}` : m[1]))
+    );
+    const bad = [];
+    // GUIDELINE 內的 §N 一律指自己
+    guideline.split(/\r?\n/).forEach((line, i) => {
+        for (const m of line.matchAll(/§\s?(\d+(?:-\d+)?)/g))
+            if (!sections.has(m[1])) bad.push(`GUIDELINE.md:${i + 1}  §${m[1]} 不存在`);
+    });
+    // README 的 §N 必須寫明是 GUIDELINE 的（README 自己沒有 §N 章節）
+    read("README.md").split(/\r?\n/).forEach((line, i) => {
+        for (const m of line.matchAll(/§\s?(\d+(?:-\d+)?)/g)) {
+            const before = line.slice(Math.max(0, m.index - 30), m.index);
+            if (!/GUIDELINE/.test(before)) bad.push(`README.md:${i + 1}  §${m[1]} 沒標明是 GUIDELINE 的章節`);
+            else if (!sections.has(m[1])) bad.push(`README.md:${i + 1}  GUIDELINE §${m[1]} 不存在`);
+        }
+    });
+    assert.equal(bad.length, 0, fail(bad));
+});
+
+test("md 的相對連結都指向存在的檔案", () => {
+    const bad = [];
+    for (const doc of ["README.md", "GUIDELINE.md", "TAILWIND-CONVERSION.md"])
+        for (const m of read(doc).matchAll(/\]\((?!https?:)([^)#]+)/g))
+            if (!existsSync(m[1])) bad.push(`${doc}  → ${m[1]}`);
+    assert.equal(bad.length, 0, fail(bad));
 });
 
 test("GUIDELINE.md 不放會腐化的枚舉（頁數、元件數）", () => {

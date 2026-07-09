@@ -97,7 +97,7 @@ dist/                       build 輸出（勿手改）
 
 ## 元件使用一覽
 
-### 帶資料的元件（頁面 include 前 `{% set %}` 提供，元件不自帶資料——見 GUIDELINE §6）
+### 帶資料的元件（資料因頁面而異，故由頁面 include 前 `{% set %}` 提供——規則見 GUIDELINE §6）
 
 | 元件 | 參數／資料 |
 |---|---|
@@ -106,13 +106,13 @@ dist/                       build 輸出（勿手改）
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
 | `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。 |
-| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
-| `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 §3-2 直接寫在元件 markup。 |
+| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
+| `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 GUIDELINE §3-2 直接寫在元件 markup。 |
 | `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
 | `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
 
-> 資料一律由**使用它的頁面**在 include 前 `{% set %}` 提供，元件不自帶資料——轉 React 即 props。規則見 [GUIDELINE §6](GUIDELINE.md)。
+> 這些元件的資料**因使用它的頁面而異**，故由頁面在 include 前 `{% set %}` 提供，元件只負責 `{% for %}` 渲染——轉 React 即 props。（全站不變的結構性設定與純示範假資料可以住在元件裡，見 [GUIDELINE §6](GUIDELINE.md)。）
 
 ### 自動引入
 
@@ -122,7 +122,7 @@ dist/                       build 輸出（勿手改）
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-這類元件**不用 include**，直接在 markup 寫它的 class：`button`、`block`、`default-table`、`form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`（無 html，靠 js 增強 `.multiSelect`）、`login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
+這類元件**不用 include**，直接在 markup 寫它的 class：`button`、`block`、`default-table`、`form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`form-table`、`link-file`、`modals`、`accordion`、`multi-select`（js 增強頁面上的 `.multiSelect`；元件自帶的 html 只是 showcase demo）、`login-wrapper`（無 html，class 寫在 `src/index.html`）、`error-page`（無 html，class 寫在 `src/404.html`）。
 另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
 
 > **上列不是完整清單**（`src/_includes/` 目前有 68 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`。
