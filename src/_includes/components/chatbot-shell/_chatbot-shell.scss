@@ -1,26 +1,21 @@
 // 前台 FAQ chatbot 外殼框架（chatbot-wrap + chatbot-main）。純樣式元件（class 寫在 layouts/chatbot-shell）。
-// 定位變數 --header-height/--footer-height 放在 .chatbot-wrap 上，只在 FAQ 頁生效、不外洩。
-// FAQ 頁固定 header/footer + 內部聊天捲動，故 body 不整頁捲——比照 §9 陷阱，用 body.chatbot-page 限定，
-// 不寫全域 body{overflow:hidden}（那會關掉全站每頁的捲動）。
+// flex 直欄：header 流頂、footer 流底、中間 .chatbot-main 佔滿並內捲——footer 直接沿用主站 components/footer（無需絕對定位或高度魔術數字）。
+// body 不整頁捲：比照 §9 陷阱用 body.chatbot-page 限定，不寫全域 body{overflow:hidden}（那會關掉全站每頁的捲動）。
 body.chatbot-page {
     overflow: hidden;
 }
 
 .chatbot-wrap {
-    --header-height: 72px;
-    --footer-height: 38px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100vh;
     overflow: hidden;
 }
 
 .chatbot-main {
-    position: absolute;
-    top: var(--header-height);
-    bottom: var(--footer-height);
-    left: 0;
-    right: 0;
+    flex: 1 1 auto;
+    min-height: 0; // 讓內部 .faq-chat-scroll 能捲（flex child 預設 min-height:auto 會被內容撐破而不捲）
     display: flex;
     overflow: hidden;
 }

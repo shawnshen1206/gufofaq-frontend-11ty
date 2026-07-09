@@ -1,10 +1,6 @@
 // 前台 FAQ 頁首（logo-only）。.logo 巢狀在 .chatbot-header 下，不與 Manager 的 .header .logo 相撞。
 .chatbot-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--header-height);
+    flex-shrink: 0; // flex 直欄的固定頂列（高度由 logo + padding 自然撐出，約 72px）
     display: flex;
     align-items: center;
     padding: 0.5rem 1.5rem;
@@ -12,7 +8,6 @@
     border-bottom: 2px solid;
     border-image: var(--brand-gradient) 1;
     box-sizing: border-box;
-    z-index: 99;
 
     .logo {
         margin: 0;
