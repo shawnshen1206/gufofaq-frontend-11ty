@@ -5,9 +5,9 @@ titleKey: nav.datasetList
 pageHeading: 資料集列表
 permalink: 3-1-6_previewExcel_compare.html
 ---
-{# 麵包屑：真實頁第三層為 .folder-name-link（回連資料集）、第四層為 .file-name（目前檔案），
-     ui/breadcrumb 只支援 label/href 無法掛這兩個專屬 class，故依真實頁手寫，逐字沿用 class；
-     資料同樣以「客服問答知識庫 / 商品清單.xlsx」呈現載入完成狀態 #}
+{# 麵包屑：真實頁第三層為 .folder-name-link（回連資料集）、第四層為 .file-name（目前檔案）。
+     ui/breadcrumb 的 item 支援 class / i18nKey，故這兩個專屬 class 由 breadcrumbItems 帶進去，
+     不必手寫一份麵包屑（§1-2：元件只有一份正本）；資料以「客服問答知識庫 / 商品清單.xlsx」呈現載入完成狀態 #}
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
   { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },

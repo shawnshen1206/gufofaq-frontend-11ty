@@ -40,10 +40,11 @@ permalink: 5-2-1_knowledgeRetrieval.html
         </div>
         <div class="form-group row mobile-col-xs">
             <div class="label">
-                <label class="control-label" data-i18n="settings.frontQaDefault">前台問答預設使用</label>
+                <label id="frontQaDefaultLabel" class="control-label" data-i18n="settings.frontQaDefault">前台問答預設使用</label>
             </div>
             <div class="field">
-                <div class="flex-row flex-wrap gap-24">
+                {# 一組 radio 要自己報出「這組在問什麼」：沒有 for 可掛的浮空 label 靠 aria-labelledby 接上（同 5-1-1、5-3）#}
+                <div class="flex-row flex-wrap gap-24" role="radiogroup" aria-labelledby="frontQaDefaultLabel">
                     {% for tab in settingTabs %}
                     <label class="form-radio">
                         <input type="radio" name="frontEnd_qa"{% if tab.active %} checked{% endif %}>
