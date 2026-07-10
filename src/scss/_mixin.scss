@@ -1,3 +1,18 @@
+// header 的桌機選單 ↔ 漢堡選單斷點。header 與 mobile-nav 兩支元件必須同步切換
+// （一支藏桌機選單、一支顯示漢堡、header 高度固定 56px 給 mobile-nav 的浮層對齊），
+// 所以斷點只留這一處，不在元件裡各寫一個 max-width。
+//
+// 1250px 是量出來的：桌機選單一露臉，整列就得塞得下
+//   24(左內距) + logo + 24(gap) + 選單 + 20(gap) + 語言/深淺 90 + 24(右內距)
+// 英文標籤比中文寬約 200px（選單 861px vs 662px），取寬者當基準；
+// 於是 1251px 時 logo 還有 208px（原尺寸 272.5px 的 76%），1316px 起回到原尺寸。
+// 真 app 用 992px —— 那時 header 右邊沒有語言／深淺鈕，也沒有英文版。
+@mixin nav-collapsed {
+    @media screen and (max-width: 1250px) {
+        @content;
+    }
+}
+
 /*html整頁用*/
 @mixin scrollbar() {
 

@@ -1,5 +1,7 @@
 // 從 component.scss 的「header」與「mobile-nav」區段逐字抽出（僅本元件的 class）
 // superfish 被拿掉：桌機下拉選單改用 CSS-hover（&:hover > ul）取代原本 JS 展開行為，視覺不變
+@use "../../../scss/mixin" as *;
+
 .header {
     position: sticky;
     top: 0;
@@ -15,10 +17,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1.5rem; // logo 縮小時不會貼上右鄰（選單或語言鈕）；space-between 只在有餘裕時才分得開
 
     .logo {
         margin: 0;
-        // 窄視窗時讓位給右側的語言／深淺／漢堡三顆鈕（真 app 右側只有漢堡，logo 才能一直是固定寬）
+        // 窄視窗時讓位給右側的語言／深淺／漢堡三顆鈕（真 app 右側只有漢堡，logo 才能一直是固定寬）。
+        // 縮到多小由斷點保證：桌機選單只在 logo 還有 208px 以上時才出現（見 mixin 的 nav-collapsed）。
         min-width: 0;
 
         a {
@@ -142,18 +146,20 @@
     }
 }
 
-@media screen and (max-width: 992px) {
+@include nav-collapsed {
     .desktop-nav {
         display: none;
     }
 
+    // 語言／深淺鈕改由 mobile-nav 放進展開的選單裡（那份不在 .header 底下，不受這條影響）。
+    // 留在 header 只會把 logo 擠小 —— 窄視窗的 header 就該只有 logo + 漢堡。
+    .header .header-controls {
+        display: none;
+    }
+
     .header {
-        height: 56px;
+        height: 56px; // mobile-nav 的浮層／選單高度都是照這個 56px 對齊，故兩者同斷點
         // 右緣收成 1rem：真 app 的漢堡就是 right: 1rem（比 logo 那側的 1.5rem 更貼邊）
         padding-right: 1rem;
-
-        .header-right {
-            gap: 0.75rem; // 窄視窗把語言／深淺／漢堡收攏，整組更靠右
-        }
     }
 }

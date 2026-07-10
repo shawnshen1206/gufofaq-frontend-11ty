@@ -1,5 +1,6 @@
 {# i18n：每個 label 帶 i18nKey，markup 渲染成 data-i18n；繁中文字即預設。
-   語言＋夜間切換抽到共用 components/header-controls（放在 nav 之後、漢堡之前，桌機/手機皆常駐）；此選單只剩導覽與登出。 #}
+   語言＋夜間切換抽到共用 components/header-controls；桌機放這裡（nav 之後、漢堡之前），
+   窄視窗改由 mobile-nav 放進展開的選單裡（header 只留 logo + 漢堡）。此選單只剩導覽與登出。 #}
 {% set menuItems = [
   {
     label: "資料配置", i18nKey: "nav.dataConfig",

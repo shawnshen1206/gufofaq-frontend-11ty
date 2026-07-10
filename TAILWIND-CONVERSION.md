@@ -98,6 +98,7 @@ screens: {
 對應：`mobile-column`（≤992 轉直排）→ `flex-row max-lg:flex-col`；`col-6-md col-12-sm`→ `w-1/2 max-lg:w-full`（或見 §6 gotcha 改 Grid）。
 
 **⚠️ 但 code 裡還有一批「元件專屬」的一次性斷點，只設 992/768 的 agent 會在這些寬度做錯版面——轉各該元件時用 `max-[Npx]` arbitrary variant 處理：**
+- `1250px`：`header` ↔ `mobile-nav` 的桌機選單／漢堡切換（**兩支元件必須同值**，故 scss 收在 `_mixin.scss` 的 `nav-collapsed` mixin；轉 Tailwind 時做成一個共用 variant，別各寫各的）。
 - `1560px`（+ 降到 `1200px`）：`.wrap` 內容容器最大寬（`_base.scss`，每頁都用）、`countdown-box`。
 - `1040px`：`step-nodes`（步驟條）。（`catalog` 的 1040px 是容器 `max-width`，**不是**斷點 → `max-w-[1040px]`，不要做成 `max-[1040px]:` variant。）
 - `991px`/`767px`：`.message-content` 訊息氣泡最大寬（`_chat-message.scss`，共用泡泡）；`faq-share-modal` 亦有一個 767px。
@@ -209,7 +210,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 
 ## ⑥ Gotchas（agent 最常轉錯的點——轉之前先讀一遍）
 
-1. **斷點方向相反、且不只 992/768**：專案 `max-width` mobile-last，別套 Tailwind 預設 `md:`（語意顛倒）。系統性用 `max-lg/max-md`，但元件另有 1560/1200/1040/991/900/576… 一次性斷點（§2）——轉某元件時**讀它自己的 `@media` 值**逐一對成 `max-[Npx]:`。
+1. **斷點方向相反、且不只 992/768**：專案 `max-width` mobile-last，別套 Tailwind 預設 `md:`（語意顛倒）。系統性用 `max-lg/max-md`，但元件另有 1560/1250/1200/1040/991/900/576… 一次性斷點（§2）——轉某元件時**讀它自己的 `@media` 值**逐一對成 `max-[Npx]:`。
 2. **字級命名偏移 +1**：`text-md/lg/xl` → `text-lg/xl/2xl`。別同名。
 3. **`text-bold` 是 500 不是 700** → `font-medium`，不是 `font-bold`。
 4. **間距是 px 命名**：Tailwind 值 = 名稱 ÷ 4（`gap-16`→`gap-4`）。別直接抄數字。

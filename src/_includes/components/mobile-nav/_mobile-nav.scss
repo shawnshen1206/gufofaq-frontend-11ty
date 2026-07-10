@@ -106,7 +106,16 @@
     }
 }
 
-@media screen and (max-width: 992px) {
+// 展開選單底部的語言／深淺鈕：靠右對齊，跟它們在 header 上的位置一致
+.mobile-menu-controls {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background-color: var(--surface-raised);
+}
+
+@include nav-collapsed {
     .nav-toggle {
         display: block;
     }
