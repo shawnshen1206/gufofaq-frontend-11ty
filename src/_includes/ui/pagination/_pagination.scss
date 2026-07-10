@@ -66,6 +66,9 @@
                 width: 2rem;
                 height: 2rem;
                 display: block;
+                // <a> 有 0.625rem 內距 → 內容區只有 12px；不解除 _base 的 max-width:100%
+                // 這顆 32px 的箭頭會被壓成 12px 寬（高度仍 32）而變形。真 app 也是讓它溢出置中。
+                max-width: none;
             }
 
             &.ellipsis {

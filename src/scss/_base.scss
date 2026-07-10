@@ -38,6 +38,13 @@ canvas {
     max-width: 100%;
 }
 
+// §4 要求每張 <img> 都帶 width/height 屬性（消除版位跳動）。那兩個屬性同時也是 CSS 的
+// presentational hint，所以只要有一邊被 CSS 或 max-width 改掉，另一邊就會卡在原值 → 圖被拉扁。
+// 這條是 width/height 屬性的標配對句：高度改由 aspect-ratio 推導。元件要固定高度就自己覆寫。
+img {
+    height: auto;
+}
+
 // 尊重「減少動效」系統偏好（前庭敏感／暈動症）
 @media (prefers-reduced-motion: reduce) {
 

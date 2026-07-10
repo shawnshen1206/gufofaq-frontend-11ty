@@ -18,13 +18,17 @@
 
     .logo {
         margin: 0;
+        // 窄視窗時讓位給右側的語言／深淺／漢堡三顆鈕（真 app 右側只有漢堡，logo 才能一直是固定寬）
+        min-width: 0;
 
         a {
             display: block;
             width: 272.5px;
+            max-width: 100%; // 空間不夠就等比縮小（background-size: contain）
             height: 42px;
             background-image: url(../images/img_logo.png);
             background-size: contain;
+            background-position: left center;
             background-repeat: no-repeat;
             text-indent: 101%;
             white-space: nowrap;
@@ -37,6 +41,7 @@
         display: flex;
         align-items: center;
         gap: 1.25rem;
+        flex-shrink: 0; // 三顆鈕不被壓扁；不夠寬時縮的是 logo
     }
 }
 
@@ -144,5 +149,11 @@
 
     .header {
         height: 56px;
+        // 右緣收成 1rem：真 app 的漢堡就是 right: 1rem（比 logo 那側的 1.5rem 更貼邊）
+        padding-right: 1rem;
+
+        .header-right {
+            gap: 0.75rem; // 窄視窗把語言／深淺／漢堡收攏，整組更靠右
+        }
     }
 }

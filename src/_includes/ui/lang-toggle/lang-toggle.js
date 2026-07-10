@@ -1,5 +1,5 @@
 // 語言切換（runtime 就地切換，不動網址、不重整）：
-// 點 .js-lang-toggle 在 繁中↔英文 間切換 —— 把所有 [data-i18n] 的文字換成該語言、
+// 點 .js-lang-toggle 在 繁中↔英文 間切換（鈕面永遠寫「要切去的語言」：繁中時 EN、英文時 中）—— 把所有 [data-i18n] 的文字換成該語言、
 // 需翻譯的屬性走 data-i18n-placeholder / data-i18n-title / data-i18n-aria-label、寫 localStorage、設 <html lang>。
 // 繁中為預設，其文字＝markup 原文（就地擷取，不需 zh 字典）；英文來自 ./i18n/en.json（被 JS fetch 的資產）。
 // 轉 React：<a data-i18n="key">文字</a> → {t("key")}，同一份 key 餵 next-intl；本檔的 runtime swap 不帶過去。
@@ -77,7 +77,7 @@
         }
         root.setAttribute("lang", lang === "en" ? "en" : "zh-Hant");
         document.querySelectorAll(".js-lang-toggle").forEach(function (b) {
-            b.textContent = lang === "en" ? "中文" : "EN";
+            b.textContent = lang === "en" ? "中" : "EN";
         });
         // 通知「文字由 JS 產生」的元件重畫自己的動態標籤
         document.dispatchEvent(new CustomEvent("gufo:langchange", { detail: { lang: lang } }));

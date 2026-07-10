@@ -32,7 +32,9 @@
 
 .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    // min() 是必要的：內容區窄於 280px 時（320px 視窗扣掉左右 1.5rem 只剩 272px），
+    // 裸寫 minmax(280px,1fr) 會硬撐出 280px 欄寬 → 整頁橫向溢出。
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
     gap: 1rem;
 }
 

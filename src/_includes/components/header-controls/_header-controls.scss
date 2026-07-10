@@ -6,9 +6,10 @@
     flex-shrink: 0;
 }
 
-// 語言鈕：文字藥丸，尺寸/色彩對齊 theme-toggle（EN↔中文，標籤由 lang-toggle.js 管理）。色值走 token，深色自動適配。
+// 語言鈕：文字藥丸，尺寸/色彩對齊 theme-toggle（EN↔中，標籤由 lang-toggle.js 管理）。色值走 token，深色自動適配。
 .lang-toggle {
     height: 36px;
+    min-width: 46px; // 「EN」(45px) 比「中」(44px) 寬 —— 取下限抹平，切語言時 header 不跳動
     padding: 0 0.75rem;
     border: 1px solid var(--border);
     border-radius: 18px;
