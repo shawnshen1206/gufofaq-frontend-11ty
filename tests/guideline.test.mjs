@@ -87,6 +87,86 @@ test("§2 只准 `| safe`，模板標籤只准白名單那幾個", () => {
     assert.equal(hits.length, 0, `§2 白名單外的語法：\n${fail(hits)}`);
 });
 
+test("§2 同一頁第二次用到某個元件參數時，該參數必須先重設（{% set %} 是頁面全域的）", () => {
+    // 這是本專案反覆踩到的第一大坑，而且靜默：漏掉一次重設，元件就沿用上一次的值，
+    // 沒有任何測試會紅。曾經：component.html 若少了 {% set stepNodesLg = false %}，
+    // 後面的 step-btn-wrap 會沿用前一個 step-nodes 的 true，大步驟條從 3 個變成 7 個。
+    //
+    // 判準以「變數」為單位而不是以「元件」為單位 —— stepNodesLg 被 step-nodes 與
+    // step-btn-wrap 兩個不同元件消費，以元件為單位會漏掉跨元件的殘留。
+
+    const stripNjk = (t) => t.replace(/\{#[\s\S]*?#\}/g, "");
+    const root = (v) => v.split(".")[0];
+    const RESERVED = new Set(["loop", "true", "false", "not", "and", "or"]);
+
+    // 一個元件 html 直接讀了哪些外部變數（排除自己 set 的、迴圈變數、保留字）
+    const directReads = (file) => {
+        const t = stripNjk(read(file));
+        const local = new Set([...t.matchAll(/\{%\s*set\s+(\w+)/g)].map((m) => m[1]));
+        const loops = new Set([...t.matchAll(/\{%\s*for\s+(\w+)\s+in\s/g)].map((m) => m[1]));
+        const out = new Set();
+        const add = (v) => {
+            v = root(v);
+            if (v && !RESERVED.has(v) && !local.has(v) && !loops.has(v)) out.add(v);
+        };
+        for (const m of t.matchAll(/\{\{\s*([A-Za-z_]\w*(?:\.\w+)*)/g)) add(m[1]);
+        for (const m of t.matchAll(/\{%\s*if\s+(?:not\s+)?([A-Za-z_]\w*(?:\.\w+)*)/g)) add(m[1]);
+        for (const m of t.matchAll(/\{%\s*for\s+\w+\s+in\s+([A-Za-z_]\w*(?:\.\w+)*)/g)) add(m[1]);
+        return out;
+    };
+    const includesIn = (text) =>
+        [...stripNjk(text).matchAll(/\{%\s*include\s+"((?:ui|components)\/[\w-]+)\/[\w-]+\.html"/g)].map((m) => m[1]);
+
+    // 元件讀的變數 = 自己讀的 ∪ 它 include 的子元件讀的（遞移；子元件的參數由父元件轉發）
+    const cache = new Map();
+    const readsOf = (key, seen = new Set()) => {
+        if (cache.has(key)) return cache.get(key);
+        if (seen.has(key)) return new Set();
+        seen.add(key);
+        const file = `src/_includes/${key}/${key.split("/")[1]}.html`;
+        if (!existsSync(file)) return new Set();
+        const out = directReads(file);
+        for (const child of includesIn(read(file))) for (const v of readsOf(child, seen)) out.add(v);
+        cache.set(key, out);
+        return out;
+    };
+
+    const pages = srcHtml.filter((f) => !f.includes("_includes"));
+    assert.ok(pages.length > 20, `只掃到 ${pages.length} 個頁面 —— 這條測試在空轉`);
+
+    let checked = 0;
+    const hits = [];
+    for (const page of pages) {
+        const lines = stripNjk(read(page)).split(/\r?\n/);
+        const setAt = new Map(); // 變數 → 被 set 的行號（1-based）
+        const consume = new Map(); // 變數 → 消費它的 include 行號
+        lines.forEach((line, i) => {
+            for (const m of line.matchAll(/\{%\s*set\s+(\w+)\s*=/g)) {
+                if (!setAt.has(m[1])) setAt.set(m[1], []);
+                setAt.get(m[1]).push(i + 1);
+            }
+            for (const key of includesIn(line))
+                for (const v of readsOf(key)) {
+                    if (!consume.has(v)) consume.set(v, []);
+                    consume.get(v).push(i + 1);
+                }
+        });
+
+        for (const [v, points] of consume) {
+            const sets = setAt.get(v) || [];
+            for (let k = 1; k < points.length; k++) {
+                const [prev, here] = [points[k - 1], points[k]];
+                if (!sets.some((l) => l < here)) continue; // 從沒設過 → 不可能有殘留
+                checked++;
+                if (!sets.some((l) => l > prev && l < here))
+                    hits.push(`${page}:${here}  第二次用到參數 ${v} 之前沒有重設它，會沿用第 ${prev} 行那次的值`);
+            }
+        }
+    }
+    assert.ok(checked > 0, "沒有任何『同頁重複消費同一參數』的情境 —— 這條測試在空轉");
+    assert.equal(hits.length, 0, `{% set %} 是頁面全域的（§2）：\n${fail(hits)}`);
+});
+
 test("§2 不得有 _data/ 資料檔（模板不吃 build data）", () => {
     assert.ok(!existsSync("src/_data"), "src/_data 存在");
 });
