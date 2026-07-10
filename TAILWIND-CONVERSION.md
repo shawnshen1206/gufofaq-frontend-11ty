@@ -49,7 +49,7 @@ Tailwind v4：把同一組名字加上 `--color-` 前綴放進 `@theme`，深色
 
 preflight 已含 `box-sizing: border-box` 與 `img{max-width:100%; height:auto}`（本專案 `_base.scss` 的 `img{height:auto}` 因此不必另帶），但下面三條**沒有**。它們在 `_base.scss`，是全站可及性/體感的地基，轉換時逐條搬進全域樣式層（v4 用 `@layer base`）：
 
-> ⚠️ 反過來，**preflight 會多給 `img{display:block; vertical-align:middle}`**，本專案的 `<img>` 維持 inline（`.icon`、`.beta-icon`、header logo…）。轉換後要視情況以 `inline`/`inline-block` 覆寫，否則徽章與圖示會換行或位移。
+> ⚠️ 反過來，**preflight 會多給 `img{display:block; vertical-align:middle}`**，本專案的 `<img>` 維持 inline（`.icon`、`.beta-icon`…）。轉換後要視情況以 `inline`/`inline-block` 覆寫，否則徽章與圖示會換行或位移。（header logo 不是 `<img>`：它是 block `<a>` + `background-image` + `text-indent:101%` 的文字替換法，見 §5-5，不受這條影響。）
 
 ```css
 @layer base {
@@ -203,7 +203,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 用 `appearance:none`（或隱藏 `opacity:0` 的 input）+ 偽元素/相鄰兄弟畫出控制項（checkbox 用旋轉 border 打勾、radio 用 scale 圓點，**switch 用隱藏 checkbox + `:checked + .switch-box .switch-btn` 相鄰兄弟 + custom property `calc()` 推 handle 位置**，含 `:checked`/`:disabled` 過渡）。純 Tailwind arbitrary `before:` 很難忠實重現。**建議做法：改成受控的 React 元件（SVG icon / 自畫 handle），或此處留一小段 CSS 逃生口**。這是整個轉換裡唯一「硬要零 CSS 會很痛」的地方——若團隊零 CSS 是硬底線，優先走受控元件。
 
 ### 5-5. 單色 PNG 圖示＝遮罩上色（`icon-mask()`），**不是** `background-image`
-全站的單色圖示（`.button-icon::before` 系列、`.nav-toggle`、`.accordion-btn`、`.multi-select-tag-remove`、五個 `::after` 箭頭、`.modals-close`、`.feedback-vote-icon`、搜尋/時鐘）都走 `src/scss/_mixin.scss` 的 `icon-mask($url, $ink, $size)`：**PNG 的 alpha 當遮罩、顏色由語意 token 給**。因此深色模式不必反相、hover 換色只要換 token（真 app 的 `*_bluehover.png` 已因此刪除）。
+全站的單色圖示（`.button-icon::before` 系列、`.nav-toggle`、`.accordion-btn`、`.multi-select-tag-remove`、六個 `::after` 箭頭（見 §5-3）、`.modals-close`、`.feedback-vote-icon`、搜尋/時鐘）都走 `src/scss/_mixin.scss` 的 `icon-mask($url, $ink, $size)`：**PNG 的 alpha 當遮罩、顏色由語意 token 給**。因此深色模式不必反相、hover 換色只要換 token（真 app 的 `*_bluehover.png` 已因此刪除）。
 
 → **轉 React 時應該直接改成內嵌 SVG component + `fill="currentColor"`**：那正是遮罩在模擬的東西，而且省掉一整批 PNG 請求。若要機械照搬，Tailwind 沒有 mask utility，得寫 arbitrary property：`bg-text [mask:url(/icons/x.png)_no-repeat_center/contain]`（底線代空白）。**顏色來自 `background-color`，不是 `color`** —— 這是遮罩的關鍵，別把它當成普通底色而套上填充 token（見 GUIDELINE §4「遮罩」）。
 
@@ -217,6 +217,12 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 ### 5-6. 特殊 CSS 屬性
 `writing-mode: vertical-rl`（`_qa-side-panel.scss` 側欄直書標題）→ Tailwind 無對應 utility，用 arbitrary property `[writing-mode:vertical-rl]`。
 
+其餘沒有 utility、要 arbitrary property 或原生 variant 的：
+- `@starting-style`（modals 進出場）→ v4 `starting:` variant。
+- `transition-behavior: allow-discrete`（modals 的 `display`/`overlay` 過渡）→ v4 `transition-discrete`。
+- `overlay`（modals 的 transition 屬性之一）→ 併入上面那條 transition，無獨立 utility。
+- `popover="manual"` + `:popover-open`（toast 容器進 top layer，蓋過 `<dialog>`）→ HTML 屬性，無 utility；React 用 portal / top-layer 方案。
+
 ### 5-7. 漸層（**背景 vs 邊框是兩種不同的配方，別混用**）
 `--brand-gradient` → theme 存成一般 CSS 變數（不是顏色 token）。兩種用法：
 - **背景漸層**（`footer` 背景、`faq-chatroom .avatar`）→ `bg-[image:var(--brand-gradient)]`。
@@ -229,7 +235,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 - `body.chatbot-page { overflow: hidden }` 只限這頁，別寫成全域。
 
 ### 5-9. CSS 動畫（`@keyframes`）——**Tailwind 純 utility 表達不了具名 keyframe**
-`ui/modals` 的 `.modals` 開關用 `@keyframes modalFadeInDown/modalFadeOutUp` + `animation: … 0.3s`（`.show`/`.hide` 觸發；所有 modal 含 `faq-*-modal` 共用）。純 utility 無法表達具名 keyframe → 在 v4 `@theme`/`@keyframes` 註冊，或裝 `tailwindcss-animate` plugin；否則開關淡入淡出會被默默丟掉。另 `.modals::backdrop` 初始 `transparent`、`.show` 時變 `var(--overlay)`（帶 transition）→ 用原生 `backdrop:` variant：`backdrop:bg-transparent` + `.show` 時 `backdrop:bg-overlay`。
+**本專案全站沒有任何 `@keyframes`**（grep 可證）。modal 的進出場不是動畫，是 `<dialog>` 的 `[open]` 屬性驅動的 discrete transition：`opacity`/`transform` 搭配 `transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete` 與 `@starting-style`（見 `_modals.scss`）。轉 v4 用 `starting:` variant + `transition-discrete`（`transition-behavior: allow-discrete`），**不是** `tailwindcss-animate`。`.modals::backdrop` 同理：`[open]::backdrop` 從 `@starting-style` 的 transparent 過渡到 `var(--overlay)`。唯一的具名動畫是 toast 自己的 `.toast.show` 淡入（`_toast.scss`），那才需要 keyframe/utility。
 
 ---
 

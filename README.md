@@ -102,7 +102,6 @@ dist/                       build 輸出（勿手改）
 | 元件 | 參數／資料 |
 |---|---|
 | `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時退回 `#`（不輸出空屬性）。 |
-| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。 |
 | `components/pagination-input` | 選填 `paginationTotal`（總筆數，預設 12）；「第 [1] 個對話，共 12 個」＋前後鈕，行為見 `pagination-input.js`。與 `ui/pagination` 是兩種互不相干的頁碼互動。 |
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
@@ -113,6 +112,7 @@ dist/                       build 輸出（勿手改）
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
 | `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
 | `components/chatroom` | `chatInputHidden`（true 時不渲染輸入區；`2-1` 是唯讀的問答紀錄預覽，真實頁沒有輸入框，單測頁 `2-2-1` 需要）。 |
+| `components/priority-table` | 頁面 set `rows = [{ category, description, prompt, priority }]`；渲染 5 欄意圖判斷表（`.default-table.priority-table`）。`rows` 空陣列＝空狀態。用於 5-2-1（依優先級分組，每組 set 後 include）。 |
 | `components/delete-modal` | `deleteTargetId`（設了就渲染空 `<span id>`，由業務 js 填入待刪除項目名稱）／`deleteTargetName`（靜態示範名稱）／`deleteConfirmBinding`（true＝確認鈕交給業務 js 綁定、不自動關窗）。 |
 | `components/file-edit-modal` | `editConfirmBinding`（true＝儲存鈕交給業務 js 綁定、不自動關窗；真實頁 `1-2-1` 傳 true，元件庫展示版不傳）。 |
 | `ui/pagination` | `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）／`prevPage`、`nextPage`（上一頁/下一頁的 `data-page` 值，真 app 的換頁委派掛點）。 |
@@ -131,7 +131,7 @@ dist/                       build 輸出（勿手改）
 ### 純樣式 / 純行為元件（直接寫 class）
 
 這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`ui/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/login.html`）、`ui/error-page`（無 html，class 寫在 `src/404.html`）。
-另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`ui/prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
+另有幾個 class 直接寫在使用頁的元件：`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`；純 scss）、`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1；scss + js）、`ui/prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`；scss + js）。
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
@@ -155,20 +155,20 @@ dist/                       build 輸出（勿手改）
 
 ## 與真 app 的刻意差異
 
-歷史出處：`GufoFAQ_Frontend_New`（管理端 23 頁）＋ `GufoFAQ_Standard_Frontend`（前台聊天 1 頁）。**這份專案是正本，本來就走在真 app 前面**——下列差異是刻意的，不是漏抄。看到它們不必「修回去」。
+歷史出處：`GufoFAQ_Frontend_New`（管理端 21 頁）＋ `GufoFAQ_Standard_Frontend`（前台聊天 1 頁）。**這份專案是正本，本來就走在真 app 前面**——下列差異是刻意的，不是漏抄。看到它們不必「修回去」。
 
 **切版新增（真 app 沒有）**
 
 | 位置 | 真 app 的狀況 |
 |---|---|
-| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端只有 23 頁） |
+| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端 21 頁，本專案加成 23 頁） |
 | `catalog.html`（部署首頁＝頁面目錄）、`404.html` | 沒有；GitHub Pages 部署需要 |
 | `4-1_qaHistory` 底部的 `ui/pagination` 頁碼列 | 真 app 的 4-1 只有 `.data-info`（「共 N 筆資料」）。它的 `.pagination` 只出現在 component / 1-1-3 / 3-1-1 / 3-1-3 / 3-1-6 |
 | `2-1_qaRecord` 的 `.qa-count` | 真 app 的 2-1 沒有（它來自 2-2-1）。輸入框則以 `chatInputHidden` 關掉——那個真 app 的 2-1 也沒有 |
-| 前台訊息動作列的讚／倒讚／分享 | `scss/faq.scss` 有 `.button-icon.like/.dislike/.share` 的樣式，但 `js/faq.js` 產生的 `.message-icon` 只放得出複製鈕 |
+| 前台訊息動作列的讚／倒讚／分享 | `scss/faq.scss` 有 `.button-icon.like/.dislike/.share` 的樣式，但 `js/main.js` 產生的 `.message-icon` 只放得出複製鈕 |
 | 深色模式（`data-theme`）、中英切換（`data-i18n`） | 兩份真 app 都完全沒有 |
 | toast 的失敗／警告／資訊語意（`toast-error/warning/info`） | 真 app 只有 `toast-success`。切版是原型：每個按鈕該有的結果狀態都要看得見（`data-toast="成功訊息｜失敗訊息"` 逐次輪替） |
-| 遮罩上色的圖示（`icon-mask()`） | 真 app 是 `background-image` + 深色反相。遮罩讓顏色跟著 token 走，也刪掉了 5 張 `*_bluehover.png` |
+| 遮罩上色的圖示（`icon-mask()`） | 真 app 是 `background-image`（且無深色模式）。遮罩讓顏色跟著 token 走，也刪掉本專案 5 張被遮罩取代的 `*_bluehover.png`（真 app 的 hover 是換整張圖，那邊有 6 張） |
 
 **其餘一律以真 app 為準**：class 名、DOM 結構、業務 js 的 hook class（`.js-apply-production`、`.btn-delete-file`、`.watchBtn`…）都是轉換契約，不改名。
 

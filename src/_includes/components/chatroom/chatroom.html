@@ -1,6 +1,7 @@
 {# 資料取自真實 app pages/qaRecord/2-1_qaRecord.html（.chatroom-wrap 結構）+ pages/qaTest/2-2-1_singleTest.html（qa-count + chat-input-container）。
      只轉結構＋樣式，串流/送出/markdown 渲染屬業務邏輯，不在此元件內（見 qaRecord.js / singleTest.js）。
-     .robot-msg 是 Markdown 區塊容器（內含 p/ul/table…），依 GUIDELINE §4 用 div——原始切版的 span 包區塊元素是無效巢狀，轉 React SSR 會 hydration 錯誤。 #}
+     .robot-msg 是 Markdown 區塊容器（內含 p/ul/table…），依 GUIDELINE §4 用 div——原始切版的 span 包區塊元素是無效巢狀，轉 React SSR 會 hydration 錯誤。
+     參數（頁面 include 前 set，見 §6）：chatInputHidden —— true 時不渲染輸入區（2-1 唯讀預覽沒有輸入框；2-2-1 需要）。 #}
 {% set messages = [
     {
         role: "robot",

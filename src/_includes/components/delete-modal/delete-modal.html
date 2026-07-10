@@ -2,7 +2,9 @@
    參數（頁面在 include 前 set，見 §6）：
      deleteTargetId       —— 設了就渲染空 <span id="…">，由業務 js 填入待刪除項目名稱；未設則印 deleteTargetName
      deleteTargetName     —— 靜態示範用的項目名稱（預設「檔案名稱2.pdf」）
-     deleteConfirmBinding —— true＝確認鈕交給業務 js 綁定（不掛 btn-close-modals 自動關窗） #}
+     deleteConfirmBinding —— true＝確認鈕交給業務 js 綁定（不掛 btn-close-modals 自動關窗）
+     deleteConfirmClass   —— 選填，加在確認鈕上的業務 hook class（如 confirm-delete-btn）
+     deleteToast / deleteToastKey —— 選填，確認鈕的多結果 toast（「成功|失敗」）與它的 i18n key #}
 <dialog class="modals" id="deleteModal" aria-labelledby="deleteModal-title">
     <div class="modals-dialog modals-sm">
         <div class="modals-wrap">

@@ -49,7 +49,7 @@ src/
 | `components/` | 它**會用到其他元件**，或是某大元件的**專屬子片段**嗎？ | header、sources-block、multi-select-box、mobile-nav |
 | `ui/` | **不依賴任何其他元件**？ | button、modals、pagination、block、storage-bar |
 
-**「用到其他元件」三種形式**（任一成立即歸 `components/`）：`{% include %}` 它、在自己的 markup 寫它的 class（如 modal 寫 `.modals`）、js 呼叫它匯出的全域函式（如 `openModal()`）。
+**「用到其他元件」三種形式**（任一成立即歸 `components/`）：`{% include %}` 它、在自己的 markup 寫它的 class（如 modal 寫 `.modals`）、js 呼叫**會產出可見 UI 的元件**匯出的函式（如 `ui/modals` 的 `openModal()`、`ui/toast` 的 `showToast()`）。**共享行為工具不算依賴**：`window.GufoSlide`（`ui/slide-toggle` 的高度動畫）、`window.GufoI18n`（`ui/lang-toggle` 的 `t()`）、`ui/scroll-lock`、`ui/print` 是全體元件通用的基礎設施，等同 DOM API——`ui/accordion` 用 `GufoSlide` 做開合、`ui/collapse-text` 用 `GufoI18n` 翻標籤，都仍是零依賴的原子。判準是「被呼叫的那個元件會不會生出一塊看得見的東西」，不是「有沒有呼叫別人的全域函式」。
 
 **判斷依賴時只看 scss + js + 生產 markup。** `<元件名>.html` 有兩種身分：被真實頁面 include 的是**生產 markup**；只被元件總覽頁 include 的是**展示片段**——展示片段為了示範情境會用到別的元件，不算依賴（否則每個原子都會被推去 `components/`）。
 
@@ -79,7 +79,7 @@ src/
 | `{% for x in 清單 %}…{% else %}…{% endfor %}`（搭配 `{% if %}`） | 渲染重複結構；`{% else %}` 是清單為空時的空狀態列 | `.map()` / `list.length ? … : …` |
 | `{{ content \| safe }}`（只出現在 `layouts/`） | 頁面內容的注入點 | `{children}` |
 
-**註解**：要註解模板碼一律用 nunjucks 註解 `{# … #}`（build 時被移除、不進輸出，轉 React 時對應 `{/* */}`）。不要在 HTML 註解 `<!-- -->` 內寫 `{% %}`／`{{ }}`——即使在註解裡 nunjucks 仍會解析而出錯。`{# #}` 不算「第 5 種語法」，它是註解機制、不產生任何 markup，白名單的 4 個語法指的是會產生輸出的模板結構。
+**註解**：要註解模板碼一律用 nunjucks 註解 `{# … #}`（build 時被移除、不進輸出，轉 React 時對應 `{/* */}`）。不要在 HTML 註解 `<!-- -->` 內寫 `{% %}`／`{{ }}`——即使在註解裡 nunjucks 仍會解析而出錯。`{# #}` 不算模板語法（它是註解機制、不產生任何 markup），故不在上表的 5 個之列。
 
 `{% set %}` 的變數在 include 後**不會消失**（整頁共用）：同頁第二次使用同元件必須重新 set 全部參數；不同元件的參數名不可相同。
 
@@ -255,7 +255,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 | front matter 資料 + `{% for %}` | `data.map(item => <Row item={item} />)` |
 | `.open`、`.active`、`.done`、`.error` 狀態 class | `useState` 布林 / props（`className={open ? "x open" : "x"}`） |
 | `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件。**進出場動畫在 CSS**（`@starting-style` + `display`/`overlay` 的 `allow-discrete`），沒有計時器可搬；**捲動鎖也在 CSS**（`html:has(dialog.modals[open])`），不要在 React 裡重寫一份 |
-| 14 個 modal 的外殼（`.modals` > `.modals-dialog` > `.modals-wrap` > `ui/modal-close` + `.modals-content`） | 除了 `.modals-dialog` 的尺寸 class（`modals-sm`×1／`md`×12／`lg`×1）之外逐字元相同（真 app 那邊 43 個也是同一個外殼）→ 收成一個 `<Modal size="md">{children}</Modal>`，各 modal 只剩自己的 header/body/footer |
+| 所有 modal 的外殼（`.modals` > `.modals-dialog.modals-<尺寸>` > `.modals-wrap` > `ui/modal-close` + `.modals-content`） | 除了 `.modals-dialog` 的尺寸 class 之外逐字元相同 → 收成一個 `<Modal size>{children}</Modal>`，各 modal 只剩自己的 header/body/footer（實際有幾個 modal、各是什麼尺寸屬現況，見 README） |
 | `data-open-modal="X"` / `data-toast="…"`（事件委派） | `onClick={() => open("X")}` / `onClick={() => toast("…")}`；資料屬性只是切版期沒有 props 時的替身 |
 | `<a data-i18n="key">文字</a>` | `{t("key")}`（next-intl 等）；`src/i18n/en.json` 直接當英文 message catalog，繁中原文由 markup 抽出成 zh catalog |
 | `GufoI18n.t(key, "繁中")` / `gufo:langchange` / `lang-toggle.js` | **不帶過去**：runtime 就地切換是切版專用；React 用 i18n library 的 `t()` 與語言 context |
