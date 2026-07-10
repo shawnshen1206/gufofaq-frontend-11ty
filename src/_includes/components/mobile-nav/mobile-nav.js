@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeAllSubmenus() {
         submenuLinks.forEach(function (link) {
             var submenu = link.parentElement.querySelector("ul");
-            if (submenu) submenu.style.display = "none";
+            if (submenu) window.GufoSlide.set(submenu, false); // 不帶動畫，選單已經關了
             link.setAttribute("aria-expanded", "false");
         });
     }
@@ -30,11 +30,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (open === isOpen()) return;
         navToggle.classList.toggle("active", open);
         navToggle.setAttribute("aria-expanded", open ? "true" : "false");
-        menuWrap.style.display = open ? "block" : "none";
         overlay.classList.toggle("active", open);
+        // 真 app 是 slideDown/slideUp(300)，不是 display 一次切掉
         if (open) {
+            window.GufoSlide.down(menuWrap);
             window.GufoScrollLock.lock();
         } else {
+            window.GufoSlide.up(menuWrap);
             window.GufoScrollLock.unlock();
             closeAllSubmenus(); // 下次開啟時回到全部收合的初始樣子
         }
@@ -56,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             var submenu = link.parentElement.querySelector("ul");
             if (!submenu) return;
-            var open = submenu.style.display !== "block";
-            submenu.style.display = open ? "block" : "none";
+            var open = getComputedStyle(submenu).display === "none"; // 真 app 是 slideToggle(300)
+            window.GufoSlide.toggle(submenu);
             link.setAttribute("aria-expanded", open ? "true" : "false");
         });
     });

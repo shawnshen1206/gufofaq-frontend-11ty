@@ -1,4 +1,5 @@
-// accordion 手風琴：改寫自真實 app js/main.js「表格 accordion 控制」（原用 jQuery + slideUp/slideDown），改用原生 DOM API + display 切換
+// accordion 手風琴：改寫自真實 app js/main.js「表格 accordion 控制」（原用 jQuery + slideDown/slideUp(300)），
+// 開合的高度動畫走 ui/slide-toggle（同一套 300ms，與手機選單共用）
 // 只轉切版互動（開合本身），資料載入/API 等業務邏輯不在此列
 //
 // a11y：按鈕的 aria-expanded 必須反映實際狀態——單筆開合與「全部展開／收合」都走同一組 open/close，避免批次操作後狀態殘留。
@@ -44,16 +45,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        function setOpen(btn, open) {
+        // animate=false 用在初始態：頁面一載入不該看到明細「滑」出來又收回去
+        function setOpen(btn, open, animate) {
             btn.classList.toggle("open", open);
             label(btn, open);
             var content = findContent(btn);
-            if (content) content.style.display = open ? "block" : "none";
+            if (!content) return;
+            if (animate === false) window.GufoSlide.set(content, open);
+            else if (open) window.GufoSlide.down(content); // 真 app 是 slideDown(300)
+            else window.GufoSlide.up(content);
         }
 
         // 初始態：內容已隱藏 → aria-expanded=false（markup 未帶時補上，讓輔具在首次互動前就知道可展開）
         block.querySelectorAll(".accordion-btn").forEach(function (btn) {
-            setOpen(btn, false);
+            setOpen(btn, false, false);
         });
 
         // 單筆開關

@@ -892,7 +892,7 @@ const COLOR_ROLES = {
     chrome: ["--on-accent", "--on-warning", "--border", "--border-subtle", "--brand-tint",
         "--scrollbar-thumb", "--scrollbar-thumb-strong", "--control-track", "--control-track-alt",
         "--control-knob", "--toggle-on", "--pattern-tint",
-        "--shadow", "--shadow-strong", "--overlay", "--overlay-tint", "--brand-gradient"],
+        "--shadow", "--shadow-strong", "--overlay", "--overlay-disabled", "--overlay-tint", "--brand-gradient"],
     // 非顏色，不參與分類
     nonColor: ["--fontFamily", "--theme-icon-light", "--theme-icon-dark", "--raster-invert", "--pattern-blend"],
 };

@@ -17,7 +17,9 @@
     align-items: center;
     justify-content: center;
     min-height: 400px;
-    background-color: var(--overlay);
+    // 停用遮罩不是 modal backdrop：真 app 用 rgba(128,128,128,.7) 把底下的面板蓋到「看得見但不能用」，
+    // 借 --overlay（黑 .3）會太透，看起來像只是變暗而已。
+    background-color: var(--overlay-disabled);
 
     &.active {
         display: flex;

@@ -66,6 +66,7 @@
   "common.collapseAll": "Collapse all",
   "common.collapseRow": "Collapse row",
   "common.confirmDelete": "Are you sure you want to delete",
+  "prompt.copied": "Prompt copied",
   "common.copied": "Copied!",
   "common.createdAt": "Created",
   "common.dataset": "Dataset",

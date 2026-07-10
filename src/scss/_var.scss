@@ -58,6 +58,7 @@
     --shadow: rgba(0, 0, 0, 0.1); // box-shadow 顏色
     --shadow-strong: rgba(0, 0, 0, 0.15); // 較重陰影
     --overlay: rgba(0, 0, 0, 0.3); // modal backdrop / 遮罩
+    --overlay-disabled: rgba(128, 128, 128, 0.7); // 功能未啟用的停用遮罩：要把底下的面板蓋到「不能用」，比 backdrop 厚
     --overlay-tint: rgba(0, 0, 0, 0.02); // 疊底半透明（blockquote）
 
     /* 控制項零件 control */
@@ -132,6 +133,7 @@
     --shadow: rgba(0, 0, 0, 0.6);
     --shadow-strong: rgba(0, 0, 0, 0.7);
     --overlay: rgba(0, 0, 0, 0.6);
+    --overlay-disabled: rgba(0, 0, 0, 0.75);
     --overlay-tint: rgba(255, 255, 255, 0.05);
 
     /* 控制項零件 */

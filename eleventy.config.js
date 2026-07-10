@@ -8,6 +8,7 @@ module.exports = function (eleventyConfig) {
     // 元件 JS 逐一登記，複製到 dist/js
     eleventyConfig.addPassthroughCopy({
         "src/_includes/ui/scroll-lock/scroll-lock.js": "js/scroll-lock.js",
+        "src/_includes/ui/slide-toggle/slide-toggle.js": "js/slide-toggle.js",
         "src/_includes/components/header/header.js": "js/header.js",
         "src/_includes/components/mobile-nav/mobile-nav.js": "js/mobile-nav.js",
         "src/_includes/ui/modals/modals.js": "js/modals.js",
