@@ -514,7 +514,7 @@ test("§4-2 markup 用到的靜態 i18n key 都要在 en.json 有英文", () => 
             // 全站的選單／目錄／麵包屑／欄位提示，key 都住在 {% set %} 的資料陣列裡，
             // 靠 data-i18n="{{ item.i18nKey }}" 渲染 —— 上面那幾條 regex 抓到的是 `{{ ... }}` 字面，一律被 note() 跳過。
             // 不掃這裡的話，新增一筆選單卻忘了補 en.json，英文模式會默默顯示繁中。
-            for (const m of line.matchAll(/(?:i18nKey|labelKey|placeholderKey|titleKey|descKey):\s*"([\w.]+)"/g)) note(m[1]);
+            for (const m of line.matchAll(/\b(?:i18nKey|labelKey|placeholderKey|titleKey|descKey):\s*"([\w.]+)"/g)) note(m[1]);
         });
     }
     // 元件 js 直接呼叫 GufoI18n.t("key", "繁中") 的 key，靜態 markup 掃不到。
@@ -643,11 +643,15 @@ test("§5 會去 DOM 找元素的元件 js 都在 DOMContentLoaded 內綁定", (
 test("§5 body 捲動鎖是純 CSS，js 不得自己鎖", () => {
     // 曾經：modals.js 與 mobile-nav.js 各寫一份 lock/unlock，各自直接改 document.body.style.overflow。
     // 兩個互不知情的擁有者搶同一個全域資源，先關的那個會把還開著的那個一起解鎖。
-    // 後來抽成共享計數器；現在連計數器都不必了 —— `html:has(dialog.modals[open])` 是宣告式的 OR，
-    // 狀態就在 DOM 上，不可能失衡。js 只剩「量捲軸寬度」那件 CSS 做不到的事。
+    // 後來抽成共享計數器；現在連計數器都不必了 —— `:has()` 是宣告式的 OR，狀態就在 DOM 上，不可能失衡。
+    // 而且這條規則不認識任何元件 class：`:modal` 是原生的（showModal 開出來的），
+    // `[data-scroll-lock]` 是宣告式契約。js 只剩「量捲軸寬度」那件 CSS 做不到的事。
     const css = read("dist/css/main.css");
-    assert.ok(css.includes("html:has(dialog.modals[open])"), "_base.scss 的 :has() 捲動鎖不見了 —— 這條測試在空轉");
-    assert.ok(css.includes("html:has(.nav-toggle.active)"), "_base.scss 少了手機選單那半邊的捲動鎖");
+    assert.ok(css.includes("html:has(:modal)"), "_base.scss 的 :modal 捲動鎖不見了 —— 這條測試在空轉");
+    assert.ok(css.includes("html:has([data-scroll-lock].active)"), "_base.scss 少了浮層開關那半邊的捲動鎖");
+    // 契約的另一半：至少要有一個元素真的掛了 data-scroll-lock，否則規則永遠不會命中
+    const lockers = distHtml.filter((f) => /data-scroll-lock/.test(distDoc(f)));
+    assert.ok(lockers.length > 0, "沒有任何 markup 掛 data-scroll-lock —— 手機選單開著時不會鎖捲動");
 
     const hits = [];
     for (const f of srcJs)

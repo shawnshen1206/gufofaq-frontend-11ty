@@ -78,7 +78,9 @@
         <div class="header-controls-slot">
             {% include "components/header-controls/header-controls.html" %}
         </div>
-        <button type="button" class="nav-toggle" aria-label="開啟選單" data-i18n-aria-label="nav.openMenu" aria-expanded="false"></button>
+        {# data-scroll-lock：宣告「這顆開關 .active 的時候要鎖住 body 捲動」。全域規則在 _base.scss，
+           它不認識 .nav-toggle —— 任何全螢幕浮層掛這個屬性就吃得到鎖（同 data-open-modal 的宣告式風格）。 #}
+        <button type="button" class="nav-toggle" data-scroll-lock aria-label="開啟選單" data-i18n-aria-label="nav.openMenu" aria-expanded="false"></button>
     </div>
 </header>
 

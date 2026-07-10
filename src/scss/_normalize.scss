@@ -212,15 +212,12 @@ button::-moz-focus-inner,
 }
 
 /**
- * Restore the focus styles unset by the previous rule.
+ * normalize 原本在這裡用 `outline: 1px dotted ButtonText` 還原 Firefox 的焦點環。
+ * 那是全站唯一一個需要色彩規則豁免的地方（`ButtonText` 是系統具名色），而 §4 說「零裸 hex／
+ * 具名色，無例外」。它也是多餘的：`_base.scss` 已經給了統一的
+ * `:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible`
+ * 焦點環，涵蓋這四種選擇器。刪掉它，stylelint 的豁免清單就只剩兩支真正的色源檔。
  */
-
-button:-moz-focusring,
-[type="button"]:-moz-focusring,
-[type="reset"]:-moz-focusring,
-[type="submit"]:-moz-focusring {
-  outline: 1px dotted ButtonText;
-}
 
 /**
  * Correct the padding in Firefox.

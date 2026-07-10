@@ -1,70 +1,75 @@
 // 部署站台首頁：頁面目錄（catalog）專屬樣式。僅本頁使用（性質同 _guideline，showcase 專用、正式頁面不引入）。
 // 顏色一律走 _var.scss 變數；間距用固定尺標，維持與全站一致。
-.catalog {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
-}
+//
+// §9：頁面專屬樣式一律限定在該頁的 body class 底下（同 _guideline 收進 .guideline-page）。
+// 曾經這支靠 `.catalog-*` 前綴自律隔離 —— 前綴不是機制，撞名就外洩。
+body.catalog-page {
+    .catalog {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+    }
 
-.catalog-header {
-    margin-bottom: 2rem;
-}
+    .catalog-header {
+        margin-bottom: 2rem;
+    }
 
-// 語言＋深淺鈕靠右（與各 app 頁的 header 右側同位置）
-.catalog-controls {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
-}
+    // 語言＋深淺鈕靠右（與各 app 頁的 header 右側同位置）
+    .catalog-controls {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+    }
 
-.catalog-title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--brand-ink);
-    margin: 0;
-}
+    .catalog-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--brand-ink);
+        margin: 0;
+    }
 
-.catalog-sub {
-    margin: 0.5rem 0 0;
-    color: var(--text-muted);
-    line-height: 1.6;
-}
+    .catalog-sub {
+        margin: 0.5rem 0 0;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
 
-.catalog-grid {
-    display: grid;
-    // min() 是必要的：內容區窄於 280px 時（320px 視窗扣掉左右 1.5rem 只剩 272px），
-    // 裸寫 minmax(280px,1fr) 會硬撐出 280px 欄寬 → 整頁橫向溢出。
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    gap: 1rem;
-}
+    .catalog-grid {
+        display: grid;
+        // min() 是必要的：內容區窄於 280px 時（320px 視窗扣掉左右 1.5rem 只剩 272px），
+        // 裸寫 minmax(280px,1fr) 會硬撐出 280px 欄寬 → 整頁橫向溢出。
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+        gap: 1rem;
+    }
 
-.catalog-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background-color: var(--surface-raised);
-    padding: 1.25rem;
-}
+    .catalog-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background-color: var(--surface-raised);
+        padding: 1.25rem;
+    }
 
-.catalog-card-title {
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-}
+    .catalog-card-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
 
-.catalog-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+    .catalog-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 
-.catalog-links a {
-    color: var(--brand-text);
-    width: fit-content;
+    .catalog-links a {
+        color: var(--brand-text);
+        width: fit-content;
 
-    &:hover {
-        color: var(--brand-text-hover);
-        text-decoration: underline;
+        &:hover {
+            color: var(--brand-text-hover);
+            text-decoration: underline;
+        }
     }
 }

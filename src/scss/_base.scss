@@ -95,17 +95,24 @@ html {
     text-size-adjust: 100%;
 }
 
-// body 捲動鎖。宣告式：DOM 上「有跳窗開著」或「手機選單開著」就鎖，沒有就不鎖。
+// body 捲動鎖。宣告式：DOM 上「有東西進了 top layer」或「有掛 data-scroll-lock 的開關被打開」就鎖。
 //
 // 曾經這是一支 js（ui/scroll-lock）維護的計數器 —— 因為跳窗與手機選單是兩個互不知情的擁有者，
 // 各鎖各的話，先關的那個會把還開著的那個一起解鎖。`:has()` 是宣告式的 OR：狀態就在 DOM 上，
 // 計數器不可能失衡，巢狀開窗也自動成立。
 //
+// 而這條規則**不認識任何元件的 class**：
+//   `:modal` 是 `showModal()` 開出來的東西（原生），新增第 15 個 modal 不必回來改這裡；
+//   `[data-scroll-lock]` 是宣告式契約（同 `data-open-modal`／`data-toast`）：任何全螢幕浮層
+//   把它掛在自己的開關上、開著時帶 `.active`，就自動吃到鎖。
+// 曾經這裡是 `html:has(dialog.modals[open]), html:has(.nav-toggle.active)` —— 全域層逐一登記
+// 元件 class，正是 `_dark-icons.scss` 已經消滅掉的那個反模式的最後一處。
+//
 // padding-right 補的是「鎖起來時消失的那條捲軸」的寬度，否則版面會橫跳一下。
 // CSS 量不到捲軸有多寬（也分不出這一頁本來有沒有捲軸），故由 ui/scroll-lock 寫進 --scrollbar-width；
 // 沒有捲軸的頁面它是 0px，於是這條 padding 什麼也不做。
-html:has(dialog.modals[open]),
-html:has(.nav-toggle.active) {
+html:has(:modal),
+html:has([data-scroll-lock].active) {
     overflow: hidden;
     padding-right: var(--scrollbar-width, 0px);
 }
