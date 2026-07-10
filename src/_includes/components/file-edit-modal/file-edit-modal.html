@@ -1,7 +1,10 @@
 {# 檔案編輯 modal（PDF 自填），class/id 沿用真實 app pages/components/component.html #editModal 系統。
      固定 14 槽 schema（title/content/source/date/category/number/flag/tags/privilege/note1..note5）：每槽一個輸入框供逐筆手填，label 用各槽預設顯示名。
      內容（content）由 PDF 自動擷取，故 render 成 disabled textarea（沿用真實系統 .form-control.disabled + disabled 屬性）；
-     其餘槽為可填 input。資料驅動：set editFields + for 內嵌渲染欄位列（依 §9，元件內部 for 不再巢狀 include 子元件）。 #}
+     其餘槽為可填 input。資料驅動：set editFields + for 內嵌渲染欄位列（依 §9，元件內部 for 不再巢狀 include 子元件）。
+     editConfirmBinding —— true＝儲存鈕交給業務 js 綁定（不掛 btn-close-modals 自動關窗）。
+     真 app 的功能頁（1-2-1）儲存鈕沒有 btn-close-modals，由 uploadFilePdf.js:81 的 saveEdit() 決定何時關；
+     只有元件庫的展示版會自動關窗。寫死自動關窗＝「按了儲存，窗關了，但什麼都沒存」。 #}
 {% set editFields = [
     { key: "title", label: "標題", value: "檔案名稱.pdf" },
     { key: "content", label: "內容", type: "textarea", disabled: true },
@@ -59,7 +62,7 @@ that identifies frequently executed loop traces at run-time and then generates m
                 <div class="modals-footer">
                     <div class="button-row center">
                         <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
-                        <button type="button" class="button button-primary btn-close-modals" data-i18n="action.save">儲存</button>
+                        <button type="button" class="button button-primary{% if not editConfirmBinding %} btn-close-modals{% endif %}" data-i18n="action.save">儲存</button>
                     </div>
                 </div>
             </div>
