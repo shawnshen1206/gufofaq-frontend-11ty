@@ -52,8 +52,8 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
-│   ├── ui/                 不依賴其他元件的元件（37 個）
-│   └── components/         會用到其他元件，或某大元件的專屬子片段（30 個）
+│   ├── ui/                 不依賴其他元件的元件（38 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（29 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         共用 mixin：scrollbar 系列、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
@@ -118,7 +118,9 @@ dist/                       build 輸出（勿手改）
 ### 自動引入
 
 `header` 與 `footer` 由 `page-shell` 自動提供；`chatbot-header` 與 `footer` 由 `chatbot-shell` 自動提供。頁面都不需 include。
-含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`mobile-nav`（含 `header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`faq-chatroom`（含 `faq-feedback-modal`、`faq-share-modal`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。`ui/default-table` 的展示片段也 include 了 `ui/accordion`，但展示用途不算依賴（GUIDELINE §1-1），故它留在 `ui/`。
+含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`mobile-nav`（含 `header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`faq-chatroom`（含 `faq-feedback-modal`、`faq-share-modal`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
+
+開跳窗一律在 markup 掛 `data-open-modal="<dialog id>"`（`ui/modals` 事件委派），彈提示掛 `data-toast`。只有「開窗前要先做別的事」才寫 js 呼叫 `window.openModal()`（如 `faq-feedback-modal.js` 的 `openFeedback` 先預選讚/倒讚）。`ui/default-table` 的展示片段也 include 了 `ui/accordion`，但展示用途不算依賴（GUIDELINE §1-1），故它留在 `ui/`。
 `components/header-controls`＝語言＋深淺切換的控制群，**主站 header 與前台 chatbot-header 共用同一份**。主站 header 在**桌機**把它放在導覽列右側；**≤1250px 收成漢堡**時 header 只留 logo + 漢堡（否則 logo 會被擠小），控制群改由 `mobile-nav` 渲染在展開的選單底部——同一份 include 出現兩次，兩支 JS 都以 `querySelectorAll` 綁定。前台頁尾直接沿用主站 `components/footer`。
 
 ### 純樣式 / 純行為元件（直接寫 class）

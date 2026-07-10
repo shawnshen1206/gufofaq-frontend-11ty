@@ -31,7 +31,7 @@ permalink: 2-2-3_abTest.html
     <div class="ab-side" data-ab-side="{{ ab.side }}">
         <div class="flex-row align-items-center gap-10 mb-10">
             <span class="text-lg text-bold text-blue"><span data-i18n="qaTest.setting">設定</span> {{ ab.side }}</span>
-            <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
+            <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal" data-i18n="qaTest.applyProduction">套用為正式設定</button>
         </div>
 
         <div class="select-row flex-row column gap-16">
@@ -173,7 +173,7 @@ permalink: 2-2-3_abTest.html
                             <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                         </div>
                     </div>
-                    <button type="submit" class="button button-primary" data-i18n="action.submit">送出</button>
+                    <button type="submit" class="button button-primary chat-input-submit" data-i18n="action.submit">送出</button>
                 </div>
             </div>
         </div>
@@ -214,6 +214,7 @@ permalink: 2-2-3_abTest.html
 {% set sourcesInfoClass = "js-sources-side" %}
 {% include "components/sources-block/sources-block.html" %}
 
-{% include "components/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
+{# 「無權限」是同一顆按鈕的另一個狀態，由業務端的權限旗標決定開哪一份 —— 本頁沒有觸發器，
+   不放死彈窗；它的外觀在元件庫頁（component.html）可見。 #}
 {% include "components/apply-settings-modal-2/apply-settings-modal-2.html" %}
 {% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

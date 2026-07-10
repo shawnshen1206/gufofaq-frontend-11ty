@@ -188,7 +188,10 @@ test("§4 phrasing 元素（span / p / button）內不得放區塊元素（轉 R
     // <button> 只吃 phrasing content：把 div 假扮的控制項改成真 button 時，內容也要一起換成 span
     // （upload-box 就這樣把非法巢狀從 div[role] 換成 button>div）。
     const PHRASING_ONLY = new Set(["span", "p", "button"]);
-    const BLOCK = new Set(["div", "p", "ul", "ol", "table", "section", "article", "h1", "h2", "h3", "h4"]);
+    // 區塊元素要列全：只列一半等於只擋一半。（`hr`/`img` 這類 void 元素在下面會先被 VOID 跳過，列了也沒用。）
+    const BLOCK = new Set(["div", "p", "ul", "ol", "dl", "table", "section", "article", "aside", "nav", "main",
+        "header", "footer", "form", "fieldset", "figure", "blockquote", "pre", "details", "dialog",
+        "h1", "h2", "h3", "h4", "h5", "h6"]);
     const hits = [];
     for (const f of distHtml) {
         // 必須先剝掉 HTML 註解：註解裡若寫了 <p> 之類的範例，會被當成真標籤而一路誤判
@@ -226,6 +229,10 @@ test("§4-2 markup 用到的靜態 i18n key 都要在 en.json 有英文", () => 
             for (const m of line.matchAll(/\bdata-key-(?:open|close)="([^"]+)"/g)) note(m[1]);
             for (const m of line.matchAll(/\bdata-placeholder-key="([^"]+)"/g)) note(m[1]);
             for (const m of line.matchAll(/^titleKey:\s*([\w.]+)\s*$/g)) note(m[1]);
+            // 全站的選單／目錄／麵包屑／欄位提示，key 都住在 {% set %} 的資料陣列裡，
+            // 靠 data-i18n="{{ item.i18nKey }}" 渲染 —— 上面那幾條 regex 抓到的是 `{{ ... }}` 字面，一律被 note() 跳過。
+            // 不掃這裡的話，新增一筆選單卻忘了補 en.json，英文模式會默默顯示繁中。
+            for (const m of line.matchAll(/(?:i18nKey|labelKey|placeholderKey|titleKey|descKey):\s*"([\w.]+)"/g)) note(m[1]);
         });
     }
     // 元件 js 直接呼叫 GufoI18n.t("key", "繁中") 的 key，靜態 markup 掃不到。
@@ -454,6 +461,12 @@ test("§4-2 同一個 i18n key 的繁中原文全站必須一致", () => {
                 const v = attrs.match(new RegExp(String.raw`(?:^|\s)${target}="([^"]*)"`));
                 if (k && v) record(k[1], v[1].trim(), f);
             }
+        // {% set %} 資料裡的 { label: "繁中", i18nKey: "key" } 配對（兩種欄位順序都要吃）——
+        // 這些 key 渲染成 data-i18n="{{ item.i18nKey }}"，上面的 regex 完全看不到。
+        // [^{}] 不准跨物件邊界：header.html 的父項 i18nKey 後面緊接 submenu 的第一個 label，
+        // 用 [^}] 會把父 key 配到子 label 上，變成假陽性。
+        for (const m of html.matchAll(/label:\s*"([^"]*)"[^{}]*?i18nKey:\s*"([\w.]+)"/g)) record(m[2], m[1].trim(), f);
+        for (const m of html.matchAll(/i18nKey:\s*"([\w.]+)"[^{}]*?label:\s*"([^"]*)"/g)) record(m[1], m[2].trim(), f);
     }
     const bad = [];
     for (const [key, variants] of seen)
@@ -492,6 +505,34 @@ test("每個開窗鈕（data-open-modal / openModal('X')）在同一頁上都要
     }
     assert.ok(refCount > 0, "dist 裡一個開窗鈕都掃不到 —— 機制換掉了就要跟著改這條測試，別讓它變假綠燈");
     assert.equal(hits.length, 0, `按鈕點了打不開：\n${fail(hits)}`);
+});
+
+test("§4 每個 <dialog> 在同一頁上都要有東西打得開它（反向：不留死彈窗）", () => {
+    // 正向測試（開窗鈕→dialog）擋的是「點了沒反應」；反向擋的是「彈窗永遠打不開」。
+    // 1-2-1 的 previewModal 就這樣死了很久：三顆 btn-*-file 從來沒接上任何觸發器。
+    const OPENED_BY_JS = new Set(["likeModal"]); // faq-feedback-modal.js 的 openFeedback() 要先預選再開窗
+    const hits = [];
+    for (const f of distHtml) {
+        const html = read(`dist/${f}`);
+        const openers = new Set([
+            ...[...html.matchAll(/data-open-modal="([^"]+)"/g)].map((m) => m[1]),
+            ...[...html.matchAll(/openModal\(\s*['"]([^'"]+)['"]/g)].map((m) => m[1]),
+        ]);
+        for (const m of html.matchAll(/<dialog[^>]*\sid="([^"]+)"/g))
+            if (!openers.has(m[1]) && !OPENED_BY_JS.has(m[1]))
+                hits.push(`dist/${f}  <dialog id="${m[1]}"> 沒有任何開窗鈕`);
+    }
+    assert.equal(hits.length, 0, `死彈窗（markup 在、但沒東西打得開）：\n${fail(hits)}`);
+});
+
+test("§5 markup 零 inline 事件處理器（行為住在元件 js 裡）", () => {
+    // 要在 markup 宣告行為就掛資料屬性（data-open-modal / data-toast），由 owning 元件的 js 事件委派。
+    const stripNjk = (s) => s.replace(/\{#[\s\S]*?#\}/g, "");
+    const hits = [];
+    for (const f of srcHtml)
+        for (const { tag, attrs, raw } of tagsOf(stripNjk(read(f))))
+            if (/\son[a-z]+\s*=/.test(" " + attrs)) hits.push(`${f}  <${tag} ${raw.slice(0, 70)}`);
+    assert.equal(hits.length, 0, `改掛 data-open-modal / data-toast，或綁在元件 js 裡：\n${fail(hits)}`);
 });
 
 test("i18n 字典的快取失效真的有生效（dist 的 fetch 帶 ?v=）", () => {

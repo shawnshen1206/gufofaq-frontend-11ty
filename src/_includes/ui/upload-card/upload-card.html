@@ -1,7 +1,7 @@
 {# 資料取自真實 app pages/dataImport/1-1-1_dataImport.html 檔案匯入類型選單（.upload-card-list 內 4 張卡片）。
      真實 app 點卡片後由業務 JS 驗證+上傳+取 sn 才跳頁（§5 不做）；此處提供「簡化版靜態跳轉」：
-     頁面 set uploadCardNav=true 時，卡片直接連到該類型的上傳頁（excel→1-1-2、pdf/word/image→1-2-1）。
-     未設（如元件庫展示頁）則維持 javascript:void(0) 不跳轉。 #}
+     卡片直接連到該類型的上傳頁（excel→1-1-2、pdf/word/image→1-2-1）。
+     卡片是可點的東西，一律是真 `<a>`（§4）；不做「不跳轉的卡片」——那會退化成 javascript:void(0) 死連結。 #}
 {% set cards = [
     {
         type: "excel",
@@ -10,8 +10,8 @@
         iconAlt: "Excel Icon",
         title: "Excel",
         desc: "支援上傳 xlsx 檔案，檔案最大不超過 10MB",
-        descI18n: "dataImport.uploadDescExcel",
-        titleI18n: "dataImport.uploadExcel"
+        descKey: "dataImport.uploadDescExcel",
+        titleKey: "dataImport.uploadExcel"
     },
     {
         type: "pdf",
@@ -20,8 +20,8 @@
         iconAlt: "PDF Icon",
         title: "PDF",
         desc: "支援上傳pdf檔案，檔案最大不超過30MB",
-        descI18n: "dataImport.uploadDescPdf",
-        titleI18n: "dataImport.uploadPdf"
+        descKey: "dataImport.uploadDescPdf",
+        titleKey: "dataImport.uploadPdf"
     },
     {
         type: "word",
@@ -30,8 +30,8 @@
         iconAlt: "WORD Icon",
         title: "WORD",
         desc: "支援上傳doc檔案，檔案最大不超過30MB",
-        descI18n: "dataImport.uploadDescWord",
-        titleI18n: "dataImport.uploadWord"
+        descKey: "dataImport.uploadDescWord",
+        titleKey: "dataImport.uploadWord"
     },
     {
         type: "image",
@@ -40,20 +40,20 @@
         iconAlt: "Image Icon",
         title: "Image",
         desc: "支援上傳PNG、JPG檔案，檔案最大不超過30MB",
-        descI18n: "dataImport.uploadDescImage",
-        titleI18n: "dataImport.uploadImage"
+        descKey: "dataImport.uploadDescImage",
+        titleKey: "dataImport.uploadImage"
     }
 ] %}
 
 <div class="upload-card-list">
     {% for card in cards %}
-    <a href="{% if uploadCardNav %}{{ card.href }}{% else %}javascript:void(0){% endif %}" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}" data-i18n-title="{{ card.titleI18n }}">
+    <a href="{{ card.href }}" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}" data-i18n-title="{{ card.titleKey }}">
         <div class="upload-content">
             <div class="upload-header">
                 <img src="./images/{{ card.icon }}" width="60" height="76" decoding="async" alt="{{ card.iconAlt }}" class="upload-icon" />
                 <p class="upload-title">{{ card.title }}</p>
             </div>
-            <p class="upload-desc" data-i18n="{{ card.descI18n }}">{{ card.desc }}</p>
+            <p class="upload-desc" data-i18n="{{ card.descKey }}">{{ card.desc }}</p>
         </div>
     </a>
     {% endfor %}

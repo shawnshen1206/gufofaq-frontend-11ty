@@ -1,10 +1,10 @@
 {# 全站頁尾（由 page-shell 與 chatbot-shell 自動提供）。無參數。
    免責聲明鈕開的彈窗 include 在這裡（§1-2：誰的按鈕開的彈窗，彈窗就 include 在誰裡面）；
-   開窗行為見 footer.js。版號與版權文字為假資料。 #}
+   開窗掛 data-open-modal，由 ui/modals 的事件委派接手（§5），故本元件零 js。版號與版權文字為假資料。 #}
 <footer class="footer">
     <span><span data-i18n="comp.buildLabel">版號：</span> 2.10</span>
     <span class="divider-vertical sm"></span>
-    <button type="button" class="link-modal on-dark js-open-disclaimer" data-i18n="comp.disclaimer">免責聲明</button>
+    <button type="button" class="link-modal on-dark" data-open-modal="disclaimerModal" data-i18n="comp.disclaimer">免責聲明</button>
     <span class="divider-vertical sm"></span>
     <span><span data-i18n="comp.copyright">版權所有</span>© 2025 All Rights Reserved</span>
 </footer>

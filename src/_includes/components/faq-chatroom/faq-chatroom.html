@@ -1,5 +1,6 @@
 {# 前台 FAQ 聊天：容器/輸入為 faq-chatroom 自有；訊息泡泡沿用共用 ui/chat-message；動作鈕沿用 ui/button 的 .button-icon。
-     初始問候＋一組示範問答（含 讚/倒讚/複製/分享 動作鈕）為靜態示範；串流送問答屬業務邏輯（見真實 main.js）不在切版範圍。 #}
+     初始問候＋一組示範問答（含 讚/倒讚/複製/分享 動作鈕）為靜態示範；串流送問答屬業務邏輯（見真實 main.js）不在切版範圍。
+     include 的子元件：components/faq-feedback-modal、components/faq-share-modal（本元件的按鈕開的彈窗，§1-2）。 #}
 <div class="faq-chatroom">
     <div class="faq-chat-scroll">
         <div class="message-wrap">
@@ -37,7 +38,7 @@
                 <button type="button" class="button-icon like js-vote" data-vote="like" title="讚" data-i18n-title="comp.like"><span class="sr-only" data-i18n="comp.like">讚</span></button>
                 <button type="button" class="button-icon dislike js-vote" data-vote="dislike" title="倒讚" data-i18n-title="comp.dislike"><span class="sr-only" data-i18n="comp.dislike">倒讚</span></button>
                 <button type="button" class="button-icon copy has-tooltip" data-toast="文字已複製!" data-i18n-data-toast="common.copied"><span class="tooltip" data-i18n="action.copy">複製</span></button>
-                <button type="button" class="button-icon share js-share" title="分享" data-i18n-title="comp.share"><span
+                <button type="button" class="button-icon share" data-open-modal="shareModal" title="分享" data-i18n-title="comp.share"><span
                         class="sr-only" data-i18n="comp.share">分享</span></button>
             </div>
         </div>

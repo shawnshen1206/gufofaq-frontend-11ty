@@ -63,7 +63,7 @@ src/
 - 有 scss → 在 `scss/main.scss` 對應分組加一行 `@use`
 - 有 js → 在 `eleventy.config.js` 的 passthrough 清單和 `layouts/base/base.html` 的 script 清單各加一行
 - 同一個元件絕不複製貼上；要用就 include，修改只改它資料夾裡的那一份
-- 誰的按鈕開的彈窗，彈窗就 include 在誰裡面（例：footer 內含 disclaimer-modal）
+- 誰的按鈕開的彈窗，彈窗就 include 在誰裡面（例：footer 內含 disclaimer-modal）。**反過來也成立：一頁上的每個 `<dialog>` 都要有東西打得開它**（有測試在 dist 上把關）——沒有觸發器的彈窗是死 markup，把它留給元件庫頁展示
 
 ---
 
@@ -140,7 +140,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
 - 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫，零例外）。**要壓過元件的字色，改由 owning 層提供變體**（如 `.page-title.plain`），不要讓工具 class 帶 `!important` 硬壓——工具層在 `main.scss` 早於元件層載入，硬壓是把層疊順序當成規則在用
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁的「04 欄位」節
-- **HTML 巢狀必須合法**：`span`／`p` 內不可放區塊元素（`div`、`ul`、`table`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
+- **HTML 巢狀必須合法**：`span`／`p`／`button` 內不可放區塊元素（`div`、`ul`、`table`…；`button` 只吃 phrasing content，把 div 假扮的控制項換成真 button 時，內容也要一起換成 `span`）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
 - **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯，沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`、`href=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
   - **id 在一頁裡必須唯一**（有測試在 dist 上把關）。同一元件在頁面出現多次時：**有迴圈變數就拿它組唯一 id**（`id="ms-{{ field.key }}"`、`id="applySample-{{ loop.index }}"`）；**沒有的**（如 `header-controls` 被 `header` 與 `mobile-nav` 各 include 一次）**一律不寫死 id**——改用 class + `querySelectorAll` 綁定、可及名稱用 `aria-label` 而非 `for`/`id`
 - **不要用 div 假扮控制項**：可點的東西一律用真 `<button type="button">`／`<a>`。`div[role="button"][tabindex="0"]` 少了 Enter/Space（WCAG 2.1.1），原生按鈕免費具備。模擬 select 也用 `<button class="form-control">`
@@ -155,7 +155,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 |---|---|
 | `color-scheme: light` / `[data-theme="dark"] { color-scheme: dark }` | 不用管。這層讓原生 UA 元件（`<select>` 展開的選單、date/time picker、autofill 底色、捲軸角落）跟著主題走——**token 換不到這層** |
 | `*, ::before, ::after { box-sizing: border-box }` | **元件不要再寫 `box-sizing: border-box`**（少數要 `content-box` 才自行覆寫） |
-| `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式。真正的控制項被藏起來或被包住時（`ui/switch` 的 1px input、`ui/multi-select` 的內層搜尋框），把焦點環畫在外框的 `:has(:focus-visible)` 上——**不要用 `:focus-within`**，它滑鼠點一下也會亮，和全域焦點環的行為對不上 |
+| `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式。真正的控制項被藏起來或被包住時（`ui/switch` 的 1px input、`ui/multi-select` 的內層搜尋框），把焦點環畫在外框的 `:has(<那顆控制項>:focus-visible)` 上——**`:has()` 要指名那顆控制項**（不然外框內任何可聚焦元素都會點亮它），且**不要用 `:focus-within`**（它滑鼠點一下也會亮，和全域焦點環對不上） |
 | `@media (prefers-reduced-motion: reduce)` 關閉動畫／過渡 | 不用管，照常寫 transition |
 | `img, svg, video, canvas { max-width: 100% }` | 不用重複寫 |
 | `img { height: auto }` | `<img>` 的 `width`/`height` 屬性同時是 CSS 的 presentational hint，只要有一邊被覆寫、另一邊就會卡在原值而把圖拉扁。這條是那兩個屬性的標配對句。元件要固定高度就自己覆寫（特異度自然勝過裸 `img`） |
@@ -190,7 +190,7 @@ ui/pagination/
 ### 寫法規則
 
 - **只用標準 DOM API**（`querySelectorAll`、`addEventListener`、`classList`、`closest`…，MDN 查得到的才能用）；禁止 jQuery 與任何第三方套件
-- 只操作**自己元件**的 class；要操作別的元件，呼叫該元件 js 提供的函式（例：footer.js 呼叫 modals.js 的 `openModal()`）
+- 只操作**自己元件**的 class；要操作別的元件，呼叫該元件 js 提供的函式（例：`faq-chatroom.js` 的讚/倒讚要先預選再開窗，故呼叫 `faq-feedback-modal.js` 匯出的 `openFeedback(vote)`）
 - 包在 `DOMContentLoaded` 裡綁定；同元件可能出現多次時用 `querySelectorAll().forEach()`
 - **markup 零 inline 事件處理器**（`onclick=`…）：行為住在元件 js 裡。要「在 markup 宣告一個行為」時，掛**資料屬性**、由 owning 元件的 js 做事件委派——開跳窗用 `data-open-modal="<dialog id>"`（`ui/modals`），彈提示用 `data-toast`（＋選填 `data-toast-type`，`ui/toast`）。委派掛在 `document` 上，動態插入的元素也吃得到
 - 跳窗用 `<dialog>` 元素 + `showModal()` / `close()`（標準 API，與既有切版相同）
@@ -332,7 +332,9 @@ body.guideline-page { overflow: hidden; }
 
 /* ✅ 要嘛不寫；複合元件把內層的環拿掉、改畫在外框上（見 ui/multi-select） */
 .multi-select-search { outline: none; } // 焦點環改畫在外框
-.multi-select-control:has(:focus-visible) { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+// :has() 一定要指名「那顆被藏起來的控制項」——寫成 :has(:focus-visible) 的話，
+// 控制項裡任何可聚焦的東西（tag 的移除鈕）都會點亮外框，和它自己的焦點環疊在一起。
+.multi-select-control:has(.multi-select-search:focus-visible) { outline: 2px solid var(--brand-text); outline-offset: 2px; }
 ```
 
 ```js

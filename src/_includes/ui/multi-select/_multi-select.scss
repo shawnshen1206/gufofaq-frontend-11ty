@@ -42,7 +42,9 @@
 
     // 複合元件慣例：內層 .multi-select-search 不畫自己的 outline，焦點環畫在整個控制項外框。
     // :has(:focus-visible) 而非 :focus-within —— 與 _base.scss 的全域焦點環同一條件。
-    &:has(:focus-visible) {
+    // **必須限定在搜尋框上**：控制項裡還有每顆 tag 的移除鈕，它們自己就有全域焦點環，
+    // 不限定的話 Tab 到移除鈕會同時亮外框，兩個環疊在一起。
+    &:has(.multi-select-search:focus-visible) {
         outline: 2px solid var(--brand-text);
         outline-offset: 2px;
     }

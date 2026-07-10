@@ -59,7 +59,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
          高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 #}
     <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
-            <button type="button" id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
+            <button type="button" id="openPrioritySwitch" class="button button-border" data-open-modal="intentionModal" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
             <button type="button" id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
         </div>
 
@@ -157,7 +157,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
     </div>
 </div>
 
-{# 意圖判斷啟用 modal：由「啟用意圖判斷」開關觸發（驗證未設定任務描述時提示）。
+{# 意圖判斷啟用 modal：真實 app 是「啟用意圖判斷」時驗證未設定任務描述才跳（業務邏輯，§5 不做）。
+   切版把它接在「啟用全部意圖判斷」鈕上，才看得到這個彈窗、也不留死 markup。
    markup 只有一份正本，見 components/intent-enable-modal（§1-2） #}
 {% include "components/intent-enable-modal/intent-enable-modal.html" %}
 

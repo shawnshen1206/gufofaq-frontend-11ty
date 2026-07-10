@@ -69,8 +69,10 @@
                 el.setAttribute(pair[1], v != null ? v : (defaults.attr[pair[0]] || {})[k]);
             });
         });
-        // <title>（分頁標題）：<html data-title-i18n="key"> 提供頁名 key，切英文＝GufoFAQ::+英文頁名
-        var tk = root.getAttribute("data-title-i18n");
+        // <title>（分頁標題）：<html data-page-title-key="key"> 提供頁名 key，切英文＝GufoFAQ::+英文頁名。
+        // 命名沿用 data-<槽名>-key（同 multi-select 的 data-placeholder-key）——data-i18n-<後綴> 專指「屬性」，
+        // 而 <title> 是元素不是屬性，兩個機制不能共用同一組前綴。
+        var tk = root.getAttribute("data-page-title-key");
         if (tk) {
             var tv = pick(tk, lang);
             document.title = tv != null ? "GufoFAQ::" + tv : defaults.title;
