@@ -208,25 +208,30 @@ test("§4 不得用 div 假扮控制項（要用真 <button>）", () => {
 
 test("§4 每個 <dialog> 的 aria-labelledby 都要指向存在的 id", () => {
     const hits = [];
+    let dialogCount = 0;
     for (const f of distHtml) {
         const html = read(`dist/${f}`);
         const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
         for (const t of tagsOf(html)) {
             if (t.tag !== "dialog") continue;
+            dialogCount++;
             const m = t.attrs.match(/aria-labelledby="([^"]+)"/);
             if (!m) hits.push(`dist/${f}  <dialog> 缺 aria-labelledby`);
             else if (!ids.has(m[1])) hits.push(`dist/${f}  aria-labelledby="${m[1]}" 指向不存在的 id`);
         }
     }
+    assert.ok(dialogCount > 0, "dist 裡一個 <dialog> 都掃不到 —— 這條測試在空轉");
     assert.equal(hits.length, 0, fail(hits));
 });
 
 test("§4 每個 <img> 都要有 width 與 height（消除版位跳動）", () => {
     const hits = [];
+    let imgCount = 0;
     for (const f of distHtml) for (const t of tagsOf(distDoc(f)))
         // 錨點用 (^|\s) 而非 \b：\bwidth= 會被 data-width= 蒙混過去（"-"→"w" 之間就有 word boundary）
-        if (t.tag === "img" && !(/(?:^|\s)width=/.test(t.attrs) && /(?:^|\s)height=/.test(t.attrs)))
+        if (t.tag === "img" && ++imgCount && !(/(?:^|\s)width=/.test(t.attrs) && /(?:^|\s)height=/.test(t.attrs)))
             hits.push(`dist/${f}  ${t.raw.slice(0, 80)}`);
+    assert.ok(imgCount > 0, "dist 裡一張 <img> 都掃不到 —— 這條測試在空轉");
     assert.equal(hits.length, 0, `缺尺寸（CLS）：\n${fail(hits)}`);
 });
 
@@ -641,10 +646,13 @@ test("§5 掛 data-open-modal 的鈕不得同時帶業務 hook class（那代表
     //
     // 判準不必列名單：業務 hook class 的定義就是「全站 scss 都找不到它」——它只給 js 認鈕用。
     // 開窗鈕若身上有這種 class，就表示這顆鈕另有 js 主人，開窗不是它唯一的職責。
-    const scssClasses = new Set();
-    for (const f of srcScss)
-        for (const m of read(f).matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) scssClasses.add(m[1]);
-    assert.ok(scssClasses.size > 100, "scss 裡掃不到 class —— 這條測試在空轉");
+    // 掃「編譯後的 css」而不是 scss 原始碼：_utilities.scss 的 .mt-#{$n} / .gap-#{$n} / .col-#{$i}-md
+    // 是 Sass 插值生成的，原始碼裡只找得到 stem。掃原始碼的話，開窗鈕寫 class="button mt-4"
+    // 就會被誤判成「.mt-4 沒有樣式 ⇒ 業務 hook」而爆紅 —— 而 §4 正是鼓勵用這些工具 class。
+    const cssClasses = new Set();
+    for (const m of read("dist/css/main.css").matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) cssClasses.add(m[1]);
+    assert.ok(cssClasses.size > 300, `dist/css/main.css 只掃到 ${cssClasses.size} 個 class —— 這條測試在空轉`);
+    const scssClasses = cssClasses;
 
     let btnCount = 0;
     const hits = [];

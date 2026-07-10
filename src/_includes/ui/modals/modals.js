@@ -3,9 +3,11 @@
 // （例：faq-feedback-modal.js 的 openFeedback 要先預選讚/倒讚再開窗，無法用宣告式屬性表達）。
 // 只是「點了就開窗」的按鈕不要寫 js —— 掛 data-open-modal="<dialog id>"，由下面的事件委派接手（§5）。
 document.addEventListener("DOMContentLoaded", function () {
-    // body 捲動鎖走 ui/scroll-lock 的共享計數器（巢狀開窗、以及和手機選單搶同一個 body 都靠它）
-    var lockBodyScroll = window.GufoScrollLock.lock;
-    var unlockBodyScroll = window.GufoScrollLock.unlock;
+    // body 捲動鎖走 ui/scroll-lock 的共享計數器（巢狀開窗、以及和手機選單搶同一個 body 都靠它）。
+    // 懶讀而不是在這裡取值：一旦 scroll-lock.js 沒載入，取值會擲例外並中斷整個 DOMContentLoaded callback，
+    // 於是連關窗鈕、Esc 解鎖、data-open-modal 委派全部沒註冊 —— 少一支捲動鎖不該讓所有跳窗一起死。
+    function lockBodyScroll() { if (window.GufoScrollLock) window.GufoScrollLock.lock(); }
+    function unlockBodyScroll() { if (window.GufoScrollLock) window.GufoScrollLock.unlock(); }
 
     function openModal(id) {
         var modal = document.getElementById(id);
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.classList.add("show");
 
         modal.showModal();
+        modal._gufoLocked = true; // 只有「我鎖的」才由我解；別的路徑關掉的 dialog 不該去減別人的計數
         lockBodyScroll();
     }
 
@@ -57,7 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal._closeTimer = null;
             }
             modal.classList.remove("show", "hide");
-            unlockBodyScroll();
+            if (modal._gufoLocked) {
+                modal._gufoLocked = false;
+                unlockBodyScroll();
+            }
         });
     });
 

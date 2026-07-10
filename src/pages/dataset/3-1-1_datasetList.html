@@ -141,4 +141,7 @@ permalink: 3-1-1_datasetList.html
     {% include "ui/pagination/pagination.html" %}
 </div>
 
+{# 刪除確認鈕交給業務 js：真 app 的 datasetList.js:360 綁 #confirmDeleteBtn，
+   API 刪完 (:342) 才 closeModal。寫死 btn-close-modals ＝ 按了確認、窗關了、什麼都沒刪。 #}
+{% set deleteConfirmBinding = true %}
 {% include "components/delete-modal/delete-modal.html" %}

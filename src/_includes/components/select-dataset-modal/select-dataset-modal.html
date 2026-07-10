@@ -1,12 +1,15 @@
 {# 選擇資料集 modal，取自真實 app pages/components/component.html #datasetModal（class/id 沿用真實系統）；
-   真實頁面（如 pages/dataImport/1-1-1_dataImport.html）的 .dataset-list 內容由 js 動態載入，
-   此處依 component.html 展示版的具體 checkbox 列表，用 set+for 資料化 #}
+   真實頁面（pages/dataImport/1-1-1_dataImport.html）的 .dataset-list 內容由 js 動態載入。
+   **是單選**：真 app 的 dataImport.js:127 塞的是 <input type="radio" name="dataset_radio">，
+   確認鈕讀 input[name="dataset_radio"]:checked（:21）——這個 modal 的語意是「選一個要匯入的目標資料集」。
+   真 app 的 component.html 展示版畫成 checkbox，那是展示版的失真；切版是給功能頁用的，照功能頁走。
+   （label 沿用真 app 的 .form-checkbox.border-wrap，radio 也是掛這組 class。） #}
 {% set datasets = [
-    { name: "dataset_AA", label: "資料集AA", checked: true },
-    { name: "dataset_BB", label: "資料集BB", checked: true },
-    { name: "dataset_CC", label: "資料集CC", checked: true },
-    { name: "dataset_DD", label: "資料集DD" },
-    { name: "dataset_EE", label: "資料集EE" }
+    { label: "資料集AA", checked: true },
+    { label: "資料集BB" },
+    { label: "資料集CC" },
+    { label: "資料集DD" },
+    { label: "資料集EE" }
 ] %}
 <dialog class="modals" id="datasetModal" aria-labelledby="datasetModal-title">
     <div class="modals-dialog modals-md">
@@ -32,7 +35,7 @@
                                 <div class="dataset-list">
                                     {% for dataset in datasets %}
                                     <label class="form-checkbox border-wrap">
-                                        <input type="checkbox" name="{{ dataset.name }}"{% if dataset.checked %} checked{% endif %} class="check-one">
+                                        <input type="radio" name="dataset_radio" value="{{ dataset.label }}"{% if dataset.checked %} checked{% endif %}>
                                         <span>{{ dataset.label }}</span>
                                     </label>
                                     {% endfor %}

@@ -53,7 +53,7 @@ permalink: 3-1-6_previewExcel_compare.html
                 <th>
                     <div class="th-sort">
                         {{ col.label }}
-                        <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="排序" data-i18n-alt="common.sort" class="sort" data-order="none">
+                        <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="排序" data-i18n-alt="common.sort" class="sort" data-column="{{ col.key }}">
                     </div>
                 </th>
                 {% endfor %}

@@ -7,6 +7,21 @@
 // 為什麼 toast 要認 dialog：showModal() 的 <dialog> 在瀏覽器的 top layer，
 // 頁面層的 position:fixed 不管 z-index 開多大都蓋不過它。跳窗裡按複製鈕，
 // toast 會被畫在跳窗底下看不見。真實 app 也是把 toast 塞進所在的 .modals 裡（Standard/js/main.js:71）。
+// 每個 <dialog> 需要自己的 live region。DOMContentLoaded 時會替當時在場的 dialog 先建好
+// （aria-live 區塊必須先存在，內容之後才變動，螢幕報讀器才會念）；之後才插入的 dialog 在這裡補建 ——
+// 少了這行，動態 dialog 裡的 toast 會掉回頁面層的 #toastContainer，被 top layer 蓋住、完全看不見。
+function ensureToastRegion(dialog) {
+    let region = dialog.querySelector(':scope > .toast-region');
+    if (region) return region;
+    region = document.createElement('div');
+    region.className = 'toast-region';
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    dialog.appendChild(region);
+    return region;
+}
+
 function showToast(message, type = 'success', duration = 3000, host = null) {
     // 舊簽名相容：showToast(msg, duration)
     if (typeof type === 'number') { duration = type; type = 'success'; }
@@ -34,7 +49,7 @@ function showToast(message, type = 'success', duration = 3000, host = null) {
     toast.appendChild(toastText);
 
     const container =
-        (host && host.querySelector(':scope > .toast-region')) ||
+        (host && ensureToastRegion(host)) ||
         document.getElementById('toastContainer') ||
         document.body;
     container.appendChild(toast);
@@ -50,17 +65,8 @@ function showToast(message, type = 'success', duration = 3000, host = null) {
 
 // data-toast 元素點擊 → 彈 toast（event delegation，涵蓋 .copyBtn 等；真實 app 為 $('.copyBtn').on('click',...)）
 document.addEventListener('DOMContentLoaded', function () {
-    // 每個 <dialog> 先備好自己的 live region：等到要彈 toast 才現做的話，
-    // 螢幕報讀器不會念（aria-live 區塊必須先存在，內容之後才變動）。選 dialog 而非 .modals，
-    // 才不會在 toast 的 js 裡指名別的元件的 class。
-    document.querySelectorAll('dialog').forEach(function (dialog) {
-        const region = document.createElement('div');
-        region.className = 'toast-region';
-        region.setAttribute('role', 'status');
-        region.setAttribute('aria-live', 'polite');
-        region.setAttribute('aria-atomic', 'true');
-        dialog.appendChild(region);
-    });
+    // 選 dialog 而非 .modals，才不會在 toast 的 js 裡指名別的元件的 class。
+    document.querySelectorAll('dialog').forEach(ensureToastRegion);
 
     document.addEventListener('click', function (e) {
         const el = e.target.closest('[data-toast]');

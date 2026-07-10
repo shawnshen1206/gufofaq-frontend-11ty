@@ -174,7 +174,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         control.addEventListener("click", function () { setOpen(true); search.focus(); });
         search.addEventListener("focus", function () { setOpen(true); });
-        search.addEventListener("input", function () { activeIndex = -1; renderDropdown(); });
+        search.addEventListener("input", function () {
+            // 重新過濾＝選項全部重建。不清掉 aria-activedescendant 的話，
+            // 它會一直指著一個已經不存在的 id，輔具會報一個看不到的「目前選項」。
+            activeIndex = -1;
+            search.removeAttribute("aria-activedescendant");
+            renderDropdown();
+        });
 
         search.addEventListener("keydown", function (event) {
             var list = items();

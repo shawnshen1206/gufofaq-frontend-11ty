@@ -109,9 +109,15 @@ permalink: 3-1-3_previewDataset.html
                 <td class="text-center">{{ file.sizeMB }} MB</td>
                 <td class="text-center">{{ file.count }} <span data-i18n="dataset.recordsUnit">筆</span></td>
                 <td>
+                    {# 兩顆列動作，逐字對上真 app 的 previewDataset.js:167/170：
+                       .delete-single-btn（單筆刪除，$(document).on('click','.delete-single-btn')）
+                       .download-file-btn（下載，:515）—— 都是業務 js 的掛點，切版不掛行為，但按鈕要在 #}
                     <div class="btn-group">
-                        <button type="button" class="button-icon no-bg size-sm delete" title="刪除" data-i18n-title="action.delete">
+                        <button type="button" class="button-icon no-bg size-sm delete delete-single-btn" title="刪除" data-i18n-title="action.delete">
                             <span class="sr-only" data-i18n="action.delete">刪除</span>
+                        </button>
+                        <button type="button" class="button-icon no-bg size-sm download download-file-btn" title="下載" data-i18n-title="action.download">
+                            <span class="sr-only" data-i18n="action.download">下載</span>
                         </button>
                     </div>
                 </td>
@@ -132,4 +138,8 @@ permalink: 3-1-3_previewDataset.html
     {% include "ui/pagination/pagination.html" %}
 </div>
 
+{# 刪除確認鈕交給業務 js：真 app 的 previewDataset.js 綁 .confirm-delete-btn，
+   API 刪完 (:498) 才 closeModal。寫死 btn-close-modals ＝ 按了確認、窗關了、什麼都沒刪。 #}
+{% set deleteConfirmBinding = true %}
+{% set deleteConfirmClass = "confirm-delete-btn" %}
 {% include "components/delete-modal/delete-modal.html" %}

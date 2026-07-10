@@ -39,8 +39,10 @@
         }
 
         // 選中（.active，由 faq-feedback-modal.js 加）
+        // 選中態的底是 --surface-sunken，--brand-text 疊上去淺色只有 4.49:1（差 0.01）。
+        // 前景墨色疊 sunken 是 10.57 / 8.6，且它本來就是「選中的前景」該用的角色（§4）。
         &.active {
-            color: var(--brand-text);
+            color: var(--brand-ink);
             background-color: var(--surface-sunken);
             border-color: var(--brand);
         }
