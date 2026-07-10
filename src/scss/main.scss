@@ -28,6 +28,7 @@
 @use "../_includes/ui/accordion/accordion";
 @use "../_includes/ui/tab/tab";
 @use "../_includes/ui/pagination/pagination";
+@use "../_includes/components/pagination-input/pagination-input";
 @use "../_includes/ui/multi-select/multi-select";
 @use "../_includes/ui/breadcrumb/breadcrumb";
 @use "../_includes/ui/tooltip/tooltip";
@@ -85,5 +86,5 @@
 // 部署站台首頁（catalog.html）專屬樣式，同 guideline 為 showcase 專用
 @use "catalog";
 
-// 深色模式：光柵 PNG 圖示反相（第一版實驗，最終不理想的再換深色版資產）
+// 深色模式：只剩 <img src*="_black"> 的反相（單色 background-image 圖示走 _mixin 的 icon-mask，不在這裡）
 @use "dark-icons";

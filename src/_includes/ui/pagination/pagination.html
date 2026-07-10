@@ -1,5 +1,5 @@
 {# 資料驅動頁碼列；頁面 include 前 set pages（[{ number, active }]，可含 { ellipsis: true } 呈現省略號）。
-     可輸入頁碼版 .pagination-input（第 X 個對話…）為另一種互動變體，行為見 pagination.js；示範見 component.html、實用於 4-2，markup 各自就地寫，不併入本檔。
+     可輸入頁碼版是另一個元件 ui/pagination-input（自帶 html/scss/js），兩者沒有共用的東西。
 
      data-page 是真 app 的換頁掛點（js/main.js:613 的 $(".pagination").on("click","a[data-page]") 委派），
      切版沒有換頁行為（要打 API），但這個屬性是轉換契約，必須留著（§5）。目前頁不掛 data-page，與真 app 一致。

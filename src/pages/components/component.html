@@ -468,18 +468,8 @@ bodyClass: guideline-page
             {% set nextPage = 2 %}
             {% include "ui/pagination/pagination.html" %}
             <br>
-            {# 可輸入頁碼切換 .pagination-input（另一互動變體，行為見 pagination.js）；此為展示，實用範例見 4-2 #}
-            <div class="pagination-input" data-total="12">
-                <button type="button" class="pager-btn prev" disabled>
-                    <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="上一頁" class="icon">
-                </button>
-                <span class="pager-text">第</span>
-                <input class="pager-input form-control" type="text" value="1" aria-label="頁碼">
-                <span class="pager-text">個對話，共<span class="total"></span>個</span>
-                <button type="button" class="pager-btn next">
-                    <img src="./images/icon_arrow_right_blue.png" width="48" height="48" decoding="async" alt="下一頁" class="icon">
-                </button>
-            </div>
+            {# 可輸入頁碼切換（另一互動變體）；實用範例見 4-2 #}
+            {% include "components/pagination-input/pagination-input.html" %}
             <div class="caption description mt-16">
                 <ul>
                     <li>上一頁li.prev以及下一頁li.next加上.disabled的class就會呈現禁用狀態</li>

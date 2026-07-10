@@ -192,16 +192,26 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 - 麵包屑分隔 `li+li::before{content:"/"}`（`_breadcrumb.scss`）→ 渲染成真元素，或 `after:content-['/'] after:px-2 after:text-text-muted`。
 - 必填星號 `.control-label.required::after{content:"*"}`（`_form-control.scss`）→ `after:content-['*'] after:text-danger-text`。
 
-貼背景圖的偽元素（`content:'' + url()`）→ `after:content-[''] after:w-5 after:h-5 after:bg-contain after:bg-no-repeat after:bg-[url(...)]`，**或改內嵌 SVG component（建議）**。code 裡實際有的（別漏）：
+畫圖示的偽元素（`content:'' + 遮罩`）→ 見 §5-5，它們**不是** `background-image` 而是 `mask` + `background-color`（`icon-mask()`）；`after:content-[''] after:w-5 after:h-5 after:bg-text after:[mask:url(...)_no-repeat_center/contain]`，**或改內嵌 SVG component（建議，SVG 的 `fill=currentColor` 就是遮罩在做的事）**。code 裡實際有的（別漏）：
 - 下拉箭頭：`.dropdown::after`（`_header.scss` 與 `_mobile-nav.scss` **各一個**）、`.select-wrap::after`（`_form-control.scss`，模擬 select）、`.multi-select-control::after`（`_multi-select.scss`）。
 - 收合/切換箭頭：`.collapse-toggle::after`（`_collapse-text.scss`）、`.qa-side-panel-toggle::after`（`_qa-side-panel.scss`）。
-- 純樣式偽元素（非圖）：header `a.logout::before` 分隔線、`li::after` hover 命中區（`_header.scss`）→ 用 `before:/after:` + 尺寸/背景。（注意：multi-select tag 的 `×` **不是**偽元素，是帶 `background-image` 的真 `<button>`，歸 5-5 圖示類。）
+- 搜尋/時鐘：`.field:has(> .form-control.search)::after` / `.time`（`_form-control.scss`）—— `<input>` 沒有偽元素，故圖示掛在 `.field` 上，`.field` 疊成單欄 grid 讓圖示與 `<input>` 同格（`grid-area:1/1` + `align-content:start`）。轉 React 時直接把圖示畫成 `<input>` 的兄弟元素、外層 `relative`，不必照抄 grid。
+- `.button-icon::before`（`_button.scss`）：字形在偽元素上，因為按鈕自己的 `background-color` 要留給 hover 藥丸。
+- 純樣式偽元素（非圖）：header `a.logout::before` 分隔線、`li::after` hover 命中區（`_header.scss`）→ 用 `before:/after:` + 尺寸/背景。（注意：multi-select tag 的 `×` **不是**偽元素，是帶遮罩的真 `<button>`，歸 5-5 圖示類。）
 
 ### 5-4. 自訂 checkbox / radio / switch（`_checkbox.scss`、`_radio.scss`、`_switch.scss`）——**零 CSS 的最弱點，特別注意**
 用 `appearance:none`（或隱藏 `opacity:0` 的 input）+ 偽元素/相鄰兄弟畫出控制項（checkbox 用旋轉 border 打勾、radio 用 scale 圓點，**switch 用隱藏 checkbox + `:checked + .switch-box .switch-btn` 相鄰兄弟 + custom property `calc()` 推 handle 位置**，含 `:checked`/`:disabled` 過渡）。純 Tailwind arbitrary `before:` 很難忠實重現。**建議做法：改成受控的 React 元件（SVG icon / 自畫 handle），或此處留一小段 CSS 逃生口**。這是整個轉換裡唯一「硬要零 CSS 會很痛」的地方——若團隊零 CSS 是硬底線，優先走受控元件。
 
-### 5-5. 實體元素的背景圖 icon（不是偽元素，數量多）
-`.form-control.search`/`.time`（放大鏡/時鐘，`_form-control.scss`）、`.button-icon` 系列 sprite（`_button.scss`）、`.multiSelect` 相關 icon（`_multi-select.scss`）、`faq-chatroom` 頭像 `icon_owl.png`、`chatbot-header` 的 `Logo.png`、`faq-feedback-modal` 的 `icon_good.png`/`icon_not_good.png`（可切換的 `.feedback-vote-btn` 圖，不是靜態 icon）都是**實體元素**的 `background-image:url(...)`。→ `bg-[url(...)] bg-no-repeat bg-contain` arbitrary，或改 SVG 元件；兩值 `background-size` → `bg-[length:24px_24px]`。**要重寫資產路徑到 React public/，數量大，別漏。**
+### 5-5. 單色 PNG 圖示＝遮罩上色（`icon-mask()`），**不是** `background-image`
+全站的單色圖示（`.button-icon::before` 系列、`.nav-toggle`、`.accordion-btn`、`.multi-select-tag-remove`、五個 `::after` 箭頭、`.modals-close`、`.feedback-vote-icon`、搜尋/時鐘）都走 `src/scss/_mixin.scss` 的 `icon-mask($url, $ink, $size)`：**PNG 的 alpha 當遮罩、顏色由語意 token 給**。因此深色模式不必反相、hover 換色只要換 token（真 app 的 `*_bluehover.png` 已因此刪除）。
+
+→ **轉 React 時應該直接改成內嵌 SVG component + `fill="currentColor"`**：那正是遮罩在模擬的東西，而且省掉一整批 PNG 請求。若要機械照搬，Tailwind 沒有 mask utility，得寫 arbitrary property：`bg-text [mask:url(/icons/x.png)_no-repeat_center/contain]`（底線代空白）。**顏色來自 `background-color`，不是 `color`** —— 這是遮罩的關鍵，別把它當成普通底色而套上填充 token（見 GUIDELINE §4「遮罩」）。
+
+彩色/多色圖不遮罩，維持 `background-image` 或 `<img>`：`faq-chatroom` 頭像 `icon_owl.png`、`chatbot-header` 的 `Logo.png`、`_header.scss` 的 `img_logo.png`、`countdown-box` 的底紋、`.beta-icon` 徽章、檔型徽章。→ `bg-[url(...)] bg-no-repeat bg-contain`，或直接 `<img>`。
+
+`<img>` 的深色反相仍留在全域的 `src/scss/_dark-icons.scss`：**只認檔名** `img[src*="_black"]`，不認任何元件 class。轉 React 時這條可以整條丟掉——SVG component 換色即可。
+
+**要重寫資產路徑到 React public/，別漏。**
 - **logo 圖片替換文字技法**：`.chatbot-header .logo a`（也見 `_header.scss`）用 `text-indent:101%; white-space:nowrap; overflow:hidden` 把文字推出視野、只留 bg 圖 → `indent-[101%] whitespace-nowrap overflow-hidden`（或直接把文字改 `sr-only`）。`text-indent` 無 utility，用 arbitrary。
 
 ### 5-6. 特殊 CSS 屬性
@@ -235,7 +245,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 8. **逃生口別略過也別硬 utility**：捲軸走 plugin（§5-1）、markdown 走 react-markdown components（§5-2）、偽元素走 before/after 或 SVG（§5-3）。不要因為「掛不上 class」就漏掉樣式。
 9. **狀態/互動是規格**：`.active/.open/.collapsed` 等狀態 → React state；元件的 `<name>.js`（如 `qa-side-panel.js`/`prompt-edit.js`/`accordion.js`）是行為規格，翻成 `useState`/事件，別照搬 DOM 操作。
 10. **自訂 checkbox/radio 別硬 utility**（§5-4）：`appearance:none`+偽元素畫的控制項，零 CSS 就走 SVG 元件；硬用 arbitrary `before:` 會重現不出旋轉打勾。這是零 CSS 唯一真的痛點。
-11. **實體元素的背景圖 icon 數量多別漏**（§5-5）：搜尋/時間框、`.button-icon` 約 13 個 sprite → `bg-[url()]` 或 SVG，且要改資產路徑。
+11. **單色圖示是遮罩不是背景圖**（§5-5）：`.button-icon` 系列、箭頭、搜尋/時間框…清單自己數（`grep -o 'mask:url("[^"]*")' dist/css/main.css | sort -u`）→ 建議一律改成 `fill="currentColor"` 的內嵌 SVG。若照搬遮罩，記得上色的是 `background-color`（墨色）而非 `color`；Tailwind 無 mask utility，需 arbitrary property。
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
 14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5`、`login-wrapper 1` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。

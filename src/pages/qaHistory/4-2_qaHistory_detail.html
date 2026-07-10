@@ -47,24 +47,9 @@ permalink: 4-2_qaHistory_detail.html
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
 
-    {# 可輸入頁碼切換：真實頁由 js/qaHistoryDetail.js 依上一頁查詢結果總數渲染 data-total 與 pager 行為，
-         此處保留同一組 class 靜態呈現（沿用 ui/pagination 的 .pagination-input 樣式） #}
+    {# 可輸入頁碼切換：真實頁由 js/qaHistoryDetail.js 依上一頁查詢結果總數渲染 data-total 與 pager 行為 #}
     <div class="page-title-wrap">
-        <div class="pagination-input" data-total="12">
-            <button type="button" class="pager-btn prev" disabled>
-                <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="上一頁" data-i18n-alt="action.prevPage" class="icon">
-            </button>
-
-            <span class="pager-text" data-i18n="qa.detailConvNo">第</span>
-
-            <input class="pager-input form-control" type="text" value="1" aria-label="頁碼" data-i18n-aria-label="qa.pageNumber">
-
-            <span class="pager-text"><span data-i18n="qa.detailConvOf">個對話，共</span> <span class="total">12</span> <span data-i18n="qa.detailConvItems">個</span></span>
-
-            <button type="button" class="pager-btn next">
-                <img src="./images/icon_arrow_right_blue.png" width="48" height="48" decoding="async" alt="下一頁" data-i18n-alt="action.nextPage" class="icon">
-            </button>
-        </div>
+        {% include "components/pagination-input/pagination-input.html" %}
     </div>
 </div>
 

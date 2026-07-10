@@ -1,0 +1,21 @@
+{# 可輸入頁碼切換：「第 [1] 個對話，共 12 個」＋前後鈕。與 ui/pagination 是兩種互不相干的頁碼互動
+   （那邊是資料驅動的頁碼列）。行為見 pagination-input.js：數字過濾、clamp 在 1~total、前後鈕 disabled 與箭頭換圖。
+
+   參數：paginationTotal（總筆數，預設 12）。真實頁的 data-total 由業務 js 依查詢結果填入
+   （真 app 的 qaHistoryDetail.js），切版給靜態值當示範；`.total` 的內容也會被 js 覆寫。 #}
+{% if not paginationTotal %}{% set paginationTotal = 12 %}{% endif %}
+<div class="pagination-input" data-total="{{ paginationTotal }}">
+    <button type="button" class="pager-btn prev" disabled>
+        <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="上一頁" data-i18n-alt="action.prevPage" class="icon">
+    </button>
+
+    <span class="pager-text" data-i18n="qa.detailConvNo">第</span>
+
+    <input class="pager-input form-control" type="text" value="1" aria-label="頁碼" data-i18n-aria-label="qa.pageNumber">
+
+    <span class="pager-text"><span data-i18n="qa.detailConvOf">個對話，共</span> <span class="total">{{ paginationTotal }}</span> <span data-i18n="qa.detailConvItems">個</span></span>
+
+    <button type="button" class="pager-btn next">
+        <img src="./images/icon_arrow_right_blue.png" width="48" height="48" decoding="async" alt="下一頁" data-i18n-alt="action.nextPage" class="icon">
+    </button>
+</div>

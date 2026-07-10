@@ -53,7 +53,7 @@ src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
 │   ├── ui/                 不依賴其他元件的元件（41 個）
-│   └── components/         會用到其他元件，或某大元件的專屬子片段（30 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（31 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         共用 mixin：scrollbar 系列、icon-mask（單色 PNG 遮罩上色）、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
@@ -102,7 +102,8 @@ dist/                       build 輸出（勿手改）
 | 元件 | 參數／資料 |
 |---|---|
 | `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時退回 `#`（不輸出空屬性）。 |
-| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
+| `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。 |
+| `components/pagination-input` | 選填 `paginationTotal`（總筆數，預設 12）；「第 [1] 個對話，共 12 個」＋前後鈕，行為見 `pagination-input.js`。與 `ui/pagination` 是兩種互不相干的頁碼互動。 |
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
 | `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, placeholderKey?, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。`placeholder` 是繁中原文，`placeholderKey` 給它的 i18n key（js 產生的字串要走 `GufoI18n.t`，見 GUIDELINE §4-2）。 |
@@ -134,7 +135,7 @@ dist/                       build 輸出（勿手改）
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 71 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
+> **上列不是完整清單**（`src/_includes/` 目前有 72 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 
