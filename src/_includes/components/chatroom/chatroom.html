@@ -1,6 +1,6 @@
-<!-- 資料取自真實 app pages/qaRecord/2-1_qaRecord.html（.chatroom-wrap 結構）+ pages/qaTest/2-2-1_singleTest.html（qa-count + chat-input-container）。
+{# 資料取自真實 app pages/qaRecord/2-1_qaRecord.html（.chatroom-wrap 結構）+ pages/qaTest/2-2-1_singleTest.html（qa-count + chat-input-container）。
      只轉結構＋樣式，串流/送出/markdown 渲染屬業務邏輯，不在此元件內（見 qaRecord.js / singleTest.js）。
-     .robot-msg 是 Markdown 區塊容器（內含 p/ul/table…），依 GUIDELINE §4 用 div——原始切版的 span 包區塊元素是無效巢狀，轉 React SSR 會 hydration 錯誤。 -->
+     .robot-msg 是 Markdown 區塊容器（內含 p/ul/table…），依 GUIDELINE §4 用 div——原始切版的 span 包區塊元素是無效巢狀，轉 React SSR 會 hydration 錯誤。 #}
 {% set messages = [
     {
         role: "robot",
@@ -46,7 +46,7 @@
                     {% endif %}
                     {% endfor %}
 
-                    <!-- AI 回答為長文格式化內容，依 GUIDELINE §3-2 直接寫死當樣式示範，不進 front matter（正式環境為 API 回傳的 markdown 渲染結果） -->
+                    {# AI 回答為長文格式化內容，依 GUIDELINE §3-2 直接寫死當樣式示範，不進 front matter（正式環境為 API 回傳的 markdown 渲染結果） #}
                     <div class="message-wrap">
                         <div class="message-row by-robot">
                             <div class="message-content">

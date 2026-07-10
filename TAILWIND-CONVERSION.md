@@ -43,9 +43,13 @@ Tailwind v4：把同一組名字加上 `--color-` 前綴放進 `@theme`，深色
 
 漸層 `--brand-gradient`（header 底線、footer 背景）不是顏色 token：設成一般 CSS 變數或用 `bg-[linear-gradient(...)]`。
 
+> ⚠️ **`_var.scss` 裡還有 5 顆「非顏色旗標」**，值是 `block`/`none`/`invert(.8)…`/`multiply` 之類，被元件當 `display`/`filter`/`background-blend-mode` 用：`--theme-icon-light`、`--theme-icon-dark`、`--raster-invert`、`--pattern-blend`、`--pattern-tint`。**不要加 `--color-` 前綴、不要放進 `@theme` 的顏色區**——改名就會讓 `var(--theme-icon-light)` 斷鏈，日/月圖示切換、插圖反相、底紋壓暗全部失效。
+
 ### 全域基底：Tailwind preflight 沒給的三條，必須自己帶過去
 
-preflight 已含 `box-sizing: border-box` 與 `img{max-width:100%}`，但下面三條**沒有**。它們在 `_base.scss`，是全站可及性/體感的地基，轉換時逐條搬進全域樣式層（v4 用 `@layer base`）：
+preflight 已含 `box-sizing: border-box` 與 `img{max-width:100%; height:auto}`（本專案 `_base.scss` 的 `img{height:auto}` 因此不必另帶），但下面三條**沒有**。它們在 `_base.scss`，是全站可及性/體感的地基，轉換時逐條搬進全域樣式層（v4 用 `@layer base`）：
+
+> ⚠️ 反過來，**preflight 會多給 `img{display:block; vertical-align:middle}`**，本專案的 `<img>` 維持 inline（`.icon`、`.beta-icon`、header logo…）。轉換後要視情況以 `inline`/`inline-block` 覆寫，否則徽章與圖示會換行或位移。
 
 ```css
 @layer base {
@@ -103,7 +107,7 @@ screens: {
 - `1040px`：`step-nodes`（步驟條）。（`catalog` 的 1040px 是容器 `max-width`，**不是**斷點 → `max-w-[1040px]`，不要做成 `max-[1040px]:` variant。）
 - `991px`/`767px`：`.message-content` 訊息氣泡最大寬（`_chat-message.scss`，共用泡泡）；`faq-share-modal` 亦有一個 767px。
 - `576px`：`countdown-box` 的一次性 `@media`。
-> ⚠️ `900px`/`560px`（`.modals-md`/`.modals-sm`）、`531px`/`480px`（login-wrapper）**不是斷點**，是元素的 `max-width` 屬性——別做成 `max-[900px]:` variant。
+> ⚠️ `1200px`/`900px`/`560px`（`.modals-lg`/`.modals-md`/`.modals-sm`）、`531px`/`480px`（login-wrapper）**不是斷點**，是元素的 `max-width` 屬性——別做成 `max-[900px]:` variant。（`.wrap` 在 1560 斷點下縮到的 `1200px` 也是 max-width，不是門檻。）
 > 做法：轉某元件時，**讀它自己的 `@media` 值**，逐一對成 `max-[992px]:`/`max-[1560px]:`… 別只靠 named screens。
 
 ---
@@ -210,7 +214,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 
 ## ⑥ Gotchas（agent 最常轉錯的點——轉之前先讀一遍）
 
-1. **斷點方向相反、且不只 992/768**：專案 `max-width` mobile-last，別套 Tailwind 預設 `md:`（語意顛倒）。系統性用 `max-lg/max-md`，但元件另有 1560/1250/1200/1040/991/900/576… 一次性斷點（§2）——轉某元件時**讀它自己的 `@media` 值**逐一對成 `max-[Npx]:`。
+1. **斷點方向相反、且不只 992/768**：專案 `max-width` mobile-last，別套 Tailwind 預設 `md:`（語意顛倒）。系統性用 `max-lg/max-md`，但元件另有 1560/1250/1040/991/767/576 一次性斷點（§2）——轉某元件時**讀它自己的 `@media` 值**逐一對成 `max-[Npx]:`。
 2. **字級命名偏移 +1**：`text-md/lg/xl` → `text-lg/xl/2xl`。別同名。
 3. **`text-bold` 是 500 不是 700** → `font-medium`，不是 `font-bold`。
 4. **間距是 px 命名**：Tailwind 值 = 名稱 ÷ 4（`gap-16`→`gap-4`）。別直接抄數字。
@@ -223,7 +227,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 11. **實體元素的背景圖 icon 數量多別漏**（§5-5）：搜尋/時間框、`.button-icon` 約 13 個 sprite → `bg-[url()]` 或 SVG，且要改資產路徑。
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
-14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
+14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5`、`login-wrapper 1` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
 15. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
 16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
 

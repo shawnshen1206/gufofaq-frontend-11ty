@@ -1,7 +1,7 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 11 Table表格 section（主要表格，class 沿用真實系統） -->
-<!-- 父層用「div.table-container」包覆，需左右滾動時加「.scrollTable」；主要表格用「table.default-table」；
+{# 展示片段，取自真實 app pages/components/component.html 11 Table表格 section（主要表格，class 沿用真實系統） #}
+{# 父層用「div.table-container」包覆，需左右滾動時加「.scrollTable」；主要表格用「table.default-table」；
      欄位排序在 th 內加 div.th-sort + img.sort；內容較多欄位用 div.ellipsis-2 包覆；
-     功能欄按鈕用 div.btn-group 包覆；固定欄寬加 .fixed-layout；無外框加 .no-border（見下方 accordion 表格範例） -->
+     功能欄按鈕用 div.btn-group 包覆；固定欄寬加 .fixed-layout；無外框加 .no-border（見下方 accordion 表格範例） #}
 {% set demoTableRows = [
     {
         id: "12173",
@@ -65,7 +65,7 @@
                 <td>{{ row.id }}</td>
                 <td>{{ row.chatId }}</td>
                 <td>
-                    <a href="" class="link-file">{{ row.question }}</a>
+                    <a href="#" class="link-file">{{ row.question }}</a>
                 </td>
                 <td>
                     <div class="ellipsis-2">{{ row.answer }}</div>
@@ -79,6 +79,6 @@
     </table>
 </div>
 
-<!-- 展開列（accordion）表格範例：expandable rows 直接複用 ui/accordion 既有標記與行為（accordion-btn/detail-row/accordion-content），
-     不重寫互動 js，僅載入 accordion.js（已在 base.html 登記） -->
+{# 展開列（accordion）表格範例：expandable rows 直接複用 ui/accordion 既有標記與行為（accordion-btn/detail-row/accordion-content），
+     不重寫互動 js，僅載入 accordion.js（已在 base.html 登記） #}
 {% include "ui/accordion/accordion.html" %}

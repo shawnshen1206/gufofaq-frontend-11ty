@@ -47,6 +47,11 @@
         gap: 1.25rem;
         flex-shrink: 0; // 三顆鈕不被壓扁；不夠寬時縮的是 logo
     }
+
+    // 放 header-controls 的 slot（header 自有）。收成漢堡時整個 slot 收起來，見檔尾的 nav-collapsed。
+    .header-controls-slot {
+        display: flex;
+    }
 }
 
 .desktop-nav {
@@ -153,7 +158,7 @@
 
     // 語言／深淺鈕改由 mobile-nav 放進展開的選單裡（那份不在 .header 底下，不受這條影響）。
     // 留在 header 只會把 logo 擠小 —— 窄視窗的 header 就該只有 logo + 漢堡。
-    .header .header-controls {
+    .header .header-controls-slot {
         display: none;
     }
 

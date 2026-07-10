@@ -1,18 +1,23 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 17 檔案上傳 section 上傳成功通知範例（class 沿用真實系統）。
-     父層用 .block.block-lg.corner-md 包覆（.block 樣式由 ui/block 提供，已建置）。
-     簡化版靜態跳轉：頁面 set successRetryHref（再次上傳）/ successViewHref（查看資料）即直接連到該頁，未設則 "#"。 -->
+{# 上傳成功通知。參數由使用頁面 include 前 set（§6：會因頁面而異的資料不寫死在元件裡）：
+     successRetryHref / successRetryLabel / successRetryKey：左鈕（預設 "#"／再次上傳／comp.uploadAgain）
+     successViewHref / successViewLabel / successViewKey：右鈕（預設 "#"／查看資料／comp.viewData）
+     successHideDesc：true 時只留空的 .success-desc 容器（PDF 流程的檔案資訊由業務 JS 動態帶入）
+   父層 .block.block-lg.corner-md 由本元件掛上（.block 樣式由 ui/block 提供）。
+   檔案名稱／大小／資料總量是純示範假資料（§3-2），不翻譯。 #}
 <div class="block block-lg corner-md success-box">
     <div class="success-message">
         <img src="./images/icon_check_green.png" width="48" height="48" decoding="async" alt="" class="icon">
         <span data-i18n="comp.uploadSuccess">上傳成功</span>
     </div>
     <div class="success-desc">
+        {% if not successHideDesc %}
         <p><span data-i18n="comp.fileNameLabel">檔案名稱：</span>20251119105623_FAQ測試用.xlsx</p>
         <p><span data-i18n="comp.fileSizeLabel">檔案大小：</span>1KB</p>
         <p><span data-i18n="comp.dataTotalLabel">資料總量：</span>90<span data-i18n="comp.recordsUnit">筆</span></p>
+        {% endif %}
     </div>
     <div class="btn-row">
-        <a href="{{ successRetryHref or '#' }}" class="button button-border" data-i18n="comp.uploadAgain">再次上傳</a>
-        <a href="{{ successViewHref or '#' }}" class="button button-primary" data-i18n="comp.viewData">查看資料</a>
+        <a href="{{ successRetryHref or '#' }}" class="button button-border" data-i18n="{{ successRetryKey or 'comp.uploadAgain' }}">{{ successRetryLabel or '再次上傳' }}</a>
+        <a href="{{ successViewHref or '#' }}" class="button button-primary" data-i18n="{{ successViewKey or 'comp.viewData' }}">{{ successViewLabel or '查看資料' }}</a>
     </div>
 </div>

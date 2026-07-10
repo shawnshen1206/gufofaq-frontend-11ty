@@ -14,9 +14,9 @@ permalink: 5-6-1_platformTenants.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 平台管理（僅平台系統管理員，跨租戶）：控制各租戶能使用哪些功能。SaaS 新需求，逆向自 apps/web app/(app)/platform；
+{# 平台管理（僅平台系統管理員，跨租戶）：控制各租戶能使用哪些功能。SaaS 新需求，逆向自 apps/web app/(app)/platform；
      真正把關在 product（require_platform_admin），本頁僅提供管理介面。
-     功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 -->
+     功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 #}
 {% set features = [
   { key: "data", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
   { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
@@ -29,7 +29,7 @@ permalink: 5-6-1_platformTenants.html
   { name: "示範租戶 C", userCount: 1, features: ["ask"] }
 ] %}
 
-<!-- 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用） -->
+{# 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用） #}
 <div class="block flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="settings.tenantFeatures">租戶功能開通</div>
     <div class="table-container scrollTable">
@@ -59,8 +59,8 @@ permalink: 5-6-1_platformTenants.html
                     <td class="text-center">{{ tenant.userCount }}</td>
                     {% for feature in features %}
                     <td class="text-center">
-                        <label class="switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle">
-                            <input type="checkbox" class="switch-checkbox" role="switch"{% if feature.key in tenant.features %} checked{% endif %}>
+                        <label class="switch">
+                            <input type="checkbox" class="switch-checkbox" role="switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle"{% if feature.key in tenant.features %} checked{% endif %}>
                             <span class="switch-box">
                                 <span class="switch-btn"></span>
                             </span>

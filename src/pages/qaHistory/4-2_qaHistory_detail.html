@@ -47,8 +47,8 @@ permalink: 4-2_qaHistory_detail.html
 <div class="flex-row column gap-16">
     {% include "ui/breadcrumb/breadcrumb.html" %}
 
-    <!-- 可輸入頁碼切換：真實頁由 js/qaHistoryDetail.js 依上一頁查詢結果總數渲染 data-total 與 pager 行為，
-         此處保留同一組 class 靜態呈現（沿用 ui/pagination 的 .pagination-input 樣式） -->
+    {# 可輸入頁碼切換：真實頁由 js/qaHistoryDetail.js 依上一頁查詢結果總數渲染 data-total 與 pager 行為，
+         此處保留同一組 class 靜態呈現（沿用 ui/pagination 的 .pagination-input 樣式） #}
     <div class="page-title-wrap">
         <div class="pagination-input" data-total="12">
             <button type="button" class="pager-btn prev" disabled>
@@ -68,14 +68,14 @@ permalink: 4-2_qaHistory_detail.html
     </div>
 </div>
 
-<!-- 列印按鈕：真實頁與下方表格同包在一個 .block.block-sm 內，但 components/qa-detail-info 已把該 .block.block-sm 連同表格一起封裝，
-     為避免重複／新建一個不存在於真實系統的空 block，改置於表格正上方、同樣 text-right + margin 呈現 -->
+{# 列印按鈕：真實頁與下方表格同包在一個 .block.block-sm 內，但 components/qa-detail-info 已把該 .block.block-sm 連同表格一起封裝，
+     為避免重複／新建一個不存在於真實系統的空 block，改置於表格正上方、同樣 text-right + margin 呈現 #}
 <div class="text-right mt-16">
     <button type="button" class="button button-green" data-i18n="qa.printPage">列印此頁</button>
 </div>
 
-<!-- 對話詳細內容：真實頁「滿意度回饋」+「基本對話資訊」表格，與 components/qa-detail-info 完全一致（同一份真實頁抽出），直接 include -->
+{# 對話詳細內容：真實頁「滿意度回饋」+「基本對話資訊」表格，與 components/qa-detail-info 完全一致（同一份真實頁抽出），直接 include #}
 {% include "components/qa-detail-info/qa-detail-info.html" %}
 
-<!-- 參考來源表格區塊：與 components/sources-block 完全一致（同一份真實頁抽出），直接 include -->
+{# 參考來源表格區塊：與 components/sources-block 完全一致（同一份真實頁抽出），直接 include #}
 {% include "components/sources-block/sources-block.html" %}

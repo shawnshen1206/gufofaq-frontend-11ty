@@ -19,9 +19,9 @@ permalink: 2-2-1_singleTest.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
+{# 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
      提示詞收合／展開編輯區塊抽成 components/prompt-edit（見下方 include）；
-     儲存/建版本等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） -->
+     儲存/建版本等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） #}
 <div class="block">
     <div class="filter-fields flex-row gap-16 mobile-column">
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
@@ -66,17 +66,17 @@ permalink: 2-2-1_singleTest.html
         </div>
     </div>
 
-    <!-- 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit -->
+    {# 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit #}
     {% include "components/prompt-edit/prompt-edit.html" %}
 
-    <!-- 套用為正式設定 -->
+    {# 套用為正式設定 #}
     <div class="flex-row justify-content-center mt-24">
         <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
     </div>
 </div>
 
-<!-- 對話區：聊天視窗沿用 components/chatroom（結構與真實頁一致）；右側可收合問答紀錄面板（.qa-side-panel）真實系統無對應既有元件，
-     collapsed/展開互動屬業務邏輯（見 singleTest.js），此處逐字保留樣式 class -->
+{# 對話區：聊天視窗沿用 components/chatroom（結構與真實頁一致）；右側可收合問答紀錄面板（.qa-side-panel）真實系統無對應既有元件，
+     collapsed/展開互動屬業務邏輯（見 singleTest.js），此處逐字保留樣式 class #}
 <div class="mt-24">
     <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
         {% include "components/chatroom/chatroom.html" %}
@@ -85,8 +85,8 @@ permalink: 2-2-1_singleTest.html
     </div>
 </div>
 
-<!-- 參考來源表格區塊：真實頁預設 hidden（點擊訊息列「查看來源」才顯示），表頭與 components/sources-block 一致，
-     來源列資料 set sources（示範 2 筆）交給 components/sources-block 內嵌 for 渲染（同 2-1_qaRecord.html 手法） -->
+{# 參考來源表格區塊：真實頁預設 hidden（點擊訊息列「查看來源」才顯示），表頭與 components/sources-block 一致，
+     來源列資料 set sources（示範 2 筆）交給 components/sources-block 內嵌 for 渲染（同 2-1_qaRecord.html 手法） #}
 {% set sources = [
     {
         no: "12173-1",

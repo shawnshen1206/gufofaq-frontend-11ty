@@ -1,10 +1,10 @@
-<!-- 意圖判斷表格（5 欄 .default-table.priority-table，class 沿用既有系統）。
+{# 意圖判斷表格（5 欄 .default-table.priority-table，class 沿用既有系統）。
      資料由使用頁面在 include 前 set（見 §3-2/§6）：
        rows = [{ category, description, prompt, priority }]
        priority 對應「變更優先級」下拉的選中值（"高優先級"/"中優先級"/"低優先級"/"不使用"，空字串＝未選）；rows 空陣列＝空狀態表。
      可編輯欄位：任務描述 td.edit-cell.description、任務對應提示詞 td.edit-cell.prompt，內容用 div.ellipsis-2 包覆；
      編輯/設定按鈕、textarea 切換屬 main.js 業務邏輯，不在此列。
-     用法：component.html（單張示範）、5-2-1_knowledgeRetrieval.html（依高/中/低優先級分組，每組 set rows 後 include）。 -->
+     用法：component.html（單張示範）、5-2-1_knowledgeRetrieval.html（依高/中/低優先級分組，每組 set rows 後 include）。 #}
 <div class="table-container scrollTable">
     <table class="default-table priority-table">
         <colgroup>

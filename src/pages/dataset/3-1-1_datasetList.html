@@ -13,7 +13,7 @@ permalink: 3-1-1_datasetList.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 搜尋 + 儲存空間 + 新增資料集 -->
+{# 搜尋 + 儲存空間 + 新增資料集 #}
 <div class="flex-row justify-content-between flex-wrap gap-16 mobile-column my-16">
     <div class="form-group w-search">
         <div class="field">
@@ -29,8 +29,8 @@ permalink: 3-1-1_datasetList.html
     </div>
 </div>
 
-<!-- 資料集表格：欄位與真實頁 pages/dataset/3-1-1_datasetList.html + js/datasetList.js 的 createDatasetRow() 一致，
-     動態渲染的列改用 set+for 資料化示範 2-3 筆 -->
+{# 資料集表格：欄位與真實頁 pages/dataset/3-1-1_datasetList.html + js/datasetList.js 的 createDatasetRow() 一致，
+     動態渲染的列改用 set+for 資料化示範 2-3 筆 #}
 {% set rows = [
     {
         name: "客服問答知識庫",
@@ -129,8 +129,8 @@ permalink: 3-1-1_datasetList.html
     </table>
 </div>
 
-<!-- 分頁：真實頁由 js/datasetList.js renderPagination() 動態產生（li.prev/li.active/li.next 結構），
-     此處沿用 ui/pagination 同一組 class 資料化示範 -->
+{# 分頁：真實頁由 js/datasetList.js renderPagination() 動態產生（li.prev/li.active/li.next 結構），
+     此處沿用 ui/pagination 同一組 class 資料化示範 #}
 {% set pages = [
     { number: 1, active: true },
     { number: 2 },

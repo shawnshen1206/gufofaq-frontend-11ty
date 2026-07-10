@@ -186,8 +186,8 @@ permalink: 1-1-4_columnSelect_excel.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條 + 上一步/下一步：步驟 1、2、3 done，僅「送出資料」未達成。
-     步驟狀態與上下步 href 由本頁 set，交給參數化的 components/step-btn-wrap 渲染（§6） -->
+{# 步驟條 + 上一步/下一步：步驟 1、2、3 done，僅「送出資料」未達成。
+     步驟狀態與上下步 href 由本頁 set，交給參數化的 components/step-btn-wrap 渲染（§6） #}
 {% set steps = [
     { label: "上傳檔案", done: true, i18nKey: "step.upload" },
     { label: "預覽資料", done: true, i18nKey: "step.preview" },

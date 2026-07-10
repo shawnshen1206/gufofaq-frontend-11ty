@@ -5,8 +5,8 @@ titleKey: nav.datasetList
 pageHeading: 資料集列表
 permalink: 3-1-5_previewFile_detail.html
 ---
-<!-- 麵包屑 + 頁面標題：真實頁第三層麵包屑與 .page-title 皆為 js previewFileDetail.js 載入後動態填字（原文「載入中...」），
-     改用範例檔名「常見問題.pdf」呈現載入完成狀態，與 3-1-3_previewDataset.html 的範例檔案列表對應 -->
+{# 麵包屑 + 頁面標題：真實頁第三層麵包屑與 .page-title 皆為 js previewFileDetail.js 載入後動態填字（原文「載入中...」），
+     改用範例檔名「常見問題.pdf」呈現載入完成狀態，與 3-1-3_previewDataset.html 的範例檔案列表對應 #}
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
   { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
@@ -17,8 +17,8 @@ permalink: 3-1-5_previewFile_detail.html
     <div class="page-title">常見問題.pdf</div>
 </div>
 
-<!-- 表單內容（模擬table）：真實頁 form-table-wrap 只有單一 form-table-group（無 subtitle），
-     欄位固定為 標題/時間/頻道/類型/供應商/內容，逐字沿用 ui/form-table 的 class 結構，改以範例資料呈現 -->
+{# 表單內容（模擬table）：真實頁 form-table-wrap 只有單一 form-table-group（無 subtitle），
+     欄位固定為 標題/時間/頻道/類型/供應商/內容，逐字沿用 ui/form-table 的 class 結構，改以範例資料呈現 #}
 <div class="form-table-wrap mt-10">
     <div class="form-table-group">
         <div class="form-table">

@@ -19,7 +19,9 @@
     }
 }
 
-input[type="checkbox"] {
+// 限定在自有 class 底下：裸寫 input[type="checkbox"] 會打包進全站 main.css，
+// 連 ui/switch 那顆藏起來的 input 都被套上勾記樣式（§9 裸元素選擇器只准 _normalize/_base）。
+.form-checkbox input[type="checkbox"] {
     flex-shrink: 0;
     appearance: none;
     width: 16px;

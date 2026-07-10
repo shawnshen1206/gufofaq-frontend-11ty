@@ -19,9 +19,9 @@ permalink: 2-2-3_abTest.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 設定卡 A / B：兩欄結構完全對稱，僅標題與 selected 值不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
+{# 設定卡 A / B：兩欄結構完全對稱，僅標題與 selected 值不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
      避免整段複製貼上；提示詞收合區塊用 components/prompt-edit（每圈重設 promptDefaultOpen）：
-     設定A 預設展開、設定B 預設收合，與真實頁一致 -->
+     設定A 預設展開、設定B 預設收合，與真實頁一致 #}
 {% set abSides = [
     { side: "A", defaultOpen: true },
     { side: "B", defaultOpen: false }
@@ -79,16 +79,16 @@ permalink: 2-2-3_abTest.html
             </div>
         </div>
 
-        <!-- 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit -->
+        {# 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit #}
         {% set promptDefaultOpen = ab.defaultOpen %}
         {% include "components/prompt-edit/prompt-edit.html" %}
     </div>
     {% endfor %}
 </div>
 
-<!-- 對話區：AB 雙欄比較訊息真實系統無對應既有元件（components/chatroom 是單欄 user/robot 結構），
+{# 對話區：AB 雙欄比較訊息真實系統無對應既有元件（components/chatroom 是單欄 user/robot 結構），
      故聊天視窗外殼（.chatroom-wrap/.chatroom-block/.chat-input-container）逐字寫死、僅回覆訊息改用 .ab-compare 雙欄比較 markup，
-     與 2-2-1_singleTest 共用同一份聊天室外殼樣式；右側問答紀錄面板真實頁預設 hidden（AB頁尚未支援），逐字保留 -->
+     與 2-2-1_singleTest 共用同一份聊天室外殼樣式；右側問答紀錄面板真實頁預設 hidden（AB頁尚未支援），逐字保留 #}
 <div class="mt-24">
     <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
         <div class="chatroom-wrap">
@@ -183,8 +183,8 @@ permalink: 2-2-3_abTest.html
     </div>
 </div>
 
-<!-- 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
-     來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染 -->
+{# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
+     來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染 #}
 {% set sources = [
     {
         no: "12173-1",

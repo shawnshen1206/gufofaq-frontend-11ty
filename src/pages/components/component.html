@@ -362,7 +362,7 @@ bodyClass: guideline-page
                     <li>主要表格</li>
                 </ul>
             </div>
-            {% include "components/default-table/default-table.html" %}
+            {% include "ui/default-table/default-table.html" %}
             <div class="caption description mt-16">
                 <ul>
                     <li>表格請給予.default-table設定主要表格樣式</li>
@@ -467,7 +467,7 @@ bodyClass: guideline-page
             ] %}
             {% include "ui/pagination/pagination.html" %}
             <br>
-            <!-- 可輸入頁碼切換 .pagination-input（另一互動變體，行為見 pagination.js）；此為展示，實用範例見 4-2 -->
+            {# 可輸入頁碼切換 .pagination-input（另一互動變體，行為見 pagination.js）；此為展示，實用範例見 4-2 #}
             <div class="pagination-input" data-total="12">
                 <button type="button" class="pager-btn prev" disabled>
                     <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="上一頁" class="icon">
@@ -633,9 +633,9 @@ bodyClass: guideline-page
 
 {% include "components/select-dataset-modal/select-dataset-modal.html" %}
 
-<!-- 檔案預覽 modal：元件庫展示版（modals-md + 靜態長文 .file-content）。
+{# 檔案預覽 modal：元件庫展示版（modals-md + 靜態長文 .file-content）。
      與 components/file-preview-modal（modals-lg + iframe，對應真實匯入流程的 #previewModal）是**兩個不同的 dialog**，
-     故用自己的 id #previewTextModal，不與元件搶同一個 id -->
+     故用自己的 id #previewTextModal，不與元件搶同一個 id #}
 <dialog class="modals" id="previewTextModal" aria-labelledby="previewTextModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">

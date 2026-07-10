@@ -74,7 +74,10 @@
                 {% endfor %}
             </ul>
         </nav>
-        {% include "components/header-controls/header-controls.html" %}
+        {# header 自有的 slot：窄視窗要把控制群收起來，藏的是 slot 不是 header-controls 自己的 class（§4） #}
+        <div class="header-controls-slot">
+            {% include "components/header-controls/header-controls.html" %}
+        </div>
         <button type="button" class="nav-toggle" aria-label="開啟選單" data-i18n-aria-label="nav.openMenu" aria-expanded="false"></button>
     </div>
 </header>

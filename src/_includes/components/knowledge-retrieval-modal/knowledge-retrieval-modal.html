@@ -1,5 +1,5 @@
-<!-- 知識檢索配置檢視 modal，取自真實 app pages/qaTest/2-2-1_singleTest.html #knowledgeModal（與 component.html、pages/qaTest/2-2-3_abTest.html 版本一致，class/id 沿用真實系統）；
-     body 為「設置一/二/三」.tab 切換（用法同 ui/tab）+ 三組高/中/低優先級分類表（用法同 components/priority-table 已建立的 .tablelist-title + .default-table.priority-table 分組表格結構） -->
+{# 知識檢索配置檢視 modal，取自真實 app pages/qaTest/2-2-1_singleTest.html #knowledgeModal（與 component.html、pages/qaTest/2-2-3_abTest.html 版本一致，class/id 沿用真實系統）；
+     body 為「設置一/二/三」.tab 切換（用法同 ui/tab）+ 三組高/中/低優先級分類表（用法同 components/priority-table 已建立的 .tablelist-title + .default-table.priority-table 分組表格結構） #}
 {% set settingTabs = [
     { label: "設置一", labelKey: "modals.settingOne", active: true },
     { label: "設置二（預設）", labelKey: "modals.settingTwoDefault" },
@@ -22,7 +22,7 @@
                     <h3 class="modals-title" id="knowledgeModal-title" data-i18n="modals.knowledgeRetrieval">知識檢索</h3>
                 </div>
                 <div class="modals-body">
-                    <!-- 設置分頁 -->
+                    {# 設置分頁 #}
                     <div class="tab-row fit-content mb-16">
                         <div class="tab-group">
                             {% for tab in settingTabs %}
@@ -31,7 +31,7 @@
                         </div>
                     </div>
 
-                    <!-- 各優先級分類 -->
+                    {# 各優先級分類 #}
                     <div class="flex-row column gap-24">
                         {% for group in priorityGroups %}
                         <div>

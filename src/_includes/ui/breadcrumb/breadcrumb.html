@@ -1,13 +1,13 @@
-<!-- 展示片段，取自真實 app pages/components/component.html 03 麵包屑 section（節錄，class 沿用真實系統） -->
+{# 展示片段，取自真實 app pages/components/component.html 03 麵包屑 section（節錄，class 沿用真實系統） #}
 {# 用法：include 前先 set breadcrumbItems（陣列，元素為 { label, href }）。
-   規則比照真實 app：最後一項＝目前頁（純文字），其餘皆為連結；href 省略時輸出空 href（真實 app 首頁/中層即 href=""）。 #}
+   規則比照真實 app：最後一項＝目前頁（純文字），其餘皆為連結；href 省略時退回 "#"（不輸出空屬性，§4）。 #}
 <div class="breadcrumb">
     <div class="wrap">
         <ul>
             {% for item in breadcrumbItems %}
             <li{% if loop.last and item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>
                 {% if not loop.last %}
-                <a href="{{ item.href or '' }}" title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
+                <a href="{{ item.href or '#' }}" title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
                 {% else %}
                 {{ item.label }}
                 {% endif %}

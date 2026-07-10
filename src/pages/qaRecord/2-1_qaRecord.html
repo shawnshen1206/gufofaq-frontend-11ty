@@ -19,9 +19,9 @@ permalink: 2-1_qaRecord.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 主要內容：聊天視窗 + 問答紀錄頁籤，真實頁 .chatroom-wrap 與 components/chatroom 完全一致（同一份真實頁抽出），直接 include；
+{# 主要內容：聊天視窗 + 問答紀錄頁籤，真實頁 .chatroom-wrap 與 components/chatroom 完全一致（同一份真實頁抽出），直接 include；
      右側頁籤區塊為單層 tab-group（非 ui/tab 展示片段的雙層 top/sub-tabs 結構），沿用 ui/tab 的 tab-wrap/tabs-title/tab-group/.tab class；
-     頁籤本身掛 ui/tab 的 .on-record 變體（見 components/qa-record-tabs） -->
+     頁籤本身掛 ui/tab 的 .on-record 變體（見 components/qa-record-tabs） #}
 <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
     {% include "components/chatroom/chatroom.html" %}
 
@@ -34,9 +34,9 @@ permalink: 2-1_qaRecord.html
     </div>
 </div>
 
-<!-- 參考來源表格區塊：真實頁此區塊預設 hidden（點擊訊息列的「查看來源」才顯示）。使用者滿意度與「檢視詳細內容」連結
+{# 參考來源表格區塊：真實頁此區塊預設 hidden（點擊訊息列的「查看來源」才顯示）。使用者滿意度與「檢視詳細內容」連結
      （連往 4-2_qaHistory_detail.html）由 components/sources-block 的 sourcesRating / sourcesDetailHref 參數帶入；
-     來源列資料 set sources（示範 2 筆）交給該元件內嵌 for 渲染 -->
+     來源列資料 set sources（示範 2 筆）交給該元件內嵌 for 渲染 #}
 {% set sources = [
     {
         no: "12173-1",
@@ -62,6 +62,6 @@ permalink: 2-1_qaRecord.html
     }
 ] %}
 {% set sourcesHidden = true %}
-{% set sourcesRating = { text: "使用者滿意度：好", icon: "./images/icon_good.png" } %}
+{% set sourcesRating = { value: "好", icon: "./images/icon_good.png" } %}
 {% set sourcesDetailHref = "4-2_qaHistory_detail.html?sn=12173" %}
 {% include "components/sources-block/sources-block.html" %}

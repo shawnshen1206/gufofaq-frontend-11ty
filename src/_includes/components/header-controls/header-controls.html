@@ -1,6 +1,6 @@
-<!-- header 右側控制群：語言鈕（.js-lang-toggle，由 lang-toggle.js 綁定並管理 EN↔中 標籤）＋深淺鈕（theme-toggle）。
+{# header 右側控制群：語言鈕（.js-lang-toggle，由 lang-toggle.js 綁定並管理 EN↔中 標籤）＋深淺鈕（theme-toggle）。
      主站 header 與前台 chatbot-header 共用；兩支 JS 由 base.html 載入，故此處只放按鈕。
-     語言鈕不帶 i18nKey——標籤永遠顯示「要切去的語言」，由 lang-toggle.js 管理，不進翻譯字典。 -->
+     語言鈕不帶 i18nKey——標籤永遠顯示「要切去的語言」，由 lang-toggle.js 管理，不進翻譯字典。 #}
 <div class="header-controls">
     <button type="button" class="lang-toggle js-lang-toggle">EN</button>
     {% include "ui/theme-toggle/theme-toggle.html" %}

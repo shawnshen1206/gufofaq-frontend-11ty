@@ -5,8 +5,8 @@ titleKey: nav.datasetList
 pageHeading: 資料集列表
 permalink: 3-1-2_dataImport_input.html
 ---
-<!-- 麵包屑：真實頁 pages/dataset/3-1-2_dataImport_input.html 第三層為靜態文字「資料集列表」（與第二層同名，
-     真實頁面本身如此，非本次轉換誤植），逐字沿用 -->
+{# 麵包屑：真實頁 pages/dataset/3-1-2_dataImport_input.html 第三層為靜態文字「資料集列表」（與第二層同名，
+     真實頁面本身如此，非本次轉換誤植），逐字沿用 #}
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
   { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
@@ -16,14 +16,15 @@ permalink: 3-1-2_dataImport_input.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 資料集名稱輸入：真實頁 #datasetName 純文字輸入框，class 沿用真實系統 -->
+{# 資料集名稱輸入：真實頁 #datasetName 純文字輸入框，class 沿用真實系統 #}
 <div class="form-group row mt-10">
     <div class="label">
         <label for="datasetName" class="control-label" data-i18n="dataset.datasetName">資料集名稱</label>
     </div>
     <div class="field">
         <input type="text" id="datasetName" placeholder="請輸入資料集名稱" data-i18n-placeholder="dataset.enterDatasetName" class="form-control select-md">
-        <span class="error-prompt" role="alert" style="display: none;"></span>
+        {# 空的 live region：錯誤文字由業務 js 填入。.error-prompt 預設就 display:none（由父層 .error 顯示），不必行內再寫一次 #}
+        <span class="error-prompt" role="alert"></span>
     </div>
 </div>
 

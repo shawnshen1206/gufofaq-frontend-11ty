@@ -23,7 +23,7 @@
         </div>
         <div class="field">
             <textarea rows="{{ editRows or 10 }}" class="form-control size-sm edit-field disabled"
-                placeholder="{{ editPlaceholder }}"{% if editPlaceholderKey %} data-i18n-placeholder="{{ editPlaceholderKey }}"{% endif %} {% if editId %}id="{{ editId }}"{% else %}aria-label="{{ editLabel }}"{% if editLabelKey %} data-i18n-aria-label="{{ editLabelKey }}"{% endif %}{% endif %} disabled>{{ editValue }}</textarea>
+                {% if editPlaceholder %}placeholder="{{ editPlaceholder }}"{% endif %}{% if editPlaceholderKey %} data-i18n-placeholder="{{ editPlaceholderKey }}"{% endif %} {% if editId %}id="{{ editId }}"{% else %}aria-label="{{ editLabel }}"{% if editLabelKey %} data-i18n-aria-label="{{ editLabelKey }}"{% endif %}{% endif %} disabled>{{ editValue }}</textarea>
         </div>
     </div>
 </div>

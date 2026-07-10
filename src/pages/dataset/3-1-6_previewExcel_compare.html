@@ -5,9 +5,9 @@ titleKey: nav.datasetList
 pageHeading: 資料集列表
 permalink: 3-1-6_previewExcel_compare.html
 ---
-<!-- 麵包屑：真實頁第三層為 .folder-name-link（回連資料集）、第四層為 .file-name（目前檔案），
+{# 麵包屑：真實頁第三層為 .folder-name-link（回連資料集）、第四層為 .file-name（目前檔案），
      ui/breadcrumb 只支援 label/href 無法掛這兩個專屬 class，故依真實頁手寫，逐字沿用 class；
-     資料同樣以「客服問答知識庫 / 商品清單.xlsx」呈現載入完成狀態 -->
+     資料同樣以「客服問答知識庫 / 商品清單.xlsx」呈現載入完成狀態 #}
 <div class="flex-row column gap-16">
     <div class="breadcrumb">
         <div class="wrap">
@@ -23,7 +23,7 @@ permalink: 3-1-6_previewExcel_compare.html
     <div class="page-title plain file-name-title">商品清單.xlsx</div>
 </div>
 
-<!-- 頁籤：ui/tab 水平單層頁籤（.tab-row.fit-content > .tab-group > .tab.tab-md），行為沿用已全域註冊的 tab.js -->
+{# 頁籤：ui/tab 水平單層頁籤（.tab-row.fit-content > .tab-group > .tab.tab-md），行為沿用已全域註冊的 tab.js #}
 <div class="tab-row fit-content mt-16">
     <div class="tab-group">
         <button type="button" class="tab tab-md active" title="比對資料" data-i18n-title="dataset.compareData" data-i18n="dataset.compareData">比對資料</button>
@@ -31,10 +31,10 @@ permalink: 3-1-6_previewExcel_compare.html
     </div>
 </div>
 
-<!-- 比對資料表格：欄位為「動態」——由帳號的欄位對照（document_field_mapping）決定有哪些欄與各欄顯示名，
+{# 比對資料表格：欄位為「動態」——由帳號的欄位對照（document_field_mapping）決定有哪些欄與各欄顯示名，
      非固定欄。以 set columns（key＝原始欄、label＝顯示名）+ set rows（每列以 key 取值）示範，
      渲染時 thead/tbody 皆對 columns 迴圈（→ React 直接 .map()）。每欄皆可排序（th-sort + icon）。
-     class 沿用 components/default-table。示範資料含「供應商 / 價格」等自訂欄，凸顯欄位由對照表決定。 -->
+     class 沿用 ui/default-table。示範資料含「供應商 / 價格」等自訂欄，凸顯欄位由對照表決定。 #}
 {% set columns = [
     { key: "title", label: "標題" },
     { key: "time", label: "時間" },
@@ -76,7 +76,7 @@ permalink: 3-1-6_previewExcel_compare.html
     </table>
 </div>
 
-<!-- 分頁：真實頁 .pagination data-total="20" 由 pagination.js 動態產生，沿用同一組 class 資料化示範 -->
+{# 分頁：真實頁 .pagination data-total="20" 由 pagination.js 動態產生，沿用同一組 class 資料化示範 #}
 {% set pages = [
     { number: 1, active: true },
     { number: 2 },

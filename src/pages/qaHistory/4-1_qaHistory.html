@@ -13,9 +13,9 @@ permalink: 4-1_qaHistory.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入（js 依 query 切換頁籤與資料來源），
+{# 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入（js 依 query 切換頁籤與資料來源），
      此靜態頁一律呈現同一份查詢表單；開始/結束時間欄位沿用真實 class（flatpickr 由 js/qaHistory.js 掛載，此處僅保留樣式用 class，不掛 JS）；
-     使用者類型／滿意度為 singleSelect（非 multiSelect），保留原生 select -->
+     使用者類型／滿意度為 singleSelect（非 multiSelect），保留原生 select #}
 <div class="block block-sm border corner-md mt-16">
     <div class="flex-row column gap-16">
         <div class="flex-row gap-8 mobile-column sm-gap-16">
@@ -101,8 +101,8 @@ permalink: 4-1_qaHistory.html
     </div>
 </div>
 
-<!-- 資料表格：真實頁 tbody 為 js/qaHistory.js 依查詢結果動態渲染（初始「共0筆資料」），
-     此處以 set+for 資料化示範 3 筆已載入狀態，欄位與真實 thead 一致；對話編號連結至已轉換的 4-2_qaHistory_detail.html -->
+{# 資料表格：真實頁 tbody 為 js/qaHistory.js 依查詢結果動態渲染（初始「共0筆資料」），
+     此處以 set+for 資料化示範 3 筆已載入狀態，欄位與真實 thead 一致；對話編號連結至已轉換的 4-2_qaHistory_detail.html #}
 {% set rows = [
     {
         id: "12173",
@@ -181,7 +181,7 @@ permalink: 4-1_qaHistory.html
     </table>
 </div>
 
-<!-- 分頁：真實頁由 js/qaHistory.js renderPagination() 動態產生，沿用同一組 class 資料化示範 -->
+{# 分頁：真實頁由 js/qaHistory.js renderPagination() 動態產生，沿用同一組 class 資料化示範 #}
 {% set pages = [
     { number: 1, active: true },
     { number: 2 },

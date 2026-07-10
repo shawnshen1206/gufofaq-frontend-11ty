@@ -127,19 +127,23 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **class 命名沿用既有系統**（`component.scss` 的詞彙：`.header`、`.modals`、`.form-group`、`.accordion-btn`…）；新元件的命名跟隨同樣風格
 - 狀態 class 沿用既有慣例：`.active`、`.open`、`.done`、`.error`、`.disabled`（轉換後 = React state / props）
 - SCSS 寫法沿用既有風格（巢狀、`&` 修飾）；**顏色一律用 `_var.scss` 的語意 token（`--surface`／`--text`／`--brand`／`--border`／`--shadow`…），完全不寫裸 hex（含白色與陰影，無例外）**。token 是**單層、直接給值、無別名**（沒有 `--color-*` 原色層）；元件不碰色值、只掛語意 token。showcase 頁 `_guideline` 另有自己的 `--gl-*` 色盤（見 §9）
-- **顏色 token 的「填充」與「文字」必須分家**：同一個品牌色當**填充**要夠深（疊在上面的白字才讀得到），當**文字**在深色模式又要夠亮（黑底才讀得到）——這兩個需求互相矛盾，不能共用一個 token。故 `background-color`／`border-color` 用 `--brand`／`--danger`（hover 用 `--brand-hover`／`--danger-hover`），`color:` 一律用 `--brand-text`／`--danger-text`（hover 用 `--brand-text-hover`）。**填充族的 hover token 不可拿來當文字色**——它為了襯白字而壓深，在深色模式當文字讀不到。
-- **對比度是硬規則**：每個有色填充都配一個成對的前景 token（白字 `--on-accent` 或深字 `--on-warning`），兩者 ≥ 4.5:1（WCAG AA 內文）。用在**需要辨識邊界的控制項**（按鈕／輸入框／開關）的填充，對底色再 ≥ 3:1（WCAG 1.4.11）；純訊息填充（如 toast）的對比由文字承載，不受這條約束。**新增或調整任何顏色都要重算——有測試逐色實算把關，`_var.scss` 的每一顆 token 都必須在測試裡歸類成填充／文字／表面／chrome，沒歸類就紅。**
-- **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**元件 scss 絕不寫 `[data-theme]` 分支（零例外）**。CSS 顏色換不動的東西（日／月圖示的顯示、光柵 PNG 的反相／底紋壓暗）也在 `_var.scss` 給成**非顏色旗標**（`--theme-icon-*`、`--raster-invert`、`--pattern-blend`、`--pattern-tint`），元件照樣只掛 `var()`。只有全域層（`_var` / `_guideline-var` / `_base` 的 `color-scheme` / `_dark-icons` 的 PNG 反相）讀得到主題旗標。主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
+- **顏色 token 的「填充」與「文字」必須分家**：同一個品牌色當**填充**要夠深（疊在上面的白字才讀得到），當**文字**在深色模式又要夠亮（黑底才讀得到）——這兩個需求互相矛盾，不能共用一個 token。故 `background-color`／`border-color` 用 `--brand`／`--danger`（hover 用 `--brand-hover`／`--danger-hover`），`color:` 一律用 `--brand-text`／`--danger-text`（hover 用 `--brand-text-hover`）。**填充族的 hover token 不可拿來當文字色**（它為了襯白字而壓深，在深色模式當文字讀不到）；**文字族反過來也不可當填充／邊框**。
+- 第三種角色是**前景記號**（`--brand-ink`）：勾記、radio 圓點、進度條、步驟底線這類**不承載文字的圖形**，以及它們配套的文字。它是前景不是填充，故套文字的門檻（疊表面 ≥ 4.5:1，自然也滿足圖形的 1.4.11 ≥ 3:1），但**不得反過來承載白字**。一顆 token 只能有一個角色——測試以角色清單為單一真相源，手打豁免清單就是偷加例外。
+- **對比度是硬規則**：每個有色填充都配一個成對的前景 token（白字 `--on-accent` 或深字 `--on-warning`），兩者 ≥ 4.5:1（WCAG AA 內文）。用在**需要辨識邊界的控制項**（按鈕／輸入框／開關）的填充，對底色再 ≥ 3:1（WCAG 1.4.11）；純訊息填充（如 toast）的對比由文字承載，不受這條約束。**新增或調整任何顏色都要重算——有測試逐色實算把關，`_var.scss` 的每一顆 token 都必須在測試裡歸類成填充／文字／前景記號／表面／chrome，沒歸類就紅。**
+- **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**元件 scss 絕不寫 `[data-theme]` 分支（零例外）**。CSS 顏色換不動的東西有兩條路，**元件都不寫 `[data-theme]`**：①元件自己要用的（日／月圖示的顯示、插圖反相、底紋壓暗）在 `_var.scss` 給成**非顏色旗標**（`--theme-icon-*`、`--raster-invert`、`--pattern-blend`、`--pattern-tint`），元件只掛 `var()`；②CSS 選不到 `url()` 裡的顏色，故黑色 PNG 圖示由全域的 `_dark-icons.scss` 統一反相——`<img>` 走檔名規則（`img[src*="_black"]`）自動涵蓋，`background-image` 的則逐一登記。**只有全域層（`_var` / `_guideline-var` 的色源、`_base` 的 `color-scheme`、`_dark-icons` 的 PNG 反相）允許讀主題旗標。**主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.chat-input-control`、`.chat-input-submit`、`.filter-field`、`.ab-side`）
-  - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`），不直接寫別人的 class 選擇器
-  - 父元件用 `custom property` 把版面尺寸傳給自己的專屬子片段，屬**允許的父子耦合**，不算跨元件洩漏
+  - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`、`.header-controls-slot`），不直接寫別人的 class 選擇器
+  - 元件 scss **不得用 `#id` 選擇器**——那是比 class 更緊的耦合，且 id 是頁面層的東西
+  - 父元件可以在**自己的**元素上 set custom property 的值，由子片段自己的 scss `var()` 讀取——傳的是值，不是選擇器。父元件的 scss 仍然不得出現子片段的 class
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
+- **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（如 `_mixin.scss` 的 `nav-collapsed`：`header` 藏桌機選單、`mobile-nav` 顯示漢堡，兩者一定要同時發生）。各寫一份 `@media` 遲早走鐘
 - **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標同 gap：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
 - 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫，零例外）。**要壓過元件的字色，改由 owning 層提供變體**（如 `.page-title.plain`），不要讓工具 class 帶 `!important` 硬壓——工具層在 `main.scss` 早於元件層載入，硬壓是把層疊順序當成規則在用
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁的「04 欄位」節
 - **HTML 巢狀必須合法**：`span`／`p` 內不可放區塊元素（`div`、`ul`、`table`…）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
-- **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯（同一元件在頁面重複出現時，id 用迴圈變數組唯一值，如 `id="ms-{{ field.key }}"`、`id="applySample-{{ loop.index }}"`），沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
+- **可及性（a11y）基本要求**：圖示按鈕要有可及名稱（`title` + `.sr-only`、`aria-label`，或按鈕內的 `.tooltip` 文字）；label 與表單控制項以 `for`/`id` 關聯，沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`、`href=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
+  - **id 在一頁裡必須唯一**（有測試在 dist 上把關）。同一元件在頁面出現多次時：**有迴圈變數就拿它組唯一 id**（`id="ms-{{ field.key }}"`、`id="applySample-{{ loop.index }}"`）；**沒有的**（如 `header-controls` 被 `header` 與 `mobile-nav` 各 include 一次）**一律不寫死 id**——改用 class + `querySelectorAll` 綁定、可及名稱用 `aria-label` 而非 `for`/`id`
 - **不要用 div 假扮控制項**：可點的東西一律用真 `<button type="button">`／`<a>`。`div[role="button"][tabindex="0"]` 少了 Enter/Space（WCAG 2.1.1），原生按鈕免費具備。模擬 select 也用 `<button class="form-control">`
 - **狀態要寫進 ARIA**：可開合的控制項（下拉、accordion、側欄、多選）掛 `aria-expanded`，且**每一條改變狀態的路徑都要同步**（含「全部展開／收合」與「點外部收合」）；`<dialog>` 用 `aria-labelledby` 接上自己的 `.modals-title`；動態出現的訊息要在 live region 裡（toast 容器 `role="status" aria-live="polite"`、錯誤訊息 `role="alert"`）
 - **`<img>` 一律帶 `width`／`height`**（原生尺寸即可，CSS 仍可覆寫）：提供 aspect-ratio、消除版位跳動；再加 `decoding="async"`。站上圖多為首屏 icon，**不要**加 `loading="lazy"`
@@ -155,6 +159,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 | `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式；複合元件（如 multi-select）把焦點環畫在外框 `:focus-within` 上 |
 | `@media (prefers-reduced-motion: reduce)` 關閉動畫／過渡 | 不用管，照常寫 transition |
 | `img, svg, video, canvas { max-width: 100% }` | 不用重複寫 |
+| `img { height: auto }` | `<img>` 的 `width`/`height` 屬性同時是 CSS 的 presentational hint，只要有一邊被覆寫、另一邊就會卡在原值而把圖拉扁。這條是那兩個屬性的標配對句。元件要固定高度就自己覆寫（特異度自然勝過裸 `img`） |
 
 - **`100vh` 一律配 `100dvh`**：`height: 100vh; height: 100dvh;`（前者是舊瀏覽器 fallback）。行動瀏覽器的 `100vh` 含會伸縮的網址列，會把底部的輸入框／footer 裁掉。
 
@@ -167,7 +172,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - **由元件 js 讀 `data-*` 資料槽再畫出來的文字**不在上表的自動翻譯範圍，繁中原文與 i18n key 要分別給：單一值用 `data-<槽名>` + `data-<槽名>-key`（`ui/multi-select` 的 placeholder）；兩態切換用 `data-text-<態>` + `data-key-<態>`（`components/prompt-edit` 的展開↔收合）。元件 js 拿 key 走 `GufoI18n.t(key, 繁中原文)`（見 §5）
 - 分頁標題：front matter 的 `titleKey`（見 §3-1）
 - **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
-- **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。唯一整頁不翻的是 `component.html`（元件總覽）——它的內容是給切版者看的說明文字，不是 app chrome
+- **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。**showcase／說明性質的整頁**（內容是寫給切版者看的，不是 app chrome）整頁不翻
 - 新增 key 就要在 `en.json` 補英文。**漏了不會壞，只會在英文模式默默顯示繁中**——所以驗收一定要 runtime 逐頁看（見 §8）
 
 ---
@@ -254,12 +259,12 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 - [ ] 重複區塊都是 include；重複列／選項用 `{% for %}` + front matter 資料
 - [ ] class 命名沿用既有系統；新顏色定義在 `_var.scss`（light + dark 都要給）
 - [ ] 放對桶：整頁模板 → `layouts/`；會用到其他元件 → `components/`；零依賴 → `ui/`
-- [ ] 只用了 §2 白名單內的模板語法
+- [ ] 只用了 §2 白名單內的模板語法；註解一律 `{# #}`，零 `<!-- -->`
 - [ ] 沒有行內 style 的間距/顏色/字級（只允許 §4 的三種合法用途）；間距都在尺標上
-- [ ] HTML 巢狀合法（span 內無 div/p/ul）；圖示按鈕有可及名稱；label 有 for/id 或控制項有 aria-label；無空屬性
+- [ ] HTML 巢狀合法（span 內無 div/p/ul）；圖示按鈕有可及名稱；label 有 for/id 或控制項有 aria-label；無空屬性；同頁 id 不重複
 - [ ] 每頁恰好一個 `<h1>`；沒有 `div[role=button]`；可開合控制項的 `aria-expanded` **每一條路徑**都同步；`<dialog>` 有 `aria-labelledby`
 - [ ] 沒有裸 `outline: none`；元件沒有重寫 `box-sizing`；`100vh` 都配了 `100dvh`；`<img>` 都有 `width`/`height`
-- [ ] 新顏色算過對比：白字 on 填充 ≥ 4.5:1、填充 on 底色 ≥ 3:1
+- [ ] 新顏色算過對比：白字 on 填充 ≥ 4.5:1、填充 on 底色 ≥ 3:1；新 token 在測試裡歸了角色
 - [ ] 新 key 都補了 `en.json`；**英文模式下逐頁 runtime 驗過，而且要實際觸發互動**（展開 accordion、開多選下拉、切主題）——JS 產生的字串靜態掃描看不到
 
 ---
@@ -267,7 +272,7 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 ## 9. Dos & Don'ts
 
 ```html
-<!-- ❌ 每頁貼一份 header（170 行 × 6 頁） -->
+<!-- ❌ 每頁貼一份 header（每頁都要跟著改） -->
 <header class="header">...</header>
 
 <!-- ✅ page-shell 自動提供；其他元件用 include -->

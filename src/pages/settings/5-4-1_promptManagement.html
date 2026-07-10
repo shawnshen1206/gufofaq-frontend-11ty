@@ -14,8 +14,8 @@ permalink: 5-4-1_promptManagement.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 篩選列：關鍵字 + 日期區間（真實頁由 flatpickr range 模式掛載於同一輸入框，此處不引入 vendor，僅保留原生 class 呈現靜態輸入框）
-     + 版本單選（singleSelect，非 select2 增強，沿用 ui/form-control 原生 select 寫法） -->
+{# 篩選列：關鍵字 + 日期區間（真實頁由 flatpickr range 模式掛載於同一輸入框，此處不引入 vendor，僅保留原生 class 呈現靜態輸入框）
+     + 版本單選（singleSelect，非 select2 增強，沿用 ui/form-control 原生 select 寫法） #}
 <div class="block mb-10">
     <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
         <div class="filter-fields flex-row gap-16 mobile-column">
@@ -62,8 +62,8 @@ permalink: 5-4-1_promptManagement.html
     </div>
 </div>
 
-<!-- 版本卡片列表：V4 新增草稿卡（真實頁預設 hidden，點「新增提示詞」才顯示，屬業務 JS 行為不轉，此處保留 hidden 靜態展示樣式）+
-     V3/V2/V1 歷史版本卡（結構完全相同，僅版本號/時間區間/引用次數/內容不同——內容本身真實頁三版皆為同一段文字，故用 set+for 資料化） -->
+{# 版本卡片列表：V4 新增草稿卡（真實頁預設 hidden，點「新增提示詞」才顯示，屬業務 JS 行為不轉，此處保留 hidden 靜態展示樣式）+
+     V3/V2/V1 歷史版本卡（結構完全相同，僅版本號/時間區間/引用次數/內容不同——內容本身真實頁三版皆為同一段文字，故用 set+for 資料化） #}
 <div class="prompt-card-list flex-row column gap-10">
 
     <div class="block prompt-card draft hidden">

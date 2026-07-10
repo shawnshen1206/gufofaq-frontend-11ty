@@ -52,11 +52,11 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
-│   ├── ui/                 不依賴其他元件的元件（36 個）
-│   └── components/         會用到其他元件，或某大元件的專屬子片段（31 個）
+│   ├── ui/                 不依賴其他元件的元件（37 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（30 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
-│   ├── _mixin.scss         scrollbar 等共用 mixin
+│   ├── _mixin.scss         共用 mixin：scrollbar 系列、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
 │   ├── _normalize.scss     vendor reset
 │   ├── _base.scss          標籤預設 + 現代瀏覽器基底（color-scheme / :focus-visible / reduced-motion / box-sizing）
 │   ├── _utilities.scss     工具 class：text-*/flex-row/gap-*/col-*/mt-*/mb-*/my-*/flex-1…
@@ -68,7 +68,7 @@ src/
 │   └── main.scss           @use 組裝清單（新增元件 scss 在這加一行）
 ├── i18n/en.json            英文翻譯（繁中是原文、留在 markup）
 ├── images/
-├── index.html              登入頁（permalink → login.html）
+├── login.html              登入頁
 ├── 404.html                GitHub Pages 的 404 fallback
 ├── catalog.html            部署站台首頁＝頁面目錄（permalink → index.html；右上角有語言/深淺鈕，在 i18n 範圍內）
 └── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名到 dist/ 根
@@ -100,12 +100,12 @@ dist/                       build 輸出（勿手改）
 
 | 元件 | 參數／資料 |
 |---|---|
-| `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時輸出空 href。 |
+| `ui/breadcrumb` | 頁面 include 前 `{% set breadcrumbItems = [{ label, href }] %}`；**最後一項＝目前頁（純文字），其餘皆為連結**；`href` 省略時退回 `#`（不輸出空屬性）。 |
 | `ui/pagination` | 頁面 set `pages`（`[{ number, active }]`，可含 `{ ellipsis: true }`）；渲染 `.pagination` 頁碼列。可輸入頁碼版 `.pagination-input` 為另一互動變體（`pagination.js` 增強），markup 就地寫（示範見 component.html、實用於 4-2）。 |
 | `components/step-nodes` | 頁面 set `steps = [{ label, done }]` + 選填 `stepNodesLg`（true 加 `.lg` 大尺寸）；`.done` = 已完成。 |
 | `components/step-btn-wrap` | 頁面 set `steps` + 選填 `stepNoPrev`（true＝只留下一步、外層加 `.no-prev`）/ `stepNodesLg`；上一步／下一步為 `.btn-prev`／`.btn-next` JS 鉤子；中間進度條 include `components/step-nodes`。 |
 | `components/multi-select-box` | 頁面 set `fields = [{ key, label, placeholder, placeholderKey?, options:[{ value, label, selected }], preview, error? }]`；`key` 用來組 `.field-{key}`／`.preview-{key}`；左欄 `<select class="multiSelect">` 由 `ui/multi-select` 增強成 tag 多選。`placeholder` 是繁中原文，`placeholderKey` 給它的 i18n key（js 產生的字串要走 `GufoI18n.t`，見 GUIDELINE §4-2）。 |
-| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
+| `components/sources-block` | 頁面 set `sources = [{ no, file, dataset, title, time, content, note1, note2, reference }]`（另有 `sourcesHidden` / `sourcesInfo` / `sourcesInfoClass` / `sourcesRating` / `sourcesDetailHref`，完整清單見該元件 html 檔頭註解）；每筆列（摘要列＋隱藏的 accordion 詳細列）以 `{% for %}` **內嵌**渲染（見 GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀 include 子元件）。外層 `.sources-block` 為設計師原有的語意 class（本身不帶樣式，視覺來自 `.block` + default-table），刻意保留；同層另掛 accordion 的 `.js-accordion` 開合鉤子。 |
 | `components/qa-detail-info` | 頁面 set `conversation = { chatroomId, id, time, intent, userMessage, satisfaction, feedback }`（短欄位）；AI 回答與「提示詞」收合欄（`.collapse-text`，其展開屬業務 JS 不在範圍）為長文，依 GUIDELINE §3-2 直接寫在元件 markup。 |
 | `components/qa-record-tabs` | 頁面 set `qaRecordTabs = [{ label, active }]`；單測/AB測試/前台對話預覽三頁共用的 `.tab-group` 頁籤清單。外層 `.tab-wrap` 等 chrome 各頁自帶。 |
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
@@ -117,12 +117,12 @@ dist/                       build 輸出（勿手改）
 ### 自動引入
 
 `header` 與 `footer` 由 `page-shell` 自動提供；`chatbot-header` 與 `footer` 由 `chatbot-shell` 自動提供。頁面都不需 include。
-含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`default-table`（含 `accordion`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
+含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`mobile-nav`（含 `header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。`ui/default-table` 的展示片段也 include 了 `ui/accordion`，但展示用途不算依賴（GUIDELINE §1-1），故它留在 `ui/`。
 `components/header-controls`＝語言＋深淺切換的控制群，**主站 header 與前台 chatbot-header 共用同一份**。主站 header 在**桌機**把它放在導覽列右側；**≤1250px 收成漢堡**時 header 只留 logo + 漢堡（否則 logo 會被擠小），控制群改由 `mobile-nav` 渲染在展開的選單底部——同一份 include 出現兩次，兩支 JS 都以 `querySelectorAll` 綁定。前台頁尾直接沿用主站 `components/footer`。
 
 ### 純樣式 / 純行為元件（直接寫 class）
 
-這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`components/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/index.html`）、`ui/error-page`（無 html，class 寫在 `src/404.html`）。
+這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`ui/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/login.html`）、`ui/error-page`（無 html，class 寫在 `src/404.html`）。
 另有三個只有 scss、class 直接寫在使用頁的純樣式元件：`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、2-2-1）、`ui/prompt-card`（5-4-1 版本卡，草稿卡 textarea 加 slot class `.prompt-input`）、`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`）。
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。

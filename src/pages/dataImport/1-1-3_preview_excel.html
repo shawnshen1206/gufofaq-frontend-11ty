@@ -13,7 +13,7 @@ permalink: 1-1-3_preview_excel.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-<!-- 步驟條：本頁步驟 1、2 done，其餘未達成 -->
+{# 步驟條：本頁步驟 1、2 done，其餘未達成 #}
 {% set steps = [
     { label: "上傳檔案", done: true, i18nKey: "step.upload" },
     { label: "預覽資料", done: true, i18nKey: "step.preview" },
@@ -26,9 +26,9 @@ permalink: 1-1-3_preview_excel.html
     {% include "components/step-btn-wrap/step-btn-wrap.html" %}
 </div>
 
-<!-- 資料預覽表格：真實頁 thead/tbody 由 js/previewExcel.js 依上傳的 excel 欄位動態產生（本檔為「動態產生」註解），
+{# 資料預覽表格：真實頁 thead/tbody 由 js/previewExcel.js 依上傳的 excel 欄位動態產生（本檔為「動態產生」註解），
      此處欄位取用與後續 1-1-4_columnSelect_excel 欄位對應步驟一致的樣本（客服問題／客服回覆／建立時間／圖片連結），
-     用 set+for 資料化示範 3 筆，父層與 table class 沿用 components/default-table 同一組真實系統 class -->
+     用 set+for 資料化示範 3 筆，父層與 table class 沿用 ui/default-table 同一組真實系統 class #}
 {% set previewRows = [
     {
         question: "如何申請入出國許可證",
@@ -80,8 +80,8 @@ permalink: 1-1-3_preview_excel.html
     </table>
 </div>
 
-<!-- 分頁：真實頁 pagination 由 js/previewExcel.js 依資料筆數動態產生（data-total="0"），
-     此處沿用與 3-1-1_datasetList 同一組 class 資料化示範 -->
+{# 分頁：真實頁 pagination 由 js/previewExcel.js 依資料筆數動態產生（data-total="0"），
+     此處沿用與 3-1-1_datasetList 同一組 class 資料化示範 #}
 {% set pages = [
     { number: 1, active: true },
     { number: 2 },

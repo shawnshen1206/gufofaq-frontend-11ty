@@ -11,8 +11,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
   { label: "知識檢索邏輯", i18nKey: "nav.knowledgeRetrieval" }
 ] %}
 
-<!-- 真實頁在麵包屑外層多包一層 #contentWrapper + #featureDisabledOverlay（功能未啟用遮罩，預設 display:none，
-     由後端旗標決定是否顯示，屬靜態遮罩非業務 JS），逐段保留 -->
+{# 真實頁在麵包屑外層多包一層 #contentWrapper + #featureDisabledOverlay（功能未啟用遮罩，預設 display:none，
+     由後端旗標決定是否顯示，屬靜態遮罩非業務 JS），逐段保留 #}
 <div id="contentWrapper" class="feature-disabled-wrap">
     <div id="featureDisabledOverlay" class="feature-disabled-overlay">
         <div class="feature-disabled-box">
@@ -23,7 +23,7 @@ permalink: 5-2-1_knowledgeRetrieval.html
 
     {% include "ui/breadcrumb/breadcrumb.html" %}
 
-    <!-- 設置頁籤（沿用 ui/tab）+ 前台問答預設使用（沿用 ui/radio），兩者共用同一份「設置一/二/三」清單資料化 -->
+    {# 設置頁籤（沿用 ui/tab）+ 前台問答預設使用（沿用 ui/radio），兩者共用同一份「設置一/二/三」清單資料化 #}
     {% set settingTabs = [
       { label: "設置一", active: true, i18nKey: "settings.config1" },
       { label: "設置二", i18nKey: "settings.config2" },
@@ -55,8 +55,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
         </div>
     </div>
 
-    <!-- 意圖判斷分級表：沿用 components/priority-table 的 5 欄 .default-table.priority-table 結構，
-         高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 -->
+    {# 意圖判斷分級表：沿用 components/priority-table 的 5 欄 .default-table.priority-table 結構，
+         高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 #}
     <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
             <button type="button" id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
@@ -93,8 +93,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
                 <div class="tablelist-title" data-i18n="{{ level.i18nKey }}">{{ level.title }}</div>
                 <div class="tablelist-asking flex-row align-items-center gap-8">
                     <span data-i18n="settings.intentEnable">意圖判斷啟用</span>
-                    <label class="switch priority-switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle">
-                        <input type="checkbox" class="switch-checkbox" role="switch">
+                    <label class="switch priority-switch">
+                        <input type="checkbox" class="switch-checkbox" role="switch" aria-label="啟用切換" data-i18n-aria-label="settings.enableToggle">
                         <span class="switch-box">
                             <span class="switch-btn"></span>
                         </span>
