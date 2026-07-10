@@ -153,6 +153,27 @@ dist/                       build 輸出（勿手改）
 
 ---
 
+## 與真 app 的刻意差異
+
+歷史出處：`GufoFAQ_Frontend_New`（管理端 23 頁）＋ `GufoFAQ_Standard_Frontend`（前台聊天 1 頁）。**這份專案是正本，本來就走在真 app 前面**——下列差異是刻意的，不是漏抄。看到它們不必「修回去」。
+
+**切版新增（真 app 沒有）**
+
+| 位置 | 真 app 的狀況 |
+|---|---|
+| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端只有 23 頁） |
+| `catalog.html`（部署首頁＝頁面目錄）、`404.html` | 沒有；GitHub Pages 部署需要 |
+| `4-1_qaHistory` 底部的 `ui/pagination` 頁碼列 | 真 app 的 4-1 只有 `.data-info`（「共 N 筆資料」）。它的 `.pagination` 只出現在 component / 1-1-3 / 3-1-1 / 3-1-3 / 3-1-6 |
+| `2-1_qaRecord` 的 `.qa-count` | 真 app 的 2-1 沒有（它來自 2-2-1）。輸入框則以 `chatInputHidden` 關掉——那個真 app 的 2-1 也沒有 |
+| 前台訊息動作列的讚／倒讚／分享 | `scss/faq.scss` 有 `.button-icon.like/.dislike/.share` 的樣式，但 `js/faq.js` 產生的 `.message-icon` 只放得出複製鈕 |
+| 深色模式（`data-theme`）、中英切換（`data-i18n`） | 兩份真 app 都完全沒有 |
+| toast 的失敗／警告／資訊語意（`toast-error/warning/info`） | 真 app 只有 `toast-success`。切版是原型：每個按鈕該有的結果狀態都要看得見（`data-toast="成功訊息｜失敗訊息"` 逐次輪替） |
+| 遮罩上色的圖示（`icon-mask()`） | 真 app 是 `background-image` + 深色反相。遮罩讓顏色跟著 token 走，也刪掉了 5 張 `*_bluehover.png` |
+
+**其餘一律以真 app 為準**：class 名、DOM 結構、業務 js 的 hook class（`.js-apply-production`、`.btn-delete-file`、`.watchBtn`…）都是轉換契約，不改名。
+
+---
+
 ## 怎麼新增
 
 **新元件**：在 `ui/` 或 `components/` 建 `<name>/` 資料夾放 `<name>.html`(+`_<name>.scss`/`<name>.js`)。有 scss → `src/scss/main.scss` 加一行 `@use`；有 js → `eleventy.config.js` passthrough 與 `layouts/base/base.html` script 鏈各加一行。

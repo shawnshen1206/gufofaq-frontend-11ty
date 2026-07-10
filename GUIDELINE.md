@@ -254,7 +254,8 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 | `{% set xxx %}` | props |
 | front matter 資料 + `{% for %}` | `data.map(item => <Row item={item} />)` |
 | `.open`、`.active`、`.done`、`.error` 狀態 class | `useState` 布林 / props（`className={open ? "x open" : "x"}`） |
-| `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件 |
+| `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件。**進出場動畫在 CSS**（`@starting-style` + `display`/`overlay` 的 `allow-discrete`），沒有計時器可搬；**捲動鎖也在 CSS**（`html:has(dialog.modals[open])`），不要在 React 裡重寫一份 |
+| 14 個 modal 的外殼（`.modals` > `.modals-dialog` > `.modals-wrap` > `ui/modal-close` + `.modals-content`） | 除了 `.modals-dialog` 的尺寸 class（`modals-sm`×1／`md`×12／`lg`×1）之外逐字元相同（真 app 那邊 43 個也是同一個外殼）→ 收成一個 `<Modal size="md">{children}</Modal>`，各 modal 只剩自己的 header/body/footer |
 | `data-open-modal="X"` / `data-toast="…"`（事件委派） | `onClick={() => open("X")}` / `onClick={() => toast("…")}`；資料屬性只是切版期沒有 props 時的替身 |
 | `<a data-i18n="key">文字</a>` | `{t("key")}`（next-intl 等）；`src/i18n/en.json` 直接當英文 message catalog，繁中原文由 markup 抽出成 zh catalog |
 | `GufoI18n.t(key, "繁中")` / `gufo:langchange` / `lang-toggle.js` | **不帶過去**：runtime 就地切換是切版專用；React 用 i18n library 的 `t()` 與語言 context |
@@ -262,6 +263,8 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 | `_var.scss` 顏色變數 | 全域引入一次，元件照用 `var(--...)` |
 
 accordion 的行為規格（`ui/accordion/accordion.js`）：各列**獨立開合**（點哪列就 toggle 哪列，不會自動關其他列），掃描根為 accordion 自有的 `.js-accordion`（原子，不綁定任何 `components/` 的 class）。轉 React 時由各 accordion 元件自管開合狀態（`useState` 記住開啟的列），不要跨元件共用一份全域狀態。
+
+單色圖示（`icon-mask()`）的行為規格：**alpha 是字形、顏色是語意 token**。轉 React 時直接改成內嵌 SVG component + `fill="currentColor"` —— 那正是遮罩在模擬的東西。`_dark-icons.scss` 的 `img[src*="_black"]` 反相規則屆時可整條刪掉。
 
 HTML → JSX 為機械式替換：`class`→`className`、標籤自閉合、`{# #}`→`{/* */}`。
 CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
