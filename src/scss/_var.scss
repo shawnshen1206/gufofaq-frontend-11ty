@@ -46,7 +46,6 @@
     --danger-hover: #c51313;
     --danger-text: #e40f0f; // 錯誤訊息 / 必填星號等「危險色文字」（深色下提亮）
     --warning: #ffc700; // 黃底恆亮 → 配 --on-warning 深字
-    --warning-hover: #efbb00;
     --info: #0b7bbb; // toast-info 填充，白字 4.60:1
 
     /* 延伸 accent（orange / teal 按鈕，皆配白字） */
@@ -121,7 +120,6 @@
     --danger-hover: #dd2b31;
     --danger-text: #f0555a; // 危險色文字在黑底要亮：vs 卡片 4.99:1
     --warning: #e6b800; // 黃底仍配 --on-warning 深字
-    --warning-hover: #d6ab00;
     --info: #1778b2; // 白字 4.81:1
 
     /* 延伸 accent（皆配白字） */
@@ -139,10 +137,10 @@
     /* 控制項零件 */
     --scrollbar-thumb: #3a3a3a;
     --scrollbar-thumb-strong: #4a6a8a;
-    --control-track: #444444;
+    --control-track: #6b6b6b; // switch off 軌道：對卡片 3.20:1（原 #444 只有 1.75，看不出開關邊界）
     --control-track-alt: #33414d;
     --control-knob: #e8e8e8;
-    --toggle-on: #4aa257;
+    --toggle-on: #3d8749; // 對把手 3.60:1（原 #4aa257 只有 2.60，把手在綠底上糊掉）
 
     /* tooltip 反相成淺泡泡 */
     --tooltip-bg: #e5e5e5;

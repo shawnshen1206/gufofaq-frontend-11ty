@@ -771,16 +771,32 @@ const COLOR_ROLES = {
     fillOnWhiteText: ["--brand", "--brand-hover", "--success", "--success-hover", "--danger", "--danger-hover",
         "--info", "--accent-orange", "--accent-orange-hover", "--accent-teal", "--accent-teal-hover"],
     // 黃底：天生太亮 —— 放不下白字，對淺色底也拉不開 3:1。改配 --on-warning 深字，兩個門檻一起豁免（§4）
-    fillOnDarkText: ["--warning", "--warning-hover"],
+    fillOnDarkText: ["--warning"],
     // 當內文用：疊 --surface / --surface-raised 要 ≥4.5:1
     textOnSurface: ["--text", "--text-strong", "--text-muted", "--brand-text", "--brand-text-hover", "--danger-text"],
     // 前景墨色：文字與「不承載文字的圖形記號」（勾記、radio 圓點、進度條、步驟底線）共用一顆。
     // 它是前景不是填充，故套文字的 ≥4.5:1 門檻（自然也滿足圖形的 1.4.11 ≥3:1）。見 §4。
     inkOnSurface: ["--brand-ink"],
     surfaces: ["--surface", "--surface-raised", "--surface-sunken", "--surface-hover", "--surface-disabled", "--surface-input"],
-    // 成對的：[前景, 背景] 要 ≥4.5:1
-    pairs: [["--tooltip-text", "--tooltip-bg"]],
-    // chrome 零件：不承載內文，不做內文對比斷言（邊框/捲軸/軌道/把手/tint/陰影/遮罩/漸層）
+    // 成對的：[前景, 背景] 要 ≥4.5:1。只列 markup 裡真的疊在一起的組合 ——
+    // token 的宣告只保證它疊在 --surface / --surface-raised 上讀得到，疊到 hover 面或 tint 面就得另外算。
+    pairs: [
+        ["--tooltip-text", "--tooltip-bg"],
+        ["--brand-ink", "--brand-tint"], // multi-select .selected、tab .on-record.active
+        ["--brand-text-hover", "--surface-hover"], // header-controls 的語言鈕 hover
+    ],
+    // 圖形記號／元件邊界：不承載文字，門檻 3:1（WCAG 1.4.11）。一樣只列真的疊在一起的。
+    // 曾經：這幾顆全被當成 chrome 而完全豁免，深色 switch 的把手疊在綠軌上只有 2.60、軌道對卡片只有 1.75。
+    graphicPairs: [
+        ["--control-knob", "--toggle-on", "switch ON 把手 vs 軌道"],
+        ["--control-knob", "--control-track", "switch OFF 把手 vs 軌道"],
+        ["--control-track", "--surface-raised", "switch OFF 軌道 vs 卡片"],
+        ["--toggle-on", "--surface-raised", "switch ON 軌道 vs 卡片"],
+        ["--brand-ink", "--control-track-alt", "storage-bar 填色 vs 空軌"],
+    ],
+    // chrome 零件：不承載內文，不做內文對比斷言（邊框/捲軸/tint/陰影/遮罩/漸層）。
+    // --control-track-alt 是 storage-bar 填色後面的軌道：資訊由「填色 vs 軌道」承載（已在 graphicPairs），
+    // 軌道本身對卡片只是一條淡導軌，不是要辨識的圖形物件。
     chrome: ["--on-accent", "--on-warning", "--border", "--border-subtle", "--brand-tint",
         "--scrollbar-thumb", "--scrollbar-thumb-strong", "--control-track", "--control-track-alt",
         "--control-knob", "--toggle-on", "--pattern-tint",
@@ -811,8 +827,11 @@ test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對
     // 抓「每一個」宣告，不只 hex —— 否則用 rgba()/gradient 寫的新填充色會靜默逃過窮舉分類
     const vars = (body) => Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 
-    const { fillOnWhiteText, fillOnDarkText, textOnSurface, inkOnSurface, surfaces, pairs, chrome, nonColor } = COLOR_ROLES;
-    const needsHex = new Set([...fillOnWhiteText, ...fillOnDarkText, ...textOnSurface, ...inkOnSurface, ...surfaces, ...pairs.flat()]);
+    const { fillOnWhiteText, fillOnDarkText, textOnSurface, inkOnSurface, surfaces, pairs, graphicPairs, chrome, nonColor } = COLOR_ROLES;
+    const needsHex = new Set([
+        ...fillOnWhiteText, ...fillOnDarkText, ...textOnSurface, ...inkOnSurface, ...surfaces,
+        ...pairs.flat(), ...graphicPairs.flatMap(([a, b]) => [a, b]),
+    ]);
     const classified = new Set([...needsHex, ...chrome, ...nonColor]);
     const bad = [];
 
@@ -837,6 +856,7 @@ test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對
         for (const f of fillOnDarkText) check(ratio("--on-warning", f), 4.5, `深字疊 ${f}`);
         for (const c of [...textOnSurface, ...inkOnSurface]) for (const bg of ["--surface", "--surface-raised"]) check(ratio(c, bg), 4.5, `內文 ${c} on ${bg}`);
         for (const [fg, bg] of pairs) check(ratio(fg, bg), 4.5, `${fg} on ${bg}`);
+        for (const [fg, bg, label] of graphicPairs) check(ratio(fg, bg), 3, `${label}（${fg} / ${bg}）`);
     }
     assert.equal(bad.length, 0, `WCAG AA / 1.4.11：\n${fail(bad)}`);
 });

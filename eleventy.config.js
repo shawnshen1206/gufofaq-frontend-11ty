@@ -23,6 +23,7 @@ module.exports = function (eleventyConfig) {
         "src/_includes/components/faq-chatroom/faq-chatroom.js": "js/faq-chatroom.js",
         "src/_includes/components/faq-feedback-modal/faq-feedback-modal.js": "js/faq-feedback-modal.js",
         "src/_includes/ui/toast/toast.js": "js/toast.js",
+        "src/_includes/ui/collapse-text/collapse-text.js": "js/collapse-text.js",
         "src/_includes/ui/theme-toggle/theme-toggle.js": "js/theme-toggle.js",
         "src/_includes/ui/lang-toggle/lang-toggle.js": "js/lang-toggle.js",
     });

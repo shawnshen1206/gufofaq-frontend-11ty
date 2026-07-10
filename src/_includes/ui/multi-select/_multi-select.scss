@@ -191,9 +191,11 @@
         box-shadow: inset 3px 0 0 0 var(--brand-ink);
     }
 
+    // 選中列疊在 --brand-tint 上，--brand-text 淺色只有 4.46:1；改用前景墨色（10.50 / 5.12），
+    // 與 ui/tab 的 .on-record.active（同樣是 tint 底 + 深藍字）一致。
     &.selected {
         background-color: var(--brand-tint);
-        color: var(--brand-text);
+        color: var(--brand-ink);
         font-weight: 500;
     }
 }

@@ -3,8 +3,8 @@
      外層 .block（ui/block）包 .form-table-wrap（ui/form-table，已含 .form-table-group/.subtitle/.form-table/.row/.col/.th/.td），
      因此不建立 _qa-detail-info.scss、main.scss 也不需新增 @use（避免無中生有杜撰一個真實系統沒有的 class；視覺完全由已註冊的 block / form-table 提供）。
      AI 對話內容維持真實頁面原始寫法：直接在 .td 內以純文字＋多個 <p> 呈現（未加 .long-text，真實 markup 本來就沒有），逐字保留（inline，非收合摘要）。
-     「提示詞」欄用 .collapse-text/.collapse-body/.collapse-toggle 收合元件呈現：真實 app 連 scss 都沒有這組 class（純由 main.js 量測夾高），
-     故收合/展開行為屬業務 JS 不在切版範圍，此處保留靜態 markup（展開鈕為靜態 hook，無 JS 時即顯示全文），逐字保留內容以維持完整欄位清單。 #}
+     「提示詞」欄用 ui/collapse-text 收合元件呈現（.collapse-text/.collapse-body/.collapse-toggle）：真 app 的 scss 源碼漏了這組 class，
+     但編譯後的 css/component.css:3482 有；展開/收合是純 UI（js/main.js:880），由 collapse-text.js 接手，逐字保留內容以維持完整欄位清單。 #}
 {# conversation 短欄位由頁面提供（include 前 set conversation，見 §3-2/§6）；AI 回答與提示詞為長文，仍依 §3-2 寫死在下方 markup #}
 
 <div class="block block-sm mt-16">
@@ -127,7 +127,7 @@
                                     如果你要拿這個去做提示詞設計，我建議還可以再補一條：<br>
                                     「若涉及台灣行政流程，應優先提供實務上最常見的申辦方式與文件需求。」<br>
                                     加上這句之後，回答就不會只停留在概念整理，而會更接近真正可執行的行政指引。</div>
-                                <button type="button" class="collapse-toggle" data-i18n="common.expand">展開</button>
+                                <button type="button" class="collapse-toggle" aria-expanded="false" data-i18n="common.expand">展開</button>
                             </div>
                         </div>
                     </div>

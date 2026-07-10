@@ -42,7 +42,8 @@
                 <td>
                     <div class="form-group">
                         <div class="field">
-                            <select class="form-control select-sm singleSelect" aria-label="變更優先級" data-i18n-aria-label="comp.changePriority">
+                            {# .priority-select 是真 app 的 change 掛點（knowledgeRetrieval.js:643 的 $(document).on('change','.priority-select')）#}
+                            <select class="form-control select-sm singleSelect priority-select" aria-label="變更優先級" data-i18n-aria-label="comp.changePriority">
                                 <option></option>
                                 <option value="高優先級" data-i18n="comp.highPriority"{% if row.priority == "高優先級" %} selected{% endif %}>高優先級</option>
                                 <option value="中優先級" data-i18n="comp.mediumPriority"{% if row.priority == "中優先級" %} selected{% endif %}>中優先級</option>
@@ -52,6 +53,11 @@
                         </div>
                     </div>
                 </td>
+            </tr>
+            {% else %}
+            {# 空狀態：真 app 也是一列 colspan 的「無資料」（knowledgeRetrieval.js:256），不是空 tbody #}
+            <tr>
+                <td colspan="5" class="text-center" data-i18n="common.noData">無資料</td>
             </tr>
             {% endfor %}
         </tbody>

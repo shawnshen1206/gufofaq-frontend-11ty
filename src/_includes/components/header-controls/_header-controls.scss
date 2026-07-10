@@ -25,7 +25,8 @@
 
     &:hover {
         background-color: var(--surface-hover);
-        color: var(--brand-text);
+        // hover 面比卡片深，--brand-text 疊上去淺色只有 4.33:1；文字的 hover 色本來就該壓深一階
+        color: var(--brand-text-hover);
         border-color: var(--brand);
     }
 }
