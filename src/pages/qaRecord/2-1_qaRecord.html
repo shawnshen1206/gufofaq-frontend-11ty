@@ -23,6 +23,8 @@ permalink: 2-1_qaRecord.html
      右側頁籤區塊為單層 tab-group（非 ui/tab 展示片段的雙層 top/sub-tabs 結構），沿用 ui/tab 的 tab-wrap/tabs-title/tab-group/.tab class；
      頁籤本身掛 ui/tab 的 .on-record 變體（見 components/qa-record-tabs） #}
 <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
+    {# 唯讀的問答紀錄預覽：真實頁沒有輸入框（qaRecord.js:5 明載已移除輸入/送出/串流） #}
+    {% set chatInputHidden = true %}
     {% include "components/chatroom/chatroom.html" %}
 
     <div>

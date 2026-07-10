@@ -97,6 +97,9 @@
         </div>
     </div>
     <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>0/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>0/1000</div>
+    {# chatInputHidden：true 時不渲染輸入區（2-1 是唯讀的問答紀錄預覽，真實頁沒有輸入框；
+       單測頁 2-2-1 需要它）。qa-count 兩頁都留。 #}
+    {% if not chatInputHidden %}
     <div class="chat-input-container">
         <div class="input-wrap">
             <div class="form-group chat-input-field">
@@ -108,4 +111,5 @@
             <button type="submit" class="button button-primary chat-input-submit" data-i18n="action.submit">送出</button>
         </div>
     </div>
+    {% endif %}
 </div>
