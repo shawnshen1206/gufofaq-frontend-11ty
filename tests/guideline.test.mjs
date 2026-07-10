@@ -249,6 +249,26 @@ test("§4 每個 <img> 都要 decoding=\"async\"，且不得 loading=\"lazy\"", 
     assert.equal(hits.length, 0, fail(hits));
 });
 
+test("§5 data-toast-type 只准四種語意，且要有對應的 .toast-<type> 樣式", () => {
+    // toast.js 直接把 type 串成 class（'toast toast-' + type）。打成 data-toast-type="err"
+    // 不會噴錯，只會少掉那條 .toast-err 規則 —— 彈出一個沒有顏色、沒有語意的白盒子。
+    const TYPES = ["success", "error", "warning", "info"];
+    const css = read("dist/css/main.css");
+    for (const t of TYPES)
+        assert.ok(css.includes(`.toast-${t}`), `_toast.scss 少了 .toast-${t} —— 這條測試在空轉`);
+
+    let count = 0;
+    const hits = [];
+    for (const f of distHtml)
+        for (const m of read(`dist/${f}`).matchAll(/data-toast-type="([^"]*)"/g)) {
+            count++;
+            if (!TYPES.includes(m[1])) hits.push(`dist/${f}  data-toast-type="${m[1]}" 不是 ${TYPES.join(" / ")}`);
+        }
+    // 元件庫頁一定示範 error / warning / info 三種，故 count 必 > 0
+    assert.ok(count > 0, "dist 裡一個 data-toast-type 都掃不到 —— 這條測試在空轉");
+    assert.equal(hits.length, 0, fail(hits));
+});
+
 test("§4 圖示按鈕要有可及名稱（aria-label、按鈕內的文字、或圖片的非空 alt）", () => {
     // title= 不算：輔具不保證會念，觸控與鍵盤焦點也永遠看不到它。
     // 曾經：三處 .info-btn 只掛 title，按鈕裡只有一張 alt="" 的圖，對螢幕報讀器就是一顆無名按鈕。

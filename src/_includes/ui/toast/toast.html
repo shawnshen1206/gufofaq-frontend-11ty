@@ -1,10 +1,18 @@
 {# 觸發方式：任何元素掛 data-toast（＋選填 data-toast-type）即可，由 toast.js 的事件委派接手（§5 不寫 inline onclick）。
      type：success（預設）/ error / warning / info。需搭配 layouts/base/base.html 裡的 #toastContainer。
-     元件 js 若要在別的時機彈，呼叫全域 showToast(message, type)。 #}
+     元件 js 若要在別的時機彈，呼叫全域 showToast(message, type, duration, host)。
+
+     **什麼時候可以在 markup 掛 data-toast**：只有「結果在前端就已經確定」的動作 —— 全站只有複製到剪貼簿
+     （`.copyBtn` / `.shareBtn`）。「儲存 / 刪除 / 上傳 / 套用」的成敗要等 API 回來才知道，
+     在 markup 掛一句「已成功儲存」＝按了就彈綠色成功，而其實什麼都沒存 —— 跟寫死 data-open-modal 是同一種謊。
+     那些 toast 由業務 js 依 API 結果決定訊息與型別（真 app 的訊息 → 型別對照見 TAILWIND-CONVERSION.md）。
+
+     以下四顆是型別展示（showcase，不譯）。 #}
 <div class="flex-row gap-16 flex-wrap">
     <button class="button button-primary" type="button" data-toast="已成功儲存">success</button>
     <button class="button button-red" type="button" data-toast="發生錯誤，請稍後再試" data-toast-type="error">error</button>
     <button class="button button-border" type="button" data-toast="請先完成必填欄位" data-toast-type="warning">warning</button>
     <button class="button button-dark" type="button" data-toast="正在處理中…" data-toast-type="info">info</button>
-    <button class="button button-border" type="button" data-toast="文字已複製!" data-toast-type="info">data-toast 觸發</button>
+    {# 複製成功是「前端就確定」的結果，故為 success —— 與真的複製鈕（.copyBtn / .shareBtn）同型別 #}
+    <button class="button button-border" type="button" data-toast="文字已複製!">data-toast 觸發（複製）</button>
 </div>
