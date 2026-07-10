@@ -59,8 +59,7 @@
         pointer-events: none;
         width: 24px;
         height: 24px;
-        background: url("../images/icon_arrow_down_black.png") no-repeat center center;
-        background-size: 24px 24px;
+        @include icon-mask("../images/icon_arrow_down_black.png", var(--text), 24px 24px);
     }
 }
 
@@ -106,7 +105,6 @@
 .multi-select-tag-remove {
     appearance: none;
     border: none;
-    background: transparent;
     font-size: 0;
     position: absolute;
     right: 5px;
@@ -116,10 +114,7 @@
     height: 20px;
     padding: 0;
     cursor: pointer;
-    background-image: url("../images/icon_close_black.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    @include icon-mask("../images/icon_close_black.png");
 }
 
 // 對應：.select2-container--default .select2-search--inline .select2-search__field

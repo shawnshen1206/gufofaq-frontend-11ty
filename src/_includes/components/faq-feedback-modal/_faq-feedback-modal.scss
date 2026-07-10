@@ -1,5 +1,6 @@
 // 前台 FAQ 回饋 modal：讚/倒讚二選一（取代原星等評分）＋填理由。只用於本 modal。
 // 圖示沿用 images/icon_good.png、icon_not_good.png（同訊息動作鈕，但這裡是可選取的切換鈕，故自有樣式）。
+@use "../../../scss/mixin" as *;
 .feedback-vote {
     display: flex;
     gap: 1rem;
@@ -21,17 +22,14 @@
         .feedback-vote-icon {
             width: 24px;
             height: 24px;
-            background-repeat: no-repeat;
-            background-size: 24px 24px;
-            background-position: center;
         }
 
         &.like .feedback-vote-icon {
-            background-image: url(../images/icon_good.png);
+            @include icon-mask("../images/icon_good.png", var(--success), 24px 24px);
         }
 
         &.dislike .feedback-vote-icon {
-            background-image: url(../images/icon_not_good.png);
+            @include icon-mask("../images/icon_not_good.png", var(--brand-ink), 24px 24px);
         }
 
         &:hover {

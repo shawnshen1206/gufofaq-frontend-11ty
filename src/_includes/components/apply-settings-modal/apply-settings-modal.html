@@ -4,10 +4,7 @@
 <dialog class="modals" id="ProductionSettingsModal" aria-labelledby="ProductionSettingsModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
-            <button type="button" class="modals-close btn-close-modals" title="關閉" data-i18n-title="action.close">
-                <img src="./images/icon_close_blue.png" width="48" height="48" decoding="async" alt="">
-                <span class="sr-only" data-i18n="action.close">關閉</span>
-            </button>
+            {% include "ui/modal-close/modal-close.html" %}
             <div class="modals-content">
                 <div class="modals-header">
                     <h3 class="modals-title" id="ProductionSettingsModal-title" data-i18n="modals.applyProductionSettings">套用為正式設定</h3>

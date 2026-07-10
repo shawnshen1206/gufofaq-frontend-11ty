@@ -1,0 +1,17 @@
+// 跳窗右上角的關閉鈕。原本是 `.modals-wrap` 底下的一段巢狀 + 一張 <img>，
+// 現在字形改用遮罩上色（icon-mask），<img> 整個消失；position:absolute 的基準仍是 `.modals-wrap`。
+@use "../../../scss/mixin" as *;
+
+.modals-close {
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    z-index: 1;
+    cursor: pointer;
+    @include icon-mask("../images/icon_close_blue.png", var(--brand-text));
+}

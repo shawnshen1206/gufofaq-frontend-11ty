@@ -957,6 +957,31 @@ test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () =>
     assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
 });
 
+test("§4 .form-control.search / .time 必須是 .field 的直接子元素（圖示畫在 .field::after）", () => {
+    // 放大鏡／時鐘是 `.field:has(> .form-control.search)::after`。搬出 `.field`、或中間多包一層，
+    // 圖示就無聲消失（沒有樣式會紅、沒有測試會抓）—— 這裡把那個前提釘住。
+    const hits = [];
+    let seen = 0;
+    for (const f of srcHtml) {
+        const html = read(f);
+        // 逐個 <input …class="… search|time …"> 往前找最近的開標籤
+        for (const m of html.matchAll(/<input\b[^>]*class="([^"]*\bform-control\b[^"]*)"[^>]*>/g)) {
+            const cls = m[1].split(/\s+/);
+            if (!cls.includes("search") && !cls.includes("time")) continue;
+            seen++;
+            const before = html.slice(0, m.index);
+            const lastOpen = before.lastIndexOf("<div");
+            const tag = before.slice(lastOpen, before.indexOf(">", lastOpen) + 1);
+            // 直接父層必須是 <div class="field">，且兩者之間不得再有別的開標籤
+            const between = before.slice(before.indexOf(">", lastOpen) + 1);
+            if (!/class="[^"]*\bfield\b/.test(tag) || /<[a-z]/.test(between))
+                hits.push(`${f}: ${m[0].slice(0, 70)}… 的直接父層是 ${tag.slice(0, 50)}`);
+        }
+    }
+    assert.ok(seen >= 5, `只掃到 ${seen} 個 search/time 輸入框 —— 這條測試在空轉`);
+    assert.equal(hits.length, 0, `圖示會消失：\n${hits.join("\n")}`);
+});
+
 test("§4 元件 scss 不得寫 [data-theme=dark] 分支（零例外）", () => {
     // 只有全域層可以讀主題旗標：_var / _guideline-var（色源）、_base（color-scheme）、
     // _dark-icons（光柵 PNG 反相）。元件一律靠 token 換膚。
@@ -972,11 +997,49 @@ test("§4 文字族 token 不可拿去當 background-color / border-color", () =
     // 當填充時白字會讀不到——兩個方向都要擋。
     // 涵蓋簡寫（background:）與各種 border 寫法；outline 刻意排除——§4-1 規定焦點環用 --brand-text
     // 清單由 COLOR_ROLES 衍生（單一真相源）：手打清單會偷偷漏掉某顆 token 而變成隱藏例外。
+    //
+    // 掃**編譯後**的 css 而非 scss 源碼：mixin 展開後的宣告（icon-mask 的 background-color）
+    // 在源碼裡看不到，掃源碼等於放它過關。
+    //
+    // 被遮罩的元素豁免：遮罩把整個 background 裁成字形，那顆顏色是**墨色**（前景），
+    // 它承載不了任何文字 —— 本規則的前提（「白字疊上去會讀不到」）在那裡不成立。見 §4「遮罩圖示」。
+    // 「有沒有被遮罩」是層疊的性質，不是單一規則的性質：`.button-icon.edit::before` 宣告遮罩，
+    // 而 `.button-icon.no-bg:hover.edit::before` 只覆寫顏色。故判準是「這個 compound 是不是
+    // 某條帶遮罩 compound 的細化（simple selector 的超集）」，而不是「這條規則裡有沒有 mask:」。
     const TEXT = COLOR_ROLES.textOnSurface.map((t) => t.slice(2)).join("|");
     const PROP = "background(?:-color)?|border(?:-color|-top|-right|-bottom|-left|-block|-inline)?|box-shadow|fill|stroke";
     const re = new RegExp(String.raw`(?:^|[\s;{])(?:${PROP})\s*:[^;]*var\(--(?:${TEXT})\)`);
-    const hits = scanLines(srcScss, (line) => (re.test(line.split("//")[0]) ? "文字 token 當填充/邊框" : null));
-    assert.equal(hits.length, 0, `白字疊上去會讀不到：\n${fail(hits)}`);
+    const css = read("dist/css/main.css");
+
+    // 只看最後一個 compound（那才是被畫的元素），拆成 simple selector 的集合
+    const compound = (sel) => {
+        const last = sel.trim().split(/\s*[>+~]\s*|\s+/).pop() || "";
+        return new Set(last.match(/::[\w-]+|:[\w-]+(?:\([^)]*\))?|\.[\w-]+|#[\w-]+|\[[^\]]*\]/g) || []);
+    };
+    const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => ({
+        sels: sel.split(",").map((s) => s.trim()).filter(Boolean),
+        body,
+    }));
+    assert.ok(blocks.length > 300, `只解析到 ${blocks.length} 條規則 —— 這條測試在空轉`);
+
+    const masked = [];
+    for (const { sels, body } of blocks) {
+        if (/(?:^|[\s;])(?:-webkit-)?mask\s*:/.test(body)) for (const s of sels) masked.push(compound(s));
+    }
+    assert.ok(masked.length > 0, "找不到任何帶遮罩的規則 —— 豁免條件在空轉");
+    const isMasked = (sel) => {
+        const own = compound(sel);
+        return masked.some((m) => [...m].every((t) => own.has(t)));
+    };
+
+    const hits = [];
+    for (const { sels, body } of blocks) {
+        for (const decl of body.split(";")) {
+            if (!re.test(";" + decl)) continue;
+            for (const s of sels) if (!isMasked(s)) hits.push(`${s.replace(/\s+/g, " ")} { ${decl.trim()} }`);
+        }
+    }
+    assert.equal(hits.length, 0, `白字疊上去會讀不到：\n${hits.join("\n")}`);
 });
 
 // §4「新增或調整任何顏色都要重算這兩個數字」——與其相信 _var.scss 的手寫註解（前面已抓到兩個

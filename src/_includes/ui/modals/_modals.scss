@@ -92,26 +92,8 @@
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 1px 0 0 var(--shadow);
-
-    .modals-close {
-        display: block;
-        width: 24px;
-        height: 24px;
-        padding: 0;
-        border: 0;
-        background-color: transparent;
-        position: absolute;
-        top: 22px;
-        right: 24px;
-        z-index: 1;
-        cursor: pointer;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    }
+    // 右上角關閉鈕的樣式在 ui/modal-close（§3-3：本元件的 scss 不寫別的元件的 class）。
+    // 它 position:absolute 的定位基準就是這裡的 position:relative。
 
     .modals-header {
         background-color: var(--surface-raised);

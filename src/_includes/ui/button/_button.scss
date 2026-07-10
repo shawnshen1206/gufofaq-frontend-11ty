@@ -1,4 +1,6 @@
 // 逐字複製自真實 app 的 scss/component.scss「button按鈕」區段（verbatim，只搬移位置）
+@use "../../../scss/mixin" as *;
+
 .button {
     display: inline-flex;
     justify-content: center;
@@ -131,13 +133,12 @@
     }
 }
 
+// 字形畫在 ::before 上，不在按鈕自己的 background 上 —— 按鈕的 background-color 得留給 hover 藥丸。
+// 字形用遮罩上色（icon-mask），所以深色模式不必反相、hover 換色不必換圖。
 .button-icon {
     display: inline-block;
     width: 36px;
     height: 36px;
-    background-size: 24px 24px;
-    background-repeat: no-repeat;
-    background-position: center;
     background-color: transparent;
     border: none;
     border-radius: 100px;
@@ -145,46 +146,54 @@
     position: relative;
     transition: all 0.3s;
 
-    &.copy {
-        background-image: url(../images/icon_copy_black.png);
+    // 沒有 variant 就沒有遮罩、也沒有底色 → 什麼都不畫（不會變成一塊實心方塊）
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
     }
 
-    &.watch {
-        background-image: url(../images/icon_watch_blacck.png);
+    &.copy::before {
+        @include icon-mask("../images/icon_copy_black.png", var(--text), 24px 24px);
     }
 
-    &.edit {
-        background-image: url(../images/icon_edit_blue.png);
+    &.watch::before {
+        @include icon-mask("../images/icon_watch_blacck.png", var(--text), 24px 24px);
     }
 
-    &.delete {
-        background-image: url(../images/icon_delete.png);
+    &.edit::before {
+        @include icon-mask("../images/icon_edit_blue.png", var(--brand-text), 24px 24px);
+    }
+
+    &.delete::before {
+        @include icon-mask("../images/icon_delete.png", var(--brand-text), 24px 24px);
     }
 
     // 下載鈕：markup 由業務 js 在執行期產生（真 app 的 previewDataset.js），本專案沒有靜態 markup —— 不是死 CSS
-    &.download {
-        background-image: url(../images/icon_download.png);
+    &.download::before {
+        @include icon-mask("../images/icon_download.png", var(--brand-text), 24px 24px);
     }
 
-    &.save {
-        background-image: url(../images/icon_check_blue.png);
+    &.save::before {
+        @include icon-mask("../images/icon_check_blue.png", var(--brand-text), 24px 24px);
     }
 
-    &.cancel {
-        background-image: url(../images/icon_close_blue.png);
+    &.cancel::before {
+        @include icon-mask("../images/icon_close_blue.png", var(--brand-text), 24px 24px);
     }
 
     // 前台 FAQ 訊息動作鈕（讚/倒讚/分享；複製沿用上面的 .copy）
-    &.like {
-        background-image: url(../images/icon_good.png);
+    // 讚是語意綠（真 app 的 icon_good 就是綠的），倒讚與分享是深墨色。
+    &.like::before {
+        @include icon-mask("../images/icon_good.png", var(--success), 24px 24px);
     }
 
-    &.dislike {
-        background-image: url(../images/icon_not_good.png);
+    &.dislike::before {
+        @include icon-mask("../images/icon_not_good.png", var(--brand-ink), 24px 24px);
     }
 
-    &.share {
-        background-image: url(../images/icon_share.png);
+    &.share::before {
+        @include icon-mask("../images/icon_share.png", var(--brand-ink), 24px 24px);
     }
 
     &:hover {
@@ -193,28 +202,18 @@
 
     // tooltip 的 hover 顯示規則已移到 ui/tooltip/_tooltip.scss（§4：本元件不再指名 .tooltip）
 
+    // 真 app 的 *_bluehover.png 與對應原圖 alpha 逐像素相同、只是換了顏色。遮罩化之後換色＝換 token，
+    // 那五張圖沒有存在的理由，已刪（icon_{edit,delete,download,check,close}_bluehover.png）。
     &.no-bg {
         &:hover {
             background-color: transparent;
 
-            &.edit {
-                background-image: url(../images/icon_edit_bluehover.png);
-            }
-
-            &.delete {
-                background-image: url(../images/icon_delete_bluehover.png);
-            }
-
-            &.download {
-                background-image: url(../images/icon_download_bluehover.png);
-            }
-
-            &.save {
-                background-image: url(../images/icon_check_bluehover.png);
-            }
-
-            &.cancel {
-                background-image: url(../images/icon_close_bluehover.png);
+            &.edit::before,
+            &.delete::before,
+            &.download::before,
+            &.save::before,
+            &.cancel::before {
+                background-color: var(--brand-text-hover);
             }
         }
     }

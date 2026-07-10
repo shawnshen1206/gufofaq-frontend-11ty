@@ -122,3 +122,20 @@
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) transparent;
 }
+
+/*===============================
+    單色圖示：遮罩上色
+================================*/
+
+// 單色 PNG 的 alpha 就是形狀，裡頭那個顏色是多餘的資訊。把它當**遮罩**、顏色改由 token 給，
+// 深色模式就只是「token 換值」——不必反相、也不必讓全域層去認識元件的 class（見 _dark-icons.scss）。
+// 副作用：hover／active 換色只要換 token，於是 *_bluehover.png 這種「同一個字形換個顏色」的資產全部不必存在。
+//
+// $ink 傳語意 token；$size 對齊原本的 background-size。
+// 只給單色字形用 —— 彩色圖（icon_beta 徽章）遮罩後會被塗平，要留 background-image／<img>。
+@mixin icon-mask($url, $ink: var(--text), $size: contain) {
+    background-color: $ink;
+    background-image: none;
+    -webkit-mask: url($url) no-repeat center / #{$size};
+    mask: url($url) no-repeat center / #{$size};
+}

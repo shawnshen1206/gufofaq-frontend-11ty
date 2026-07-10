@@ -1,36 +1,21 @@
-// 深色模式：光柵 PNG 圖示的反相。CSS 選不到 url() 裡的顏色，故由這層全域處理（GUIDELINE §4 的機制②）。
-// invert(1) hue-rotate(180deg)：單色黑 icon 變白；彩色 icon 保留大致色相、只反轉亮度。
-// ⚠️ 只反相「純圖示」元素（icon-only：button-icon、檔名帶 _black 的 <img>、::after 箭頭）。
-//    【絕不可】把 filter 加在「有底色+文字」的元素（如 .form-control.search/.time 輸入框）——
-//    invert 會連整個輸入框的深色底一起反相成淺色（曾踩過）。那兩處的搜尋/時鐘 icon 在深色下較淡，之後另出深色版資產。
-// button-icon 內的 .tooltip 於 hover 時會被連帶反相（已回正）。
+// 深色模式：光柵 PNG 圖示的反相（GUIDELINE §4 的機制②）。CSS 選不到 url() 裡的顏色。
 //
-// 曾經這裡還有一條 `img.icon:not([src*="white"])`：它是**黑名單**，只排除檔名含 white 的。
-// 於是純白的 icon_back / icon_next（檔名不含 white）在深色下被反相成**黑箭頭**，壓在藍底白字的按鈕上；
-// 而檔型徽章（XLSX 綠 / PDF 紅）、success 綠勾、讚的綠拇指也全被翻掉色。
-// 規範說的機制是**檔名白名單** `img[src*="_black"]` —— 只有那條留著。要反相的資產就照實命名。
+// 這裡只剩 <img>，而且只認**檔名**：帶 `_black` 的一律反相。新增黑圖示不必回來加一行，
+// 這層也不必認識任何元件的 class —— 它讀的是資產的命名慣例，不是別人的內部結構。
+//
+// `background-image` 的單色圖示曾經要逐一登記在這裡（13 個元件 class）。現在它們改用
+// `icon-mask()`：把 PNG 的 alpha 當遮罩、顏色交給語意 token，深色模式只是 token 換值。
+// 順帶收掉三個舊病：
+//   ① 反相會把彩色圖示的色相一起翻掉（讚的綠拇指、beta 徽章）—— 遮罩是塗色，不是翻色；
+//   ② 曾有一條 `img.icon:not([src*="white"])` 黑名單，把純白但檔名不含 white 的 icon_back/icon_next
+//      翻成黑箭頭壓在藍底上。白名單 `img[src*="_black"]` 不會有這種漏；
+//   ③ hover 換色不必再多存一張 *_bluehover.png（那五張已刪）。
+//
+// ⚠️ filter 不可以加在「有底色＋文字」的元素上（如 `.form-control.search` / `.time` 輸入框）：
+//    invert 會連整個輸入框的底色一起翻。那兩處的搜尋／時鐘 icon 畫在 <input> 自己的 background 上，
+//    而 <input> 沒有偽元素可以承載遮罩 —— 要修得先給它們一層 wrapper，不在這一層想辦法。
 [data-theme="dark"] {
-
-    // <img> 走規則：檔名帶 _black 的一律反相（新增黑圖示不必回來加一行）。
-    // background-image 的黑圖示 CSS 選不到 url()，只能逐一登記在下面。
-    img[src*="_black"],
-    .button-icon,
-    .beta-icon,
-    .modals-close img,
-    .nav-toggle,
-    .accordion-btn,
-    .feedback-vote-icon,
-    .dropdown::after,
-    .select-wrap::after,
-    .multi-select-control::after,
-    .multi-select-tag-remove,
-    .collapse-toggle::after,
-    .qa-side-panel-toggle::after {
-        filter: invert(1) hue-rotate(180deg);
-    }
-
-    // button-icon 內的 tooltip 泡泡不該被父層反相 → 再反相一次回正
-    .button-icon .tooltip {
+    img[src*="_black"] {
         filter: invert(1) hue-rotate(180deg);
     }
 }

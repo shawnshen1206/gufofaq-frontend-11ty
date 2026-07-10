@@ -1,5 +1,6 @@
 // 長文收合（qa-detail-info 的「提示詞」收合欄）。取自真 app 已編譯 css/component.css（scss 源碼漏了）。
 // 預設夾 3 行、.open 展開全文；收合鈕箭頭於 .open 時轉向。開合行為見 collapse-text.js。
+@use "../../../scss/mixin" as *;
 .collapse-text {
     .collapse-body {
         line-height: 1.5;
@@ -27,8 +28,7 @@
             content: "";
             width: 1.25rem;
             height: 1.25rem;
-            background: url(../images/icon_arrowdown_s_brown.png) no-repeat center center;
-            background-size: contain;
+            @include icon-mask("../images/icon_arrowdown_s_brown.png");
             transition: transform 0.3s ease;
         }
 

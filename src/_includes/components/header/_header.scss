@@ -86,10 +86,7 @@
                         display: inline-block;
                         width: 20px;
                         height: 22px;
-                        background-image: url(../images/icon_header_arrowdown_black.png);
-                        background-repeat: no-repeat;
-                        background-size: contain;
-                        background-position: center;
+                        @include icon-mask("../images/icon_header_arrowdown_black.png");
                     }
                 }
 

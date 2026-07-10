@@ -1,4 +1,6 @@
-// 逐位元照抄自真 app scss/component.scss 1935-2005（accordion 手風琴區塊），只搬檔案位置，宣告一字不改
+// 照抄自真 app scss/component.scss 1935-2005（accordion 手風琴區塊）。
+// 唯一的改寫：箭頭原本是 background-image，改成 icon-mask（顏色交給 token，深色模式免反相）。
+@use "../../../scss/mixin" as *;
 /*===============================
     accordion手風琴
 ================================*/
@@ -7,13 +9,11 @@
     padding: 0;
     width: 1.5rem;
     height: 1.5rem;
-    background-image: url(../images/icon_table_arrow_default.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+    // 收合時是很淡的灰箭頭（真 app 的 icon_table_arrow_default 就是 #d7d7d7），展開時轉成深墨色。
+    @include icon-mask("../images/icon_table_arrow_default.png", var(--border));
 
     &.open {
-        background-image: url(../images/icon_table_arrow_open.png);
+        @include icon-mask("../images/icon_table_arrow_open.png", var(--brand-ink));
     }
 }
 
