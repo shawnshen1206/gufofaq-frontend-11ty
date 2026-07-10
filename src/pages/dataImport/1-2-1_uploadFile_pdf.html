@@ -72,7 +72,7 @@ permalink: 1-2-1_uploadFile_pdf.html
             {% for file in fileRows %}
             <tr>
                 <td>
-                    <button type="button" class="link-modal btn-preview-file" data-open-modal="previewModal">{{ file.name }}</button>
+                    <button type="button" class="link-modal btn-preview-file">{{ file.name }}</button>
                 </td>
                 <td>
                     <span class="ellipsis-2">{{ file.title }}</span>
@@ -81,10 +81,10 @@ permalink: 1-2-1_uploadFile_pdf.html
                 <td>{{ file.sizeMB }}MB</td>
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="button-icon no-bg size-sm edit btn-edit-file" data-open-modal="editModal" title="編輯" data-i18n-title="action.edit">
+                        <button type="button" class="button-icon no-bg size-sm edit btn-edit-file" title="編輯" data-i18n-title="action.edit">
                             <span class="sr-only" data-i18n="action.edit">編輯</span>
                         </button>
-                        <button type="button" class="button-icon no-bg size-sm delete btn-delete-file" data-open-modal="deleteModal" title="刪除" data-i18n-title="action.delete">
+                        <button type="button" class="button-icon no-bg size-sm delete btn-delete-file" title="刪除" data-i18n-title="action.delete">
                             <span class="sr-only" data-i18n="action.delete">刪除</span>
                         </button>
                     </div>

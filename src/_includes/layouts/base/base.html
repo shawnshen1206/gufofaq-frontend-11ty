@@ -7,7 +7,9 @@
     {# 本站是公開的切版預覽（含假的內部後台畫面），不希望被搜尋引擎收錄。
          用 noindex 而非 robots.txt Disallow：Disallow 會讓爬蟲讀不到這行 noindex，反而可能只收 URL。 #}
     <meta name="robots" content="noindex, nofollow">
-    {# 行動瀏覽器網址列顏色：由下方 no-flash 腳本 / theme-toggle.js 跟著 data-theme 更新 #}
+    {# 行動瀏覽器網址列顏色：由下方 no-flash 腳本 / theme-toggle.js 跟著 data-theme 更新。
+       這裡跟 no-flash 是全站唯一「色碼不從 token 讀」的地方——它們跑在 CSS 載入前，讀不到 var()。
+       兩個值必須等於 _var.scss 的 --surface-raised（淺/深），有測試盯著（§4）。 #}
     <meta name="theme-color" content="#ffffff">
     {# no-flash：在套用 CSS 前先定 <html data-theme>（讀 localStorage → 否則跟系統），避免載入白閃。切換行為見 theme-toggle.js #}
     <script>
@@ -38,6 +40,7 @@
     {# toast 由 toast.js 動態塞入；role=status + aria-live 讓螢幕報讀器會念出來（error 型仍屬 polite，避免打斷輸入） #}
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true"></div>
 
+    <script defer src="./js/scroll-lock.js"></script>
     <script defer src="./js/header.js"></script>
     <script defer src="./js/mobile-nav.js"></script>
     <script defer src="./js/modals.js"></script>

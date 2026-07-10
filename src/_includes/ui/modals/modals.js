@@ -3,22 +3,9 @@
 // （例：faq-feedback-modal.js 的 openFeedback 要先預選讚/倒讚再開窗，無法用宣告式屬性表達）。
 // 只是「點了就開窗」的按鈕不要寫 js —— 掛 data-open-modal="<dialog id>"，由下面的事件委派接手（§5）。
 document.addEventListener("DOMContentLoaded", function () {
-    // 開著的 modal 計數：巢狀開窗時關掉內層不該把外層背後的 body 提早解鎖
-    var openCount = 0;
-
-    function lockBodyScroll() {
-        if (openCount++ > 0) return;
-        var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = "hidden";
-        if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + "px";
-    }
-
-    function unlockBodyScroll() {
-        if (openCount > 0) openCount--;
-        if (openCount > 0) return;
-        document.body.style.overflow = "";
-        document.body.style.paddingRight = "";
-    }
+    // body 捲動鎖走 ui/scroll-lock 的共享計數器（巢狀開窗、以及和手機選單搶同一個 body 都靠它）
+    var lockBodyScroll = window.GufoScrollLock.lock;
+    var unlockBodyScroll = window.GufoScrollLock.unlock;
 
     function openModal(id) {
         var modal = document.getElementById(id);
@@ -44,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closeModal(modal) {
         if (!modal || !modal.open) return;
+        if (modal._closeTimer) return; // 關閉動畫還在跑：不要再排一顆 timer 覆寫掉舊的參照
 
         modal.classList.remove("show");
         modal.classList.add("hide");

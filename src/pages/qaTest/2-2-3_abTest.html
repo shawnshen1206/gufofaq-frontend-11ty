@@ -31,7 +31,7 @@ permalink: 2-2-3_abTest.html
     <div class="ab-side" data-ab-side="{{ ab.side }}">
         <div class="flex-row align-items-center gap-10 mb-10">
             <span class="text-lg text-bold text-blue"><span data-i18n="qaTest.setting">設定</span> {{ ab.side }}</span>
-            <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal" data-i18n="qaTest.applyProduction">套用為正式設定</button>
+            <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
         </div>
 
         <div class="select-row flex-row column gap-16">
@@ -214,7 +214,8 @@ permalink: 2-2-3_abTest.html
 {% set sourcesInfoClass = "js-sources-side" %}
 {% include "components/sources-block/sources-block.html" %}
 
-{# 「無權限」是同一顆按鈕的另一個狀態，由業務端的權限旗標決定開哪一份 —— 本頁沒有觸發器，
-   不放死彈窗；它的外觀在元件庫頁（component.html）可見。 #}
-{% include "components/apply-settings-modal-2/apply-settings-modal-2.html" %}
+{# 兩份「套用為正式設定」彈窗：業務 js 依模型權限決定開哪一份（真 app abTest.js 的 .js-apply-production）。
+   切版不做那個分支，兩份 markup 都要在（React 端才有東西可轉）；示範觸發器在元件庫頁。 #}
+{% include "components/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
+{% include "components/apply-settings-compare-modal/apply-settings-compare-modal.html" %}
 {% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}

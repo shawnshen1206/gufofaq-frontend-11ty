@@ -183,10 +183,12 @@
         background-color: var(--surface-hover);
     }
 
-    // 鍵盤游標（↑↓ 移動）所在的選項：焦點留在搜尋框，故需自畫，見 aria-activedescendant
+    // 鍵盤游標（↑↓ 移動）所在的選項：焦點留在搜尋框，故需自畫，見 aria-activedescendant。
+    // 這條 3px 指示線是「不承載文字的圖形記號」→ 用前景墨色 --brand-ink（§4）。
+    // 用填充族的 --brand 的話，深色下它疊在 --surface-hover 上只有 2.85:1，低於 WCAG 1.4.11 的 3:1。
     &.active {
         background-color: var(--surface-hover);
-        box-shadow: inset 3px 0 0 0 var(--brand);
+        box-shadow: inset 3px 0 0 0 var(--brand-ink);
     }
 
     &.selected {

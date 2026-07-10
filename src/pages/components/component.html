@@ -495,6 +495,7 @@ bodyClass: guideline-page
                 <div class="flex-row gap-16 flex-wrap align-items-center">
                     <button type="button" class="button button-primary" data-open-modal="datasetModal">開啟選擇資料集modal</button>
                     <button type="button" class="link-modal" data-open-modal="previewTextModal">檔案名稱.pdf</button>
+                    <button type="button" class="button button-primary" data-open-modal="previewModal">開啟檔案預覽modal（iframe）</button>
                     <button type="button" class="button-icon no-bg size-sm edit" data-open-modal="editModal" title="編輯">
                         <span class="sr-only">編輯</span>
                     </button>
@@ -504,7 +505,8 @@ bodyClass: guideline-page
                     <button type="button" class="button button-primary" data-open-modal="disclaimerModal">開啟免責聲明modal</button>
                     <button type="button" class="button button-primary" data-open-modal="intentionModal">開啟意圖判斷啟用modal</button>
                     <button type="button" class="button button-dark" data-open-modal="ProductionSettingsNoPermissionModal">套用為正式設定（無權限）</button>
-                    <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal">套用為正式設定</button>
+                    <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal">套用為正式設定（單測確認版）</button>
+                    <button type="button" class="button button-dark" data-open-modal="ProductionSettingsCompareModal">套用為正式設定（A/B 比對版）</button>
                     <button type="button" class="info-btn" title="配置說明" data-open-modal="knowledgeModal">
                         <img src="./images/icon_info.png" width="48" height="48" decoding="async" alt="" class="icon">
                     </button>
@@ -737,12 +739,14 @@ bodyClass: guideline-page
     </div>
 </dialog>
 
+{% include "components/file-preview-modal/file-preview-modal.html" %}
 {% include "components/file-edit-modal/file-edit-modal.html" %}
 {% include "components/delete-modal/delete-modal.html" %}
 {% include "components/disclaimer-modal/disclaimer-modal.html" %}
 {% include "components/intent-enable-modal/intent-enable-modal.html" %}
-{% include "ui/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
-{% include "components/apply-settings-modal-2/apply-settings-modal-2.html" %}
+{% include "components/apply-settings-no-permission-modal/apply-settings-no-permission-modal.html" %}
+{% include "components/apply-settings-modal/apply-settings-modal.html" %}
+{% include "components/apply-settings-compare-modal/apply-settings-compare-modal.html" %}
 {% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}
 
 <button type="button" class="button btn_gotop">

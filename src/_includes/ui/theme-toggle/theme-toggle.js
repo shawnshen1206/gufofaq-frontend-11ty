@@ -8,11 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
     }
 
-    // 行動瀏覽器網址列顏色跟著主題（值＝--surface-raised，即 header 底色）
+    // 行動瀏覽器網址列顏色跟著主題。值直接讀 --surface-raised（header 底色）的 computed 值，
+    // 不在這裡複寫色碼 —— 本檔在 CSS 載入後才跑，讀得到；改了 token 這裡自動跟上（§4：顏色只有一份）。
     function apply(theme) {
         root.setAttribute("data-theme", theme);
         var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.setAttribute("content", theme === "dark" ? "#1c1c1c" : "#ffffff");
+        if (!m) return;
+        // 讀不到（樣式表沒載成功）就不動 meta，留著 no-flash 寫的值 —— 那種情況整頁本來就沒樣式了。
+        var c = getComputedStyle(root).getPropertyValue("--surface-raised").trim();
+        if (c) m.setAttribute("content", c);
     }
 
     document.querySelectorAll(".theme-toggle").forEach(function (btn) {
