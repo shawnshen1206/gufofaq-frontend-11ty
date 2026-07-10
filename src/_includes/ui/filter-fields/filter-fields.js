@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!btn) return;
 
         var block = btn.closest(".block");
-        var fields = block && block.querySelector(".filter-fields");
-        if (!fields) return;
+        if (!block) return;
+        // 有 .filter-fields 就只清它；沒有的話（4-1／5-3 的篩選列是就地寫的 form-group）清整個 .block
+        var fields = block.querySelector(".filter-fields") || block;
 
         fields.querySelectorAll("input, textarea").forEach(function (el) {
             el.value = "";

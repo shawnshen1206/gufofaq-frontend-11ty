@@ -53,7 +53,7 @@ permalink: 5-4-1_promptManagement.html
         </div>
         <div class="flex-row flex-wrap gap-16 align-items-center">
             <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
-            <button type="button" class="button button-primary js-prompt-search" data-i18n="action.query">查詢</button>
+            <button type="button" class="button button-primary js-prompt-search" data-toast="查詢成功|無法載入提示詞版本列表" data-i18n-data-toast="toast.queryPrompt" data-toast-type="success|error" data-i18n="action.query">查詢</button>
             <button type="button" class="button button-primary js-add-prompt">
                 <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
                 <span data-i18n="settings.addPrompt">新增提示詞</span>
@@ -81,7 +81,7 @@ permalink: 5-4-1_promptManagement.html
             </div>
             <div class="flex-row justify-content-center gap-16">
                 <button type="button" class="button button-border js-prompt-cancel" data-i18n="action.cancel">取消</button>
-                <button type="button" class="button button-primary js-prompt-save" data-i18n="action.save">儲存</button>
+                <button type="button" class="button button-primary js-prompt-save" data-toast="已儲存為新版本|內容欄位不可為空|新增提示詞失敗，請稍後再試" data-i18n-data-toast="toast.savePrompt" data-toast-type="success|warning|error" data-i18n="action.save">儲存</button>
             </div>
         </div>
     </div>

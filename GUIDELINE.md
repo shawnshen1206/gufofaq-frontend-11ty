@@ -201,9 +201,11 @@ ui/pagination/
 - **一個全域資源只能有一個擁有者。** body 捲動鎖一律走 `ui/scroll-lock` 的共享計數器（`window.GufoScrollLock.lock()/.unlock()`），不得自己去寫 `document.body.style.overflow`——跳窗與手機選單各鎖各的話，先關的那個會把還開著的那個一起解鎖（有測試把關）
 - **用 CSS 斷點決定顯示與否的東西，它的 js 不要複寫那個斷點值**：問 CSS 就好（`getComputedStyle(navToggle).display === "none"`）。斷點只有 mixin 那一份真相
 - **視窗尺寸變化會讓「唯一關得掉它的那顆鈕」消失**：手機選單開著時拉寬過收合斷點，漢堡被 CSS 藏起來，遮罩與 body 鎖卻留著 → 只能重整。凡是「只在某斷點內才有觸發器」的開合，都要在 `resize` 時自我收合
-- **`showModal()` 的 `<dialog>` 在瀏覽器的 top layer**：頁面層的 `position: fixed` 不管 z-index 開多大都蓋不過它。跳窗裡彈的 toast 要掛進那個 `<dialog>`（`ui/toast` 已處理：`data-toast` 委派時取 `el.closest("dialog[open]")`）
+- **`showModal()` 的 `<dialog>` 在瀏覽器的 top layer**：頁面層的 `position: fixed` 不管 z-index 開多大都蓋不過它。要蓋過它，自己也得進 top layer —— `#toastContainer` 掛 `popover="manual"`，`ui/toast` 每次彈 toast 前重新 `showPopover()` 一次（top layer 的疊放順序＝進入順序，先進去的反而在下面）。popover 不搶焦點，且 toast 不會隨著跳窗關閉一起消失
 - **markup 零 inline 事件處理器**（`onclick=`／`onClick=`…）與零 `javascript:` href（`javascript:void(0)` 更是一顆死連結）：行為住在元件 js 裡。要「在 markup 宣告一個行為」時，掛**資料屬性**、由 owning 元件的 js 做事件委派——**無條件**開跳窗用 `data-open-modal="<dialog id>"`（`ui/modals`），彈提示用 `data-toast`（＋選填 `data-toast-type`，`ui/toast`），列印本頁用 `data-print`（`ui/print`）。委派掛在 `document` 上，動態插入的元素也吃得到
-  - **能宣告在 markup 的，只有「無條件、且結果不必等 API」的動作。** 開一個固定的窗、彈一句固定的提示、列印本頁——都符合。「儲存 / 刪除 / 上傳 / 套用」的成敗要等 API 回來才知道，靜態掛 `data-toast="已成功儲存"` ＝ 按了就彈綠色成功而其實什麼都沒存，跟寫死 `data-open-modal` 是同一種謊。那些 toast 由業務 js 依 API 結果決定訊息與型別
+  - **切版是原型：每個動作的每一種結果都要演得出來。** 送 API 的按鈕（儲存 / 刪除 / 上傳 / 套用 / 查詢 / 下載）在 `data-toast` 裡用 `|` 列出它**所有**可能的結果，`data-toast-type` 用同樣順序對位；每點一次換下一個。設計師才看得到成功、失敗、警告長什麼樣，React 端也才知道這顆鈕要接哪幾種 toast
+    - 例：`data-toast="帳號資訊已儲存|儲存失敗" data-toast-type="success|error"`。翻譯照舊掛 `data-i18n-data-toast`，`en.json` 的值同樣用 `|` 分隔
+    - 這不是「說謊」——說謊的是**只演成功那一種**（`data-open-modal` 掛在有條件開窗的鈕上就是這種）。列出全部結果才是誠實的原型
   - `data-toast-type` 只准 `success` / `error` / `warning` / `info`（有測試把關）。打錯字不會噴錯，只會彈出一個沒有語意的白盒子
   - **有條件的開窗是業務邏輯，不掛 `data-open-modal`**（先設定要刪哪一列的名字、依模型權限決定開哪一份、驗證失敗才跳…）。那種觸發鈕保留真 app 的 hook class（`.js-apply-production`、`.btn-delete-file`…），切版不假裝它會無條件開窗——掛上去等於在 markup 裡寫了一句謊話。判準不必查表：**hook class 就是「全站 scss 找不到它」的 class**，開窗鈕身上有這種 class 就代表它另有 js 主人（有測試把關）
 - **一個 `<dialog id>` 只能由一個元件宣告。** 兩個元件各寫一份同 id 的彈窗＝兩份會分岔的正本，而且元件庫的示範觸發器只打得開其中一份、另一份變成誰都看不到的死彈窗。真 app 兩個頁面各有一份同 id 的不同彈窗時，**切版要改名**——`id` 不是轉換契約（React 不靠 `getElementById`），真正要原樣保留的是 hook class 與資料屬性

@@ -107,4 +107,6 @@ permalink: 1-2-1_uploadFile_pdf.html
    markup 只有一份正本，見 components/delete-modal（§1-2／§6） #}
 {% set deleteTargetId = "deleteFileName" %}
 {% set deleteConfirmBinding = true %}
+{% set deleteToast = "刪除成功|刪除檔案失敗" %}
+{% set deleteToastKey = "toast.deleteFile" %}
 {% include "components/delete-modal/delete-modal.html" %}

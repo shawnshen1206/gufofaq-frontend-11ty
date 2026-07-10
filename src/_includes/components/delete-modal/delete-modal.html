@@ -20,7 +20,7 @@
                 <div class="modals-footer">
                     <div class="button-row center">
                         <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
-                        <button type="button" class="button button-primary{% if deleteConfirmClass %} {{ deleteConfirmClass }}{% endif %}{% if not deleteConfirmBinding %} btn-close-modals{% endif %}" data-i18n="action.confirm">確認</button>
+                        <button type="button" class="button button-primary{% if deleteConfirmClass %} {{ deleteConfirmClass }}{% endif %}{% if not deleteConfirmBinding %} btn-close-modals{% endif %}"{% if deleteToast %} data-toast="{{ deleteToast }}" data-i18n-data-toast="{{ deleteToastKey }}" data-toast-type="success|error"{% endif %} data-i18n="action.confirm">確認</button>
                     </div>
                 </div>
             </div>

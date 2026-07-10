@@ -60,8 +60,8 @@ permalink: 5-2-1_knowledgeRetrieval.html
          高/中/低優先級各自一組（含 .tablelist-asking 啟用開關），資料化 2-3 筆示例列；未使用為空狀態不需開關 #}
     <div class="block flex-row column gap-10 relative">
         <div class="switch-control-row">
-            <button type="button" id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
-            <button type="button" id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
+            <button type="button" id="openPrioritySwitch" class="button button-border" data-toast="已啟用全部意圖判斷|啟用失敗，請稍後再試" data-i18n-data-toast="toast.enableIntent" data-toast-type="success|error" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
+            <button type="button" id="closePrioritySwitch" class="button button-border" data-toast="已停用全部意圖判斷|停用失敗，請稍後再試" data-i18n-data-toast="toast.disableIntent" data-toast-type="success|error" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
         </div>
 
         {% set priorityLevels = [

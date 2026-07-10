@@ -38,7 +38,9 @@
     </div>
 
     {# toast 由 toast.js 動態塞入；role=status + aria-live 讓螢幕報讀器會念出來（error 型仍屬 polite，避免打斷輸入） #}
-    <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true"></div>
+    {# popover：讓容器進瀏覽器的 top layer，才蓋得過 showModal() 的 <dialog>（見 ui/toast/toast.js）。
+       manual＝不會被 Esc 或點擊外部關掉，由 toast.js 自己開關。 #}
+    <div id="toastContainer" class="toast-container" popover="manual" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <script defer src="./js/scroll-lock.js"></script>
     <script defer src="./js/slide-toggle.js"></script>

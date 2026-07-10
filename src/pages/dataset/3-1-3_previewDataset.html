@@ -116,7 +116,7 @@ permalink: 3-1-3_previewDataset.html
                         <button type="button" class="button-icon no-bg size-sm delete delete-single-btn" title="刪除" data-i18n-title="action.delete">
                             <span class="sr-only" data-i18n="action.delete">刪除</span>
                         </button>
-                        <button type="button" class="button-icon no-bg size-sm download download-file-btn" title="下載" data-i18n-title="action.download">
+                        <button type="button" class="button-icon no-bg size-sm download download-file-btn" data-toast="準備下載檔案...|此來源無法下載|下載失敗" data-i18n-data-toast="toast.downloadFile" data-toast-type="info|warning|error" title="下載" data-i18n-title="action.download">
                             <span class="sr-only" data-i18n="action.download">下載</span>
                         </button>
                     </div>
@@ -142,4 +142,6 @@ permalink: 3-1-3_previewDataset.html
    API 刪完 (:498) 才 closeModal。寫死 btn-close-modals ＝ 按了確認、窗關了、什麼都沒刪。 #}
 {% set deleteConfirmBinding = true %}
 {% set deleteConfirmClass = "confirm-delete-btn" %}
+{% set deleteToast = "刪除成功|刪除檔案失敗" %}
+{% set deleteToastKey = "toast.deleteFile" %}
 {% include "components/delete-modal/delete-modal.html" %}

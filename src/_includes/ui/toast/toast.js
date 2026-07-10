@@ -1,28 +1,10 @@
-// 全域 showToast(message, type, duration, host)：改寫自真實 app js/toast.js，原生 DOM API，無 jQuery/vendor。
+// 全域 showToast(message, type, duration)：改寫自真實 app js/toast.js，原生 DOM API，無 jQuery/vendor。
 //   type：'success'（預設，綠）/ 'error'（紅）/ 'warning'（黃）/ 'info'（藍）—— 真實 app 只有 success，多色為本專案擴充。
-//   host：toast 要掛在哪個 <dialog> 裡（省略＝掛頁面層的 #toastContainer）。
 //   相容舊呼叫 showToast(msg, 2000)：第二參數是數字時視為 duration。
-// 另外：自動把任何帶 data-toast 的元素（如聊天室 .copyBtn）點擊 → 彈出該訊息的 toast（可用 data-toast-type 指定顏色）。
 //
-// 為什麼 toast 要認 dialog：showModal() 的 <dialog> 在瀏覽器的 top layer，
-// 頁面層的 position:fixed 不管 z-index 開多大都蓋不過它。跳窗裡按複製鈕，
-// toast 會被畫在跳窗底下看不見。真實 app 也是把 toast 塞進所在的 .modals 裡（Standard/js/main.js:71）。
-// 每個 <dialog> 需要自己的 live region。DOMContentLoaded 時會替當時在場的 dialog 先建好
-// （aria-live 區塊必須先存在，內容之後才變動，螢幕報讀器才會念）；之後才插入的 dialog 在這裡補建 ——
-// 少了這行，動態 dialog 裡的 toast 會掉回頁面層的 #toastContainer，被 top layer 蓋住、完全看不見。
-function ensureToastRegion(dialog) {
-    let region = dialog.querySelector(':scope > .toast-region');
-    if (region) return region;
-    region = document.createElement('div');
-    region.className = 'toast-region';
-    region.setAttribute('role', 'status');
-    region.setAttribute('aria-live', 'polite');
-    region.setAttribute('aria-atomic', 'true');
-    dialog.appendChild(region);
-    return region;
-}
-
-function showToast(message, type = 'success', duration = 3000, host = null) {
+// toast 永遠掛在頁面層唯一的 #toastContainer。它能蓋過 showModal() 的 <dialog>，
+// 是因為容器本身掛 popover —— 見 raiseContainer()。
+function showToast(message, type = 'success', duration = 3000) {
     // 舊簽名相容：showToast(msg, duration)
     if (typeof type === 'number') { duration = type; type = 'success'; }
 
@@ -48,30 +30,57 @@ function showToast(message, type = 'success', duration = 3000, host = null) {
     toastText.textContent = message;
     toast.appendChild(toastText);
 
-    const container =
-        (host && ensureToastRegion(host)) ||
-        document.getElementById('toastContainer') ||
-        document.body;
+    const container = document.getElementById('toastContainer') || document.body;
+    raiseContainer(container);
     container.appendChild(toast);
 
     setTimeout(function () { toast.classList.add('show'); }, 10);
     setTimeout(function () {
         toast.classList.remove('show');
-        setTimeout(function () { toast.remove(); }, 300);
+        setTimeout(function () {
+            toast.remove();
+            lowerIfEmpty(container);
+        }, 300);
     }, duration);
 
     return toast;
 }
 
+// 把容器抬到 top layer 的最上面。
+//
+// 為什麼需要：`showModal()` 的 `<dialog>` 住在瀏覽器的 top layer，頁面層的 `position: fixed`
+// 不管 z-index 開多大都蓋不過它 —— 跳窗裡按複製鈕，toast 會被畫在跳窗底下看不見。
+// popover 也進 top layer，而 top layer 的疊放順序＝**進入順序**（實測：先開 popover 再開 dialog，
+// popover 反而在下面）。所以每次彈 toast 前重新進場一次，就一定蓋在當下開著的跳窗上面。
+// popover 不搶焦點（實測：showPopover() 後 activeElement 不變），也不會被 dialog 的 inert 影響繪製。
+//
+// 舊瀏覽器沒有 showPopover：容器退化成一般的頁面層節點，toast 在跳窗裡會被蓋住 —— 只是視覺退化，不會壞。
+function raiseContainer(el) {
+    if (typeof el.showPopover !== 'function') return;
+    try {
+        if (el.matches(':popover-open')) el.hidePopover();
+        el.showPopover();
+    } catch (e) { }
+}
+
+function lowerIfEmpty(el) {
+    if (typeof el.hidePopover !== 'function' || el.childElementCount > 0) return;
+    try { el.hidePopover(); } catch (e) { }
+}
+
 // data-toast 元素點擊 → 彈 toast（event delegation，涵蓋 .copyBtn 等；真實 app 為 $('.copyBtn').on('click',...)）
 document.addEventListener('DOMContentLoaded', function () {
-    // 選 dialog 而非 .modals，才不會在 toast 的 js 裡指名別的元件的 class。
-    document.querySelectorAll('dialog').forEach(ensureToastRegion);
-
     document.addEventListener('click', function (e) {
         const el = e.target.closest('[data-toast]');
         if (!el) return;
-        showToast(el.getAttribute('data-toast'), el.getAttribute('data-toast-type') || 'success', 3000,
-            el.closest('dialog[open]'));
+
+        // 一顆鈕可以宣告**多個結果**，用 `|` 分隔：切版是原型，API 的成功／失敗／警告都要演得出來，
+        // 每點一次換下一個。data-toast-type 用同樣的順序對位，少給就沿用最後一個。
+        // 用 `|` 而不是另開屬性，是為了讓 data-i18n-data-toast 照舊翻譯整串（en.json 的值也用 `|` 分隔）。
+        const messages = el.getAttribute('data-toast').split('|');
+        const types = (el.getAttribute('data-toast-type') || 'success').split('|');
+        const at = el._gufoToastAt || 0;
+        el._gufoToastAt = (at + 1) % messages.length;
+        showToast(messages[at].trim(), (types[at] || types[types.length - 1]).trim());
     });
 });

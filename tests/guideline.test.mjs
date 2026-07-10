@@ -249,9 +249,12 @@ test("§4 每個 <img> 都要 decoding=\"async\"，且不得 loading=\"lazy\"", 
     assert.equal(hits.length, 0, fail(hits));
 });
 
-test("§5 data-toast-type 只准四種語意，且要有對應的 .toast-<type> 樣式", () => {
+test("§5 data-toast 的結果數與 data-toast-type 的語意數要對得起來", () => {
     // toast.js 直接把 type 串成 class（'toast toast-' + type）。打成 data-toast-type="err"
     // 不會噴錯，只會少掉那條 .toast-err 規則 —— 彈出一個沒有顏色、沒有語意的白盒子。
+    //
+    // 一顆鈕可以用 `|` 宣告多個結果（模擬 API 的成功／失敗／警告），每點一次換下一個。
+    // 型別數多過結果數＝有語意永遠演不出來；少於則沿用最後一個（合法，例如三個結果都是 success）。
     const TYPES = ["success", "error", "warning", "info"];
     const css = read("dist/css/main.css");
     for (const t of TYPES)
@@ -260,12 +263,20 @@ test("§5 data-toast-type 只准四種語意，且要有對應的 .toast-<type> 
     let count = 0;
     const hits = [];
     for (const f of distHtml)
-        for (const m of read(`dist/${f}`).matchAll(/data-toast-type="([^"]*)"/g)) {
+        for (const { attrs, raw } of tagsOf(distDoc(f))) {
+            const msg = attrs.match(/(?:^|\s)data-toast="([^"]*)"/);
+            if (!msg) continue;
             count++;
-            if (!TYPES.includes(m[1])) hits.push(`dist/${f}  data-toast-type="${m[1]}" 不是 ${TYPES.join(" / ")}`);
+            const types = (attrs.match(/(?:^|\s)data-toast-type="([^"]*)"/) || [, "success"])[1].split("|");
+            const messages = msg[1].split("|");
+            for (const t of types)
+                if (!TYPES.includes(t.trim())) hits.push(`dist/${f}  data-toast-type 的 "${t}" 不是 ${TYPES.join(" / ")}`);
+            if (types.length > messages.length)
+                hits.push(`dist/${f}  ${types.length} 個語意配 ${messages.length} 個結果，多出來的永遠演不到：<${raw.slice(0, 60)}`);
+            if (messages.some((m) => !m.trim()))
+                hits.push(`dist/${f}  data-toast 有空的結果（多打了一個 |）：<${raw.slice(0, 60)}`);
         }
-    // 元件庫頁一定示範 error / warning / info 三種，故 count 必 > 0
-    assert.ok(count > 0, "dist 裡一個 data-toast-type 都掃不到 —— 這條測試在空轉");
+    assert.ok(count > 0, "dist 裡一個 data-toast 都掃不到 —— 這條測試在空轉");
     assert.equal(hits.length, 0, fail(hits));
 });
 
