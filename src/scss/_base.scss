@@ -1,6 +1,7 @@
 // 全站基底：取自真實 app component.scss 的「樣式共用」與「main主要內容區」，
 // 另補上現代瀏覽器基底（color-scheme／focus-visible／reduced-motion／box-sizing／媒體元素）。
 @use "mixin" as *;
+@use "size" as *;
 
 /*===============================
     現代瀏覽器基底
@@ -125,12 +126,12 @@ a {
 }
 
 .wrap {
-    max-width: 1560px;
+    max-width: $wrap-max;
     width: 100%;
     margin: 0 auto;
 
-    @media screen and (max-width: 1560px) {
-        max-width: 1200px;
+    @media screen and (max-width: $wrap-max) {
+        max-width: $wrap-max-narrow;
     }
 }
 

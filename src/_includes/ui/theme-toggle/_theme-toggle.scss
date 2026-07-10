@@ -1,9 +1,11 @@
+@use "../../../scss/size" as *;
+
 .theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: $control-btn-size;
+    height: $control-btn-size;
     padding: 0;
     border: 0;
     border-radius: 50%;

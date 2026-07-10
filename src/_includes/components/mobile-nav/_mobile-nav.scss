@@ -1,5 +1,6 @@
 // 從 component.scss 的「mobile-nav」區段逐字抽出（僅本元件的 class）
 @use "../../../scss/mixin" as *;
+@use "../../../scss/size" as *;
 
 .nav-toggle {
     display: none;
@@ -28,7 +29,7 @@
     left: 0;
     z-index: 100;
     width: 100%;
-    padding-top: 56px;
+    padding-top: $header-height;
 }
 
 // 限定在 .mobile-nav 底下：.overlay 是很通用的名字，不限定會灌到任何用了這個 class 的元素上
@@ -36,7 +37,7 @@
     width: 100%;
     height: 100%;
     position: fixed;
-    top: 56px;
+    top: $header-height;
     left: 0;
     z-index: 97;
     background-color: var(--overlay);
@@ -52,8 +53,8 @@
 
 .mobile-menu-wrap {
     width: 100%;
-    max-height: calc(100vh - 56px);
-    max-height: calc(100dvh - 56px); // 行動瀏覽器：扣掉會伸縮的網址列
+    max-height: calc(100vh - #{$header-height});
+    max-height: calc(100dvh - #{$header-height}); // 行動瀏覽器：扣掉會伸縮的網址列
     overflow: auto;
     background-color: var(--surface-raised);
     position: relative;

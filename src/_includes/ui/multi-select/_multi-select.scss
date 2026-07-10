@@ -4,6 +4,8 @@
 // 視覺數值（顏色變數、border、padding、min-height、chip 樣式、下拉箭頭圖示）取自真實 app
 // scss/component.scss 第 993-1133 行（.multiSelect / select2 多選樣式改寫區段），重新對應到本檔自訂的
 // class 名稱（.multi-select-control / .multi-select-tag / .multi-select-search / .multi-select-dropdown）。
+@use "../../../scss/size" as *;
+
 @use "../../../scss/mixin" as *;
 
 .multi-select {
@@ -26,7 +28,7 @@
 // 對應真實 app：.select2-container--default .select2-selection--multiple
 .multi-select-control {
     width: 100%;
-    min-height: 56px;
+    min-height: $field-control-height;
     padding: 7px 32px 7px 8px;
     border: 1px solid var(--border);
     border-radius: 4px;

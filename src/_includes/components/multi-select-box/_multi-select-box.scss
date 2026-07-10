@@ -1,9 +1,11 @@
 // 逐字複製自真實 app 的 scss/component.scss「1-1-4 欄位對應」區段（verbatim，只搬移位置，line 3151-3162）
 // 1-1-4 欄位對應
+@use "../../../scss/size" as *;
+
 .multi-select-box {
     // §4 隔離：改用本元件自己命名的 class，不指名 ui/form-control 的 .form-control
     .ms-control {
-        min-height: 56px;
+        min-height: $field-control-height; // 與左欄的 .multi-select-control 等高（見 _size.scss）
         height: auto;
         padding: 0.5rem;
     }

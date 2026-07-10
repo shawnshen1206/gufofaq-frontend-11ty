@@ -421,9 +421,12 @@ test("GUIDELINE.md 不放會腐化的枚舉（頁數、元件數）", () => {
 // ─────────── 地毯式稽核抓到、但既有測試沒涵蓋的規則 ───────────
 
 test("§4 可點的東西一律用真 button，且不得省略 type", () => {
+    // 掃的是原始碼（`{% if %}` 兩個分支都要驗），所以要先把 {# #} 註解挖掉——
+    // 檔頭註解裡寫「一律用真 `<button>`」會被 tagsOf 當成一顆沒有 type 的按鈕。
+    const stripNjk = (s) => s.replace(/\{#[\s\S]*?#\}/g, "");
     const hits = [];
     for (const f of srcHtml)
-        for (const { tag, attrs, raw } of tagsOf(read(f)))
+        for (const { tag, attrs, raw } of tagsOf(stripNjk(read(f))))
             if (tag === "button" && !/\btype=/.test(attrs)) hits.push(`${f}  ${raw.slice(0, 90)}`);
     assert.equal(hits.length, 0, `<button> 缺 type（預設是 submit，會誤送表單）：\n${fail(hits)}`);
 });
@@ -535,9 +538,12 @@ test("§9 裸元素選擇器只准出現在 _normalize / _base", () => {
                         // 4. 屬性／偽類要剝掉再比對元素名，否則 `input[type="checkbox"] {}` 這種
                         //    一樣會洩漏全站的寫法會靜默漏網。但 `body.guideline-page`、
                         //    `button.form-control` 有 class 收窄，不洩漏 → 只在整段沒有 . / # 時才算裸。
+                        //    判斷「有沒有 class/id 收窄」前，要先把整段屬性選擇器連值一起挖掉——
+                        //    否則 `img[src="a.png"]`、`a[href="#x"]` 的值裡那個 . / # 會被誤當成收窄。
                         const compound = group.trim().split(/[\s>+~]/)[0];
-                        const elem = compound.split(/[.#:[]/)[0];
-                        if (/^[a-z][a-z0-9]*$/.test(elem) && ELEMENTS.has(elem) && !/[.#]/.test(compound))
+                        const bare = compound.replace(/\[[^\]]*\]/g, "");
+                        const elem = bare.split(/[.#:]/)[0];
+                        if (/^[a-z][a-z0-9]*$/.test(elem) && ELEMENTS.has(elem) && !/[.#]/.test(bare))
                             hits.push(`${f}:${selLine}  ${group.trim()}`);
                     }
                 }

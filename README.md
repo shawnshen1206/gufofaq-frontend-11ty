@@ -57,6 +57,7 @@ src/
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         共用 mixin：scrollbar 系列、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
+│   ├── _size.scss          跨元件必須同值的尺寸（header 高、控制鈕高、欄位高、.wrap 內容寬）；純變數不產生 CSS
 │   ├── _normalize.scss     vendor reset
 │   ├── _base.scss          標籤預設 + 現代瀏覽器基底（color-scheme / :focus-visible / reduced-motion / box-sizing）
 │   ├── _utilities.scss     工具 class：text-*/flex-row/gap-*/col-*/mt-*/mb-*/my-*/flex-1…

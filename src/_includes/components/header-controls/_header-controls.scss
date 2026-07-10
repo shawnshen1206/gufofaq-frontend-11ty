@@ -1,4 +1,6 @@
 // header 右側控制群（語言＋深淺），主站 header 與前台 chatbot-header 共用。
+@use "../../../scss/size" as *;
+
 .header-controls {
     display: flex;
     align-items: center;
@@ -8,7 +10,7 @@
 
 // 語言鈕：文字藥丸，尺寸/色彩對齊 theme-toggle（EN↔中，標籤由 lang-toggle.js 管理）。色值走 token，深色自動適配。
 .lang-toggle {
-    height: 36px;
+    height: $control-btn-size; // 與 theme-toggle 等高（見 _size.scss）
     min-width: 46px; // 「EN」(45px) 比「中」(44px) 寬 —— 取下限抹平，切語言時 header 不跳動
     padding: 0 0.75rem;
     border: 1px solid var(--border);

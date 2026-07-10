@@ -14,8 +14,8 @@ permalink: 1-1-1_dataImport.html
 </div>
 
 {# 選擇資料集：真實頁 pages/dataImport/1-1-1_dataImport.html 的「模擬select」觸發 datasetModal，
-     class 沿用真實系統（同 ui/form-control 的 .field.select-wrap 寫法），onclick="openModal(...)"
-     沿用 ui/modals 既有 window.openModal 靜態呼叫方式（同 ui/link-modal 既有寫法） #}
+     class 沿用真實系統（同 ui/form-control 的 .field.select-wrap 寫法）。
+     開窗掛 data-open-modal，由 ui/modals 的事件委派接手（§5：不寫 inline onclick） #}
 <div class="form-group row mt-10">
     <div class="label">
         <label id="datasetNameLabel" class="control-label" data-i18n="dataImport.datasetName">資料集名稱</label>
@@ -23,7 +23,7 @@ permalink: 1-1-1_dataImport.html
     <div class="field select-wrap">
         {# 模擬 select：用真 <button type="button"> 而非 div[role=button]，否則 Enter/Space 不會觸發（原生按鈕免費具備）
              可及名稱用 aria-labelledby 接上左側 label（label 無 for 可指，因為控制項不是表單元素） #}
-        <button type="button" aria-labelledby="datasetNameLabel" class="form-control select-md" onclick="openModal('datasetModal');">
+        <button type="button" aria-labelledby="datasetNameLabel" class="form-control select-md" data-open-modal="datasetModal">
             <span class="select-placeholder" data-i18n="dataImport.pleaseSelect">請選擇</span>
             <span class="select-value hidden"></span>
         </button>

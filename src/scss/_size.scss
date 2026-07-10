@@ -1,0 +1,20 @@
+// 全域尺寸 token：只放「兩個以上元件必須同值」的尺寸（§4）。
+// 判準是「一邊改了、另一邊沒跟就會壞掉」——元件自己的一次性尺寸不放這裡。
+// 純變數檔，不產生 CSS，故不必進 main.scss；用到的元件各自 @use "../../../scss/size" as *。
+
+// header 收成漢堡時的高度。mobile-nav 的浮層起點、選單最大高度全靠它對齊；
+// 兩者若不同步就會露縫或蓋住 header。
+$header-height: 56px;
+
+// header 右側控制列並排的圓鈕（ui/theme-toggle 與 header-controls 的語言鈕）必須等高，
+// 否則那一列會參差。
+$control-btn-size: 36px;
+
+// 欄位對應頁的左右兩欄逐列對齊：左欄是 ui/multi-select 增強後的控制項，
+// 右欄是 multi-select-box 的預覽輸入框，高度不同就會錯位。
+$field-control-height: 56px;
+
+// 內容容器最大寬（_base.scss 的 .wrap）。ui/countdown-box 的底紋要在同一個門檻換排列方式，
+// 才會跟內容同寬同步縮。
+$wrap-max: 1560px;
+$wrap-max-narrow: 1200px;

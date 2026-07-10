@@ -1,5 +1,6 @@
 // 跳窗開關：標準 <dialog> API（showModal / close），改寫自真實 app 的 js/main.js openModal/closeModal
 // 拿掉 flatpickr 初始化（日期選擇不在切版範圍）；曝露 window.openModal / window.closeModal 供其他元件呼叫（例：footer.js）
+// 開窗鈕掛 data-open-modal="<dialog id>" 即可（事件委派），markup 不寫 inline onclick
 document.addEventListener("DOMContentLoaded", function () {
     function lockBodyScroll() {
         var hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
@@ -47,6 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 closeModal(modal);
             }
         });
+    });
+
+    // 開窗鈕：掛 data-open-modal="<dialog id>" 即可，不必寫 inline onclick（§5：行為綁在 js 裡）。
+    // 用事件委派，故後續動態插入的按鈕也吃得到（同 toast 的 data-toast 機制）。
+    document.addEventListener("click", function (e) {
+        var trigger = e.target.closest("[data-open-modal]");
+        if (trigger) openModal(trigger.getAttribute("data-open-modal"));
     });
 
     // 供其他元件（例：footer.js）呼叫

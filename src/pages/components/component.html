@@ -493,27 +493,19 @@ bodyClass: guideline-page
             <h2 class="section-title"><span>16</span><span>Modal跳窗</span></h2>
             <div>
                 <div class="flex-row gap-16 flex-wrap align-items-center">
-                    <button type="button" class="button button-primary"
-                        onclick="openModal('datasetModal');">開啟選擇資料集modal</button>
-                    <button type="button" class="link-modal"
-                        onclick="openModal('previewTextModal');">檔案名稱.pdf</button>
-                    <button type="button" class="button-icon no-bg size-sm edit"
-                        onclick="openModal('editModal');" title="編輯">
+                    <button type="button" class="button button-primary" data-open-modal="datasetModal">開啟選擇資料集modal</button>
+                    <button type="button" class="link-modal" data-open-modal="previewTextModal">檔案名稱.pdf</button>
+                    <button type="button" class="button-icon no-bg size-sm edit" data-open-modal="editModal" title="編輯">
                         <span class="sr-only">編輯</span>
                     </button>
-                    <button type="button" class="button-icon no-bg size-sm delete"
-                        onclick="openModal('deleteModal')" title="刪除">
+                    <button type="button" class="button-icon no-bg size-sm delete" data-open-modal="deleteModal" title="刪除">
                         <span class="sr-only">刪除</span>
                     </button>
-                    <button type="button" class="button button-primary"
-                        onclick="openModal('disclaimerModal')">開啟免責聲明modal</button>
-                    <button type="button" class="button button-primary"
-                        onclick="openModal('intentionModal')">開啟意圖判斷啟用modal</button>
-                    <button type="button" class="button button-dark"
-                        onclick="openModal('ProductionSettingsNoPermissionModal');">套用為正式設定（無權限）</button>
-                    <button type="button" class="button button-dark"
-                        onclick="openModal('ProductionSettingsModal');">套用為正式設定</button>
-                    <button type="button" class="info-btn" title="配置說明" onclick="openModal('knowledgeModal');">
+                    <button type="button" class="button button-primary" data-open-modal="disclaimerModal">開啟免責聲明modal</button>
+                    <button type="button" class="button button-primary" data-open-modal="intentionModal">開啟意圖判斷啟用modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="ProductionSettingsNoPermissionModal">套用為正式設定（無權限）</button>
+                    <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal">套用為正式設定</button>
+                    <button type="button" class="info-btn" title="配置說明" data-open-modal="knowledgeModal">
                         <img src="./images/icon_info.png" width="48" height="48" decoding="async" alt="" class="icon">
                     </button>
                 </div>

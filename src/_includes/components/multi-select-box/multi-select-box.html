@@ -45,9 +45,11 @@
                         <label for="ms-preview-{{ field.key }}" class="control-label" data-i18n="field.{{ field.key }}">{{ field.label }}</label>
                     </div>
                     <div class="field col-12-sm">
-                        <input type="text" id="ms-preview-{{ field.key }}" class="form-control disabled ms-control preview-{{ field.key }}" value="{{ field.preview }}" disabled>
+                        <input type="text" id="ms-preview-{{ field.key }}" class="form-control disabled ms-control preview-{{ field.key }}{% if field.error %} error{% endif %}" value="{{ field.preview }}" disabled>
                         {% if field.error %}
-                        <span class="error-prompt date-error" role="alert" style="display: none;" data-i18n="dataImport.formatWarning">此格式可能無法被正確讀取</span>
+                        {# .error-prompt 預設就 display:none，靠父層 .form-group:has(.error) 揭示（見 _form-control.scss）。
+                           原本這裡寫死行內 display:none，等於把揭示機制永久壓死——error: true 的示範欄從來沒顯示過警告。 #}
+                        <span class="error-prompt date-error" role="alert" data-i18n="dataImport.formatWarning">此格式可能無法被正確讀取</span>
                         {% endif %}
                     </div>
                 </div>

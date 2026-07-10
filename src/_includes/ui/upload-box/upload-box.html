@@ -1,19 +1,26 @@
-{# 生產 markup（由 pages/dataImport/1-1-2_uploadFile_excel.html include；component.html 亦展示一份）。class 沿用真實系統。
-     真實 app 上傳完由業務 JS 自動跳到預覽頁（此頁無下一步按鈕，§5 不做）；簡化版靜態跳轉：
-     頁面 set uploadNextHref 時，把上傳區改成連結（點放置區＝前進到下一頁），未設維持 div 不跳轉。 #}
+{# 檔案上傳區。參數由使用頁面 include 前 set（§6：會因頁面而異的資料不寫死在元件裡）：
+     uploadNextHref：設了就把放置區變成連結（點放置區＝前進到下一頁）；未設則是按鈕，點了開檔案窗
+     uploadAccept：accept 屬性（預設 ".xlsx"）
+     uploadMultiple：true 時可多選
+     uploadHintText / uploadHintKey：放置區主提示（預設「點選或拖曳檔案至該區域上傳」／comp.uploadDropHint）
+     uploadDescText / uploadDescKey：格式與大小說明（預設 xlsx／10MB／comp.uploadDescXlsx）
+   真實 app 上傳完由業務 JS 自動跳到預覽頁（此頁無下一步按鈕，§5 不做）。
+   放置區是可點的東西，故一律用真 `<a>`／`<button>`，不用 div 假扮（§4）。
+   `<input type=file>` 放在放置區外面（`<a>`／`<button>` 都不能包互動內容），且不寫死 id——
+   由 upload-box.js 以 `.upload-input` class 綁定（§4：沒有迴圈變數的元件不寫死 id）。 #}
 {% if uploadNextHref %}
 <a href="{{ uploadNextHref }}" class="upload-box">
     <div class="upload-text">
-        <div class="upload-message" data-i18n="comp.uploadDropHint">點選或拖曳檔案至該區域上傳</div>
-        <div class="upload-desc" data-i18n="comp.uploadDescXlsx">支援上傳xlsx檔案，檔案最大不超過10MB</div>
+        <div class="upload-message" data-i18n="{{ uploadHintKey or 'comp.uploadDropHint' }}">{{ uploadHintText or '點選或拖曳檔案至該區域上傳' }}</div>
+        <div class="upload-desc" data-i18n="{{ uploadDescKey or 'comp.uploadDescXlsx' }}">{{ uploadDescText or '支援上傳xlsx檔案，檔案最大不超過10MB' }}</div>
     </div>
 </a>
 {% else %}
-<div class="upload-box">
+<button type="button" class="upload-box">
     <div class="upload-text">
-        <div class="upload-message" data-i18n="comp.uploadDropHint">點選或拖曳檔案至該區域上傳</div>
-        <div class="upload-desc" data-i18n="comp.uploadDescXlsx">支援上傳xlsx檔案，檔案最大不超過10MB</div>
+        <div class="upload-message" data-i18n="{{ uploadHintKey or 'comp.uploadDropHint' }}">{{ uploadHintText or '點選或拖曳檔案至該區域上傳' }}</div>
+        <div class="upload-desc" data-i18n="{{ uploadDescKey or 'comp.uploadDescXlsx' }}">{{ uploadDescText or '支援上傳xlsx檔案，檔案最大不超過10MB' }}</div>
     </div>
-</div>
+</button>
 {% endif %}
-<input type="file" id="fileInput" class="upload-input" accept=".xlsx" hidden />
+<input type="file" class="upload-input" accept="{{ uploadAccept or '.xlsx' }}"{% if uploadMultiple %} multiple{% endif %} aria-label="上傳檔案" data-i18n-aria-label="dataImport.uploadFile" hidden>
