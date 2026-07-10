@@ -1,27 +1,24 @@
-// body 捲動鎖：全站唯一寫 document.body.style.overflow 的地方（有測試把關）。
+// 捲軸寬度量測。**鎖捲動本身是純 CSS**（`_base.scss` 的 `html:has(dialog.modals[open]) { overflow: hidden }`）。
 //
-// 為什麼要共享：跳窗（ui/modals）與手機選單（components/mobile-nav）都要鎖 body。
-// 兩邊各鎖各的話，先關的那個會把「另一個還開著」的鎖一起解掉 —— 同一個全域資源、兩個互不知情的擁有者。
-// 這裡用計數器：lock() 累加、unlock() 遞減，歸零才真的放開。巢狀開窗也吃這條。
+// 曾經這裡是一個共享計數器：跳窗與手機選單是兩個互不知情的擁有者，各鎖各的話，
+// 先關的那個會把還開著的那個一起解鎖。`:has()` 是宣告式的 OR —— 狀態就在 DOM 上，
+// 計數器不可能失衡，巢狀開窗、resize 自動收合、Esc 全部自動成立，一行 js 都不必寫。
 //
-// 純函式工具，載入時不碰 DOM，故不需要 DOMContentLoaded 包裹。
+// CSS 唯一做不到的是「捲軸有多寬」：鎖起來時捲軸消失，不補一樣寬的 padding，版面就會橫向跳一下。
+// 而且 CSS 也分不出「這一頁本來有沒有捲軸」（全站 28 頁有 19 頁在桌機寬度下根本不會捲），
+// 所以 `scrollbar-gutter: stable` 那類做法會在那 19 頁上反而製造位移。
+// 這支只做一件事：把當下的捲軸寬度寫進 `--scrollbar-width`，讓 CSS 的鎖規則自己讀。
+//
+// 純函式，載入時只讀尺寸、不改結構，故不需要 DOMContentLoaded 包裹。
 (function () {
-    var count = 0;
+    var root = document.documentElement;
 
-    function lock() {
-        if (count++ > 0) return;
-        // 捲軸消失會讓版面橫向跳一下，補等寬 padding 抵銷
-        var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = "hidden";
-        if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + "px";
+    function measure() {
+        // 鎖著的時候捲軸已經不見了，量到的會是 0 —— 那會把上一次量到的正確值蓋掉，別量。
+        if (getComputedStyle(root).overflow === "hidden") return;
+        root.style.setProperty("--scrollbar-width", window.innerWidth - root.clientWidth + "px");
     }
 
-    function unlock() {
-        if (count > 0) count--;
-        if (count > 0) return;
-        document.body.style.overflow = "";
-        document.body.style.paddingRight = "";
-    }
-
-    window.GufoScrollLock = { lock: lock, unlock: unlock };
+    measure();
+    window.addEventListener("resize", measure);
 })();

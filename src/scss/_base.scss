@@ -95,6 +95,21 @@ html {
     text-size-adjust: 100%;
 }
 
+// body 捲動鎖。宣告式：DOM 上「有跳窗開著」或「手機選單開著」就鎖，沒有就不鎖。
+//
+// 曾經這是一支 js（ui/scroll-lock）維護的計數器 —— 因為跳窗與手機選單是兩個互不知情的擁有者，
+// 各鎖各的話，先關的那個會把還開著的那個一起解鎖。`:has()` 是宣告式的 OR：狀態就在 DOM 上，
+// 計數器不可能失衡，巢狀開窗也自動成立。
+//
+// padding-right 補的是「鎖起來時消失的那條捲軸」的寬度，否則版面會橫跳一下。
+// CSS 量不到捲軸有多寬（也分不出這一頁本來有沒有捲軸），故由 ui/scroll-lock 寫進 --scrollbar-width；
+// 沒有捲軸的頁面它是 0px，於是這條 padding 什麼也不做。
+html:has(dialog.modals[open]),
+html:has(.nav-toggle.active) {
+    overflow: hidden;
+    padding-right: var(--scrollbar-width, 0px);
+}
+
 body {
     font-family: var(--fontFamily);
     font-size: 1rem;

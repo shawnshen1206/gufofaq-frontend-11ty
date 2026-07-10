@@ -7,37 +7,23 @@
 // 這裡不再有 300ms 的 setTimeout、不再有 `.show`/`.hide` class、也不再需要「關到一半又重開」的重入守衛：
 // `close()` 立刻拿掉 `[open]`，瀏覽器自己把元素撐到退場動畫跑完；中途 `showModal()` 會讓 transition 原生反向。
 document.addEventListener("DOMContentLoaded", function () {
-    // body 捲動鎖走 ui/scroll-lock 的共享計數器（巢狀開窗、以及和手機選單搶同一個 body 都靠它）。
-    // 懶讀而不是在這裡取值：一旦 scroll-lock.js 沒載入，取值會擲例外並中斷整個 DOMContentLoaded callback，
-    // 於是連關窗鈕、Esc 解鎖、data-open-modal 委派全部沒註冊 —— 少一支捲動鎖不該讓所有跳窗一起死。
-    function lockBodyScroll() { if (window.GufoScrollLock) window.GufoScrollLock.lock(); }
-    function unlockBodyScroll() { if (window.GufoScrollLock) window.GufoScrollLock.unlock(); }
+    // body 捲動鎖不在這裡：`_base.scss` 的 `html:has(dialog.modals[open]) { overflow: hidden }` 宣告式地鎖。
+    // `[open]` 一被 close() 拿掉，鎖就自動解開 —— Esc、巢狀、和手機選單同時開，全部免費。
 
     function openModal(id) {
         var modal = document.getElementById(id);
         if (!modal || modal.open) return;
-
         modal.showModal();
-        modal._gufoLocked = true; // 只有「我鎖的」才由我解；別的路徑關掉的 dialog 不該去減別人的計數
-        lockBodyScroll();
     }
 
     function closeModal(modal) {
         if (!modal || !modal.open) return;
-        modal.close(); // 退場動畫由 CSS 接手；收尾統一走原生的 close 事件
+        modal.close(); // 退場動畫由 CSS 接手（_modals.scss 的 allow-discrete）
     }
 
     document.querySelectorAll(".modals").forEach(function (modal) {
         modal.addEventListener("click", function (e) {
             if (e.target.closest(".btn-close-modals")) closeModal(modal);
-        });
-
-        // 收尾統一走原生的 close 事件。**按 Esc 是瀏覽器直接關掉 dialog、不會經過 closeModal()**，
-        // 少了這條，body 的 overflow:hidden 就永遠解不開，整頁捲動被鎖死。
-        modal.addEventListener("close", function () {
-            if (!modal._gufoLocked) return;
-            modal._gufoLocked = false;
-            unlockBodyScroll();
         });
     });
 

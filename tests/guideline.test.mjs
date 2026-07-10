@@ -598,21 +598,25 @@ test("§5 會去 DOM 找元素的元件 js 都在 DOMContentLoaded 內綁定", (
     assert.equal(bad.length, 0, fail(bad));
 });
 
-test("§5 body 捲動鎖只能有一個擁有者（ui/scroll-lock）", () => {
+test("§5 body 捲動鎖是純 CSS，js 不得自己鎖", () => {
     // 曾經：modals.js 與 mobile-nav.js 各寫一份 lock/unlock，各自直接改 document.body.style.overflow。
     // 兩個互不知情的擁有者搶同一個全域資源，先關的那個會把還開著的那個一起解鎖。
-    const OWNER = "src/_includes/ui/scroll-lock/scroll-lock.js";
-    assert.ok(srcJs.includes(OWNER), `${OWNER} 不見了 —— 這條測試在空轉`);
+    // 後來抽成共享計數器；現在連計數器都不必了 —— `html:has(dialog.modals[open])` 是宣告式的 OR，
+    // 狀態就在 DOM 上，不可能失衡。js 只剩「量捲軸寬度」那件 CSS 做不到的事。
+    const css = read("dist/css/main.css");
+    assert.ok(css.includes("html:has(dialog.modals[open])"), "_base.scss 的 :has() 捲動鎖不見了 —— 這條測試在空轉");
+    assert.ok(css.includes("html:has(.nav-toggle.active)"), "_base.scss 少了手機選單那半邊的捲動鎖");
+
     const hits = [];
-    for (const f of srcJs) {
-        if (f === OWNER) continue;
+    for (const f of srcJs)
         read(f).split(/\r?\n/).forEach((raw, i) => {
             const line = raw.split("//")[0];
-            if (/document\.body\.style\.(overflow|paddingRight)\s*=/.test(line))
+            if (/(document\.body|document\.documentElement)\.style\.(overflow|paddingRight)\s*=/.test(line))
                 hits.push(`${f}:${i + 1}  ${line.trim()}`);
+            if (/\.style\.setProperty\(\s*["']overflow/.test(line))
+                hits.push(`${f}:${i + 1}  用 setProperty 繞過：${line.trim()}`);
         });
-    }
-    assert.equal(hits.length, 0, `改走 window.GufoScrollLock.lock() / .unlock()：\n${fail(hits)}`);
+    assert.equal(hits.length, 0, `捲動鎖交給 _base.scss 的 :has() 規則：\n${fail(hits)}`);
 });
 
 // ─────────────────────────── 跨檔一致性 ───────────────────────────
