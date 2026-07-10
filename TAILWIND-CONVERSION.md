@@ -38,7 +38,7 @@ Tailwind v4：把同一組名字加上 `--color-` 前綴放進 `@theme`，深色
 三條不可違背的規則（同 GUIDELINE §4）：
 
 1. **填充與文字的 token 分家**：`bg-brand` / `border-brand`，但文字用 `text-brand-text`（`--brand`／`--brand-text` 在深色模式的值刻意不同——填充要深、文字要亮）。`--danger` / `--danger-text` 同理。
-2. **對比度**：白字（`--on-accent`）配任何有色填充 ≥ 4.5:1、填充對底色 ≥ 3:1。唯一例外是 `--warning` 黃底配 `--on-warning` 深字。
+2. **對比度**：每個有色填充配一個成對前景 token（白字 `--on-accent` 或深字 `--on-warning`）≥ 4.5:1；控制項填充對底色再 ≥ 3:1。
 3. **`color-scheme`**：`:root { color-scheme: light }` 與 `[data-theme="dark"] { color-scheme: dark }` 必須保留，否則原生 `<select>` 下拉、date picker、autofill、捲軸角落在深色下仍是白的。
 
 漸層 `--brand-gradient`（header 底線、footer 背景）不是顏色 token：設成一般 CSS 變數或用 `bg-[linear-gradient(...)]`。
@@ -129,7 +129,7 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 | `mt-24`/`mb-*`/`my-*` | `mt-6`… | `m-0` | `m-0` |
 | `text-center/left/right` | 同名 | `hidden` | `hidden` |
 | `text-md/lg/xl` | `text-lg/xl/2xl`（偏移！） | `text-bold`（=500） | `font-medium`（**不是 font-bold**） |
-| `text-red/blue/gray` | `text-danger-text` / `text-brand-text` / `text-text-muted` | `text-default` | `text-text` |
+| `text-red/blue/gray` | `text-danger-text` / `text-brand-text` / `text-text-muted` |
 | （顏色一律對到 `_var` 的語意 token，**不要**換成 Tailwind 內建色階或填充色 token——會丟失深色換膚）|||
 | `w100` | `w-full` | `flex-1`(`flex:1 1 0;min-width:0`) | `flex-1 min-w-0` |
 | `flex-shrink-0` | `shrink-0` | `relative` | `relative` |
@@ -137,7 +137,6 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 | `sr-only` | `sr-only` | `col-N-md`(見 gotcha) | grid `col-span-N` 或 `w-[N/12]` |
 
 `!important`（`.text-center`/`mt-*`/`hidden` 帶）→ Tailwind utility 靠 layer 勝出，通常**不需**加 `!`。
-**例外 `.text-default`**：它是唯一帶 `!important` 的顏色工具，用途是壓過元件情境色（如 `3-1-6` 用它把 `.page-title` 的品牌色蓋回預設字色）→ 轉成 `!text-text`，不要漏掉 `!`。
 
 ### 4-2. 元件 scss → utility
 

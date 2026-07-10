@@ -10,6 +10,13 @@
     margin-bottom: 2rem;
 }
 
+// 語言＋深淺鈕靠右（與各 app 頁的 header 右側同位置）
+.catalog-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
 .catalog-title {
     font-size: 1.75rem;
     font-weight: 600;

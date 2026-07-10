@@ -3,6 +3,15 @@
     display: flex;
     height: 100vh;
     height: 100dvh; // 行動瀏覽器：扣掉會伸縮的網址列
+    position: relative; // 給右上角的語言／深淺鈕定位
+
+    // 登入前就要能切換介面語言與深淺（與各 app 頁的 header 右側同位置）
+    .login-controls {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1;
+    }
 
     .login-left {
         width: 50%;

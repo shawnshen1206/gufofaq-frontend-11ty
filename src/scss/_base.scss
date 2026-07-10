@@ -155,4 +155,10 @@ a {
     color: var(--brand-text);
     text-align: left;
     word-break: break-all;
+
+    // 標題其實是資料值（檔名／資料集名）時，用預設字色而非品牌色。
+    // 由 owning 層提供變體，不必靠工具 class 帶 !important 硬壓（§4）。
+    &.plain {
+        color: var(--text);
+    }
 }

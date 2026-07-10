@@ -7,6 +7,9 @@ permalink: login.html
 <div class="login-wrapper">
     {# 本頁唯一的 h1：視覺上以 logo 呈現，故 h1 用 .sr-only 提供頁面主題給輔具 #}
     <h1 class="sr-only" data-i18n="auth.login">登入</h1>
+    <div class="login-controls">
+        {% include "components/header-controls/header-controls.html" %}
+    </div>
     <div class="login-left">
         <div class="login-box">
             <img src="./images/logo_login.png" width="960" height="144" decoding="async" alt="GufoFAQ" class="logo">

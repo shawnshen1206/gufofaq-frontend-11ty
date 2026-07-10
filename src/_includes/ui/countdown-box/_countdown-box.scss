@@ -7,6 +7,13 @@
     background-image: url(../images/img_countdown_bg_pattern.png);
     background-repeat: repeat;
     background-size: cover;
+    // 白底紋 + 白底時鐘插圖在深色頁上會變成一整片刺眼的白 → 由 _var.scss 的旗標壓暗／反相
+    background-color: var(--pattern-tint);
+    background-blend-mode: var(--pattern-blend);
+
+    img {
+        filter: var(--raster-invert);
+    }
     margin-top: 0.625rem;
     margin-bottom: 1.5rem;
     border-radius: 4px;

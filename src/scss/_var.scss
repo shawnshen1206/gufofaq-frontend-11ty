@@ -72,6 +72,16 @@
     /* tooltip（淺色本就是深泡泡；深色反相成淺泡泡才跳得出來） */
     --tooltip-bg: #363636;
     --tooltip-text: #ffffff;
+
+    /* 主題旗標（非顏色）：讓元件不必寫 [data-theme] 分支 —— 淺色顯示月亮、深色顯示太陽 */
+    --theme-icon-light: block;
+    --theme-icon-dark: none;
+
+    /* 光柵插圖／底紋的深色處理（--raster-invert、--pattern-blend 非顏色）：
+       PNG 的亮度換不了 token，故由這三個旗標統一控制，元件只掛 var()，不寫 [data-theme] 分支 */
+    --raster-invert: none;
+    --pattern-blend: normal;
+    --pattern-tint: transparent; // 淺色不疊色
 }
 
 // 深色（護眼：近黑底、字用調暗米白防光暈、accent 略提亮、整體降亮度）
@@ -137,4 +147,14 @@
     /* tooltip 反相成淺泡泡 */
     --tooltip-bg: #e5e5e5;
     --tooltip-text: #1f1f1f;
+
+    /* 主題旗標（非顏色） */
+    --theme-icon-light: none;
+    --theme-icon-dark: block;
+
+    /* 光柵插圖反相；白底紋以 multiply 疊深色 tint 壓暗（否則深色頁上是一整片刺眼的白）。
+       反相刻意不到 1.0：全反會把白鐘面翻成漆黑；0.8 讓它落在底紋 tint 附近、只留下亮環與指針 */
+    --raster-invert: invert(0.8) hue-rotate(180deg);
+    --pattern-blend: multiply;
+    --pattern-tint: #333333;
 }

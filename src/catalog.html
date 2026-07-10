@@ -1,90 +1,95 @@
 ---
 layout: layouts/base/base.html
 title: GufoFAQ::頁面目錄
+titleKey: catalog.pageTitle
 permalink: index.html
 ---
-{# 部署站台首頁：所有頁面的目錄（showcase 入口，不是 app 的一部分——性質同 component.html）。
-   登入頁移到 login.html，本頁佔用 index.html 當站台進入點，讓進站就能點去任一頁。
-   連結清單資料化，新增頁面時在此加一筆。 #}
+{# 部署站台首頁：所有頁面的目錄，也是站台的進入點（登入頁移到 login.html）。
+   在 app i18n 範圍內（chrome 要翻譯）；連結清單資料化，新增頁面時在此加一筆（label 是繁中原文，i18nKey 是英文的 key）。 #}
 {% set sections = [
     {
-        title: "資料匯入",
+        title: "資料匯入", i18nKey: "catalog.secDataImport",
         links: [
-            { label: "資料匯入（選擇資料集）", href: "1-1-1_dataImport.html" },
-            { label: "上傳 Excel", href: "1-1-2_uploadFile_excel.html" },
-            { label: "Excel 資料預覽", href: "1-1-3_preview_excel.html" },
-            { label: "Excel 欄位對應", href: "1-1-4_columnSelect_excel.html" },
-            { label: "Excel 上傳完成", href: "1-1-6_uploadSuccess_excel.html" },
-            { label: "上傳 PDF", href: "1-2-1_uploadFile_pdf.html" },
-            { label: "PDF 上傳完成", href: "1-2-6_uploadSuccess_pdf.html" }
+            { label: "資料匯入（選擇資料集）", href: "1-1-1_dataImport.html", i18nKey: "catalog.linkDataImport" },
+            { label: "上傳 Excel", href: "1-1-2_uploadFile_excel.html", i18nKey: "catalog.linkUploadExcel" },
+            { label: "Excel 資料預覽", href: "1-1-3_preview_excel.html", i18nKey: "catalog.linkPreviewExcel" },
+            { label: "Excel 欄位對應", href: "1-1-4_columnSelect_excel.html", i18nKey: "catalog.linkColumnSelect" },
+            { label: "Excel 上傳完成", href: "1-1-6_uploadSuccess_excel.html", i18nKey: "catalog.linkUploadSuccessExcel" },
+            { label: "上傳 PDF", href: "1-2-1_uploadFile_pdf.html", i18nKey: "catalog.linkUploadPdf" },
+            { label: "PDF 上傳完成", href: "1-2-6_uploadSuccess_pdf.html", i18nKey: "catalog.linkUploadSuccessPdf" }
         ]
     },
     {
-        title: "資料集",
+        title: "資料集", i18nKey: "catalog.secDataset",
         links: [
-            { label: "資料集列表", href: "3-1-1_datasetList.html" },
-            { label: "新增資料集", href: "3-1-2_dataImport_input.html" },
-            { label: "資料集預覽", href: "3-1-3_previewDataset.html" },
-            { label: "檔案內容預覽", href: "3-1-5_previewFile_detail.html" },
-            { label: "Excel 比對預覽", href: "3-1-6_previewExcel_compare.html" }
+            { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "catalog.linkDatasetList" },
+            { label: "新增資料集", href: "3-1-2_dataImport_input.html", i18nKey: "catalog.linkDatasetNew" },
+            { label: "資料集預覽", href: "3-1-3_previewDataset.html", i18nKey: "catalog.linkDatasetPreview" },
+            { label: "檔案內容預覽", href: "3-1-5_previewFile_detail.html", i18nKey: "catalog.linkFilePreview" },
+            { label: "Excel 比對預覽", href: "3-1-6_previewExcel_compare.html", i18nKey: "catalog.linkExcelCompare" }
         ]
     },
     {
-        title: "服務預覽",
+        title: "服務預覽", i18nKey: "catalog.secServicePreview",
         links: [
-            { label: "前台對話預覽", href: "2-1_qaRecord.html" }
+            { label: "前台對話預覽", href: "2-1_qaRecord.html", i18nKey: "catalog.linkQaRecord" }
         ]
     },
     {
-        title: "問答測試區",
+        title: "問答測試區", i18nKey: "catalog.secQaTest",
         links: [
-            { label: "單測", href: "2-2-1_singleTest.html" },
-            { label: "AB 測試", href: "2-2-3_abTest.html" }
+            { label: "單測", href: "2-2-1_singleTest.html", i18nKey: "catalog.linkSingleTest" },
+            { label: "AB 測試", href: "2-2-3_abTest.html", i18nKey: "catalog.linkAbTest" }
         ]
     },
     {
-        title: "歷史紀錄",
+        title: "歷史紀錄", i18nKey: "catalog.secHistory",
         links: [
-            { label: "歷史問答紀錄", href: "4-1_qaHistory.html" },
-            { label: "對話詳細內容", href: "4-2_qaHistory_detail.html" }
+            { label: "歷史問答紀錄", href: "4-1_qaHistory.html", i18nKey: "catalog.linkQaHistory" },
+            { label: "對話詳細內容", href: "4-2_qaHistory_detail.html", i18nKey: "catalog.linkQaHistoryDetail" }
         ]
     },
     {
-        title: "設定",
+        title: "設定", i18nKey: "catalog.secSettings",
         links: [
-            { label: "帳號資訊", href: "5-1-1_accountInfo.html" },
-            { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html" },
-            { label: "統計模組", href: "5-3_statsModule.html" },
-            { label: "提示詞管理", href: "5-4-1_promptManagement.html" }
+            { label: "帳號資訊", href: "5-1-1_accountInfo.html", i18nKey: "catalog.linkAccountInfo" },
+            { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html", i18nKey: "catalog.linkKnowledgeRetrieval" },
+            { label: "統計模組", href: "5-3_statsModule.html", i18nKey: "catalog.linkStatsModule" },
+            { label: "提示詞管理", href: "5-4-1_promptManagement.html", i18nKey: "catalog.linkPromptManagement" }
         ]
     },
     {
-        title: "前台 FAQ（公開聊天機器人）",
+        title: "前台 FAQ（公開聊天機器人）", i18nKey: "catalog.secFaq",
         links: [
-            { label: "FAQ 聊天機器人", href: "faq.html" }
+            { label: "FAQ 聊天機器人", href: "faq.html", i18nKey: "catalog.linkFaq" }
         ]
     },
     {
-        title: "其他",
+        title: "其他", i18nKey: "catalog.secOther",
         links: [
-            { label: "元件庫（style guide）", href: "component.html" },
-            { label: "登入頁", href: "login.html" }
+            { label: "元件庫（style guide）", href: "component.html", i18nKey: "catalog.linkComponentLibrary" },
+            { label: "登入頁", href: "login.html", i18nKey: "catalog.linkLogin" }
         ]
     }
 ] %}
 <div class="catalog">
     <header class="catalog-header">
-        <h1 class="catalog-title">GufoFAQ 前端切版預覽</h1>
-        <p class="catalog-sub">Eleventy 切版正本的頁面目錄，點任一頁即可瀏覽。<br>
-            各頁的 header 導航列與頁面間連結可正常切換；元件用法一頁看完請開「元件庫」。</p>
+        <div class="catalog-controls">
+            {% include "components/header-controls/header-controls.html" %}
+        </div>
+        <h1 class="catalog-title" data-i18n="catalog.heading">GufoFAQ 前端切版預覽</h1>
+        <p class="catalog-sub">
+            <span data-i18n="catalog.sub1">Eleventy 切版正本的頁面目錄，點任一頁即可瀏覽。</span><br>
+            <span data-i18n="catalog.sub2">各頁的 header 導航列與頁面間連結可正常切換；元件用法一頁看完請開「元件庫」。</span>
+        </p>
     </header>
     <div class="catalog-grid">
         {% for section in sections %}
         <div class="catalog-card">
-            <div class="catalog-card-title">{{ section.title }}</div>
+            <div class="catalog-card-title" data-i18n="{{ section.i18nKey }}">{{ section.title }}</div>
             <div class="catalog-links">
                 {% for link in section.links %}
-                <a href="{{ link.href }}">{{ link.label }}</a>
+                <a href="{{ link.href }}" data-i18n="{{ link.i18nKey }}">{{ link.label }}</a>
                 {% endfor %}
             </div>
         </div>

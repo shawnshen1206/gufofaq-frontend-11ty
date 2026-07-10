@@ -70,7 +70,7 @@ src/
 ├── images/
 ├── index.html              登入頁（permalink → login.html）
 ├── 404.html                GitHub Pages 的 404 fallback
-├── catalog.html            部署站台首頁＝頁面目錄（permalink → index.html；showcase，非 app 一部分）
+├── catalog.html            部署站台首頁＝頁面目錄（permalink → index.html；右上角有語言/深淺鈕，在 i18n 範圍內）
 └── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名到 dist/ 根
     ├── dataImport/(7) dataset/(5) qaHistory/(2) qaRecord/(1) qaTest/(2) settings/(6)   ← 管理端，走 page-shell
     ├── faq/(1)                                                                        ← 前台 FAQ，走 chatbot-shell

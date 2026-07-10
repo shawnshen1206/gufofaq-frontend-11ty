@@ -425,7 +425,7 @@ test("§4 可點的東西一律用真 button，且不得省略 type", () => {
 
 test("§4-2 同一個 i18n key 的繁中原文全站必須一致", () => {
     // 切回繁中的預設值是「以 key 為索引、從 DOM 就地擷取」，同 key 兩種繁中會互相覆蓋
-    const ATTRS = [["title", "title"], ["aria-label", "aria-label"], ["placeholder", "placeholder"], ["alt", "alt"], ["toast", "data-toast"]];
+    const ATTRS = [["title", "title"], ["aria-label", "aria-label"], ["placeholder", "placeholder"], ["alt", "alt"], ["data-toast", "data-toast"]];
     const seen = new Map(); // key -> Map(繁中 -> [出處])
     const record = (key, zh, where) => {
         if (!key || key.includes("{{") || !zh || !zh.trim()) return;
@@ -572,9 +572,10 @@ test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () =>
     assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
 });
 
-test("§4 元件 scss 不得寫 [data-theme=dark] 分支（元件只有 theme-toggle 與 dark-icons 兩個例外）", () => {
-    // 色源檔（_var / _guideline-var）與 _base 的 color-scheme 本來就是靠這個選擇器換膚，不算元件。
-    const ALLOW = /scss\/_(var|guideline-var|base|dark-icons)\.scss$|ui\/theme-toggle\//;
+test("§4 元件 scss 不得寫 [data-theme=dark] 分支（零例外）", () => {
+    // 只有全域層可以讀主題旗標：_var / _guideline-var（色源）、_base（color-scheme）、
+    // _dark-icons（光柵 PNG 反相）。元件一律靠 token 換膚。
+    const ALLOW = /src\/scss\/_(var|guideline-var|base|dark-icons)\.scss$/;
     const hits = scanLines(srcScss.filter((f) => !ALLOW.test(f)), (line) =>
         /\[data-theme/.test(line.split("//")[0]) ? "深色分支" : null
     );
@@ -608,10 +609,10 @@ const COLOR_ROLES = {
     // chrome 零件：不承載內文，不做內文對比斷言（邊框/捲軸/軌道/把手/tint/陰影/遮罩/漸層）
     chrome: ["--on-accent", "--on-warning", "--border", "--border-subtle", "--brand-tint",
         "--scrollbar-thumb", "--scrollbar-thumb-strong", "--control-track", "--control-track-alt",
-        "--control-knob", "--toggle-on",
+        "--control-knob", "--toggle-on", "--pattern-tint",
         "--shadow", "--shadow-strong", "--overlay", "--overlay-tint", "--brand-gradient"],
     // 非顏色，不參與分類
-    nonColor: ["--fontFamily"],
+    nonColor: ["--fontFamily", "--theme-icon-light", "--theme-icon-dark", "--raster-invert", "--pattern-blend"],
 };
 
 test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對底色 ≥3、內文疊表面 ≥4.5）", () => {
@@ -666,7 +667,7 @@ test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對
     assert.equal(bad.length, 0, `WCAG AA / 1.4.11：\n${fail(bad)}`);
 });
 
-test("§4 工具層：文字大小/顏色工具不帶 !important（唯一例外 .text-default）", () => {
+test("§4 工具層：文字大小/顏色工具不帶 !important（零例外）", () => {
     let cur = null;
     const hits = [];
     read("src/scss/_utilities.scss").split(/\r?\n/).forEach((raw, i) => {
@@ -674,10 +675,10 @@ test("§4 工具層：文字大小/顏色工具不帶 !important（唯一例外 
         const sel = line.match(/^\.([\w-]+)[\s,{]/);
         if (sel) cur = sel[1];
         // -webkit-text-fill-color 也是文字顏色；錨點用 (^|[\s;{]) 才不會被 background-color 蒙混
-        if (/(?:^|[\s;{])(-webkit-text-fill-color|color|font-size|font-weight)\s*:[^;]*!important/.test(line) && cur !== "text-default")
+        if (/(?:^|[\s;{])(-webkit-text-fill-color|color|font-size|font-weight)\s*:[^;]*!important/.test(line))
             hits.push(`_utilities.scss:${i + 1}  .${cur}  ${line.trim()}`);
     });
-    assert.equal(hits.length, 0, `元件情境要能覆寫它們：\n${fail(hits)}`);
+    assert.equal(hits.length, 0, `要壓過元件色，改由 owning 層提供變體（如 .page-title.plain）：\n${fail(hits)}`);
 });
 
 test("§4 元件 scss 不得用 #id 選擇器（那是比 class 更緊的跨元件耦合）", () => {
@@ -696,7 +697,8 @@ test("src/images 每張圖都必須被引用", () => {
 });
 
 test("§1-1 桶歸屬：components/ 要用到其他元件（或是專屬子片段）；ui/ 要零依賴", () => {
-    const SHOWCASE = new Set(["src/pages/components/component.html", "src/catalog.html"]);
+    // 只有元件總覽頁會 include「展示片段」；catalog.html 是真實頁面（有語言/深淺鈕、在 i18n 範圍）
+    const SHOWCASE = new Set(["src/pages/components/component.html"]);
     const selectorClasses = (src) => {
         const out = new Set();
         for (const raw of src.split(/\r?\n/)) {

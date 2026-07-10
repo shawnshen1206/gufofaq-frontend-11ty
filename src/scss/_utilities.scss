@@ -9,7 +9,7 @@
 //    把 --flex-gap 歸零，讓 .col-12-* 恆為整寬。
 // 3) 覆寫層級：間距（mt/mb/my/m-0）、顯示（hidden）、對齊（text-left/center/right）這類「最後一手」
 //    單屬性工具帶 !important——它們取代的是行內 style，語意上不允許被元件樣式反壓。
-//    文字大小與顏色工具不帶 !important（允許元件情境覆寫；.text-default 沿用原本的 !important）。
+//    文字大小與顏色工具不帶 !important（允許元件情境覆寫，無例外）。
 
 @use "sass:map";
 
@@ -146,9 +146,6 @@ $margins: (4, 8, 10, 12, 16, 20, 24, 32, 40); // mt-*/mb-*/my-*
     border: 0;
 }
 
-.text-default {
-    color: var(--text) !important;
-}
 
 /*===============================
     間距（margin）

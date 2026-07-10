@@ -9,7 +9,7 @@
     var enDict = null;
     var defaults = { text: {}, attr: {} };
     // [ 標記後綴, 目標屬性 ]：data-i18n-<後綴> 的 key 用來翻譯「目標屬性」的值
-    var ATTRS = [["placeholder", "placeholder"], ["title", "title"], ["aria-label", "aria-label"], ["toast", "data-toast"], ["alt", "alt"]];
+    var ATTRS = [["placeholder", "placeholder"], ["title", "title"], ["aria-label", "aria-label"], ["data-toast", "data-toast"], ["alt", "alt"]];
 
     function collectDefaults() {
         defaults.title = document.title; // <title>（分頁標題）預設繁中原文

@@ -18,23 +18,13 @@
         color: var(--brand-text);
     }
 
-    .theme-toggle-icon {
-        display: block;
-    }
-
-    // 淺色：顯示月亮（點了轉深）；太陽藏起來
-    .icon-sun {
-        display: none;
-    }
-}
-
-// 深色：顯示太陽（點了轉淺）；月亮藏起來
-[data-theme="dark"] .theme-toggle {
-    .icon-sun {
-        display: block;
-    }
-
+    // 淺色顯示月亮（點了轉深）、深色顯示太陽（點了轉淺）。
+    // 由 _var.scss 的主題旗標決定，元件自己不讀 [data-theme]（§4）。
     .icon-moon {
-        display: none;
+        display: var(--theme-icon-light);
+    }
+
+    .icon-sun {
+        display: var(--theme-icon-dark);
     }
 }
