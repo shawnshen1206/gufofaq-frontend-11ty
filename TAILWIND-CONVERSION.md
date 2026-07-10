@@ -68,6 +68,17 @@ preflight 已含 `box-sizing: border-box` 與 `img{max-width:100%; height:auto}`
 
 另：所有 `100vh` 都寫成 `height:100vh; height:100dvh`（Tailwind 的 `h-screen` 是 `100vh`，要用 `h-dvh` 或 arbitrary）。
 
+### 跨元件共用尺寸（`src/scss/_size.scss`）：不是一次性數字，別各自 arbitrary
+
+`_size.scss` 是 Sass 變數檔（零 CSS 輸出），只放「一邊改了、另一邊沒跟就會壞掉」的尺寸：
+`$header-height: 56px`（`header` 高 ↔ `mobile-nav` 浮層起點與選單最大高）、`$control-btn-size: 36px`
+（`theme-toggle` ↔ `header-controls` 的語言鈕）、`$field-control-height: 56px`（`multi-select` ↔
+`multi-select-box` 左右欄逐列對齊）、`$wrap-max: 1560px`（`.wrap` ↔ `countdown-box` 底紋門檻）。
+
+**轉換時做成 theme 常數或 CSS 變數（如 `--header-height`），兩端引用同一顆**；分別寫成 `h-14` / `top-14`
+就把耦合藏起來了。`$header-height` 特別建議做成 `--header-height` CSS 變數——`mobile-nav` 要
+`calc(100dvh - var(--header-height))`，arbitrary value 寫起來很醜。
+
 ### 間距：px 命名 ÷ 4 = Tailwind 單位（完美整除，通常不需自訂 scale）
 
 `_utilities.scss` 的 `$spacing-scale` 是 px 命名，Tailwind 單位 = px ÷ 4：
@@ -228,8 +239,9 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
 14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5`、`login-wrapper 1` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
-15. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
-16. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
+15. **事件委派的資料屬性不是樣式**：`data-open-modal="X"`（`ui/modals`）與 `data-toast="…"`（`ui/toast`）是切版期「markup 沒有 props 可傳」的替身，由掛在 `document` 的委派接手。轉 React 時**一律換成 `onClick`**（`onClick={() => openModal("X")}`），不要保留這兩個屬性、也不要保留 document-level 委派。
+16. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
+17. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。
 
 ---
 

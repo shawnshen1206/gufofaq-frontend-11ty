@@ -14,8 +14,10 @@
         width: 100%;
     }
 
+    // 初始隱藏一律只寫在 markup 的行內 style（§4：JS 切換 display 的替身）。
+    // 樣式表如果也寫一份 display:none，editable-block.js 的 show() 清掉行內後，
+    // 樣式表這份會接手 —— 確認/取消鈕永遠出不來、textarea 模式根本存不了檔。
     .edit-field {
-        display: none; // 初始隱藏
         padding: 6px 8px;
         font-size: 1rem;
         width: fit-content;
@@ -33,10 +35,5 @@
         align-items: center;
         min-height: 36px;
         vertical-align: middle;
-    }
-
-    .save-icon,
-    .cancel-icon {
-        display: none; // 初始不顯示
     }
 }

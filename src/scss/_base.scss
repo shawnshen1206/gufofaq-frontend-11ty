@@ -131,7 +131,7 @@ a {
     margin: 0 auto;
 
     @media screen and (max-width: $wrap-max) {
-        max-width: $wrap-max-narrow;
+        max-width: 1200px; // 只有這裡在意「縮到多窄」，不必上升成跨元件 token
     }
 }
 

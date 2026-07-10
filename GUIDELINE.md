@@ -134,10 +134,9 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.chat-input-control`、`.chat-input-submit`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`、`.header-controls-slot`），不直接寫別人的 class 選擇器
   - 元件 scss **不得用 `#id` 選擇器**——那是比 class 更緊的耦合，且 id 是頁面層的東西
-  - 父元件可以在**自己的**元素上 set custom property 的值，由子片段自己的 scss `var()` 讀取——傳的是值，不是選擇器。父元件的 scss 仍然不得出現子片段的 class
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
 - **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（斷點見 `_mixin.scss` 的 `nav-collapsed`，尺寸見 `_size.scss`）。判準是「**一邊改了、另一邊沒跟就會壞掉**」——`header` 的高度與 `mobile-nav` 浮層的起點是耦合；`992px`／`768px` 這種各元件各自收版的系統性斷點只是共用約定，不是耦合。各寫一份遲早走鐘
-- **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標同 gap：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
+- **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`（尺標 2, 4, 8, 10, 12, 16, 20, 24, 32, 40）；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標少了最細的 2：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
 - 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫，零例外）。**要壓過元件的字色，改由 owning 層提供變體**（如 `.page-title.plain`），不要讓工具 class 帶 `!important` 硬壓——工具層在 `main.scss` 早於元件層載入，硬壓是把層疊順序當成規則在用
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。用法見元件總覽頁的「04 欄位」節
@@ -156,7 +155,7 @@ permalink: 檔名.html                   # 輸出到 dist/ 的檔名
 |---|---|
 | `color-scheme: light` / `[data-theme="dark"] { color-scheme: dark }` | 不用管。這層讓原生 UA 元件（`<select>` 展開的選單、date/time picker、autofill 底色、捲軸角落）跟著主題走——**token 換不到這層** |
 | `*, ::before, ::after { box-sizing: border-box }` | **元件不要再寫 `box-sizing: border-box`**（少數要 `content-box` 才自行覆寫） |
-| `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式；複合元件（如 multi-select）把焦點環畫在外框 `:focus-within` 上 |
+| `:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 2px solid var(--brand-text) }` | **禁止裸寫 `outline: none`**。真的要蓋掉，必須同時給可見的 `:focus-visible` 樣式。真正的控制項被藏起來或被包住時（`ui/switch` 的 1px input、`ui/multi-select` 的內層搜尋框），把焦點環畫在外框的 `:has(:focus-visible)` 上——**不要用 `:focus-within`**，它滑鼠點一下也會亮，和全域焦點環的行為對不上 |
 | `@media (prefers-reduced-motion: reduce)` 關閉動畫／過渡 | 不用管，照常寫 transition |
 | `img, svg, video, canvas { max-width: 100% }` | 不用重複寫 |
 | `img { height: auto }` | `<img>` 的 `width`/`height` 屬性同時是 CSS 的 presentational hint，只要有一邊被覆寫、另一邊就會卡在原值而把圖拉扁。這條是那兩個屬性的標配對句。元件要固定高度就自己覆寫（特異度自然勝過裸 `img`） |
@@ -193,6 +192,7 @@ ui/pagination/
 - **只用標準 DOM API**（`querySelectorAll`、`addEventListener`、`classList`、`closest`…，MDN 查得到的才能用）；禁止 jQuery 與任何第三方套件
 - 只操作**自己元件**的 class；要操作別的元件，呼叫該元件 js 提供的函式（例：footer.js 呼叫 modals.js 的 `openModal()`）
 - 包在 `DOMContentLoaded` 裡綁定；同元件可能出現多次時用 `querySelectorAll().forEach()`
+- **markup 零 inline 事件處理器**（`onclick=`…）：行為住在元件 js 裡。要「在 markup 宣告一個行為」時，掛**資料屬性**、由 owning 元件的 js 做事件委派——開跳窗用 `data-open-modal="<dialog id>"`（`ui/modals`），彈提示用 `data-toast`（＋選填 `data-toast-type`，`ui/toast`）。委派掛在 `document` 上，動態插入的元素也吃得到
 - 跳窗用 `<dialog>` 元素 + `showModal()` / `close()`（標準 API，與既有切版相同）
 - **JS 不得寫死要顯示的字串。** 由 JS 產生／切換的文字（accordion 的展開↔收合、multi-select 的空狀態、prompt-edit 的按鈕字…）走 `window.GufoI18n.t(key, "繁中原文")`；除了寫入文字，**還要同步改寫該元素的 `data-i18n` / `data-i18n-title` key**，並監聽 `gufo:langchange` 依「當下狀態」重畫。否則英文模式下一互動就冒出繁中（`lang-toggle.js` 匯出這兩者）
 - **CSS 改不了 ARIA。** 用 CSS 做開合（`:hover` / `:focus-within`）時，配一支只做一件事的小 js 去同步 `aria-expanded`（見 `components/header/header.js`）
@@ -237,6 +237,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 | front matter 資料 + `{% for %}` | `data.map(item => <Row item={item} />)` |
 | `.open`、`.active`、`.done`、`.error` 狀態 class | `useState` 布林 / props（`className={open ? "x open" : "x"}`） |
 | `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件 |
+| `data-open-modal="X"` / `data-toast="…"`（事件委派） | `onClick={() => open("X")}` / `onClick={() => toast("…")}`；資料屬性只是切版期沒有 props 時的替身 |
 | `<a data-i18n="key">文字</a>` | `{t("key")}`（next-intl 等）；`src/i18n/en.json` 直接當英文 message catalog，繁中原文由 markup 抽出成 zh catalog |
 | `GufoI18n.t(key, "繁中")` / `gufo:langchange` / `lang-toggle.js` | **不帶過去**：runtime 就地切換是切版專用；React 用 i18n library 的 `t()` 與語言 context |
 | `ui/multi-select`（增強原生 `<select multiple>`） | `react-select`（isMulti）；value 陣列＝原生 select 的選取，行為（標籤／搜尋／複選）即規格 |
@@ -254,6 +255,7 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 ## 8. 交付前檢查清單
 
 - [ ] `npm run check` 綠（stylelint → build → test，測試把本規範的規則跑成斷言）；`dist/` 每一頁雙擊可開、外觀與互動正確
+- [ ] 零死碼：每個元件 html 都被 include、每張 `src/images` 的圖都被引用；build 產出的資產都帶 content hash（`?v=`）
 - [ ] 沒有 jQuery 與任何第三方 JS 套件；js 只用標準 DOM API
 - [ ] 每個有互動的元件：js 在自己資料夾，且已在 `eleventy.config.js` 與 `base.html` 登記
 - [ ] 重複區塊都是 include；重複列／選項用 `{% for %}` + front matter 資料
@@ -329,8 +331,8 @@ body.guideline-page { overflow: hidden; }
 .some-inner-input { outline: none; }
 
 /* ✅ 要嘛不寫；複合元件把內層的環拿掉、改畫在外框上（見 ui/multi-select） */
-.multi-select-search { outline: none; } // 焦點環改畫在外框 :focus-within
-.multi-select-control:focus-within { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+.multi-select-search { outline: none; } // 焦點環改畫在外框
+.multi-select-control:has(:focus-visible) { outline: 2px solid var(--brand-text); outline-offset: 2px; }
 ```
 
 ```js

@@ -3,11 +3,12 @@
 // 實際讀檔/上傳 API 邏輯（uploadFile_excel.js、uploadFilePdf.js 等）為業務邏輯，不轉。
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".upload-box").forEach(function (box) {
-        var input = box.parentElement ? box.parentElement.querySelector(".upload-input") : null;
-        if (!input) {
-            input = box.querySelector(".upload-input");
-        }
+        // input 是放置區的下一個兄弟（`<a>`/`<button>` 不能包互動內容），而且只有按鈕版才有。
+        // 用 parentElement.querySelector 會在同一個父層放兩個 upload-box 時抓到別人的 input。
+        var next = box.nextElementSibling;
+        var input = next && next.classList.contains("upload-input") ? next : null;
 
+        // 連結版（uploadNextHref）點下去是前進到下一頁，不開檔案窗，也沒有 input。
         box.addEventListener("click", function () {
             if (input) input.click();
         });

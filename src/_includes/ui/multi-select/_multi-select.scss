@@ -40,8 +40,9 @@
     cursor: text;
     transition: border-color 0.3s;
 
-    // 複合元件慣例：內層 .multi-select-search 不畫自己的 outline，焦點環畫在整個控制項外框
-    &:focus-within {
+    // 複合元件慣例：內層 .multi-select-search 不畫自己的 outline，焦點環畫在整個控制項外框。
+    // :has(:focus-visible) 而非 :focus-within —— 與 _base.scss 的全域焦點環同一條件。
+    &:has(:focus-visible) {
         outline: 2px solid var(--brand-text);
         outline-offset: 2px;
     }
@@ -125,7 +126,7 @@
     min-width: 0.75rem;
     width: 100%;
     border: none;
-    outline: none; // 刻意：焦點環由外層 .multi-select-control:focus-within 統一畫出
+    outline: none; // 刻意：焦點環由外層 .multi-select-control:has(:focus-visible) 統一畫出
     background: transparent;
     font-family: inherit;
     font-size: 1rem;

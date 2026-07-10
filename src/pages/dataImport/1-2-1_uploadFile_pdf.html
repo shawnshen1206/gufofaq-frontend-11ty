@@ -29,8 +29,6 @@ permalink: 1-2-1_uploadFile_pdf.html
 {# 上傳區：PDF 流程可多選、上限 30MB，與元件預設（.xlsx、單檔、10MB）不同，由本頁 set 覆寫（§6） #}
 {% set uploadAccept = ".pdf" %}
 {% set uploadMultiple = true %}
-{% set uploadHintText = "點選或拖曳檔案至該區域上傳" %}
-{% set uploadHintKey = "dataImport.uploadHint" %}
 {% set uploadDescText = "支援上傳pdf檔案，檔案最大不超過30MB" %}
 {% set uploadDescKey = "dataImport.uploadDescPdf" %}
 {% include "ui/upload-box/upload-box.html" %}

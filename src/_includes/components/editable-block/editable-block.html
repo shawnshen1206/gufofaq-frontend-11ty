@@ -2,11 +2,14 @@
      editType："text"（單行：display-text + input）或 "textarea"（多行：label + textarea）
      editValue：目前值（顯示文字 / input value / textarea 內容）
      editLabel：欄位名——textarea 樣式的可見 label；text 樣式無可見 label，用作 input 的 aria-label
+     editLabelKey：editLabel 的 i18n key（給 data-i18n / data-i18n-aria-label）
      editId：textarea 樣式的 label 以 for/id 關聯的唯一 id（建議設；未給時退回 textarea 的 aria-label）
      editPlaceholder：textarea 的 placeholder（選填）
+     editPlaceholderKey：editPlaceholder 的 i18n key（選填）
      editRows：textarea 列數（選填，預設 10）
    同頁重複使用時每次 include 前重新 set 全部參數（§2 set 全域）。用法見 3-1-3_previewDataset.html。
-   save/cancel/input 的 display:none 為 JS 切換的初始態（§4 允許），與 _editable-block.scss 的初始隱藏一致。 #}
+   save/cancel/input 的 display:none 是 JS 切換的初始態（§4 允許的行內替身）。**初始隱藏只寫在這裡**——
+   scss 若也寫一份 display:none，js 的 show() 清掉行內後樣式表會接手，按鈕就永遠出不來。 #}
 {% if editType == "textarea" %}
 <div class="editable-block">
     <div class="form-group edit-field-group">

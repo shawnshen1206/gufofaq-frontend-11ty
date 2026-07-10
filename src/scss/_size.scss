@@ -15,6 +15,5 @@ $control-btn-size: 36px;
 $field-control-height: 56px;
 
 // 內容容器最大寬（_base.scss 的 .wrap）。ui/countdown-box 的底紋要在同一個門檻換排列方式，
-// 才會跟內容同寬同步縮。
+// 才會跟內容同寬同步縮。（.wrap 縮到多窄只有 _base 一處在意，那個值就留在 _base。）
 $wrap-max: 1560px;
-$wrap-max-narrow: 1200px;

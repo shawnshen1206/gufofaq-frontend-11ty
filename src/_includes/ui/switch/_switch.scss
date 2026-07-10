@@ -13,7 +13,8 @@ label.switch {
 
     // 真正的控制項是這顆 input，但它 opacity:0 —— _base.scss 的 :focus-visible 焦點環會畫在
     // 它身上、然後被 opacity 一起吃掉，鍵盤使用者看不到焦點。複合元件把環畫在外框上（§4-1）。
-    &:focus-within .switch-box {
+    // 用 :has(:focus-visible) 而非 :focus-within —— 後者滑鼠點一下也會亮，與全域焦點環行為不一致。
+    &:has(.switch-checkbox:focus-visible) .switch-box {
         outline: 2px solid var(--brand-text);
         outline-offset: 2px;
     }
@@ -42,7 +43,7 @@ label.switch {
         padding: var(--switchPaddingVertical) var(--switchPaddingHorizontal);
         border-radius: 1000px;
         vertical-align: middle;
-        transition: 0.3s;
+        transition: background-color 0.3s; // 具名屬性：寫 all 會連焦點環的 outline 一起動畫
         position: relative;
 
         .switch-btn {

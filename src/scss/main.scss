@@ -1,6 +1,6 @@
 // 只放 @use 組裝清單（依 GUIDELINE.md）
+// 註：_mixin.scss / _size.scss 是純定義檔（零 CSS 輸出），由需要的元件各自 @use，不列在這裡
 @use "var";
-@use "mixin";
 @use "normalize";
 @use "base";
 @use "utilities";
