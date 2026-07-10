@@ -999,6 +999,29 @@ test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () =>
     assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
 });
 
+test("§9 showcase 色盤 _guideline-var.scss 的 light 與 dark 也必須有完全相同的 token 集合", () => {
+    // 曾經整組 --gl-* 只有淺色值：頁面裡的 app 元件會自己換膚，showcase 的 chrome 不會，
+    // 於是深色下 app 的 --text 疊在白色的 --gl-bg 上，整頁散文的對比只有 1.6:1。
+    // 它跟 _var.scss 一樣是色源檔，一樣要兩邊給滿。
+    const src = read("src/scss/_guideline-var.scss");
+    const at = (re) => { const i = src.search(re); assert.ok(i >= 0, `找不到 ${re} —— 這條測試在空轉`); return i; };
+    const blockAt = (start) => {
+        let depth = 0;
+        for (let i = src.indexOf("{", start); i < src.length; i++) {
+            if (src[i] === "{") depth++;
+            else if (src[i] === "}" && --depth === 0) return src.slice(start, i);
+        }
+        throw new Error("_guideline-var.scss 大括號不平衡");
+    };
+    const tokens = (body) => new Set([...body.matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]));
+    const light = tokens(blockAt(at(/^\.guideline-page\s*\{/m)));
+    const dark = tokens(blockAt(at(/^\[data-theme="dark"\]\s+\.guideline-page\s*\{/m)));
+    assert.ok(light.size >= 10, `只掃到 ${light.size} 顆 --gl-* —— 這條測試在空轉`);
+    const onlyLight = [...light].filter((t) => !dark.has(t));
+    const onlyDark = [...dark].filter((t) => !light.has(t));
+    assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "showcase 頁的深色模式會靜默壞掉");
+});
+
 test("§4 .form-control.search / .time 必須是 .field 的直接子元素（圖示畫在 .field::after）", () => {
     // 放大鏡／時鐘是 `.field:has(> .form-control.search)::after`。搬出 `.field`、或中間多包一層，
     // 圖示就無聲消失（沒有樣式會紅、沒有測試會抓）—— 這裡把那個前提釘住。
@@ -1093,7 +1116,8 @@ const COLOR_ROLES = {
     // 黃底：天生太亮 —— 放不下白字，對淺色底也拉不開 3:1。改配 --on-warning 深字，兩個門檻一起豁免（§4）
     fillOnDarkText: ["--warning"],
     // 當內文用：疊 --surface / --surface-raised 要 ≥4.5:1
-    textOnSurface: ["--text", "--text-strong", "--text-muted", "--brand-text", "--brand-text-hover", "--danger-text"],
+    textOnSurface: ["--text", "--text-strong", "--text-muted", "--brand-text", "--brand-text-hover", "--danger-text",
+        "--success-text"],
     // 前景墨色：文字與「不承載文字的圖形記號」（勾記、radio 圓點、進度條、步驟底線）共用一顆。
     // 它是前景不是填充，故套文字的 ≥4.5:1 門檻（自然也滿足圖形的 1.4.11 ≥3:1）。見 §4。
     inkOnSurface: ["--brand-ink"],
@@ -1179,6 +1203,47 @@ test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對
         for (const [fg, bg, label] of graphicPairs) check(ratio(fg, bg), 3, `${label}（${fg} / ${bg}）`);
     }
     assert.equal(bad.length, 0, `WCAG AA / 1.4.11：\n${fail(bad)}`);
+});
+
+test("§4 遮罩圖示的墨色只能來自文字族／前景墨色（填充族與 chrome 都不行）", () => {
+    // 「文字族不可當填充」那條測試放行了所有被遮罩的元素——但它只是**豁免**，沒有斷言墨色來自哪個角色。
+    // 於是填充族（--success）與 chrome（--border）都曾偷偷跑進來當墨色：
+    //   --success 是為了襯白字而壓深的填充，當前景在深色下只有 3.41:1；
+    //   --border 是邊框色，當箭頭是 1.3:1 —— 兩者都通過了全部 60 條測試。
+    // 遮罩把 background 裁成字形 → 那顆顏色是**前景**，門檻與內文相同（§4：一顆 token 只能有一個角色）。
+    const allowed = new Set([...COLOR_ROLES.textOnSurface, ...COLOR_ROLES.inkOnSurface]);
+    const css = read("dist/css/main.css");
+
+    const compound = (sel) => {
+        const last = sel.trim().split(/\s*[>+~]\s*|\s+/).pop() || "";
+        return new Set(last.match(/::[\w-]+|:[\w-]+(?:\([^)]*\))?|\.[\w-]+|#[\w-]+|\[[^\]]*\]/g) || []);
+    };
+    const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => ({
+        sels: sel.split(",").map((s) => s.trim()).filter(Boolean),
+        body,
+    }));
+    const masked = [];
+    for (const { sels, body } of blocks)
+        if (/(?:^|[\s;])(?:-webkit-)?mask\s*:/.test(body)) for (const s of sels) masked.push(compound(s));
+    assert.ok(masked.length >= 10, `只找到 ${masked.length} 條帶遮罩的規則 —— 這條測試在空轉`);
+    const isMasked = (sel) => { const own = compound(sel); return masked.some((m) => [...m].every((t) => own.has(t))); };
+
+    const hits = [];
+    let checked = 0;
+    for (const { sels, body } of blocks) {
+        for (const decl of body.split(";")) {
+            const m = decl.match(/(?:^|[\s{])background-color\s*:\s*var\((--[\w-]+)\)/);
+            if (!m) continue;
+            for (const s of sels) {
+                if (!isMasked(s)) continue;
+                checked++;
+                if (!allowed.has(m[1]))
+                    hits.push(`${s.replace(/\s+/g, " ")} 的墨色是 ${m[1]}（它的角色不是文字／前景墨色）`);
+            }
+        }
+    }
+    assert.ok(checked >= 10, `只檢查到 ${checked} 個遮罩墨色 —— 這條測試在空轉`);
+    assert.equal(hits.length, 0, `遮罩的顏色是前景，門檻同內文：\n${hits.join("\n")}`);
 });
 
 test("§4 工具層：文字大小/顏色工具不帶 !important（零例外）", () => {

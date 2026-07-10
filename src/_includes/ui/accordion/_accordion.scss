@@ -9,8 +9,10 @@
     padding: 0;
     width: 1.5rem;
     height: 1.5rem;
-    // 收合時是很淡的灰箭頭（真 app 的 icon_table_arrow_default 就是 #d7d7d7），展開時轉成深墨色。
-    @include icon-mask("../images/icon_table_arrow_default.png", var(--border));
+    // 收合時是次要灰、展開時轉成深墨色。
+    // 真 app 這裡是 #d7d7d7（疊白底只有 1.30:1，深色反相後 1.11:1，等於看不見）——
+    // 那是箭頭本身的顏色，不是邊框；用 --border 只是「數值剛好接近」，角色是錯的（§4：一顆 token 只有一個角色）。
+    @include icon-mask("../images/icon_table_arrow_default.png", var(--text-muted));
 
     &.open {
         @include icon-mask("../images/icon_table_arrow_open.png", var(--brand-ink));

@@ -2,11 +2,19 @@
 // 這些是 showcase 頁自己的 chrome 色（側欄／區塊標題／go-top／footer／說明面板），非 app 設計 token——
 // 放這支專用檔、不進 _var.scss，讓「app 唯一色源」保持乾淨；但一樣走變數、不寫裸 hex（架構不妥協）。
 // 定義在 .guideline-page 上：只在 showcase 頁生效、零全站足跡。
+//
+// **深色模式同樣要給一整套。** 頁面裡的 app 元件會自己換膚，但 showcase 的 chrome 不會 ——
+// 曾經整組 --gl-* 只有淺色值，於是深色下 app 的 --text(#c9c9c9) 疊在 --gl-bg(#fcfcfc) 上，
+// 說明散文與說明面板的對比只有 1.6:1，整頁等於看不見（像素量過）。
+//
+// 這裡與 _var.scss 一樣「填充／文字分家」：--gl-dark 是填充（襯 --on-accent 白字），
+// --gl-ink 是文字（深色下提亮）。兩邊的 token 集合由測試釘住，漏一顆就紅。
 .guideline-page {
     --gl-bg: #fcfcfc; // 主內容區 / 區塊標題底
     --gl-aside-bg: #fffaf2; // 側欄底
     --gl-nav-link: #6c6c6c; // 側欄連結文字
-    --gl-dark: #4f4f4f; // 深色 ink：側欄 hover 底、區塊標題重點、頁標題
+    --gl-dark: #4f4f4f; // 填充：側欄連結 hover 底（襯 --on-accent 白字）
+    --gl-ink: #4f4f4f; // 文字：頁標題、選中的側欄項與它的分隔線
     --gl-scrollbar-thumb: rgba(79, 79, 79, 0.5); // 捲軸 thumb（= #4f4f4f @ 50%）
     --gl-divider: #3153ba; // 區塊標題分隔線
     --gl-title: #000; // 區塊標題主字
@@ -17,4 +25,22 @@
     --gl-gotop-bg: #cbcbcb; // go-top 鈕底
     --gl-gotop-ink: #222a32; // go-top 鈕字 / 箭頭
     --gl-footer-border: #d2d2d2; // footer 上邊框
+}
+
+[data-theme="dark"] .guideline-page {
+    --gl-bg: #141414; // app 的 --text(#c9c9c9) 疊上去 11.13:1
+    --gl-aside-bg: #1b1713; // 保留原本的暖調，只換明度
+    --gl-nav-link: #9a9a9a; // 疊側欄底 6.33:1
+    --gl-dark: #3a3a3a; // 填充：襯 --on-accent 白字 9.94:1
+    --gl-ink: #d4d4d4; // 文字：疊 --gl-bg 12.4:1
+    --gl-scrollbar-thumb: rgba(190, 190, 190, 0.35);
+    --gl-divider: #7e9cf0; // 分隔線在暗底要提亮
+    --gl-title: #ededed; // 疊 --gl-bg 15.7:1
+    --gl-bullet: #9fb0c2; // 項目符號是圖形記號，不承載文字
+    --gl-panel-bg: rgba(70, 82, 95, 0.5); // 說明面板底
+    --gl-panel-text: #e6e6e6; // 疊面板 7.5:1
+    --gl-example-bg: #3a3a3a; // 版位示意方塊
+    --gl-gotop-bg: #3a3a3a;
+    --gl-gotop-ink: #dfe4e8; // 疊 go-top 底 8.9:1
+    --gl-footer-border: #2e2e2e;
 }

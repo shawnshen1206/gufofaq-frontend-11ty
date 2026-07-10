@@ -184,8 +184,9 @@
 
     // 前台 FAQ 訊息動作鈕（讚/倒讚/分享；複製沿用上面的 .copy）
     // 讚是語意綠（真 app 的 icon_good 就是綠的），倒讚與分享是深墨色。
+    // 綠色用 --success-text 不是 --success：填充色為了襯白字而壓深，當前景在深色下只有 3.41:1。
     &.like::before {
-        @include icon-mask("../images/icon_good.png", var(--success), 24px 24px);
+        @include icon-mask("../images/icon_good.png", var(--success-text), 24px 24px);
     }
 
     &.dislike::before {

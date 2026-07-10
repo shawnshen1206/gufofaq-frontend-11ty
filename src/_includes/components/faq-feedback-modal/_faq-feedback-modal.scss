@@ -25,7 +25,7 @@
         }
 
         &.like .feedback-vote-icon {
-            @include icon-mask("../images/icon_good.png", var(--success), 24px 24px);
+            @include icon-mask("../images/icon_good.png", var(--success-text), 24px 24px);
         }
 
         &.dislike .feedback-vote-icon {
