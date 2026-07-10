@@ -5,11 +5,11 @@
 <div class="step-btn-wrap{% if stepNoPrev %} no-prev{% endif %}">
     {% if not stepNoPrev %}
     <a href="{{ stepPrevHref or '#' }}" class="button button-primary btn-prev" data-i18n="action.prevStep">
-        <img src="./images/icon_back.png" width="48" height="48" decoding="async" alt="" class="icon">上一步
+        <img src="./images/icon_back_white.png" width="48" height="48" decoding="async" alt="" class="icon">上一步
     </a>
     {% endif %}
     {% include "components/step-nodes/step-nodes.html" %}
     <a href="{{ stepNextHref or '#' }}" class="button button-primary align-self-end btn-next" data-i18n="action.nextStep">
-        下一步<img src="./images/icon_next.png" width="48" height="48" decoding="async" alt="" class="icon">
+        下一步<img src="./images/icon_next_white.png" width="48" height="48" decoding="async" alt="" class="icon">
     </a>
 </div>
