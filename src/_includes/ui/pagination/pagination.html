@@ -1,47 +1,16 @@
-{# 資料驅動頁碼列；頁面 include 前 set pages（[{ number, active }]，可含 { ellipsis: true } 呈現省略號）。
-     可輸入頁碼版是另一個元件 ui/pagination-input（自帶 html/scss/js），兩者沒有共用的東西。
-
-     data-page 是真 app 的換頁掛點（js/main.js:613 的 $(".pagination").on("click","a[data-page]") 委派），
-     切版沒有換頁行為（要打 API），但這個屬性是轉換契約，必須留著（§5）。目前頁不掛 data-page，與真 app 一致。
-     上一頁/下一頁兩態依 prevPage / nextPage 有無切換（真 app main.js renderPagination：第一頁不能往前、
-     最後一頁不能往後——enabled=藍箭頭+data-page、disabled=灰箭頭+aria-disabled）；頁面在第一頁就不傳
-     prevPage、最後一頁就不傳 nextPage，data-page 值是 current±1（迴圈裡的 {% set %} 出不了迴圈，由頁面算）。 #}
-<div class="pagination" role="navigation" aria-label="頁碼分頁" data-i18n-aria-label="pagination.nav">
-    <ul>
-        {% if prevPage %}
-        <li class="prev">
-            <a href="#" data-page="{{ prevPage }}" aria-label="上一頁" data-i18n-aria-label="pagination.prev">
-                <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="">
-            </a>
-        </li>
-        {% else %}
-        <li class="prev disabled">
-            <a href="#" aria-label="上一頁不可用" data-i18n-aria-label="pagination.prevDisabled" aria-disabled="true" tabindex="-1">
-                <img src="./images/icon_arrow_left_gray.png" width="48" height="48" decoding="async" alt="">
-            </a>
-        </li>
-        {% endif %}
-        {% for page in pages %}
-        {% if page.ellipsis %}
-        <li class="ellipsis">...</li>
-        {% else %}
-        <li{% if page.active %} class="active"{% endif %}>
-            <a href="#"{% if page.active %} aria-current="page"{% else %} data-page="{{ page.number }}"{% endif %}>{{ page.number }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-        {% if nextPage %}
-        <li class="next">
-            <a href="#" data-page="{{ nextPage }}" aria-label="下一頁" data-i18n-aria-label="action.nextPage">
-                <img src="./images/icon_arrow_right_blue.png" width="48" height="48" decoding="async" alt="">
-            </a>
-        </li>
-        {% else %}
-        <li class="next disabled">
-            <a href="#" aria-label="下一頁不可用" data-i18n-aria-label="pagination.nextDisabled" aria-disabled="true" tabindex="-1">
-                <img src="./images/icon_arrow_right_gray.png" width="48" height="48" decoding="async" alt="">
-            </a>
-        </li>
-        {% endif %}
-    </ul>
+{# 資料驅動頁碼列，js render（pagination.js，改寫自真 app js/main.js:499 renderPagination()）。
+     頁面 include 前 set total（總筆數，必填）；可選 set perPage（每頁筆數，預設 10，對照真 app perPage）
+     ／set currentPage（目前頁，預設 1）。<ul> 空殼由 js 依 data-total/data-per-page/data-current 動態產生：
+     prev → 首頁碼恆顯 → 中間滑動視窗（visible=5，真 app 是 3——可視頁碼變多，設計演進）+ 左右省略號
+     → 尾頁碼恆顯 → next；點 a[data-page] 換頁即重新 render（兩態＝有無 data-page，同真 app）。
+     .page-info 顯示總頁數：真 app main.js:500 有 `$(".pagination .page-info span").text(totalItems)`
+     這行引用，但真 app html 從未補上這塊 markup（未完成的意圖）——這裡把它做完，數字由 js 填。 #}
+<div class="pagination" role="navigation" aria-label="頁碼分頁" data-i18n-aria-label="pagination.nav"
+    data-total="{{ total }}"{% if perPage %} data-per-page="{{ perPage }}"{% endif %}{% if currentPage %} data-current="{{ currentPage }}"{% endif %}>
+    <ul></ul>
+    <div class="page-info mt-8">
+        <span data-i18n="pagination.totalPrefix">共</span>
+        <span class="page-info-count"></span>
+        <span data-i18n="pagination.totalSuffix">頁</span>
+    </div>
 </div>

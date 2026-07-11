@@ -129,14 +129,9 @@ permalink: 3-1-1_datasetList.html
     </table>
 </div>
 
-{# 分頁：真實頁由 js/datasetList.js renderPagination() 動態產生（li.prev/li.active/li.next 結構），
-     此處沿用 ui/pagination 同一組 class 資料化示範 #}
-{% set pages = [
-    { number: 1, active: true },
-    { number: 2 },
-    { number: 3 }
-] %}
-{% set nextPage = 2 %}
+{# 分頁：真實頁由 js/datasetList.js renderPagination() 動態產生（li.prev/li.active/li.next 結構）；
+     ui/pagination 現在也是同一套 data-total 驅動的 js render，故直接沿用，total 挑大一點的假數字讓省略號露出來 #}
+{% set total = 115 %}
 <div class="mt-16">
     {% include "ui/pagination/pagination.html" %}
 </div>

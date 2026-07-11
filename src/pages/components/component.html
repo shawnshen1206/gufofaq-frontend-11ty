@@ -458,14 +458,10 @@ bodyClass: guideline-page
                     <li>一般頁碼形式 / 可輸入頁碼切換</li>
                 </ul>
             </div>
-            {% set pages = [
-                { number: 1, active: true },
-                { number: 2 },
-                { number: 3 },
-                { ellipsis: true },
-                { number: 10 }
-            ] %}
-            {% set nextPage = 2 %}
+            {# total=115 顆＋currentPage=6：totalPages=12，visible=5 的滑動視窗置中在第6頁，
+                 左右省略號同時出現，一次展示完整樣式 #}
+            {% set total = 115 %}
+            {% set currentPage = 6 %}
             {% include "ui/pagination/pagination.html" %}
             <br>
             {# 可輸入頁碼切換（另一互動變體）；實用範例見 4-2 #}

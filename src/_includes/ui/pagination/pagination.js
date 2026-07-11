@@ -1,0 +1,146 @@
+// pagination 頁碼列：改寫自真 app js/main.js:499 renderPagination()（原用 jQuery + $(".pagination").data("total")），
+// 改標準 DOM。data-total（總筆數）÷ data-per-page（預設 10，對照真 app perPage）算 totalPages，
+// data-current（目前頁，預設 1）驅動要畫哪一頁；<ul> 整份由本檔動態產生，點 a[data-page] 換頁即重新 render。
+// 滑動視窗演算法對照真 app：total<=visible+2 時全部顯示，否則以 current 為中心的滑動視窗；
+// 中間可視頁碼數（visible）不寫死——讀 CSS 的 --pagination-visible（_pagination.scss：預設 5、
+// ≤768px 改 3），斷點只有那一份真相，同 mobile-nav.js 的 hamburgerHidden() 哲學（問 CSS，不猜斷點）。
+// .page-info 總頁數：真 app main.js:500 引用了 .page-info 卻從未補上 markup（未完成的意圖）——這裡補上，
+// 數字由 js 填、標籤文字（共／頁）走 markup 原生 data-i18n（非 JS 產生字串，不必再走 GufoI18n.t）。
+// 省略號可點（切版新增，真 app 的 "..." 是死文字）：固定跳 ±3 頁、clamp 在 1~totalPages，外觀不變（仍是
+// "..."，不 hover 變箭頭），data-page 走跟頁碼一樣的委派與 hover 回饋。
+// i18n：per-page aria-label（第N頁）、prev/next 兩態標籤、省略號的跳頁 aria-label，由 GufoI18n.t(key, 繁中原文) 產生；
+// 監聽 gufo:langchange 依「當下 data-current」重新 render，讓切語言後的頁碼列也是對的語言。
+document.addEventListener("DOMContentLoaded", function () {
+    var lastVisible = new WeakMap();
+
+    function getVisible(el) {
+        var raw = getComputedStyle(el).getPropertyValue("--pagination-visible");
+        var n = parseInt(raw, 10);
+        return isNaN(n) ? 5 : n;
+    }
+
+    function t(key, zh) {
+        return (window.GufoI18n && window.GufoI18n.t) ? window.GufoI18n.t(key, zh) : zh;
+    }
+
+    function pageLabel(n) {
+        return t("pagination.pagePrefix", "第") + n + t("pagination.pageSuffix", "頁");
+    }
+
+    function arrowLi(cls, enabled, page, enabledLabel, disabledLabel, blueImg, grayImg) {
+        if (enabled) {
+            return '<li class="' + cls + '"><a href="#" data-page="' + page + '" aria-label="' + enabledLabel + '">' +
+                '<img src="' + blueImg + '" width="48" height="48" decoding="async" alt="">' +
+                '</a></li>';
+        }
+        return '<li class="' + cls + ' disabled"><a href="#" aria-label="' + disabledLabel + '" aria-disabled="true" tabindex="-1">' +
+            '<img src="' + grayImg + '" width="48" height="48" decoding="async" alt="">' +
+            '</a></li>';
+    }
+
+    function pageLi(n, current) {
+        if (n === current) {
+            return '<li class="active"><a href="#" aria-label="' + pageLabel(n) + '" aria-current="page">' + n + '</a></li>';
+        }
+        return '<li><a href="#" data-page="' + n + '" aria-label="' + pageLabel(n) + '">' + n + '</a></li>';
+    }
+
+    // 省略號可點，固定跳 ±3 頁（clamp 在 1~totalPages）。外觀不變（仍顯示 "..."，不 hover 變箭頭符號），
+    // data-page 吃到跟頁碼一樣的委派與 hover 回饋，不必另寫點擊處理。
+    function ellipsisLi(target, label) {
+        return '<li class="ellipsis"><a href="#" data-page="' + target + '" aria-label="' + label + '">...</a></li>';
+    }
+
+    function render(el) {
+        var VISIBLE = getVisible(el);
+        lastVisible.set(el, VISIBLE);
+
+        var total = Math.max(0, Number(el.getAttribute("data-total")) || 0);
+        var perPage = Number(el.getAttribute("data-per-page")) || 10;
+        var totalPages = Math.max(1, Math.ceil(total / perPage));
+        var current = Number(el.getAttribute("data-current")) || 1;
+        if (current < 1) current = 1;
+        if (current > totalPages) current = totalPages;
+        el.setAttribute("data-current", current);
+
+        var ul = el.querySelector("ul");
+        if (!ul) return;
+        var html = "";
+
+        // 上一頁
+        html += arrowLi("prev", current > 1, current - 1,
+            t("pagination.prev", "上一頁"), t("pagination.prevDisabled", "上一頁不可用"),
+            "./images/icon_arrow_left_blue.png", "./images/icon_arrow_left_gray.png");
+
+        // 首頁碼恆顯
+        html += pageLi(1, current);
+
+        // 中間滑動視窗
+        var start, end;
+        if (totalPages <= VISIBLE + 2) {
+            // 總頁數少時，頁碼全部顯示
+            start = 2;
+            end = totalPages - 1;
+        } else {
+            start = current - Math.floor(VISIBLE / 2);
+            end = current + Math.floor(VISIBLE / 2);
+
+            if (start < 2) {
+                start = 2;
+                end = start + VISIBLE - 1;
+            }
+            if (end > totalPages - 1) {
+                end = totalPages - 1;
+                start = end - VISIBLE + 1;
+                if (start < 2) start = 2;
+            }
+        }
+
+        if (start > 2) {
+            html += ellipsisLi(Math.max(1, current - 3), t("pagination.jumpPrev", "往前 3 頁"));
+        }
+        for (var i = start; i <= end; i++) html += pageLi(i, current);
+        if (end < totalPages - 1) {
+            html += ellipsisLi(Math.min(totalPages, current + 3), t("pagination.jumpNext", "往後 3 頁"));
+        }
+
+        // 尾頁碼恆顯
+        if (totalPages > 1) html += pageLi(totalPages, current);
+
+        // 下一頁
+        html += arrowLi("next", current < totalPages, current + 1,
+            t("action.nextPage", "下一頁"), t("pagination.nextDisabled", "下一頁不可用"),
+            "./images/icon_arrow_right_blue.png", "./images/icon_arrow_right_gray.png");
+
+        ul.innerHTML = html;
+
+        var count = el.querySelector(".page-info-count");
+        if (count) count.textContent = totalPages;
+    }
+
+    var containers = document.querySelectorAll(".pagination");
+    containers.forEach(function (el) { render(el); });
+
+    // 事件委派：動態插入的頁碼 <a> 也吃得到
+    document.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-page]");
+        if (!a) return;
+        var el = a.closest(".pagination");
+        if (!el) return;
+        e.preventDefault();
+        el.setAttribute("data-current", a.getAttribute("data-page"));
+        render(el);
+    });
+
+    // 切換語言後，依各自「當下 data-current」重新 render
+    document.addEventListener("gufo:langchange", function () {
+        containers.forEach(function (el) { render(el); });
+    });
+
+    // 跨斷點（≤768px）--pagination-visible 從 5 變 3（或反之）時才重排，不是每個 resize tick 都重畫
+    window.addEventListener("resize", function () {
+        containers.forEach(function (el) {
+            if (getVisible(el) !== lastVisible.get(el)) render(el);
+        });
+    });
+});
