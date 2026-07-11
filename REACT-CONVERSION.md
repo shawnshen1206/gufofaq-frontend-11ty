@@ -18,6 +18,8 @@
 - 從現況保留的只有 **React 應用層**：權限過濾、`fetch`、路由、Next 慣例。
 - 重建到符合切版的正確路徑／命名（`ui/` 原子→`components/ui/`）：consumer 改用新元件、刪掉走樣舊檔，不留新舊兩套。
   （現況常有 undefined token 的走樣舊檔仍被 consumer import——那正是要退休的那份。）
+- 寄生 orphan class：某元件 `.scss` 裡出現、但它自己 tsx/markup 從不 render 的 selector，是別的 atom 寄生進來的——
+  追回它切版的 `ui/` atom、抽成獨立 `components/ui/<Name>/`、退掉寄生（例：`.data-info` 曾寄生在 `Pagination.scss`）。
 - 舊 jQuery 真 app 不看。
 
 ## ① scss（byte-identical）
