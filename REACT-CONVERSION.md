@@ -20,6 +20,8 @@
   （現況常有 undefined token 的走樣舊檔仍被 consumer import——那正是要退休的那份。）
 - 寄生 orphan class：某元件 `.scss` 裡出現、但它自己 tsx/markup 從不 render 的 selector，是別的 atom 寄生進來的——
   追回它切版的 `ui/` atom、抽成獨立 `components/ui/<Name>/`、退掉寄生（例：`.data-info` 曾寄生在 `Pagination.scss`）。
+- 走樣 scss 若把 hook class 選擇器寫成裸元素（如 `button:hover .tooltip` 而非 `.has-tooltip:hover .tooltip`），修回
+  切版選擇器時 grep 所有 consumer、在觸發元素補上該 hook class——consumer 常是靠走樣的裸選擇器意外運作、自己沒掛 class。
 - 舊 jQuery 真 app 不看。
 
 ## ① scss（byte-identical）
@@ -93,6 +95,10 @@
 - 互動型 `--react-eval`（點 checkbox/switch 觸發 `:checked`）：`await` 要在 click **之前**——`page.goto(waitUntil:"load")`
   可能在 React hydrate 完成前返回，same-tick click 落在 onChange 綁定前會被吞、fpdiff deterministic fail；寫成
   `(async()=>{await new Promise(r=>setTimeout(r,500));el.click()})()`（await 在 click 前，不是 after）。
+- `:hover` 態（tooltip 等）不能用 `--*-eval` 造（瀏覽器原生偽類、`page.evaluate` 觸發不了）：用 Playwright 真
+  `page.hover()` + 兩側 computed-style 比對（等 opacity transition 跑完再量）驗 hover 顯示。
+- gallery demo 別把消歧用的額外 class 加在 fpdiff 根元素上（element identity 會判成增減）——用不參與比對的
+  外層 wrapper scope。
 - 對照切版 `component.html`（showcase 頁）時，`body.guideline-page`（`_guideline.scss` 的 showcase chrome）會對 demo 也用的
   通用 class（`.flex-row`/`.subtitle` 等）加樣式，造成 residual diff——那是展示頁 chrome bleed、非元件 bug。比對聚焦元件自身
   子樹（如 `.form-group`），別框到 demo wrapper。
