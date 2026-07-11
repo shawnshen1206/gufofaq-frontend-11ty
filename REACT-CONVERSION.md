@@ -80,6 +80,8 @@
 - 捲動鎖：開關掛 `data-scroll-lock`（`html:has([data-scroll-lock].active)` 在 `_base.scss`）。
 - 業務 hook class（`.watchBtn`／`.copyBtn`／`.js-apply-production`…）保留。
 - 業務邏輯（抓資料／SSE／圖表／表單驗證／日期）不轉。
+- 量測用臨時 DOM 節點（append 到 `document.body` 量文字寬等）加 `position:absolute`——append 目標可能是
+  flex/grid 容器（節點會被 blockify 拉伸），absolute 讓它退出環境佈局。
 
 ## ⑤ 平台原生機制保留
 
