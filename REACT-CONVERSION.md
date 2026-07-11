@@ -46,17 +46,14 @@
 
 ## ④ 行為（vanilla js → hooks）
 
+- 轉行為前讀 `<name>.js` **全文**，次要的無障礙同步也要一併轉。例：桌機下拉是純 CSS `:hover`／`:focus-within`，
+  但 `header.js` 另用 `mouseenter`／`focusin` 把 `aria-expanded` 同步成子選單是否顯示（CSS 改不了 ARIA）。
 - vanilla 事件 → `useState` + `onClick/onChange`。
 - `data-open-modal`／`data-toast`／`data-print` → `onClick`；移除屬性、不自創 hook class、不留 document 委派。
 - `GufoSlide`→`useSlideToggle`、`showToast`→`useToast()`、`openModal`→受控 `<Modal>`、`aria-expanded`→綁 state。
 - 捲動鎖：開關掛 `data-scroll-lock`（`html:has([data-scroll-lock].active)` 在 `_base.scss`）。
 - 業務 hook class（`.watchBtn`／`.copyBtn`／`.js-apply-production`…）保留。
 - 業務邏輯（抓資料／SSE／圖表／表單驗證／日期）不轉。
-- `<name>.js` 裡「次要的無障礙同步」也算行為、要一併轉，不是只轉主要互動：例如桌機下拉選單
-  本身是純 CSS `:hover`/`:focus-within`，但 `header.js` 另外用 `mouseenter`/`mouseleave`/
-  `focusin`/`focusout` 把 `aria-expanded` 同步成「子選單當下是否顯示」（CSS 改不了 ARIA）——
-  這種同檔案但容易被 task 描述漏掉的第二支行為，讀 `<name>.js` 全文才會發現，只看 task brief
-  列的重點摘要會漏轉。
 
 ## ⑤ 平台原生機制保留
 
@@ -70,14 +67,10 @@
   `--component` normalize 元件絕對位置；`--legacy-eval`／`--react-eval` 開隱藏元件；排除 `.js-*`；both-empty／loadFail 守門。
 - full-width 元件：gallery 展示槽用切版展示頁的同一條寬度算式
   （`.full-container`：aside 200px + main `calc(100% - 200px)` + padding 1rem + border-box）。
-- React 應用層資料（例：`/api/me` 權限過濾選單）會讓 React 端顯示內容天生少於永遠無過濾的
-  切版 `dist` 頁——這不是視覺 bug，兩側資料前提本來就不對等，不能靠放寬幾何判準解決。用
-  `fpdiff.mjs` 的 `--react-route="<urlGlob>|<json>"`／`--legacy-route=`（`page.route()` 在
-  `goto` 前攔截、回一致資料）讓兩側資料前提一致後再比幾何；只加能力、不改 (A)-(D) 判準本身。
-- WAAPI 動畫（如 `useSlideToggle` 的 300ms slide）open-state 截圖：固定的字型等待時間
-  （約 150ms）不夠讓動畫跑完，會截到動畫中途的高度。`--legacy-eval`／`--react-eval` 用 async
-  IIFE 觸發後 `await` 一段超過動畫時長的 timeout（例：`(async()=>{el.click();await new
-  Promise(r=>setTimeout(r,500));})()`），兩側用同一段腳本、同一個等待時間。
+- 兩側資料前提不對等時（如 React 保留 `/api/me` 權限過濾、切版 `dist` 永遠無過濾）：用 `--react-route="<urlGlob>|<json>"`／
+  `--legacy-route=`（`goto` 前 `page.route()` 攔截、回一致資料）對齊資料再比幾何；不放寬 (A)-(D) 判準。
+- WAAPI 動畫（如 `useSlideToggle` 300ms slide）open-state 截圖：`--legacy-eval`／`--react-eval` 用 async IIFE
+  觸發後 `await` 超過動畫時長的 timeout（例 `(async()=>{el.click();await new Promise(r=>setTimeout(r,500))})()`），兩側同腳本同等待。
 - 新規則附負控 + 空轉守門；能白名單就別黑名單。
 
 ---
@@ -86,18 +79,16 @@
 
 - 斷點：切版 max-width mobile-last；`nav-collapsed` 1250px（header ↔ mobile-nav 同值，收在 `_mixin.scss`）。
 - Header：`.header-right` 包 desktop-nav + `.header-controls-slot` + nav-toggle；nav-collapsed 時 `.header-controls-slot` 收起。
-- MobileNav：`.mobile-menu-wrap` 與各子選單用 `useSlideToggle`；子選單拆子元件（hook 不入 `.map()`）；收合整個選單時子選單用 `setImmediate` 零動畫收合，**同時**把子選單的 `open` state 也設回 `false`（同步 `aria-expanded`，對照 `closeAllSubmenus` 的 `setAttribute("aria-expanded","false")`）——`setImmediate` 只保證「這次不動畫」，state 之後真的變化仍會讓 `useSlideToggle` 的 `[open]` effect 正常再跑一次動畫（這是設計如此，不是 bug）；因為子選單巢狀在同樣正在收合、`overflow:hidden` 收到 0 高度的父層 wrap 內，這次「多餘」動畫不可見，結算狀態仍正確，不需要額外機制去避免它。
+- MobileNav：`.mobile-menu-wrap` 與各子選單用 `useSlideToggle`；子選單拆子元件（hook 不入 `.map()`）；
+  收合整個選單時子選單 `setImmediate(false)` 零動畫、同時把子選單 open state 設回 `false`（同步 `aria-expanded`）。
 - Modal：受控 `<dialog>`，effect 依 `open` 呼 `showModal()`／`close()`。
 - useSlideToggle：介面 `(open) → { ref, setImmediate }`；mount 首次不動畫。
+
+## 測試設定
+
+- `vitest.config.ts` 的 `resolve.alias` 補 `tsconfig.json` `paths` 的 `@/` 映射（Vitest 底層 Vite 不自動套 tsconfig paths）。
 
 ## 驗收
 
 逐元件對 `dist/component.html` 用 `fpdiff.mjs` 比幾何 + 繪製；scss 對 `_<name>.scss` 用 `scss-diff.mjs` 比 byte-identical。
 確認：tsx 從切版重寫、scss byte-identical、原生機制保留、i18n 走 react-i18next、`.js-*`／`data-i18n` 未帶。
-
-## 測試環境一次性坑
-
-- `apps/web` 的元件慣例用 `@/…` 絕對匯入（同 `tsconfig.json` 的 `paths`）。Next build/dev 原生讀
-  tsconfig paths，但 `vitest.config.ts` 底層是 Vite、不會自動套用，要在 `resolve.alias` 明講一次
-  同一條映射，否則第一個「transitively import 到用 `@/` 的模組」的測試檔就會
-  `Failed to resolve import`（這不是新元件的 bug，是測試設定本身缺一塊，補一次全域生效）。
