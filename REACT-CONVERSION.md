@@ -117,6 +117,8 @@
 - 對照切版 `component.html`（showcase 頁）時，`body.guideline-page`（`_guideline.scss` 的 showcase chrome）會對 demo 也用的
   通用 class（`.flex-row`/`.subtitle` 等）加樣式，造成 residual diff——那是展示頁 chrome bleed、非元件 bug。比對聚焦元件自身
   子樹（如 `.form-group`），別框到 demo wrapper。
+- fpdiff 揭露「被依賴的共享 scss」（如 chat-message）非 byte-identical 時，發現的那一批就修（byte-identical
+  重抄 + scss-diff），不推遲——它擋著當批的比對，發現時修最便宜。
 - 新規則附負控 + 空轉守門；能白名單就別黑名單。
 - 一列多個示範元素只實作部分時，fpdiff 對每顆各自下 `:nth-child(N)` selector（`document.querySelector` 單 root）。
 
