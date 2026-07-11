@@ -49,6 +49,8 @@
 - 切版 `<name>.html` 只是 component.html 的 demo 片段（無 nunjucks 參數、literal demo copy）時，tsx 做 generic
   props wrapper，demo 內容（示範文案/示例項）放 gallery，不 baked 進元件。
 - 切版 template 產生的縮排空白文字節點：改切版消除，React 不補死節點。
+- 反向注意：HTML 裡 inline 元素間「換行縮排」渲染成一個空格（如 `共 <span>N</span> 頁` 的字距），
+  JSX 會把元素間純空白行整個吃掉——這種**有意的**字間空格在 JSX 補 `{" "}`。
 
 ## ③ i18n（react-i18next）
 
@@ -101,6 +103,8 @@
   `(async()=>{await new Promise(r=>setTimeout(r,500));el.click()})()`（await 在 click 前，不是 after）。
 - `:hover` 態（tooltip 等）不能用 `--*-eval` 造（瀏覽器原生偽類、`page.evaluate` 觸發不了）：用 Playwright 真
   `page.hover()` + 兩側 computed-style 比對（等 opacity transition 跑完再量）驗 hover 顯示。
+- shell 下組 `--*-eval` 命令：`VAR=value cmd "$VAR"` 單行寫法 `$VAR` 在前綴賦值生效前就展開＝空字串，
+  eval 靜默失效、fpdiff 比到兩個未互動的相同快照＝假綠——賦值與命令分兩行寫。
 - gallery demo 別把消歧用的額外 class 加在 fpdiff 根元素上（element identity 會判成增減）——用不參與比對的
   外層 wrapper scope。
 - 對照切版 `component.html`（showcase 頁）時，`body.guideline-page`（`_guideline.scss` 的 showcase chrome）會對 demo 也用的
