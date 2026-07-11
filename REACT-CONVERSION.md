@@ -33,6 +33,9 @@
   `main.scss` 只放全域層 `@use`，元件 scss 由各自 tsx `import "./X.scss"`。
 - `@use`／`url()`／`icon-mask(...)` 的路徑在原行就地替換，不插入額外說明行（scss-diff 逐行比對）。
 - `scss-diff.mjs` exit 0。
+- 跨元件同 specificity 的覆寫（如 `.pager-input{width:60px}` 蓋 `.form-control{width:100%}`）靠 cascade 順序決勝：
+  切版由 `main.scss` 的 `@use` 順序保證；React 元件各自 import scss，**同頁多個元件 scss 的 import 順序照切版
+  `main.scss` 的 `@use` 順序**（被覆寫者在前、覆寫者在後），否則同分規則翻盤。
 
 ## ② markup（html → tsx）
 
@@ -70,6 +73,8 @@
 - 轉行為前讀 `<name>.js` **全文**，次要的無障礙同步也要一併轉。例：桌機下拉是純 CSS `:hover`／`:focus-within`，
   但 `header.js` 另用 `mouseenter`／`focusin` 把 `aria-expanded` 同步成子選單是否顯示（CSS 改不了 ARIA）。
 - vanilla 事件 → `useState` + `onClick/onChange`。
+- 切版用 `<a>` 當行為觸發元素（demo 靜態跳轉）時，React **保留 `<a>`**、行為用
+  `onClick={e => { e.preventDefault(); handler(); }}`——不換成 `<button>`（tag 是 markup 的一部分；要改語意先改切版）。
 - `data-open-modal`／`data-toast`／`data-print` → `onClick`；移除屬性、不自創 hook class、不留 document 委派。
 - `GufoSlide`→`useSlideToggle`、`showToast`→`useToast()`、`openModal`→受控 `<Modal>`、`aria-expanded`→綁 state。
 - 捲動鎖：開關掛 `data-scroll-lock`（`html:has([data-scroll-lock].active)` 在 `_base.scss`）。
