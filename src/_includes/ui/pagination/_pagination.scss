@@ -87,7 +87,7 @@
                 max-width: none;
             }
 
-            // 省略號可點（跳 ±3 頁，見 pagination.js）：markup 换成跟頁碼一樣的 <a data-page>，
+            // 省略號可點（跳 ±3 頁，見 pagination.js）：markup 換成跟頁碼一樣的 <a data-page>，
             // 尺寸/置中/底色/hover 直接吃上面 `li a` 與 `:not(.prev):not(.next) a:hover` 那兩條規則，
             // 這裡只補「跟數字頁碼不同」的字重，不重複宣告盒模型。
             &.ellipsis {
