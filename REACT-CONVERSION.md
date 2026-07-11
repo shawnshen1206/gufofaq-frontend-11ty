@@ -25,8 +25,7 @@
 - 逃生口（捲軸、偽元素、`icon-mask`、`@starting-style`、`border-image` 漸層、`writing-mode`）隨 scss 照抄。
 - 全域層 `src/scss/{_var,_base,_mixin,_utilities,_normalize,_form-check,_dark-icons,_size}` → `styles/`；
   `main.scss` 只放全域層 `@use`，元件 scss 由各自 tsx `import "./X.scss"`。
-- `@use`／`url()`／`icon-mask(...)` 的路徑改寫，在原本那一行就地替換，不額外插入「環境適配」說明行——
-  `scss-diff.mjs` 是逐行位置比對，插入的行會讓後面每一行都錯位，整份被誤判不同。
+- `@use`／`url()`／`icon-mask(...)` 的路徑在原行就地替換，不插入額外說明行（scss-diff 逐行比對）。
 - `scss-diff.mjs` exit 0。
 
 ## ② markup（html → tsx）
@@ -84,9 +83,7 @@
 - WAAPI 動畫（如 `useSlideToggle` 300ms slide）open-state 截圖：`--legacy-eval`／`--react-eval` 用 async IIFE
   觸發後 `await` 超過動畫時長的 timeout（例 `(async()=>{el.click();await new Promise(r=>setTimeout(r,500))})()`），兩側同腳本同等待。
 - 新規則附負控 + 空轉守門；能白名單就別黑名單。
-- 切版展示區塊「一列多個示範元素」若本次只實作其中一部分（其餘留給後續 task），fpdiff 對每顆元素各自
-  下 `:nth-child(N)` selector 比對（`document.querySelector` 只認單一 root，整列一起比會把「本次不做」
-  的那幾顆判成假的元素增減）。
+- 一列多個示範元素只實作部分時，fpdiff 對每顆各自下 `:nth-child(N)` selector（`document.querySelector` 單 root）。
 
 ---
 
