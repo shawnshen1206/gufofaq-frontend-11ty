@@ -6,14 +6,11 @@
 <div class="breadcrumb">
     <div class="wrap">
         <ul>
+            {# li 內容寫成一行（不縮排換行）：分隔線是 `li+li::before` 的 "/"（間距由它的 padding 決定）。
+               li 內容前若有縮排換行，會在 "/" 與文字之間多留一個 whitespace text node（約 4px），讓右側間距不對稱；
+               而且轉 React 時 `.map()`/JSX 不會產生這種縮排空白，兩邊會差 ~4px。寫一行讓間距純由 ::before 的 padding 決定、兩邊一致。 #}
             {% for item in breadcrumbItems %}
-            <li{% if loop.last and item.class %} class="{{ item.class }}"{% endif %}{% if loop.last and item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>
-                {% if not loop.last %}
-                <a href="{{ item.href or '#' }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
-                {% else %}
-                {{ item.label }}
-                {% endif %}
-            </li>
+            <li{% if loop.last and item.class %} class="{{ item.class }}"{% endif %}{% if loop.last and item.i18nKey %} data-i18n="{{ item.i18nKey }}"{% endif %}>{% if not loop.last %}<a href="{{ item.href or '#' }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>{% else %}{{ item.label }}{% endif %}</li>
             {% endfor %}
         </ul>
     </div>
