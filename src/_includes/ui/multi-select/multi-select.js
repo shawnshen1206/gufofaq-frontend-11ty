@@ -224,6 +224,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         document.addEventListener("click", function (event) {
+            // 點選項時 toggleOption() → render() → renderDropdown() 會在這個 click 事件冒泡途中
+            // 把 dropdown.innerHTML 整個清空重建，於是冒泡到 document 時 event.target 已是被拔掉的舊節點。
+            // wrapper.contains(detached node) 恆為 false，會被誤判成「點在外面」而把剛選完就錯關——
+            // 違反 select2 closeOnSelect:false（選了不關、可連選）的設計意圖。
+            // 外部真實點擊的 target 必然仍連在文件上，故先濾掉已 detached 的 target 再判斷。
+            if (!event.target.isConnected) return;
             if (!wrapper.contains(event.target)) setOpen(false);
         });
 
