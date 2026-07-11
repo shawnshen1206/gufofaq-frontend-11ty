@@ -1,0 +1,5 @@
+// 問答紀錄頁籤的空狀態。真 app 是 js 動態 append（qaRecord.js / singleTest.js）帶 inline
+// style="padding:8px" —— 收進 class（§4 不留行內樣式），文字顏色沿 utilities 的 .text-gray。
+.tab-group .no-records {
+    padding: 8px;
+}

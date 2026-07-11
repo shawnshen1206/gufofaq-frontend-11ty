@@ -1,8 +1,12 @@
 {# 問答紀錄頁籤（單測/AB測試/前台對話預覽三頁共用的 .tab-group 清單，資料化）。
      外層 .tab-wrap/.tabs-title/.qa-side-panel 等 chrome 由各頁自帶（每頁不同），本元件只負責重複的三顆頁籤本身。
-     資料 qaRecordTabs（[{ label, active }]）由頁面提供（見 §3-2/§6），本元件不自帶。 #}
+     資料 qaRecordTabs（[{ label, active }]）由頁面提供（見 §3-2/§6），本元件不自帶。
+     無紀錄時顯示空狀態（真 app qaRecord.js/singleTest.js 皆有；原 inline padding 收進 _qa-record-tabs.scss，
+     div/span 不一統一為 div）。 #}
 <div class="tab-group">
     {% for tab in qaRecordTabs %}
     <button type="button" class="tab on-record{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
+    {% else %}
+    <div class="text-gray no-records" data-i18n="qa.noRecords">尚無問答紀錄</div>
     {% endfor %}
 </div>

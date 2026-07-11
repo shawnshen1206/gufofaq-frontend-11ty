@@ -277,6 +277,7 @@
   "pagination.totalSuffix": "pages",
   "qa.aiMessage": "AI message",
   "qa.backendQa": "Backend Q&A",
+  "qa.noRecords": "No records yet",
   "qa.basicConversationInfo": "Basic conversation info",
   "qa.chatroomId": "Chatroom ID",
   "qa.conversationDate": "Conversation date",
