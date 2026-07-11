@@ -25,6 +25,8 @@
 - 逃生口（捲軸、偽元素、`icon-mask`、`@starting-style`、`border-image` 漸層、`writing-mode`）隨 scss 照抄。
 - 全域層 `src/scss/{_var,_base,_mixin,_utilities,_normalize,_form-check,_dark-icons,_size}` → `styles/`；
   `main.scss` 只放全域層 `@use`，元件 scss 由各自 tsx `import "./X.scss"`。
+- `@use`／`url()`／`icon-mask(...)` 的路徑改寫，在原本那一行就地替換，不額外插入「環境適配」說明行——
+  `scss-diff.mjs` 是逐行位置比對，插入的行會讓後面每一行都錯位，整份被誤判不同。
 - `scss-diff.mjs` exit 0。
 
 ## ② markup（html → tsx）
@@ -82,11 +84,23 @@
 - WAAPI 動畫（如 `useSlideToggle` 300ms slide）open-state 截圖：`--legacy-eval`／`--react-eval` 用 async IIFE
   觸發後 `await` 超過動畫時長的 timeout（例 `(async()=>{el.click();await new Promise(r=>setTimeout(r,500))})()`），兩側同腳本同等待。
 - 新規則附負控 + 空轉守門；能白名單就別黑名單。
+- 切版展示區塊「一列多個示範元素」若本次只實作其中一部分（其餘留給後續 task），fpdiff 對每顆元素各自
+  下 `:nth-child(N)` selector 比對（`document.querySelector` 只認單一 root，整列一起比會把「本次不做」
+  的那幾顆判成假的元素增減）。
 
 ---
 
 ## 機械對照（元件常見）
 
+- Button：`.button`（文字按鈕，variant 走 `.button-{primary,border,green,red,dark,orange}` + `.button-sm`）
+  與 `.button-icon`（遮罩圖示按鈕：copy/watch/edit/delete/download/save/cancel/like/dislike/share +
+  `.no-bg` + `.size-sm`）雖同檔 scss、byte-identical 一起照抄，但是**兩種獨立元件**，不是同一元件的
+  variant——`.button-icon` 不吃 `.button` 的 padding/border/背景樣式，用途也是純圖示鈕。`<Button>` 只做
+  `.button` 文字按鈕；`.button-icon` 走獨立 `<IconButton>`（或消費端直接寫 class，見既有 consumer 用法）。
+- disabled 態：切版靜態 demo 常見 `.disabled` class 與 `disabled` 屬性並存（scss 選擇器也是
+  `&.disabled, &:disabled` 兩個都認）——這是給 `<a>` 這類無法帶原生 `disabled` 屬性的偽按鈕用的樣式門檻。
+  原生 `<button disabled>` 元件不必自動疊加 `.disabled` class（`:disabled` 偽類已同義、消費端只傳
+  `disabled` 即可）；gallery 展示若要讓 fpdiff 逐字比對切版 class 清單，用 `className="disabled"` 手動疊加。
 - 斷點：切版 max-width mobile-last；`nav-collapsed` 1250px（header ↔ mobile-nav 同值，收在 `_mixin.scss`）。
 - Header：`.header-right` 包 desktop-nav + `.header-controls-slot` + nav-toggle；nav-collapsed 時 `.header-controls-slot` 收起。
 - MobileNav：`.mobile-menu-wrap` 與各子選單用 `useSlideToggle`；子選單拆子元件（hook 不入 `.map()`）；
