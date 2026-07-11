@@ -140,6 +140,8 @@
 - MobileNav：`.mobile-menu-wrap` 與各子選單用 `useSlideToggle`；子選單拆子元件（hook 不入 `.map()`）；
   收合整個選單時子選單 `setImmediate(false)` 零動畫、同時把子選單 open state 設回 `false`（同步 `aria-expanded`）。
 - Modal：受控 `<dialog>`，effect 依 `open` 呼 `showModal()`／`close()`。
+- MultiSelect：切版的 visually-hidden 原生 `<select>`（vanilla 的資料源）不轉——React 資料模型是
+  `options/value/onChange` props；fpdiff 比對時切版側先移除該 hidden select 再比。
 - useSlideToggle：介面 `(open) → { ref, setImmediate }`；mount 首次不動畫。
 
 ## 測試設定
