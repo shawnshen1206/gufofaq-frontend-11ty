@@ -16,6 +16,8 @@
 - 每個元件從切版 `<name>.html` + `<name>.js` + `_<name>.scss` 整份重寫。
 - 現況 `apps/web` 只讀 **consumer 介面**（props 被哪些頁面用），實作不參考。
 - 從現況保留的只有 **React 應用層**：權限過濾、`fetch`、路由、Next 慣例。
+- 重建到符合切版的正確路徑／命名（`ui/` 原子→`components/ui/`）：consumer 改用新元件、刪掉走樣舊檔，不留新舊兩套。
+  （現況常有 undefined token 的走樣舊檔仍被 consumer import——那正是要退休的那份。）
 - 舊 jQuery 真 app 不看。
 
 ## ① scss（byte-identical）
@@ -36,6 +38,10 @@
 - a11y 綁定屬性成對帶：`aria-labelledby`／`aria-describedby` 連同它指到的 `id` 一起轉，兩端缺一不可
   （如 `<dialog aria-labelledby="x-title">` 配 `<h3 id="x-title">`），id 隨呼叫端 prop 衍生時兩處同一份運算式。
 - 命名：kebab（`mobile-nav`）→ PascalCase 資料夾＋同名 tsx/scss；`ui/` 原子→`components/ui/`，大元件→`components/`。
+- 元件形態：純 CSS class 貼到任意 element（如 `.block`）→ **scss-only**（無 tsx，consumer 手寫 className）；
+  固定 markup + variant（如 `span.divider-vertical`、`ul.list-style-disc`）→ **tsx wrapper**（variant→props、內容→children）。
+- 切版 `<name>.html` 只是 component.html 的 demo 片段（無 nunjucks 參數、literal demo copy）時，tsx 做 generic
+  props wrapper，demo 內容（示範文案/示例項）放 gallery，不 baked 進元件。
 - 切版 template 產生的縮排空白文字節點：改切版消除，React 不補死節點。
 
 ## ③ i18n（react-i18next）
