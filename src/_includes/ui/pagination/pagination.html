@@ -3,15 +3,24 @@
 
      data-page 是真 app 的換頁掛點（js/main.js:613 的 $(".pagination").on("click","a[data-page]") 委派），
      切版沒有換頁行為（要打 API），但這個屬性是轉換契約，必須留著（§5）。目前頁不掛 data-page，與真 app 一致。
-     上一頁/下一頁的 data-page 值是 current±1，切版算不出來（迴圈裡的 {% set %} 出不了迴圈），
-     由頁面用 prevPage / nextPage 傳；沒傳就不掛，不憑空編一個號碼。 #}
+     上一頁/下一頁兩態依 prevPage / nextPage 有無切換（真 app main.js renderPagination：第一頁不能往前、
+     最後一頁不能往後——enabled=藍箭頭+data-page、disabled=灰箭頭+aria-disabled）；頁面在第一頁就不傳
+     prevPage、最後一頁就不傳 nextPage，data-page 值是 current±1（迴圈裡的 {% set %} 出不了迴圈，由頁面算）。 #}
 <div class="pagination" role="navigation" aria-label="頁碼分頁" data-i18n-aria-label="pagination.nav">
     <ul>
+        {% if prevPage %}
+        <li class="prev">
+            <a href="#" data-page="{{ prevPage }}" aria-label="上一頁" data-i18n-aria-label="pagination.prev">
+                <img src="./images/icon_arrow_left_blue.png" width="48" height="48" decoding="async" alt="">
+            </a>
+        </li>
+        {% else %}
         <li class="prev disabled">
-            <a href="#"{% if prevPage %} data-page="{{ prevPage }}"{% endif %} aria-label="上一頁不可用" data-i18n-aria-label="pagination.prevDisabled" aria-disabled="true" tabindex="-1">
+            <a href="#" aria-label="上一頁不可用" data-i18n-aria-label="pagination.prevDisabled" aria-disabled="true" tabindex="-1">
                 <img src="./images/icon_arrow_left_gray.png" width="48" height="48" decoding="async" alt="">
             </a>
         </li>
+        {% endif %}
         {% for page in pages %}
         {% if page.ellipsis %}
         <li class="ellipsis">...</li>
@@ -21,10 +30,18 @@
         </li>
         {% endif %}
         {% endfor %}
+        {% if nextPage %}
         <li class="next">
-            <a href="#"{% if nextPage %} data-page="{{ nextPage }}"{% endif %} aria-label="下一頁" data-i18n-aria-label="action.nextPage">
+            <a href="#" data-page="{{ nextPage }}" aria-label="下一頁" data-i18n-aria-label="action.nextPage">
                 <img src="./images/icon_arrow_right_blue.png" width="48" height="48" decoding="async" alt="">
             </a>
         </li>
+        {% else %}
+        <li class="next disabled">
+            <a href="#" aria-label="下一頁不可用" data-i18n-aria-label="pagination.nextDisabled" aria-disabled="true" tabindex="-1">
+                <img src="./images/icon_arrow_right_gray.png" width="48" height="48" decoding="async" alt="">
+            </a>
+        </li>
+        {% endif %}
     </ul>
 </div>

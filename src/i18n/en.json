@@ -266,6 +266,8 @@
   "nav.tenantEnable": "Tenant Features",
   "nav.userMgmt": "User Management",
   "pagination.nav": "Pagination",
+  "pagination.nextDisabled": "Next page (unavailable)",
+  "pagination.prev": "Previous page",
   "pagination.prevDisabled": "Previous page (unavailable)",
   "qa.aiMessage": "AI message",
   "qa.backendQa": "Backend Q&A",
