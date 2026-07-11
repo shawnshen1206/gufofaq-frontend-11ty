@@ -44,6 +44,8 @@
 - 命名：kebab（`mobile-nav`）→ PascalCase 資料夾＋同名 tsx/scss；`ui/` 原子→`components/ui/`，大元件→`components/`。
 - 元件形態：純 CSS class 貼到任意 element（如 `.block`）→ **scss-only**（無 tsx，consumer 手寫 className）；
   固定 markup + variant（如 `span.divider-vertical`、`ul.list-style-disc`）→ **tsx wrapper**（variant→props、內容→children）。
+- `ui/` atom 不依業務資料自我隱藏（不寫 `if (data == null) return null`）——render 與否由 consumer 在
+  call site 決定（`{cond && <X/>}`）。
 - 切版 `<name>.html` 只是 component.html 的 demo 片段（無 nunjucks 參數、literal demo copy）時，tsx 做 generic
   props wrapper，demo 內容（示範文案/示例項）放 gallery，不 baked 進元件。
 - 切版 template 產生的縮排空白文字節點：改切版消除，React 不補死節點。
@@ -86,8 +88,10 @@
   這類值隨語言翻譯的屬性不進零容忍比對（fpdiff 對照的切版 dist 跟 React 開發模式預設同語言，比不出翻譯錯誤，
   靠 §③ 規則 + code review 把關）；`--component` normalize 元件絕對位置；`--legacy-eval`／`--react-eval` 開隱藏元件；
   排除 `.js-*`；both-empty／loadFail 守門。
-- full-width 元件：gallery 展示槽用切版展示頁的同一條寬度算式
-  （`.full-container`：aside 200px + main `calc(100% - 200px)` + padding 1rem + border-box）。
+- full-width 元件：gallery 展示槽用**該元件在切版真實頁的容器環境**——對照 `component.html`（guideline shell）的
+  元件用它的 `.full-container` 算式（aside 200px + main `calc(100% - 200px)` + padding 1rem + border-box）；
+  對照業務頁（如 `5-1-1_accountInfo.html`）的元件用業務頁的 `.main > .wrap`（全域 `_base.scss` 現成規則，
+  不手推公式）。兩種容器寬不同，用錯邊 fpdiff width 必差。
 - 兩側資料前提不對等時（如 React 保留 `/api/me` 權限過濾、切版 `dist` 永遠無過濾）：用 `--react-route="<urlGlob>|<json>"`／
   `--legacy-route=`（`goto` 前 `page.route()` 攔截、回一致資料）對齊資料再比幾何；不放寬 (A)-(D) 判準。
 - WAAPI 動畫（如 `useSlideToggle` 300ms slide）open-state 截圖：`--legacy-eval`／`--react-eval` 用 async IIFE
