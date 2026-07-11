@@ -32,17 +32,23 @@
 - `class`→`className`、`for`→`htmlFor`、`{# #}`→`{/* */}`、自閉合。
 - `{% include "x.html" %}`→`<X/>`、`{% for a in xs %}`→`{xs.map(a=>…)}`、`{% if c %}`→`{c && …}`／三元、`{% set %}`→props。
 - markup 完整照切版：wrapper、`aria-*`、`title` 全數帶到。
+- a11y 綁定屬性成對帶：`aria-labelledby`／`aria-describedby` 連同它指到的 `id` 一起轉，兩端缺一不可
+  （如 `<dialog aria-labelledby="x-title">` 配 `<h3 id="x-title">`），id 隨呼叫端 prop 衍生時兩處同一份運算式。
 - 命名：kebab（`mobile-nav`）→ PascalCase 資料夾＋同名 tsx/scss；`ui/` 原子→`components/ui/`，大元件→`components/`。
 - 切版 template 產生的縮排空白文字節點：改切版消除，React 不補死節點。
 
 ## ③ i18n（react-i18next）
 
-- `data-i18n="k">文<`→`{t("k")}`；`data-i18n-title="k"`→`title={t("k")}`（placeholder/aria-label/alt 對到對應屬性）。
+- `data-i18n="k">文<`→`{t("k")}`；`data-i18n-title="k"`→`title={t("k")}`（`data-i18n-aria-label`/`data-i18n-alt`/
+  `data-i18n-placeholder` 對到對應屬性）：帶 `data-i18n-<attr>` 的屬性一律用 `t()` 譯值，不是原文 label／資料值——
+  同一顆節點的文字走 `t()`、屬性卻留原文 label 是常見漏網（沒有 `data-i18n-*` 標記的屬性才維持原文）。
 - markup 不掛 `data-i18n`／`.js-lang-toggle`。
-- 語言鈕標籤顯示要切去的語言（en→「中」、zh→「EN」，不進字典）；點擊 `i18n.changeLanguage` + `localStorage("lang")`。
+- 語言鈕標籤顯示要切去的語言（en→「中」、zh→「EN」，不進字典）；點擊 `i18n.changeLanguage` + `localStorage("lang")` +
+  同步 `document.documentElement.lang`（`en`→`"en"`，否則`"zh-Hant"`）——不是只有 `<head>` no-flash 腳本首次載入設一次。
 - i18n init `lng="zh"`；client mount 後依 `localStorage("lang")` `changeLanguage`。
 - 主題：`<head>` no-flash inline script 設 `data-theme`（照抄 `base.html` 的 IIFE）、`<html suppressHydrationWarning>`；
-  圖示切換用 scss `display: var(--theme-icon-*)`，元件不讀 `[data-theme]`。
+  圖示切換用 scss `display: var(--theme-icon-*)`，元件不讀 `[data-theme]`；深淺鈕點擊同步 `data-theme`
+  （同語言鈕：live 切換要即時同步 `<html>` 屬性，不能只靠首次載入的 no-flash 腳本）。
 
 ## ④ 行為（vanilla js → hooks）
 
@@ -63,8 +69,12 @@
 ## ⑥ 視覺指紋驗收
 
 - `scss-diff.mjs`：去路徑映射後 byte-identical。
-- `fpdiff.mjs`：幾何（x/y/w/h/display/元素增減）零容忍；繪製白名單只含資產路徑 + i18n 文字；
-  `--component` normalize 元件絕對位置；`--legacy-eval`／`--react-eval` 開隱藏元件；排除 `.js-*`；both-empty／loadFail 守門。
+- `fpdiff.mjs`：幾何（x/y/w/h/display/元素增減）零容忍；a11y 結構屬性（`role`／`aria-labelledby`／
+  `aria-describedby`／`aria-haspopup`／`aria-expanded`、以及被某個 `aria-*by` 引用到的元素 `id`）跟幾何同級零容忍
+  （值是結構性 id/常數，不隨語言變）；繪製白名單只含資產路徑 + i18n 文字；`title`／`aria-label`／`alt`／`placeholder`
+  這類值隨語言翻譯的屬性不進零容忍比對（fpdiff 對照的切版 dist 跟 React 開發模式預設同語言，比不出翻譯錯誤，
+  靠 §③ 規則 + code review 把關）；`--component` normalize 元件絕對位置；`--legacy-eval`／`--react-eval` 開隱藏元件；
+  排除 `.js-*`；both-empty／loadFail 守門。
 - full-width 元件：gallery 展示槽用切版展示頁的同一條寬度算式
   （`.full-container`：aside 200px + main `calc(100% - 200px)` + padding 1rem + border-box）。
 - 兩側資料前提不對等時（如 React 保留 `/api/me` 權限過濾、切版 `dist` 永遠無過濾）：用 `--react-route="<urlGlob>|<json>"`／
