@@ -121,6 +121,9 @@
   重抄 + scss-diff），不推遲——它擋著當批的比對，發現時修最便宜。
 - fpdiff 的切版對照頁以 **grep dist 驗證元素/id 實際落點**為準（元件檔頭註解次之）——別直接信外部指派清單，
   頁面沒有該 id 就换真正含它的 business 頁。
+- 已知差異類別（fpdiff 遇到時對照本條、不重新 root-cause）：AI 訊息內容 React 走 ReactMarkdown（`<p>` +
+  margin），切版 dist 是手寫凍結 HTML——高度/y 位移 cascade 限於訊息內文子樹；驗法＝scope 到單一訊息比
+  x/width（應 0 diff），內文高度差記 report。切版對此欄位本無 string→markup 契約。
 - 新規則附負控 + 空轉守門；能白名單就別黑名單。
 - 一列多個示範元素只實作部分時，fpdiff 對每顆各自下 `:nth-child(N)` selector（`document.querySelector` 單 root）。
 
