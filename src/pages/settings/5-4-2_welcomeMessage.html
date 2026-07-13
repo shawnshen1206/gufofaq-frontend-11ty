@@ -1,0 +1,80 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::歡迎語設定
+titleKey: nav.welcomeMsg
+pageHeading: 歡迎語設定
+permalink: 5-4-2_welcomeMessage.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "歡迎語設定", i18nKey: "nav.welcomeMsg" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 設定檔選擇：每個設定檔（前台/後台三套）各有一份歡迎語，切換即載入該設定檔的歡迎語與版本史。
+     沿用 5-4-1 版本篩選欄同一個 form-group 結構（原生 select，singleSelect 為 select2 增強 hook）。 #}
+<div class="block mb-10">
+    <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
+        <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label for="welcomeProfileSelect" class="control-label" data-i18n="settings.profile">設定檔</label>
+            </div>
+            <div class="field">
+                <select id="welcomeProfileSelect" class="form-control singleSelect">
+                    <option value="1" data-i18n="settings.config1">設置一</option>
+                    <option value="2" data-i18n="settings.config2">設置二</option>
+                    <option value="3" data-i18n="settings.config3">設置三</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# 歡迎語編輯器：沿用 5-4-1 草稿卡（.block.prompt-card.draft）結構——儲存即建立新版本、不覆蓋舊版。 #}
+<div class="block prompt-card draft mb-10">
+    <div class="flex-row column gap-16">
+        <div class="text-md text-blue" data-i18n="settings.welcomeMessage">歡迎語</div>
+        <div>
+            <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
+            <div class="form-group">
+                <div class="field">
+                    <textarea class="form-control size-lg prompt-input" placeholder="請輸入歡迎語內容" data-i18n-placeholder="settings.pleaseEnterWelcome" aria-label="歡迎語內容" data-i18n-aria-label="settings.welcomeContent">你好，請問有甚麼問題需要我幫你解答的?</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row justify-content-center gap-16">
+            <button type="button" class="button button-primary js-welcome-save" data-toast="已儲存為新版本|內容欄位不可為空|儲存歡迎語失敗，請稍後再試" data-i18n-data-toast="toast.saveWelcome" data-toast-type="success|warning|error" data-i18n="action.saveNewVersion">儲存為新版本</button>
+        </div>
+    </div>
+</div>
+
+{# 歡迎語版本史：結構同提示詞版本卡（5-4-1），動作為 複製 + 還原此版本；
+     歡迎語不參與檢索，故無「被問答引用次數」欄。 #}
+<div class="prompt-card-list flex-row column gap-10">
+    {% set welcomeVersions = [
+      { label: "V2", timeRange: "2026/01/20 13:09:37～", content: "您好，我是智能客服，有什麼可以協助您的嗎？" },
+      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/20 13:09:36", content: "你好，請問有甚麼問題需要我幫你解答的?" }
+    ] %}
+    {% for v in welcomeVersions %}
+    <div class="block prompt-card">
+        <div class="flex-row column gap-16">
+            <div class="flex-row justify-content-between align-items-center flex-wrap gap-16">
+                <div class="text-md text-blue">{{ v.label }}（{{ v.timeRange }}）</div>
+                <div class="flex-row align-items-center gap-8">
+                    <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="歡迎語已複製！" data-i18n-data-toast="welcome.copied">
+                        <span class="tooltip" data-i18n="action.copy">複製</span>
+                    </button>
+                    <span class="divider-vertical"></span>
+                    <button type="button" class="button button-border button-sm js-welcome-restore" data-toast="已還原此版本|還原失敗，請稍後再試" data-i18n-data-toast="toast.restoreWelcome" data-toast-type="success|error" data-i18n="action.restore">還原此版本</button>
+                </div>
+            </div>
+            <div class="prompt-content">
+                <p>{{ v.content }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
