@@ -1,0 +1,77 @@
+{# 租戶管理 modal，取自 5-6-1_platformTenants 頁「管理」鈕（.js-manage-tenant）：平台系統管理員管理指定租戶的
+     額度／使用期／模型開通／代理登入。開窗需先選定哪個租戶才知道管理誰＝業務條件開窗，故該鈕保留真 app hook class、
+     不掛 data-open-modal（GUIDELINE §5）。彈窗本體回歸切版，四塊：
+       1. 額度——form-control 文字欄
+       2. 使用期延展——日期欄，靜態外觀（GUIDELINE：日期選擇不在切版範圍，交由 React 套件實作，沿用 .calendar hook class）
+       3. 模型開通——checkbox 清單，欄位寫法比照 5-5-1_userManagement「能力」checkbox
+       4. 成員代理登入——說明文字 + 代理鈕；代理是跳轉動作，此處以 data-toast 演出結果（比照 5-8 widgetTokens「產生 Token」
+          的直接動作模式，不掛 btn-close-modals——代理鈕不是關窗的那顆鈕）
+     額度／使用期／模型開通共用「儲存」鈕（toast.manageTenant，成功/失敗）；代理登入是獨立動作，自己的 toast
+    （toast.impersonateTenant，成功/權限不足/失敗）。
+     無參數——單一用途的確認彈窗，同 components/apply-settings-modal 的模式。 #}
+<dialog class="modals" id="manageTenantModal" aria-labelledby="manageTenantModal-title">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="manageTenantModal-title" data-i18n="settings.manageTenant">租戶管理</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="flex-row column gap-24">
+                        <div class="flex-row gap-40 mobile-column sm-gap-16">
+                            <div class="col-6-md col-12-sm">
+                                <div class="form-group">
+                                    <div class="label">
+                                        <label for="tenantQuotaInput" class="control-label" data-i18n="settings.quota">額度</label>
+                                    </div>
+                                    <div class="field">
+                                        <input type="text" id="tenantQuotaInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6-md col-12-sm">
+                                <div class="form-group">
+                                    <div class="label">
+                                        <label for="tenantExpiryInput" class="control-label" data-i18n="settings.extendExpiry">使用期延展</label>
+                                    </div>
+                                    <div class="field">
+                                        <input type="text" id="tenantExpiryInput" placeholder="請選擇" data-i18n-placeholder="common.pleaseSelect" class="form-control calendar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-row column gap-8">
+                            <div id="tenantModelEnableLabel" class="text-bold" data-i18n="settings.modelEnablement">模型開通</div>
+                            <div class="flex-row flex-wrap gap-20" role="group" aria-labelledby="tenantModelEnableLabel">
+                                <label class="form-checkbox">
+                                    <input type="checkbox" name="tenant_model_gpt4o_mini" checked>
+                                    <span>OpenAI gpt-4o-mini</span>
+                                </label>
+                                <label class="form-checkbox">
+                                    <input type="checkbox" name="tenant_model_gpt4o">
+                                    <span>OpenAI gpt-4o</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex-row column gap-8">
+                            <div class="text-bold" data-i18n="settings.memberImpersonation">成員代理登入</div>
+                            <p class="text-gray m-0" data-i18n="settings.impersonateDesc">以成員身分登入以協助排除問題，僅供支援與除錯使用。</p>
+                            <div class="flex-row">
+                                <button type="button" class="button button-border" data-toast="已代理登入該成員|權限不足，無法代理登入|代理登入失敗，請稍後再試" data-i18n-data-toast="toast.impersonateTenant" data-toast-type="success|warning|error" data-i18n="action.impersonate">代理登入</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary btn-close-modals" data-toast="已更新|儲存失敗" data-i18n-data-toast="toast.manageTenant" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

@@ -55,7 +55,10 @@ permalink: 5-8_widgetTokens.html
 
 {# Token 清單：default-table。名稱 / Token（可複製）/ 允許網域 / 狀態 / 操作（複製嵌入連結 + 撤銷）。
      token 本就嵌在瀏覽器端、非機密，故清單直接顯示全值供複製。撤銷鈕只在啟用中的列出現（業務條件，
-     用 hook class .js-revoke-token）。示範 2 筆（一啟用一已撤銷）。 #}
+     用 hook class .js-revoke-token）。示範 2 筆（一啟用一已撤銷）。
+     撤銷鈕的演出：查過 components/delete-modal 的參數化程度——它的標題/內文是寫死「刪除」（data-i18n="action.delete"），
+     不支援自訂標題/文案，故不套用它；改比照同頁「產生 Token」的直接動作模式，data-toast 直接掛在 .js-revoke-token 上
+    （接上原本孤兒的 toast.revokeWidgetToken key）。 #}
 {% set tokens = [
     {
         name: "官網客服",
@@ -118,7 +121,7 @@ permalink: 5-8_widgetTokens.html
                         <div class="btn-group">
                             <button type="button" class="button button-border button-sm" data-toast="嵌入連結已複製" data-i18n-data-toast="widget.embedCopied" data-i18n="widget.copyEmbed">複製嵌入連結</button>
                             {% if not row.disabled %}
-                            <button type="button" class="button button-red button-sm js-revoke-token" data-i18n="action.revoke">撤銷</button>
+                            <button type="button" class="button button-red button-sm js-revoke-token" data-toast="已撤銷|撤銷失敗，請稍後再試" data-i18n-data-toast="toast.revokeWidgetToken" data-toast-type="success|error" data-i18n="action.revoke">撤銷</button>
                             {% endif %}
                         </div>
                     </td>

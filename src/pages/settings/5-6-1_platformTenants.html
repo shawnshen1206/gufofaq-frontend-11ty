@@ -71,7 +71,7 @@ permalink: 5-6-1_platformTenants.html
                         <div class="btn-group">
                             <button type="button" class="button button-border button-sm" data-toast="更新成功|儲存失敗" data-i18n-data-toast="toast.saveTenant" data-toast-type="success|error" data-i18n="action.save">儲存</button>
                             {# 管理：開窗需先選定「管理哪個租戶」＝業務條件開窗，用 hook class（.js-manage-tenant），
-                                 不掛 data-open-modal（§5）。彈窗（額度/使用期/模型開通）由 React 以共用 Modal 組成。 #}
+                                 不掛 data-open-modal（§5）。彈窗本體見 components/manage-tenant-modal（include 於本頁底部）。 #}
                             <button type="button" class="button button-border button-sm js-manage-tenant" data-i18n="settings.manage">管理</button>
                         </div>
                     </td>
@@ -81,3 +81,5 @@ permalink: 5-6-1_platformTenants.html
         </table>
     </div>
 </div>
+
+{% include "components/manage-tenant-modal/manage-tenant-modal.html" %}
