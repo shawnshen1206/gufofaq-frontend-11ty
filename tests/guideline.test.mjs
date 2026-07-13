@@ -501,32 +501,109 @@ test("§4 不得依頁面覆寫元件（.page-xxx .button {}）", () => {
 
 // ─────────────────────────── §4-2 i18n ───────────────────────────
 
-test("§4-2 markup 用到的靜態 i18n key 都要在 en.json 有英文", () => {
-    const en = JSON.parse(read("src/i18n/en.json"));
+// 收集全站「用到的 i18n key」——被 §4-2 的存在性測試與孤兒 key 反向測試共用（同一份收集邏輯，
+// 一份改就兩邊都跟著改，不會漏改其中一邊而分岔）。
+//
+// 除了 data-i18n* / data-key-open|close / data-placeholder-key / titleKey / {% set %} 資料陣列
+// 的 i18nKey 系欄位，還收斂幾種「間接引用」寫法（不收的話，孤兒 key 測試會把它們全部誤判成孤兒）：
+//   - `{% set xxxKey = "real.key" %}`：頁面先把 key 存進一個變數，之後用 `{{ xxxKey }}` 消費
+//     （5-4-1/dataImport 等頁的 deleteToastKey / successRetryKey / editPlaceholderKey…）
+//   - JS 的 `var KEY_XXX = "real.key"`：兩態切換時把 key 存常數，`t()` 呼叫時傳變數不是字面
+//     （accordion.js / collapse-text.js / qa-side-panel.js 的 KEY_COLLAPSE）
+//   - `data-i18n="{{ xxxKey or 'fallback.key' }}"`：元件參數的預設 key（chart-box / upload-box / success-box）
+//   - 條件字面值 `data-i18n="{% if %}key1{% else %}key2{% endif %}"`（5-5-1 的 role.admin／role.member）
+// 回傳 { used, dynamicPrefixes }：dynamicPrefixes 是 `data-i18n="field.{{ slot.key }}"` 這種串接出
+// 的 key 前綴——解不出是哪一支確切的 key，只能證明整個 field.* 家族都在服役，故只給孤兒 key 檢查用
+// （反向的「這個字面 key 有沒有英文」用不到前綴，也不該用，那條要的是精確的字面 key）。
+function collectUsedI18nKeys() {
     const used = new Map();
+    const note = (k, where) => { if (!k.includes("{{") && !k.includes("{%")) (used.get(k) ?? used.set(k, []).get(k)).push(where); };
+    const dynamicPrefixes = new Set();
     for (const f of srcHtml) {
         read(f).split(/\r?\n/).forEach((line, i) => {
-            const note = (k) => { if (!k.includes("{{") && !k.includes("{%")) (used.get(k) ?? used.set(k, []).get(k)).push(`${f}:${i + 1}`); };
-            for (const m of line.matchAll(/\bdata-i18n(?:-[a-z-]+)?="([^"]+)"/g)) note(m[1]);
-            for (const m of line.matchAll(/\bdata-key-(?:open|close)="([^"]+)"/g)) note(m[1]);
-            for (const m of line.matchAll(/\bdata-placeholder-key="([^"]+)"/g)) note(m[1]);
-            for (const m of line.matchAll(/^titleKey:\s*([\w.]+)\s*$/g)) note(m[1]);
+            const where = `${f}:${i + 1}`;
+            for (const m of line.matchAll(/\bdata-i18n(?:-[a-z-]+)?="([^"]+)"/g)) note(m[1], where);
+            for (const m of line.matchAll(/\bdata-key-(?:open|close)="([^"]+)"/g)) note(m[1], where);
+            for (const m of line.matchAll(/\bdata-placeholder-key="([^"]+)"/g)) note(m[1], where);
+            for (const m of line.matchAll(/^titleKey:\s*([\w.]+)\s*$/g)) note(m[1], where);
             // 全站的選單／目錄／麵包屑／欄位提示，key 都住在 {% set %} 的資料陣列裡，
             // 靠 data-i18n="{{ item.i18nKey }}" 渲染 —— 上面那幾條 regex 抓到的是 `{{ ... }}` 字面，一律被 note() 跳過。
             // 不掃這裡的話，新增一筆選單卻忘了補 en.json，英文模式會默默顯示繁中。
-            for (const m of line.matchAll(/\b(?:i18nKey|labelKey|placeholderKey|titleKey|descKey):\s*"([\w.]+)"/g)) note(m[1]);
+            for (const m of line.matchAll(/\b(?:i18nKey|labelKey|placeholderKey|titleKey|descKey):\s*"([\w.]+)"/g)) note(m[1], where);
+            // 間接 1：{% set xxxKey = "real.key" %}
+            for (const m of line.matchAll(/\{%\s*set\s+\w*Key\s*=\s*"([\w.]+)"\s*%\}/g)) note(m[1], where);
+            // 間接 2：data-i18n="{{ xxxKey or 'fallback.key' }}"（鎖在 data-i18n* 屬性內，
+            // 否則會連 href="{{ x or '#' }}"、accept="{{ x or '.xlsx' }}" 這類無關的預設值也一起抓進來）
+            for (const m of line.matchAll(/\bdata-i18n(?:-[a-z-]+)?="\{\{\s*[\w.]+\s+or\s+'([\w.]+)'\s*\}\}"/g)) note(m[1], where);
+            // 間接 3：條件字面值 data-i18n="{% if %}key1{% else %}key2{% endif %}"
+            for (const m of line.matchAll(/data-i18n(?:-[a-z-]+)?="\{%\s*if\s[^"]*?%\}([\w.]+)\{%\s*else\s*%\}([\w.]+)\{%\s*endif\s*%\}"/g)) {
+                note(m[1], where); note(m[2], where);
+            }
+            // 動態前綴：data-i18n="field.{{ slot.key }}" 這種串接 key，整個 field.* 家族視為在服役
+            for (const m of line.matchAll(/\bdata-i18n(?:-[a-z-]+)?="(\w+)\.\{\{/g)) dynamicPrefixes.add(`${m[1]}.`);
         });
     }
     // 元件 js 直接呼叫 GufoI18n.t("key", "繁中") 的 key，靜態 markup 掃不到。
     // 跳過 lang-toggle.js（它是 t() 的定義處，註解裡有 t("key") 的示範）與所有註解行。
-    for (const f of srcJs.filter((p) => !p.includes("lang-toggle"))) {
+    for (const f of srcJs) {
         read(f).split(/\r?\n/).forEach((line, i) => {
             const code = line.split("//")[0];
-            for (const m of code.matchAll(/\bt\(\s*"([\w.]+)"/g)) (used.get(m[1]) ?? used.set(m[1], []).get(m[1])).push(`${f}:${i + 1}`);
+            const where = `${f}:${i + 1}`;
+            if (!f.includes("lang-toggle"))
+                for (const m of code.matchAll(/\bt\(\s*"([\w.]+)"/g)) note(m[1], where);
+            // 間接：var KEY_XXX = "real.key"（accordion.js / collapse-text.js / qa-side-panel.js）
+            for (const m of code.matchAll(/var\s+KEY_\w+\s*=\s*"([\w.]+)"/g)) note(m[1], where);
         });
     }
+    return { used, dynamicPrefixes };
+}
+
+test("§4-2 markup 用到的靜態 i18n key 都要在 en.json 有英文", () => {
+    const en = JSON.parse(read("src/i18n/en.json"));
+    const { used } = collectUsedI18nKeys();
+    assert.ok(used.size > 100, `只收集到 ${used.size} 個用到的 key —— 這條測試在空轉`);
     const missing = [...used.keys()].filter((k) => en[k] == null);
     assert.equal(missing.length, 0, `英文模式會默默顯示繁中：\n${missing.map((k) => `${k}  ← ${used.get(k)[0]}`).join("\n")}`);
+});
+
+test("§4-2 en.json 不得有孤兒 key（每個 key 都要被 markup／js 引用，否則是切完就沒人用的死翻譯）", () => {
+    // 跟上一條共用同一份「用到的 key」收集邏輯，反向斷言：en.json 的每個 key 都要出現在那個集合裡
+    // （或落在 dynamicPrefixes 的某個前綴下）。孤兒 key 不會壞任何頁面，純粹是沒人會再看到的死翻譯，
+    // 靜態掃描是唯一抓得到的方式——沒有任何一頁會提醒你「這個 key 早就沒人用了」。
+    const en = JSON.parse(read("src/i18n/en.json"));
+    const { used, dynamicPrefixes } = collectUsedI18nKeys();
+    const keys = Object.keys(en);
+    assert.ok(keys.length > 400, `en.json 只有 ${keys.length} 個 key —— 這條測試在空轉`);
+    const orphans = keys.filter((k) => !used.has(k) && ![...dynamicPrefixes].some((p) => k.startsWith(p)));
+    assert.equal(orphans.length, 0, `en.json 有 key 沒有任何 markup/js 引用（死翻譯，應該刪掉）：\n${orphans.join("\n")}`);
+});
+
+test("§4-2 markup 引用到的 key，en.json 的值不得是空字串（allowlist 除外）", () => {
+    // 「孤兒 key」測試擋的是「en.json 有、沒人用」；這條反過來擋「有人用、卻沒有英文內容」——
+    // 英文模式下會顯示一片空白，比顯示繁中更容易被誤以為是「這裡本來就沒有文字」。
+    // 三顆刻意留空（見各自 en.json 旁的定義）：comp.copyright（頁尾版權，真 app 就是空字串）、
+    // qa.detailConvItems（分頁「共 N 筆」的裝飾字，英文版式不需要這個字）、
+    // pagination.pageSuffix（"Page 3"英文不需要中文「頁」那個字尾）。
+    const ALLOWLIST = new Set(["comp.copyright", "qa.detailConvItems", "pagination.pageSuffix"]);
+    const en = JSON.parse(read("src/i18n/en.json"));
+    const { used } = collectUsedI18nKeys();
+    assert.ok(used.size > 100, `只收集到 ${used.size} 個用到的 key —— 這條測試在空轉`);
+    const hits = [];
+    for (const [k, where] of used) {
+        if (ALLOWLIST.has(k)) continue;
+        if (en[k] === "") hits.push(`${k}  ← ${where[0]}`);
+    }
+    assert.equal(hits.length, 0, `英文模式下會顯示空白（如非刻意留空，請補上英文；如確實該空，請加進 allowlist）：\n${hits.join("\n")}`);
+});
+
+test("§4-2 en.json 的 key 依字母序排列（全域嚴格字母序，插入新 key 別手滑塞錯位置）", () => {
+    const raw = read("src/i18n/en.json");
+    const keys = [...raw.matchAll(/^\s*"((?:[^"\\]|\\.)*)":/gm)].map((m) => m[1]);
+    assert.ok(keys.length > 400, `只抓到 ${keys.length} 個 key —— 這條測試在空轉`);
+    const bad = [];
+    for (let i = 1; i < keys.length; i++)
+        if (keys[i - 1] > keys[i]) bad.push(`"${keys[i - 1]}" 排在 "${keys[i]}" 前面，不是字母序`);
+    assert.equal(bad.length, 0, `en.json 的 key 沒有照字母序插入：\n${bad.join("\n")}`);
 });
 
 test("§4-2 / §5 JS 不得寫死顯示字串（繁中只能當 GufoI18n.t 的 fallback）", () => {
@@ -854,6 +931,25 @@ test("元件的 html 都必須被 include（不得有孤兒死碼）", () => {
         .filter(({ bucket, name }) => !allMarkup.includes(`include "${bucket}/${name}/${name}.html"`))
         .map(({ bucket, name }) => `${bucket}/${name}/${name}.html`);
     assert.equal(orphans.length, 0, `沒有任何頁面/元件 include 它們（展示片段請在 component.html include）：\n${orphans.join("\n")}`);
+});
+
+test("catalog.html（頁面目錄）要收錄每一個 page-shell 頁面的連結", () => {
+    // 新切一頁很容易漏補頁面目錄的連結（跟漏補 header 導覽選單是同一種腐化）——那一頁在 GitHub Pages
+    // 上就成了一條沒有入口的死路，得知道確切網址才進得去。豁免只需要「layout 不是 page-shell」
+    // 這一個條件：component.html 是 base layout 的展示頁、404.html/catalog.html 自己在 src/pages/**
+    // 之外，三者都天然不在這條測試的掃描範圍內，不必再手寫一份豁免清單。
+    const catalog = read("src/catalog.html");
+    const hrefs = new Set([...catalog.matchAll(/href:\s*"([^"]+)"/g)].map((m) => m[1]));
+    assert.ok(hrefs.size > 15, `catalog.html 只掃到 ${hrefs.size} 個連結 —— 這條測試在空轉`);
+
+    const pages = gitFiles('"src/pages/**/*.html"')
+        .filter((f) => /^layout: layouts\/page-shell\/page-shell\.html\s*$/m.test(read(f)));
+    assert.ok(pages.length > 15, `只掃到 ${pages.length} 個 page-shell 頁 —— 這條測試在空轉`);
+
+    const missing = pages
+        .map((f) => [f, (read(f).match(/^permalink:\s*(\S+)\s*$/m) || [])[1]])
+        .filter(([, perma]) => perma && !hrefs.has(perma));
+    assert.equal(missing.length, 0, `catalog.html 頁面目錄漏了這些頁（GitHub Pages 上沒有入口）：\n${missing.map(([f, p]) => `${f} → ${p}`).join("\n")}`);
 });
 
 test("§5 掛 data-open-modal 的鈕不得同時帶業務 hook class（那代表開窗是有條件的）", () => {

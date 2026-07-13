@@ -444,6 +444,13 @@ bodyClass: guideline-page
                     <li>tab有較大內距，在.tab加上「.tab-md」這個class，最外層使用「div.tab-row.fit-content」包覆</li>
                 </ul>
             </div>
+            <div class="caption mt-16">
+                <ul>
+                    <li>問答紀錄頁籤空狀態（components/qa-record-tabs，qaRecordTabs 傳空陣列時顯示「尚無問答紀錄」）</li>
+                </ul>
+            </div>
+            {% set qaRecordTabs = [] %}
+            {% include "components/qa-record-tabs/qa-record-tabs.html" %}
         </section>
 
         <section id="listStyleSection">
