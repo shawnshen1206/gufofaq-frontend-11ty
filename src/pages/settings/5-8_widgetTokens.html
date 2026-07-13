@@ -1,0 +1,130 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::Widget Token 管理
+titleKey: nav.widgetTokens
+pageHeading: Widget Token 管理
+permalink: 5-8_widgetTokens.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "Widget Token 管理", i18nKey: "nav.widgetTokens" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 前台嵌入用 widget token 管理（僅租戶管理者）。SaaS 新需求，逆向自 product widget_tokens.py：
+     token 綁允許網域（allowed_origins）、供瀏覽器端前台機器人以 X-Widget-Token 呼叫公開端點；
+     可撤銷（軟刪）。前台嵌入連結＝ /faq?wt=<token>。真正把關在 product（require_admin）。 #}
+<p class="text-gray" data-i18n="widget.intro">Widget token 供前台公開機器人（/faq?wt=）認出租戶。每個 token 綁定允許的網域，可隨時撤銷。</p>
+
+{# 產生 token：名稱（選填）+ 允許網域（必填，一行一個 https://網域）+ 產生按鈕 #}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="widget.createToken">產生 Token</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="widgetNameInput" class="control-label" data-i18n="widget.tokenName">名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="widgetNameInput" placeholder="例如：官網客服" data-i18n-placeholder="widget.namePlaceholder" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="widgetOriginsInput" class="control-label required" data-i18n="widget.allowedOrigins">允許網域</label>
+                </div>
+                <div class="field">
+                    <textarea id="widgetOriginsInput" rows="3" placeholder="一行一個，例如 https://example.com" data-i18n-placeholder="widget.originsPlaceholder" class="form-control"></textarea>
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="已產生 Token|網域格式錯誤，請確認格式為 https://網域|產生失敗，請稍後再試" data-i18n-data-toast="toast.createWidgetToken" data-toast-type="success|warning|error">
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+            <span data-i18n="widget.createToken">產生 Token</span>
+        </button>
+    </div>
+</div>
+
+{# Token 清單：default-table。名稱 / Token（可複製）/ 允許網域 / 狀態 / 操作（複製嵌入連結 + 撤銷）。
+     token 本就嵌在瀏覽器端、非機密，故清單直接顯示全值供複製。撤銷鈕只在啟用中的列出現（業務條件，
+     用 hook class .js-revoke-token）。示範 2 筆（一啟用一已撤銷）。 #}
+{% set tokens = [
+    {
+        name: "官網客服",
+        token: "wgt_aB3xYz9Qle8sample000tokenvalue00",
+        origins: ["https://acme.com", "https://www.acme.com"],
+        disabled: false
+    },
+    {
+        name: "測試站",
+        token: "wgt_9zK1sample000revokedtokenvalue00",
+        origins: ["https://staging.acme.com"],
+        disabled: true
+    }
+] %}
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="widget.tokenList">Token 清單</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="width:160px; min-width:160px;">
+                <col style="min-width:280px;">
+                <col style="width:220px; min-width:220px;">
+                <col style="width:100px; min-width:100px;">
+                <col style="width:200px; min-width:200px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="widget.tokenName">名稱</th>
+                    <th data-i18n="widget.token">Token</th>
+                    <th data-i18n="widget.allowedOrigins">允許網域</th>
+                    <th data-i18n="widget.status">狀態</th>
+                    <th data-i18n="common.actions">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in tokens %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td>
+                        <div class="flex-row align-items-center gap-8">
+                            <span>{{ row.token }}</span>
+                            <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="Token 已複製" data-i18n-data-toast="widget.tokenCopied">
+                                <span class="tooltip" data-i18n="action.copy">複製</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        {% for o in row.origins %}
+                        <div>{{ o }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if row.disabled %}
+                        <span class="text-gray" data-i18n="widget.revoked">已撤銷</span>
+                        {% else %}
+                        <span class="text-bold" data-i18n="widget.active">啟用</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm" data-toast="嵌入連結已複製" data-i18n-data-toast="widget.embedCopied" data-i18n="widget.copyEmbed">複製嵌入連結</button>
+                            {% if not row.disabled %}
+                            <button type="button" class="button button-red button-sm js-revoke-token" data-i18n="action.revoke">撤銷</button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
