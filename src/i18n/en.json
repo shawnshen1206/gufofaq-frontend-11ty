@@ -431,6 +431,7 @@
   "settings.tenantAdmin": "Tenant admin",
   "settings.tenantAdminToggle": "Toggle tenant admin",
   "settings.tenantFeatures": "Tenant feature access",
+  "settings.manage": "Manage",
   "settings.timeRange": "Time range",
   "settings.timesUnit": "times",
   "settings.to": "to",
