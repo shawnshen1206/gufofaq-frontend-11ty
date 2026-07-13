@@ -629,6 +629,46 @@ test("§5 不得有 jQuery 或任何第三方套件", () => {
     assert.equal(hits.length, 0, fail(hits));
 });
 
+test("§5 元件 js 不得用 .isConnected 判斷「點外部」（零合法用途，該用 composedPath()）", () => {
+    // .isConnected 只能證明「此刻這個節點還在文件裡」，證明不了「這次 click 有沒有發生在它裡面」——
+    // 會被拿來用的唯一情境，就是想繞過 detached-node 問題卻用錯工具（見 composedPath 那條規則的
+    // 註解：別的 document 委派可能先重繪把 target 拔掉重建）。isConnected 在那個情境下永遠是
+    // true（重建後的新節點一樣連著文件），完全掩蓋不了問題，等於白寫。黑名單而非白名單，因為
+    // 這是「零合法用途」的 API，不是「大多數情況不該用」。
+    const hits = scanLines(srcJs, (line) => {
+        const code = line.replace(/\/\/.*$/, "");
+        return /\.isConnected\b/.test(code) ? "禁用 .isConnected（改用 composedPath()）" : null;
+    });
+    assert.equal(hits.length, 0, fail(hits));
+});
+
+test("§5 元件 js 若在 document click 委派裡做「收合/關閉」語意，必須用 composedPath() 判斷點外部", () => {
+    // 判準以「檔案」為單位：同一檔案內出現 document.addEventListener("click" 委派，且同檔任何
+    // 地方出現 dismiss 語意（setOpen(false) / classList.remove("open") / classList.add("collapsed")），
+    // 就代表這支 js 有「點外部收合」這條路徑，該檔就必須含 composedPath(——不管兩者是不是同一個
+    // 事件處理器內，用字串級門檻抓，涵蓋未來新元件（不必每次手動加檔名）。
+    // 現況命中 multi-select.js、qa-side-panel.js 兩檔；修完 round11 的 #1 後兩檔都該含 composedPath(。
+    //
+    // 先剝掉 `//` 行內註解再判斷：composedPath 規則的說明註解本身就會寫「用 composedPath()…」，
+    // 若不剝，退化成 event.target/contains() 的檔案光靠註解殘留的字面就能矇混過關（驗證過：
+    // 把 multi-select.js 的實作改回 wrapper.contains(event.target)，但說明註解沒清乾淨時，
+    // 不剝註解版本仍誤判為綠燈）。
+    const stripComments = (t) => t.split(/\r?\n/).map((l) => l.replace(/\/\/.*$/, "")).join("\n");
+    const DISMISS = /setOpen\(false\)|classList\.remove\(\s*["']open["']\s*\)|classList\.add\(\s*["']collapsed["']\s*\)/;
+    const hits = [];
+    let checked = 0;
+    for (const f of srcJs) {
+        const code = stripComments(read(f));
+        const hasClickDelegate = /document\.addEventListener\(\s*["']click["']/.test(code);
+        const hasDismiss = DISMISS.test(code);
+        if (!hasClickDelegate || !hasDismiss) continue;
+        checked++;
+        if (!code.includes("composedPath(")) hits.push(`${f}  有 document click 委派＋dismiss 語意，卻沒有 composedPath(`);
+    }
+    assert.ok(checked >= 2, `只命中 ${checked} 個檔 —— 這條測試在空轉（現況應命中 multi-select.js、qa-side-panel.js）`);
+    assert.equal(hits.length, 0, fail(hits));
+});
+
 test("§5 元件 js 三方對齊：實體檔 ⇄ eleventy passthrough ⇄ base.html script", () => {
     const cfg = read("eleventy.config.js");
     const pass = [...cfg.matchAll(/"src\/_includes\/[^"]+\/([\w-]+)\.js":\s*"js\/([\w-]+)\.js"/g)].map((m) => m[2]);

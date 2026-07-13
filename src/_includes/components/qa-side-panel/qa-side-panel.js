@@ -39,8 +39,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 點面板外部：收合所有側欄
+    // 用 composedPath() 而非 e.target.closest()：本頁可能有其他 document click 委派在這個
+    // click 事件冒泡途中先重繪 DOM，把被點的節點拔掉重建，屆時 e.target 已是 detached 節點，
+    // closest() 找不到任何祖先而恆為 null，會誤判成「點在外面」而錯收合。composedPath() 是
+    // dispatch 當下就固定的路徑快照，不受後續 DOM 突變影響，故用它判斷才準。
     document.addEventListener("click", function (e) {
-        if (!e.target.closest(".qa-side-panel")) {
+        var path = e.composedPath();
+        var insideAnyPanel = Array.prototype.some.call(panels, function (panel) {
+            return path.includes(panel);
+        });
+        if (!insideAnyPanel) {
             panels.forEach(function (panel) {
                 panel.classList.add("collapsed");
                 sync(panel);
