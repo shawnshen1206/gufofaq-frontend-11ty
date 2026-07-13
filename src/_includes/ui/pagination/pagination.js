@@ -96,12 +96,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        // 省略號跳頁 target：一般情況跳 3 頁，但視窗貼近頭尾時 current±3 可能仍落在 [start,end] 視窗內
+        // （等於白按）。跳頁語意是「至少跳出目前視窗」，故 target 要再夾到視窗外一格（start-1 / end+1）。
         if (start > 2) {
-            html += ellipsisLi(Math.max(1, current - 3), t("pagination.jumpPrev", "往前 3 頁"));
+            html += ellipsisLi(Math.max(1, Math.min(current - 3, start - 1)), t("pagination.jumpPrev", "往前 3 頁"));
         }
         for (var i = start; i <= end; i++) html += pageLi(i, current);
         if (end < totalPages - 1) {
-            html += ellipsisLi(Math.min(totalPages, current + 3), t("pagination.jumpNext", "往後 3 頁"));
+            html += ellipsisLi(Math.min(totalPages, Math.max(current + 3, end + 1)), t("pagination.jumpNext", "往後 3 頁"));
         }
 
         // 尾頁碼恆顯

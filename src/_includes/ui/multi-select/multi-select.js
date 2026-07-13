@@ -224,13 +224,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         document.addEventListener("click", function (event) {
-            // 點選項時 toggleOption() → render() → renderDropdown() 會在這個 click 事件冒泡途中
-            // 把 dropdown.innerHTML 整個清空重建，於是冒泡到 document 時 event.target 已是被拔掉的舊節點。
-            // wrapper.contains(detached node) 恆為 false，會被誤判成「點在外面」而把剛選完就錯關——
-            // 違反 select2 closeOnSelect:false（選了不關、可連選）的設計意圖。
-            // 外部真實點擊的 target 必然仍連在文件上，故先濾掉已 detached 的 target 再判斷。
-            if (!event.target.isConnected) return;
-            if (!wrapper.contains(event.target)) setOpen(false);
+            // 用 composedPath() 而非 event.target + contains()：本頁可能有其他 document click 委派
+            // （例如 pagination.js）在這個 click 事件冒泡途中先把自己的 innerHTML 整個重繪，於是被點的
+            // 節點被拔掉重建，冒泡到這裡時 event.target 已是 detached 節點，wrapper.contains(target) 恆
+            // false，會誤判成「點在外面」而錯關——違反 select2 closeOnSelect:false 的設計意圖。
+            // composedPath() 是 dispatch 當下就固定的路徑快照，不受後續 DOM 突變影響，故用它判斷才準。
+            if (!event.composedPath().includes(wrapper)) setOpen(false);
         });
 
         // 切換語言後重畫 JS 產生的字串（placeholder / 空狀態 / 移除鈕標籤）

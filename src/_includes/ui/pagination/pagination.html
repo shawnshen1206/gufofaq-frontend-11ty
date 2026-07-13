@@ -8,9 +8,10 @@
 <div class="pagination" role="navigation" aria-label="頁碼分頁" data-i18n-aria-label="pagination.nav"
     data-total="{{ total }}"{% if perPage %} data-per-page="{{ perPage }}"{% endif %}{% if currentPage %} data-current="{{ currentPage }}"{% endif %}>
     <ul></ul>
-    <div class="page-info mt-8">
-        <span data-i18n="pagination.totalPrefix">共</span>
-        <span class="page-info-count"></span>
-        <span data-i18n="pagination.totalSuffix">頁</span>
-    </div>
+    {# span 內容寫一行，消除縮排 whitespace（同 breadcrumb 67b26e3 修法）：三個 <span> 之間若有縮排換行，
+       會留下 whitespace text node，讓「共 12 頁」數字兩側字距比 zh 原文字距寬一截；轉 React 時 JSX
+       又不會產生這種縮排空白，兩邊字距因此不一致——寫一行讓字距純由 CSS 決定。
+       數字填的是 totalPages（頁數）是詮釋而非逐字對照：真 app main.js:500 引用 .page-info span 時填的其實是
+       totalItems（總筆數），但真 app 從未補上這塊 markup；這裡把它做完，順著標籤語意「共／頁」改填 totalPages。 #}
+    <div class="page-info mt-8"><span data-i18n="pagination.totalPrefix">共</span><span class="page-info-count"></span><span data-i18n="pagination.totalSuffix">頁</span></div>
 </div>

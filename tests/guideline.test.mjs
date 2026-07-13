@@ -575,6 +575,62 @@ test("§5 dist/js 不得有孤兒（沒被 passthrough 的舊產物）", () => {
     assert.equal(orphan.length, 0, `dist 未清乾淨，殘留：${orphan}`);
 });
 
+// pagination.js 的滑動視窗＋省略號 target 演算法是純計算（無 DOM 副作用之外的分支），但整段包在
+// DOMContentLoaded 的 closure 裡沒有匯出。與其在 test 裡手抄一份公式（源檔改了、抄本忘了同步會變 false green），
+// 直接把「// 中間滑動視窗」到「// 尾頁碼恆顯」這段原始碼文字切出來，用 Function() 就地執行——
+// 跑的是真檔案的原文，不是重寫的邏輯，pageLi/ellipsisLi/t 只需要最小 stub 餵給它。
+function paginationWindowCalc() {
+    const jsSrc = read("src/_includes/ui/pagination/pagination.js");
+    const i = jsSrc.indexOf("// 中間滑動視窗");
+    const j = jsSrc.indexOf("// 尾頁碼恆顯");
+    if (i < 0 || j <= i) throw new Error("pagination.js 找不到滑動視窗區塊錨點（// 中間滑動視窗 ~ // 尾頁碼恆顯）—— 原始碼結構變了，測試要更新錨點");
+    const block = jsSrc.slice(i, j);
+    return new Function("totalPages", "VISIBLE", "current", `
+        var html = "";
+        var ellipsisCalls = [];
+        function ellipsisLi(target) { ellipsisCalls.push(target); return ""; }
+        function pageLi() { return ""; }
+        function t(key, zh) { return zh; }
+        ${block}
+        return { start: start, end: end, ellipsisCalls: ellipsisCalls };
+    `);
+}
+
+test("§5 pagination 省略號跳頁 target 不落回目前視窗（totalPages 8~15 × visible 3/5 × current 全頁全組合）", () => {
+    const windowCalc = paginationWindowCalc();
+    const bad = [];
+    for (const totalPages of [8, 9, 10, 11, 12, 13, 14, 15]) {
+        for (const VISIBLE of [3, 5]) {
+            for (let current = 1; current <= totalPages; current++) {
+                const { start, end, ellipsisCalls } = windowCalc(totalPages, VISIBLE, current);
+                const prevShown = start > 2;
+                const nextShown = end < totalPages - 1;
+                const calls = ellipsisCalls.slice();
+                const ctx = `totalPages=${totalPages} V=${VISIBLE} current=${current} 視窗[${start},${end}]`;
+                if (prevShown) {
+                    const target = calls.shift();
+                    if (!(target < start) || !(target < current)) bad.push(`${ctx}: 左省略號 target=${target} 應 <start 且 <current`);
+                }
+                if (nextShown) {
+                    const target = calls.shift();
+                    if (!(target > end) || !(target > current)) bad.push(`${ctx}: 右省略號 target=${target} 應 >end 且 >current`);
+                }
+            }
+        }
+    }
+    assert.equal(bad.length, 0, bad.join("\n"));
+});
+
+test("§5 pagination 省略號跳頁具體回歸案例：totalPages=12 V=5 current=1，右省略號要跳視窗外的 7，不是仍在視窗內的 4", () => {
+    // 這是原 bug 的最小重現：修前 target 固定 current+3=4，但視窗是 [2,6]，4 在視窗內＝點了沒用。
+    const windowCalc = paginationWindowCalc();
+    const { start, end, ellipsisCalls } = windowCalc(12, 5, 1);
+    assert.equal(start, 2);
+    assert.equal(end, 6);
+    assert.equal(ellipsisCalls.length, 1, "current=1 時視窗已貼齊左邊，不該有左省略號");
+    assert.equal(ellipsisCalls[0], 7, `右省略號 target 應是 7（視窗外一格），不是 current+3=4（仍落在視窗[${start},${end}]內）`);
+});
+
 // ─────────────────────────── §1 檔案結構 ───────────────────────────
 
 const componentDirs = ["ui", "components"].flatMap((bucket) =>
