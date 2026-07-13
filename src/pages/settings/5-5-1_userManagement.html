@@ -126,6 +126,9 @@ permalink: 5-5-1_userManagement.html
                     <td>
                         <div class="btn-group">
                             <button type="button" class="button button-border button-sm" data-toast="更新成功|儲存失敗" data-i18n-data-toast="toast.saveMember" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                            {# 重設密碼：開窗需先選定「重設哪一位成員」＝業務條件開窗，故用 hook class（.js-reset-password），
+                                 不掛 data-open-modal（§5）。彈窗（輸入新密碼）由 React 以共用 Modal 組成。 #}
+                            <button type="button" class="button button-border button-sm js-reset-password" data-i18n="settings.resetPassword">重設密碼</button>
                         </div>
                     </td>
                 </tr>

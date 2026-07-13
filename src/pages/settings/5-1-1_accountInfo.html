@@ -145,3 +145,75 @@ permalink: 5-1-1_accountInfo.html
         <button type="button" class="button button-primary" data-toast="帳號資訊已儲存|儲存失敗" data-i18n-data-toast="toast.saveAccount" data-toast-type="success|error" data-i18n="action.save">儲存</button>
     </div>
 </div>
+
+{# 個人資料（登入者自身，非租戶層）：顯示名稱 + 聯絡資訊，可編輯後儲存（product /me/profile）。 #}
+<div class="block mt-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.myProfile">個人資料</div>
+    <div class="flex-row gap-40 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="profileNameInput" class="control-label" data-i18n="settings.displayName">顯示名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="profileNameInput" placeholder="請輸入顯示名稱" data-i18n-placeholder="settings.pleaseEnterDisplayName" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="profileContactInput" class="control-label" data-i18n="settings.contact">聯絡資訊</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="profileContactInput" placeholder="電話或其他聯絡方式" data-i18n-placeholder="settings.pleaseEnterContact" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="個人資料已儲存|儲存失敗" data-i18n-data-toast="toast.saveProfile" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+    </div>
+</div>
+
+{# 變更密碼：舊密碼 + 新密碼（至少 8 碼）+ 確認新密碼（product /me/change-password）。 #}
+<div class="block mt-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.changePassword">變更密碼</div>
+    <div class="flex-row gap-40 mobile-column sm-gap-16">
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="oldPasswordInput" class="control-label required" data-i18n="settings.oldPassword">舊密碼</label>
+                </div>
+                <div class="field">
+                    <input type="password" id="oldPasswordInput" placeholder="請輸入舊密碼" data-i18n-placeholder="settings.pleaseEnterOldPassword" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newPasswordInput" class="control-label required" data-i18n="settings.newPassword">新密碼</label>
+                </div>
+                <div class="field">
+                    <input type="password" id="newPasswordInput" placeholder="至少 8 碼" data-i18n-placeholder="settings.pleaseEnterNewPassword" class="form-control">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="confirmPasswordInput" class="control-label required" data-i18n="settings.confirmPassword">確認新密碼</label>
+                </div>
+                <div class="field">
+                    <input type="password" id="confirmPasswordInput" placeholder="再次輸入新密碼" data-i18n-placeholder="settings.pleaseEnterConfirmPassword" class="form-control">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="密碼已變更|兩次新密碼不一致|舊密碼錯誤或變更失敗" data-i18n-data-toast="toast.changePassword" data-toast-type="success|warning|error" data-i18n="settings.changePassword">變更密碼</button>
+    </div>
+</div>
