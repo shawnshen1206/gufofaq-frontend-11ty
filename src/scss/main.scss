@@ -46,7 +46,6 @@
 // ⚠️ 這份清單的順序＝層疊順序，不要為了「照桶排整齊」而重排
 @use "../_includes/ui/default-table/default-table";
 @use "../_includes/ui/code-block/code-block";
-@use "../_includes/components/priority-table/priority-table";
 @use "../_includes/components/file-preview-modal/file-preview-modal";
 @use "../_includes/components/delete-modal/delete-modal";
 @use "../_includes/ui/form-table/form-table";
@@ -61,7 +60,7 @@
 @use "../_includes/ui/storage-bar/storage-bar";
 @use "../_includes/components/editable-block/editable-block";
 @use "../_includes/ui/chat-message/chat-message";
-@use "../_includes/components/chatroom/chatroom";
+@use "../_includes/ui/chatroom-shell/chatroom-shell";
 @use "../_includes/components/faq-chatroom/faq-chatroom";
 @use "../_includes/layouts/chatbot-shell/chatbot-shell";
 @use "../_includes/components/chatbot-header/chatbot-header";

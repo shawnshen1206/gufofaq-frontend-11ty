@@ -1,5 +1,8 @@
-// 後台單測/AB測的聊天視窗「容器」（固定 600px 卡片）。訊息泡泡本身抽到共用 ui/chat-message。
-// 值以真 app 編譯 css 為準。
+// 後台單測/AB測的聊天視窗「外殼」（固定 600px 卡片 + 訊息捲動區 + 底部輸入列）。
+// 純樣式共用詞彙（無 html/js）：後台 chatroom 元件與 AB測 2-2-3 頁各自手寫 markup、共用這一套 class
+// （同 ui/chat-message 的訊息泡泡共用模式）——2-2-3 需要 .ab-compare 雙欄內容，無法直接 include chatroom，
+// 故外殼樣式升格為 ui/ 共用正本，不留在 components/chatroom 私有（§4：跨頁沿用要升格、不外借）。
+// 訊息泡泡本身在 ui/chat-message。值以真 app 編譯 css 為準。
 @use "../../../scss/mixin" as *;
 
 .chatroom-wrap {

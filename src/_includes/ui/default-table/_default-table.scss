@@ -1,6 +1,6 @@
 // 逐位元照抄自真 app scss/component.scss table表格區塊，只搬檔案位置，宣告一字不改
 // .scrollTable 1680-1685、.default-table 1687-1799、.tablelist-title 1801-1808、.file-number-group 1829-1845
-// （.priority-table 1810-1827 另外搬到 components/priority-table/_priority-table.scss）
+// .priority-table 1810-1827 為 .default-table 的變體（&.priority-table，見下），供 priority-table 與 knowledge-retrieval-modal 沿用
 @use "../../../scss/mixin" as *;
 
 /*===============================
@@ -117,6 +117,24 @@
 
     &.fixed-layout {
         table-layout: fixed;
+    }
+
+    // 意圖判斷表格變體（原 components/priority-table 的 .priority-table 私有 class，改由 default-table 提供變體，
+    // 供 priority-table 與 knowledge-retrieval-modal 兩處沿用；§4 用 variant 取代跨元件借用）。
+    // 逐位元照抄自真 app scss/component.scss 1810-1827，宣告一字不改。
+    &.priority-table {
+        thead tr {
+            border: 1px solid var(--border-subtle);
+
+            th {
+                background-color: var(--surface-sunken);
+            }
+        }
+
+        tbody tr {
+            border: 1px solid var(--border-subtle);
+            height: 68px;
+        }
     }
 }
 

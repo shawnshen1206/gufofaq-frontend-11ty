@@ -350,7 +350,7 @@
   "platform.reviewDesc": "Set the overdue threshold and list all matching accounts in one click; process them in a batch after confirmation. Fully manual; both the list and result screens persist for audit screenshots.",
   "platform.reviewDone": "Done / Back",
   "platform.reviewDue": "ISO review due",
-  "platform.reviewDueTooltip": "Expired over 90 days; please review and act",
+  "platform.reviewDueTooltip": "Overdue for review; please review and act",
   "platform.reviewMatched": "Matched: ",
   "platform.reviewResultFailMid": ", failed",
   "platform.reviewResultOkMid": "records, succeeded",
