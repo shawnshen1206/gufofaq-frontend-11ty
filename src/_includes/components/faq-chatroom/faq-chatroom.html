@@ -41,6 +41,17 @@
                 <button type="button" class="button-icon share" data-open-modal="shareModal" title="分享" data-i18n-title="comp.share"><span
                         class="sr-only" data-i18n="comp.share">分享</span></button>
             </div>
+            {# 建議追問（A7，SaaS 新需求／真 app 無對應）：問答完成後 chatbot 於 SSE chat_room 塊回傳
+                 suggest_questions 陣列（見 gufofaq-saas services/product/app/routers/ask.py:253 enable_suggest_questions、
+                 :319/:353 chat_room chunk），渲染成一排可點 chip；點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
+                 此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。 #}
+            {% set suggestedQuestions = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
+            <div class="suggested-questions" role="group" aria-labelledby="suggestedQuestionsLabel">
+                <span id="suggestedQuestionsLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
+                {% for q in suggestedQuestions %}
+                <button type="button" class="button button-border button-sm js-ask-suggested">{{ q }}</button>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
