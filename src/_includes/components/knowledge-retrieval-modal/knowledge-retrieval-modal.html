@@ -5,10 +5,12 @@
     { label: "設置二（預設）", labelKey: "modals.settingTwoDefault" },
     { label: "設置三", labelKey: "modals.settingThree" }
 ] %}
+{# 分類→優先級對應與設定頁 5-2-1_knowledgeRetrieval 的示範資料一致（同一功能的兩個視圖，不可矛盾）：
+     高＝入出國與法規／證件與資料申請、中＝婚姻與家庭、低＝權益與申訴服務類。 #}
 {% set priorityGroups = [
-    { title: "高優先級（意圖判斷開啟）", titleKey: "modals.highPriorityIntentOn", categories: ["入出國與法規", "證件與資料申請", "權益與申訴服務類"] },
+    { title: "高優先級（意圖判斷開啟）", titleKey: "modals.highPriorityIntentOn", categories: ["入出國與法規", "證件與資料申請"] },
     { title: "中優先級（意圖判斷開啟）", titleKey: "modals.midPriorityIntentOn", categories: ["婚姻與家庭"] },
-    { title: "低優先級（意圖判斷關閉）", titleKey: "modals.lowPriorityIntentOff", categories: ["其他"] }
+    { title: "低優先級（意圖判斷關閉）", titleKey: "modals.lowPriorityIntentOff", categories: ["權益與申訴服務類"] }
 ] %}
 <dialog class="modals" id="knowledgeModal" aria-labelledby="knowledgeModal-title">
     <div class="modals-dialog modals-md">

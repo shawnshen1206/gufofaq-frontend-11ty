@@ -28,7 +28,8 @@
     <button type="button" class="button-icon no-bg size-sm delete" title="刪除">
         <span class="sr-only">刪除</span>
     </button>
-    <div class="editable-block">
+    {# 展示 edit/save/cancel 三顆圖示鈕的長相；用工具 class 排版，不借用 components/editable-block 的私有殼（§4） #}
+    <div class="flex-row gap-4">
         <button type="button" class="button-icon no-bg size-sm edit edit-icon" title="編輯"><span
                 class="sr-only">編輯</span></button>
         <button type="button" class="button-icon no-bg size-sm save save-icon" title="確認"><span
