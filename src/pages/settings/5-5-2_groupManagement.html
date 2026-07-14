@@ -1,0 +1,127 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::群組管理
+titleKey: nav.groupMgmt
+pageHeading: 群組管理
+permalink: 5-5-2_groupManagement.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "群組管理", i18nKey: "nav.groupMgmt" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 租戶群組（分組）＋群組權限管理（僅租戶管理者）。SaaS 新需求，逆向自 product app/routers/groups.py：
+     群組＝權限群組，能力（細粒度 token）定在群組上，使用者屬於群組即繼承其能力（多群組聯集）。
+     真正把關在 product（require_admin），本頁僅提供管理介面。
+     能力 token 集合對齊 product app/authz.py CAPABILITY_TOKENS（data/settings 拆讀寫；ask/history/audit 單一）。 #}
+{% set capabilities = [
+  { key: "data:read", label: "資料集檢視", i18nKey: "settings.capDataRead" },
+  { key: "data:write", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
+  { key: "settings:read", label: "設定檢視", i18nKey: "settings.capSettingsRead" },
+  { key: "settings:write", label: "設定編輯（提示詞／檢索）", i18nKey: "settings.capSettingsWrite" },
+  { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
+  { key: "history", label: "歷史紀錄", i18nKey: "settings.capHistory" },
+  { key: "audit", label: "稽核日誌檢視", i18nKey: "settings.capAudit" }
+] %}
+{% set groups = [
+  { name: "管理群組", capabilities: ["data:read", "data:write", "settings:read", "settings:write", "ask", "history", "audit"], memberCount: 2 },
+  { name: "業務群組", capabilities: ["data:read", "ask", "history"], memberCount: 5 },
+  { name: "研發群組", capabilities: ["data:read", "data:write", "settings:read"], memberCount: 3 }
+] %}
+
+<p class="text-gray" data-i18n="settings.groupMgmtIntro">群組即權限群組：能力定在群組上，使用者加入群組即繼承其能力（多群組取聯集）。資料集歸屬群組，寫入權限依所屬群組而定。</p>
+
+{# 新增群組：名稱 + 能力 token 勾選（ui/checkbox）+ 新增按鈕（三態 toast：成功／名稱已存在／失敗）#}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.addGroup">新增群組</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newGroupNameInput" class="control-label required" data-i18n="settings.groupName">群組名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newGroupNameInput" placeholder="請輸入群組名稱" data-i18n-placeholder="settings.pleaseEnterGroupName" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row flex-wrap gap-20 align-items-center">
+        <span class="text-bold" data-i18n="settings.capabilities">能力：</span>
+        {% for cap in capabilities %}
+        <label class="form-checkbox">
+            <input type="checkbox" name="new_group_cap_{{ cap.key }}">
+            <span data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="群組已建立|群組名稱已存在|建立失敗，請稍後再試" data-i18n-data-toast="toast.createGroup" data-toast-type="success|warning|error">
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+            <span data-i18n="settings.addGroup">新增群組</span>
+        </button>
+    </div>
+</div>
+
+{# 群組清單：default-table。名稱（可就地改名）＋能力勾選（同一格內 7 個 checkbox）＋成員數＋操作
+     （儲存名稱與能力｜管理成員｜刪除）。管理成員與刪除都需先選定「哪一個群組」＝業務條件開窗，
+     故用 hook class（.js-manage-members / .js-delete-group），不掛 data-open-modal（§5）。
+     刪除群組守衛（尚有資料集歸屬 → 409）由 product 把關，前端顯示錯誤。示範 3 筆。 #}
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.groupList">群組清單</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="width:220px; min-width:220px;">
+                <col style="min-width:480px;">
+                <col style="width:100px; min-width:100px;">
+                <col style="width:260px; min-width:260px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="settings.groupName">群組名稱</th>
+                    <th data-i18n="settings.capabilities">能力：</th>
+                    <th data-i18n="settings.memberCount">成員數</th>
+                    <th data-i18n="common.actions">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" value="{{ group.name }}" aria-label="群組名稱" data-i18n-aria-label="settings.groupName">
+                    </td>
+                    <td>
+                        <div class="flex-row flex-wrap gap-16 align-items-center">
+                            {% for cap in capabilities %}
+                            <label class="form-checkbox">
+                                <input type="checkbox"{% if cap.key in group.capabilities %} checked{% endif %}>
+                                <span data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td class="text-center">{{ group.memberCount }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm" data-toast="群組已更新|儲存失敗" data-i18n-data-toast="toast.saveGroup" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                            <button type="button" class="button button-border button-sm js-manage-members" data-i18n="settings.manageMembers">管理成員</button>
+                            <button type="button" class="button button-red button-sm js-delete-group" data-i18n="action.delete">刪除</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "components/manage-members-modal/manage-members-modal.html" %}
+{% set deleteTargetName = "業務群組" %}
+{% set deleteToast = "群組已刪除|刪除失敗，請確認群組內已無資料集" %}
+{% set deleteToastKey = "toast.deleteGroup" %}
+{% include "components/delete-modal/delete-modal.html" %}

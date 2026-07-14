@@ -14,12 +14,12 @@ permalink: 5-4-2_welcomeMessage.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-{# 設定檔選擇：每個設定檔（前台/後台三套）各有一份歡迎語，切換即載入該設定檔的歡迎語與版本史。
-     沿用 5-4-1 版本篩選欄同一個 form-group 結構（原生 select，singleSelect 為 select2 增強 hook）。 #}
+{# 控制列：設定檔選擇（每設定檔各一份歡迎語，切換即載入該設定檔的歡迎語與版本史）+ 篩選（關鍵字 / 日期區間 /
+     版本）。與 5-4-1 提示詞同構（union 對齊）——差別僅提示詞版本卡多一欄「被問答引用次數」，歡迎語不參與檢索故無此欄。 #}
 <div class="block mb-10">
     <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
         <div class="filter-fields flex-row gap-16 mobile-column">
-            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
                 <div class="label">
                     <label for="welcomeProfileSelect" class="control-label" data-i18n="settings.profile">設定檔</label>
                 </div>
@@ -31,6 +31,40 @@ permalink: 5-4-2_welcomeMessage.html
                     </select>
                 </div>
             </div>
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
+                <div class="label">
+                    <label for="welcomeKeywordInput" class="control-label" data-i18n="settings.keyword">關鍵字</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="welcomeKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
+                <div class="label">
+                    <label for="welcomeDateRangeInput" class="control-label" data-i18n="settings.dateRange">日期區間</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="welcomeDateRangeInput" class="form-control calendar range-date" placeholder="起迄日" data-i18n-placeholder="settings.dateRangePlaceholder">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
+                <div class="label">
+                    <label for="welcomeVersionSelect" class="control-label" data-i18n="settings.version">版本</label>
+                </div>
+                <div class="field">
+                    <select id="welcomeVersionSelect" class="form-control singleSelect">
+                        <option></option>
+                        <option value="V2">V2</option>
+                        <option value="V1">V1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row flex-wrap gap-16 align-items-center">
+            <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
+            <button type="button" class="button button-primary js-welcome-search" data-toast="查詢成功|無法載入歡迎語版本列表" data-i18n-data-toast="toast.queryWelcome" data-toast-type="success|error" data-i18n="action.query">查詢</button>
         </div>
     </div>
 </div>

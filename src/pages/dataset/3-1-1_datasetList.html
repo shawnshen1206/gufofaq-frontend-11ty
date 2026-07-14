@@ -35,6 +35,7 @@ permalink: 3-1-1_datasetList.html
     {
         name: "客服問答知識庫",
         href: "3-1-3_previewDataset.html?sn=101",
+        group: "管理群組",
         fileTypes: { xlsx: 3, pdf: 12, word: 2, api: 0, img: 1 },
         createdAt: "2025/11/02 10:20",
         updatedAt: "2026/06/18 09:05",
@@ -44,6 +45,7 @@ permalink: 3-1-1_datasetList.html
     {
         name: "產品規格文件集",
         href: "3-1-3_previewDataset.html?sn=102",
+        group: "研發群組",
         fileTypes: { xlsx: 0, pdf: 20, word: 5, api: 1, img: 0 },
         createdAt: "2025/12/15 14:33",
         updatedAt: "2026/05/30 17:41",
@@ -53,6 +55,7 @@ permalink: 3-1-1_datasetList.html
     {
         name: "常見問題彙整",
         href: "3-1-3_previewDataset.html?sn=103",
+        group: "業務群組",
         fileTypes: { xlsx: 1, pdf: 4, word: 0, api: 0, img: 0 },
         createdAt: "2026/01/08 08:52",
         updatedAt: "2026/06/29 11:12",
@@ -64,6 +67,7 @@ permalink: 3-1-1_datasetList.html
     <table class="default-table">
         <colgroup>
             <col style="min-width:327px;">
+            <col style="width:160px; min-width:160px;">
             <col style="min-width:327px;">
             <col style="width: 120px; min-width: 120px;">
             <col style="width: 120px; min-width: 120px;">
@@ -74,6 +78,7 @@ permalink: 3-1-1_datasetList.html
         <thead>
             <tr>
                 <th data-i18n="dataset.datasetName">資料集名稱</th>
+                <th data-i18n="dataset.group">所屬群組</th>
                 <th data-i18n="dataset.fileType">檔案類型</th>
                 <th data-i18n="common.createdAt">建立時間</th>
                 <th data-i18n="dataset.lastUpdatedAt">最後更新時間</th>
@@ -88,6 +93,7 @@ permalink: 3-1-1_datasetList.html
                 <td>
                     <a href="{{ row.href }}" title="{{ row.name }}" class="link-file">{{ row.name }}</a>
                 </td>
+                <td>{{ row.group }}</td>
                 <td>
                     <div class="file-number-group">
                         <div class="item">

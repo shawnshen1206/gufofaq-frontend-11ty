@@ -20,6 +20,8 @@ permalink: 3-1-3_previewDataset.html
     {% set editLabelKey = "dataset.datasetName" %}
     {% set editValue = "客服問答知識庫" %}
     {% include "components/editable-block/editable-block.html" %}
+    {# 所屬群組（唯讀顯示）：資料集歸屬的群組（SaaS 群組權限需求，見 product datasets.py DatasetDetailOut.group_id）。 #}
+    <p class="text-gray m-0"><span data-i18n="dataset.group">所屬群組</span>：管理群組</p>
 </div>
 
 {# 任務描述 / 任務對應提示詞：editable-block 樣式二（textarea），左右兩欄各佔一半、可壓縮（.flex-1） #}

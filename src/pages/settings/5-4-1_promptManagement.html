@@ -14,21 +14,33 @@ permalink: 5-4-1_promptManagement.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-{# 篩選列：關鍵字 + 日期區間（真實頁由 flatpickr range 模式掛載於同一輸入框，此處不引入 vendor，僅保留原生 class 呈現靜態輸入框）
-     + 版本單選（singleSelect，非 select2 增強，沿用 ui/form-control 原生 select 寫法） #}
+{# 控制列：設定檔選擇（每設定檔各一份提示詞，切換即載入該設定檔的提示詞與版本史）+ 篩選（關鍵字 / 日期區間 /
+     版本）。與 5-4-2 歡迎語同構（union 對齊）——差別僅版本卡多一欄「被問答引用次數」。 #}
 <div class="block mb-10">
     <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
         <div class="filter-fields flex-row gap-16 mobile-column">
-            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
+                <div class="label">
+                    <label for="promptProfileSelect" class="control-label" data-i18n="settings.profile">設定檔</label>
+                </div>
+                <div class="field">
+                    <select id="promptProfileSelect" class="form-control singleSelect">
+                        <option value="1" data-i18n="settings.config1">設置一</option>
+                        <option value="2" data-i18n="settings.config2">設置二</option>
+                        <option value="3" data-i18n="settings.config3">設置三</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
                 <div class="label">
                     <label for="promptKeywordInput" class="control-label" data-i18n="settings.keyword">關鍵字</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="promptKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword" value="條列式">
+                    <input type="text" id="promptKeywordInput" class="form-control" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword">
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
-            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
                 <div class="label">
                     <label for="promptDateRangeInput" class="control-label" data-i18n="settings.dateRange">日期區間</label>
                 </div>
@@ -37,7 +49,7 @@ permalink: 5-4-1_promptManagement.html
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
-            <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="form-group filter-field row mobile-col col-3-md col-12-sm">
                 <div class="label">
                     <label for="promptVersionSelect" class="control-label" data-i18n="settings.version">版本</label>
                 </div>
@@ -54,38 +66,32 @@ permalink: 5-4-1_promptManagement.html
         <div class="flex-row flex-wrap gap-16 align-items-center">
             <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
             <button type="button" class="button button-primary js-prompt-search" data-toast="查詢成功|無法載入提示詞版本列表" data-i18n-data-toast="toast.queryPrompt" data-toast-type="success|error" data-i18n="action.query">查詢</button>
-            <button type="button" class="button button-primary js-add-prompt">
-                <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
-                <span data-i18n="settings.addPrompt">新增提示詞</span>
-            </button>
         </div>
     </div>
 </div>
 
-{# 版本卡片列表：V4 新增草稿卡（真實頁預設 hidden，點「新增提示詞」才顯示，屬業務 JS 行為不轉，此處保留 hidden 靜態展示樣式）+
-     V3/V2/V1 歷史版本卡（結構完全相同，僅版本號/時間區間/引用次數/內容不同——內容本身真實頁三版皆為同一段文字，故用 set+for 資料化） #}
-<div class="prompt-card-list flex-row column gap-10">
-
-    <div class="block prompt-card draft hidden">
-        <div class="flex-row column gap-16">
-            <div class="text-md text-blue">V4</div>
-            <div>
-                <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
-                <div class="form-group">
-                    <div class="field">
-                        <textarea class="form-control size-lg prompt-input js-prompt-input" placeholder="請輸入提示詞內容" data-i18n-placeholder="settings.pleaseEnterPromptContent" aria-label="提示詞內容" data-i18n-aria-label="settings.promptContent">角色定位：
+{# 編輯器：常時顯示、預填目前生效提示詞；儲存即建立新版本、不覆蓋舊版（沿用 5-4-2 歡迎語編輯器結構）。 #}
+<div class="block prompt-card draft mb-10">
+    <div class="flex-row column gap-16">
+        <div class="text-md text-blue" data-i18n="settings.promptContent">提示詞內容</div>
+        <div>
+            <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
+            <div class="form-group">
+                <div class="field">
+                    <textarea class="form-control size-lg prompt-input" placeholder="請輸入提示詞內容" data-i18n-placeholder="settings.pleaseEnterPromptContent" aria-label="提示詞內容" data-i18n-aria-label="settings.promptContent">角色定位：
 你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
 知識來源限制：</textarea>
-                    </div>
                 </div>
             </div>
-            <div class="flex-row justify-content-center gap-16">
-                <button type="button" class="button button-border js-prompt-cancel" data-i18n="action.cancel">取消</button>
-                <button type="button" class="button button-primary js-prompt-save" data-toast="已儲存為新版本|內容欄位不可為空|新增提示詞失敗，請稍後再試" data-i18n-data-toast="toast.savePrompt" data-toast-type="success|warning|error" data-i18n="action.save">儲存</button>
-            </div>
+        </div>
+        <div class="flex-row justify-content-center gap-16">
+            <button type="button" class="button button-primary js-prompt-save" data-toast="已儲存為新版本|內容欄位不可為空|新增提示詞失敗，請稍後再試" data-i18n-data-toast="toast.savePrompt" data-toast-type="success|warning|error" data-i18n="action.saveNewVersion">儲存為新版本</button>
         </div>
     </div>
+</div>
 
+{# 版本史：結構同 5-4-2 歡迎語版本卡，動作為 複製 + 還原此版本；提示詞另有「被問答引用次數」欄（唯一差異）。 #}
+<div class="prompt-card-list flex-row column gap-10">
     {% set versions = [
       { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204" },
       { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:38", refCount: "14" },
@@ -102,6 +108,8 @@ permalink: 5-4-1_promptManagement.html
                     <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="提示詞已複製！" data-i18n-data-toast="prompt.copied">
                         <span class="tooltip" data-i18n="action.copy">複製</span>
                     </button>
+                    <span class="divider-vertical"></span>
+                    <button type="button" class="button button-border button-sm js-prompt-restore" data-toast="已還原此版本|還原失敗，請稍後再試" data-i18n-data-toast="toast.restorePrompt" data-toast-type="success|error" data-i18n="action.restore">還原此版本</button>
                 </div>
             </div>
             <div class="prompt-content">

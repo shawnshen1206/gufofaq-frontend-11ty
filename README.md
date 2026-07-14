@@ -53,7 +53,7 @@ src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
 │   ├── ui/                 不依賴其他元件的元件（42 個）
-│   └── components/         會用到其他元件，或某大元件的專屬子片段（33 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（35 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         共用 mixin：scrollbar 系列、icon-mask（單色 PNG 遮罩上色）、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
@@ -87,7 +87,7 @@ dist/                       build 輸出（勿手改）
 
 | layout | 自動提供 | 用它的頁面 |
 |---|---|---|
-| `layouts/page-shell/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 26 頁；front matter 必填 `titleKey` / `pageHeading` |
+| `layouts/page-shell/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 28 頁；front matter 必填 `titleKey` / `pageHeading` |
 | `layouts/chatbot-shell/chatbot-shell.html` | `<head>` + skip-link + `chatbot-header`（logo + 語言/夜間，無導覽）+ 滿版 `<main id="main">` + `footer` | 前台 FAQ 聊天頁 |
 | `layouts/base/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 登入頁、404、頁面目錄、元件總覽（各自在內容裡放唯一的 h1） |
 
@@ -135,7 +135,7 @@ dist/                       build 輸出（勿手改）
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 75 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
+> **上列不是完整清單**（`src/_includes/` 目前有 77 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 
@@ -161,8 +161,8 @@ dist/                       build 輸出（勿手改）
 
 | 位置 | 真 app 的狀況 |
 |---|---|
-| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端 21 頁，本專案加成 26 頁） |
-| `5-4-2_welcomeMessage`、`5-7_auditLog`、`5-8_widgetTokens` | 沒有這三頁（皆為 SaaS 新增需求：歡迎語版本管理、稽核日誌、Widget Token 自助管理，真 app 21 頁裡都查無對應頁面） |
+| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端 21 頁，本專案加成 28 頁） |
+| `5-4-2_welcomeMessage`、`5-7_auditLog`、`5-8_widgetTokens`、`5-5-2_groupManagement` | 沒有這四頁（皆為 SaaS 新增需求：歡迎語版本管理、稽核日誌、Widget Token 自助管理、群組（分組）＋群組權限管理，真 app 21 頁裡都查無對應頁面） |
 | `catalog.html`（部署首頁＝頁面目錄）、`404.html` | 沒有；GitHub Pages 部署需要 |
 | `4-1_qaHistory` 底部的 `ui/pagination` 頁碼列 | 真 app 的 4-1 只有 `.data-info`（「共 N 筆資料」）。它的 `.pagination` 只出現在 component / 1-1-3 / 3-1-1 / 3-1-3 / 3-1-6 |
 | `2-1_qaRecord` 的 `.qa-count` | 真 app 的 2-1 沒有（它來自 2-2-1）。輸入框則以 `chatInputHidden` 關掉——那個真 app 的 2-1 也沒有 |

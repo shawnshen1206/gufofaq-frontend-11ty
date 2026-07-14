@@ -505,10 +505,12 @@ bodyClass: guideline-page
                         <img src="./images/icon_info_black.png" width="48" height="48" decoding="async" alt="" class="icon">
                         <span class="sr-only" data-i18n="qaTest.configInfo">配置說明</span>
                     </button>
-                    {# 這兩個彈窗在真實頁（5-5-1／5-6-1）是業務條件開窗（.js-reset-password／.js-manage-tenant，
+                    {# 這幾個彈窗在真實頁是業務條件開窗（.js-reset-password／.js-manage-tenant／詳情頁「分享」鈕，
                          不掛 data-open-modal，見 GUIDELINE §5）。「看得見」由本頁示範觸發器保證（第三條路）。 #}
                     <button type="button" class="button button-dark" data-open-modal="resetPasswordModal">開啟重設密碼modal</button>
                     <button type="button" class="button button-dark" data-open-modal="manageTenantModal">開啟租戶管理modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="shareManageModal">開啟分享連結管理modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="manageMembersModal">開啟管理成員modal</button>
                 </div>
                 <div class="caption description mt-16">
                     <ul>
@@ -746,6 +748,8 @@ bodyClass: guideline-page
 {% include "components/knowledge-retrieval-modal/knowledge-retrieval-modal.html" %}
 {% include "components/reset-password-modal/reset-password-modal.html" %}
 {% include "components/manage-tenant-modal/manage-tenant-modal.html" %}
+{% include "components/share-manage-modal/share-manage-modal.html" %}
+{% include "components/manage-members-modal/manage-members-modal.html" %}
 
 <button type="button" class="button btn_gotop">
     TOP

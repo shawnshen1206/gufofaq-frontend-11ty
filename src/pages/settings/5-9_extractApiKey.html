@@ -1,0 +1,54 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::萃取 API 金鑰
+titleKey: nav.extractApiKey
+pageHeading: 萃取 API 金鑰
+permalink: 5-9_extractApiKey.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "萃取 API 金鑰", i18nKey: "nav.extractApiKey" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 萃取 API 金鑰管理（獨立設定頁）。SaaS 新需求，逆向自 product extract.py：
+     每租戶一把金鑰，供外部程式以 X-API-Key 標頭呼叫萃取端點（國家／時間）；
+     重新產生後舊金鑰立即失效。product /api-key 以 session 認證、對所有登入者開放（不加 require_admin）。 #}
+<p class="text-gray" data-i18n="extractKey.intro">此金鑰供外部程式以 X-API-Key 標頭呼叫萃取 API（國家／時間），請妥善保管。重新產生後舊金鑰會立即失效。</p>
+
+{# 金鑰顯示欄：readonly，預設遮蔽（type=password）+ 顯示/隱藏切換 + 複製 + 產生/重新產生 #}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="extractKey.currentKey">目前金鑰</div>
+    <div class="flex-row align-items-center gap-8 flex-wrap">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="field">
+                    <input type="password" id="apiKeyInput" class="form-control" value="sk_aB3xYz9Qle8sample000apikeyvalue00" readonly>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="button button-border js-toggle-key" data-i18n="extractKey.show">顯示</button>
+        <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="已複製金鑰" data-i18n-data-toast="toast.copyKey">
+            <span class="tooltip" data-i18n="action.copy">複製</span>
+        </button>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary js-generate-key" data-toast="已產生新金鑰|產生失敗" data-i18n-data-toast="toast.generateKey" data-toast-type="success|error" data-i18n="extractKey.regenerate">重新產生金鑰</button>
+    </div>
+</div>
+
+{# 如何呼叫：說明 + 可複製 curl 範例 #}
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="extractKey.howToTitle">如何呼叫萃取 API</div>
+    <p class="text-gray" data-i18n="extractKey.howToDesc">以 X-API-Key 標頭呼叫；mode 1=國家、2=時間、3=兩者；text 長度 2–5000 字；額度用罄回 429。</p>
+    <pre class="code-block"><code>curl -X POST "https://&lt;your-product-host&gt;/extract/country-or-time" \
+  -H "X-API-Key: YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"我們下週三在東京開會","mode":3}'</code></pre>
+    <div class="flex-row">
+        <button type="button" class="button button-border button-sm js-copy-curl" data-toast="文字已複製!" data-i18n-data-toast="common.copied" data-i18n="action.copy">複製</button>
+    </div>
+</div>

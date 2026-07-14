@@ -14,22 +14,22 @@ permalink: 5-5-1_userManagement.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-{# 租戶成員與權限管理（僅租戶管理者）。SaaS 新需求，逆向自 apps/web app/(app)/users；
-     真正把關在 product（require_admin / require_capability），本頁僅提供管理介面。
-     能力鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 #}
-{% set capabilities = [
-  { key: "data", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
-  { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
-  { key: "history", label: "歷史紀錄", i18nKey: "settings.capHistory" },
-  { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" }
+{# 租戶成員與群組指派管理（僅租戶管理者）。SaaS 需求，逆向自 apps/web app/(app)/users。
+     逐使用者能力已改由群組繼承：不再逐使用者勾能力，改指派「所屬群組」（多選），有效能力唯讀顯示
+     （由所屬群組能力聯集算出；管理者＝全部）。真正把關在 product（require_admin / group_ids）。
+     群組本身（名稱＋能力）在「群組管理」頁維護（5-5-2_groupManagement.html）。 #}
+{% set groups = [
+  { id: 1, name: "管理群組" },
+  { id: 2, name: "業務群組" },
+  { id: 3, name: "研發群組" }
 ] %}
 {% set members = [
-  { email: "admin@example.com", isAdmin: true, permissions: [] },
-  { email: "editor@example.com", isAdmin: false, permissions: ["data", "settings"] },
-  { email: "viewer@example.com", isAdmin: false, permissions: ["ask", "history"] }
+  { email: "admin@example.com", isAdmin: true, groupIds: [], effectiveCaps: "全部能力" },
+  { email: "editor@example.com", isAdmin: false, groupIds: [1, 3], effectiveCaps: "資料集檢視、資料匯入／資料集管理、設定檢視" },
+  { email: "viewer@example.com", isAdmin: false, groupIds: [2], effectiveCaps: "資料集檢視、問答（後台測試區）、歷史紀錄" }
 ] %}
 
-{# 新增成員：電子郵件 + 初始密碼 + 能力勾選（ui/checkbox）+ 租戶管理者（ui/switch）+ 新增按鈕 #}
+{# 新增成員：電子郵件 + 初始密碼 + 所屬群組勾選（ui/checkbox）+ 租戶管理者（ui/switch）+ 新增按鈕 #}
 <div class="block mb-16 flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="settings.addMember">新增成員</div>
     <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
@@ -55,11 +55,11 @@ permalink: 5-5-1_userManagement.html
         </div>
     </div>
     <div class="flex-row flex-wrap gap-20 align-items-center">
-        <span class="text-bold" data-i18n="settings.capabilities">能力：</span>
-        {% for cap in capabilities %}
+        <span class="text-bold" data-i18n="settings.groups">所屬群組</span>
+        {% for group in groups %}
         <label class="form-checkbox">
-            <input type="checkbox" name="new_member_perm_{{ cap.key }}">
-            <span data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
+            <input type="checkbox" name="new_member_group_{{ group.id }}">
+            <span>{{ group.name }}</span>
         </label>
         {% endfor %}
         <label class="switch">
@@ -76,27 +76,25 @@ permalink: 5-5-1_userManagement.html
     </div>
 </div>
 
-{# 成員清單：default-table；角色欄用 ui/switch（管理者切換），能力欄每一格用 ui/checkbox；
-     管理者列的能力全開且鎖定（disabled），對齊 apps/web 行為 #}
+{# 成員清單：default-table。角色欄用 ui/switch（管理者切換）；所屬群組欄每一個群組一個 checkbox（多選指派）；
+     有效能力欄唯讀顯示（由群組聯集算出，管理者＝全部）。#}
 <div class="block flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="settings.memberList">成員清單</div>
     <div class="table-container scrollTable">
         <table class="default-table">
             <colgroup>
                 <col style="min-width:220px;">
-                <col style="min-width:180px;">
-                {% for cap in capabilities %}
-                <col style="min-width:120px;">
-                {% endfor %}
-                <col style="min-width:120px;">
+                <col style="min-width:160px;">
+                <col style="min-width:280px;">
+                <col style="min-width:280px;">
+                <col style="min-width:160px;">
             </colgroup>
             <thead>
                 <tr>
                     <th data-i18n="common.email">電子郵件</th>
                     <th data-i18n="settings.role">角色</th>
-                    {% for cap in capabilities %}
-                    <th data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</th>
-                    {% endfor %}
+                    <th data-i18n="settings.groups">所屬群組</th>
+                    <th data-i18n="settings.effectiveCapabilities">有效能力</th>
                     <th data-i18n="common.actions">操作</th>
                 </tr>
             </thead>
@@ -115,14 +113,17 @@ permalink: 5-5-1_userManagement.html
                             <span data-i18n="{% if member.isAdmin %}role.admin{% else %}role.member{% endif %}">{% if member.isAdmin %}管理者{% else %}成員{% endif %}</span>
                         </div>
                     </td>
-                    {% for cap in capabilities %}
-                    <td class="text-center">
-                        <label class="form-checkbox">
-                            <input type="checkbox"{% if member.isAdmin or (cap.key in member.permissions) %} checked{% endif %}{% if member.isAdmin %} disabled{% endif %}>
-                            <span class="sr-only" data-i18n="{{ cap.i18nKey }}">{{ cap.label }}</span>
-                        </label>
+                    <td>
+                        <div class="flex-row flex-wrap gap-16 align-items-center">
+                            {% for group in groups %}
+                            <label class="form-checkbox">
+                                <input type="checkbox"{% if group.id in member.groupIds %} checked{% endif %}>
+                                <span>{{ group.name }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
                     </td>
-                    {% endfor %}
+                    <td>{{ member.effectiveCaps }}</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" class="button button-border button-sm" data-toast="更新成功|儲存失敗" data-i18n-data-toast="toast.saveMember" data-toast-type="success|error" data-i18n="action.save">儲存</button>

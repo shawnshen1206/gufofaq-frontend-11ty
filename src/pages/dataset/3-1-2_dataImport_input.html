@@ -28,5 +28,20 @@ permalink: 3-1-2_dataImport_input.html
     </div>
 </div>
 
+{# 所屬群組：資料集歸屬一個群組（SaaS 群組權限需求，見 product datasets.py DatasetIn.group_id 為必填）。
+     真 app 由業務 js 載入使用者「可寫入」的群組（is_admin＝本租戶全部），單選；此處示範原生 select。 #}
+<div class="form-group row mt-10">
+    <div class="label">
+        <label for="datasetGroup" class="control-label required" data-i18n="dataset.group">所屬群組</label>
+    </div>
+    <div class="field">
+        <select id="datasetGroup" class="form-control select-md">
+            <option value="" data-i18n="dataset.selectGroup">請選擇群組</option>
+            <option value="1">管理群組</option>
+            <option value="3">研發群組</option>
+        </select>
+    </div>
+</div>
+
 {# 簡化版靜態跳轉：卡片直接連到該類型上傳頁（excel→1-1-2、pdf/word/image→1-2-1） #}
 {% include "ui/upload-card/upload-card.html" %}
