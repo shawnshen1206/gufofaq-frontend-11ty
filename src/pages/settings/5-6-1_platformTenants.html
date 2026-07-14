@@ -14,6 +14,54 @@ permalink: 5-6-1_platformTenants.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
+{# 建立租戶：平台管理員新增租戶（同時建立首位管理員帳號 + 預設額度）。逆向自 product POST /platform/tenants
+     （body：name / admin_email / admin_password，密碼至少 8 碼；201）。沿用同頁 5-8 widget「產生 Token」的
+     inline 建立區塊模式（非彈窗，無條件動作），data-toast 直接掛按鈕。 #}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.createTenant">建立租戶</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="tenantNameInput" class="control-label required" data-i18n="settings.tenantName">租戶名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="tenantNameInput" placeholder="例如：宇宙股份有限公司" data-i18n-placeholder="settings.tenantNamePlaceholder" class="form-control">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="tenantAdminEmailInput" class="control-label required" data-i18n="settings.adminEmail">管理員 Email</label>
+                </div>
+                <div class="field">
+                    <input type="email" id="tenantAdminEmailInput" placeholder="admin@example.com" class="form-control">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="tenantAdminPasswordInput" class="control-label required" data-i18n="settings.adminPassword">管理員密碼</label>
+                </div>
+                <div class="field">
+                    <input type="password" id="tenantAdminPasswordInput" placeholder="至少 8 碼" data-i18n-placeholder="settings.adminPasswordPlaceholder" class="form-control">
+                    <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="租戶已建立|請填寫租戶名稱、管理員 Email 與至少 8 碼密碼|建立失敗（Email 可能已被使用），請稍後再試" data-i18n-data-toast="toast.createTenant" data-toast-type="success|warning|error">
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+            <span data-i18n="settings.createTenant">建立租戶</span>
+        </button>
+    </div>
+</div>
+
 {# 平台管理（僅平台系統管理員，跨租戶）：控制各租戶能使用哪些功能。SaaS 新需求，逆向自 apps/web app/(app)/platform；
      真正把關在 product（require_platform_admin），本頁僅提供管理介面。
      功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 #}
@@ -24,12 +72,22 @@ permalink: 5-6-1_platformTenants.html
   { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" }
 ] %}
 {% set tenants = [
-  { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings"] },
-  { name: "示範租戶 B", userCount: 3, features: ["data", "ask"] },
-  { name: "示範租戶 C", userCount: 1, features: ["ask"] }
+  { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings"], frozen: false, reviewDue: false },
+  { name: "示範租戶 B", userCount: 3, features: ["data", "ask"], frozen: true, reviewDue: false },
+  { name: "示範租戶 C", userCount: 1, features: ["ask"], frozen: false, reviewDue: true }
 ] %}
 
-{# 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用） #}
+{# 帳號治理工具列：匯出租戶／使用者 CSV（帳號列表，稽核用）。直接下載動作 → data-toast 演出成敗（走 BFF 檔案透傳）。 #}
+<div class="block mb-16 flex-row flex-wrap gap-16 align-items-center">
+    <div class="text-md text-bold" data-i18n="platform.accountGovernance">帳號治理</div>
+    <div class="btn-group">
+        <button type="button" class="button button-border" data-toast="開始下載|下載失敗，請稍後再試" data-i18n-data-toast="toast.exportCsv" data-toast-type="success|error" data-i18n="platform.exportTenants">匯出租戶 CSV</button>
+        <button type="button" class="button button-border" data-toast="開始下載|下載失敗，請稍後再試" data-i18n-data-toast="toast.exportCsv" data-toast-type="success|error" data-i18n="platform.exportUsers">匯出使用者 CSV</button>
+    </div>
+</div>
+
+{# 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用）。名稱欄附治理徽章：
+     reviewDue → 紅色「ISO 待審」（title 提示逾期滿 90 天）、frozen → 「已凍結」狀態。 #}
 <div class="block flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="settings.tenantFeatures">租戶功能開通</div>
     <div class="table-container scrollTable">
@@ -55,7 +113,13 @@ permalink: 5-6-1_platformTenants.html
             <tbody>
                 {% for tenant in tenants %}
                 <tr>
-                    <td>{{ tenant.name }}</td>
+                    <td>
+                        <div class="flex-row align-items-center gap-8 flex-wrap">
+                            <span>{{ tenant.name }}</span>
+                            {% if tenant.reviewDue %}<span class="text-red text-bold" title="逾期滿 90 天，請審核處置" data-i18n-title="platform.reviewDueTooltip" data-i18n="platform.reviewDue">ISO 待審</span>{% endif %}
+                            {% if tenant.frozen %}<span class="text-gray" data-i18n="platform.statusFrozen">已凍結</span>{% endif %}
+                        </div>
+                    </td>
                     <td class="text-center">{{ tenant.userCount }}</td>
                     {% for feature in features %}
                     <td class="text-center">
@@ -82,4 +146,189 @@ permalink: 5-6-1_platformTenants.html
     </div>
 </div>
 
+{# ISO 季度審核精靈（一次性版面，直接寫在頁面）：三步驟畫面皆保留供稽核截圖，非一閃即逝的 toast。
+     Step1 設門檻＋選動作；Step2 預覽名單（停留可截圖，含門檻／查詢時間戳）；Step3 結果（停留可截圖）。
+     動作鈕與確認鈕皆業務條件（fetch 名單→預覽→確認執行、需 type-to-confirm），用 hook class（.js-review-*），不掛 data-open-modal/data-toast。
+     破壞性動作鈕用 button-red。切版靜態把三畫面全數展示（示範各步長相），React 依步驟狀態一次顯示一個。
+     名單／結果列為純示範假資料（§6b），正式環境由 React 走 GET /platform/review/overdue 與 POST /platform/review/apply。 #}
+{% set reviewCandidates = [
+  { name: "示範租戶 C", email: "c-admin@example.com", trialEnd: "2026-03-01", daysOverdue: 135, userCount: 1, storage: 12.4 },
+  { name: "示範租戶 D", email: "d-admin@example.com", trialEnd: "2026-02-14", daysOverdue: 150, userCount: 4, storage: 88.0 }
+] %}
+{% set reviewResults = [
+  { name: "示範租戶 C", ok: true, error: "" },
+  { name: "示範租戶 D", ok: false, error: "從 GufoRAG 刪租戶索引失敗（tenant=42）" }
+] %}
+<div class="block mt-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="platform.reviewTitle">ISO 季度審核</div>
+    <p class="text-gray m-0" data-i18n="platform.reviewDesc">設定逾時門檻並一鍵列出所有符合的帳號；確認後批次處置。全手動，名單與結果畫面皆保留供稽核截圖。</p>
+
+    <div class="flex-row column gap-8">
+        <div class="text-bold" data-i18n="platform.reviewStep1">① 設定門檻與動作</div>
+        <div class="flex-row flex-wrap gap-16 align-items-end mobile-column sm-gap-16">
+            <div class="form-group">
+                <div class="label">
+                    <label for="reviewOverdueDaysInput" class="control-label" data-i18n="platform.overdueDaysLabel">逾期滿（天）</label>
+                </div>
+                <div class="field">
+                    <input type="number" id="reviewOverdueDaysInput" value="90" class="form-control">
+                </div>
+            </div>
+            <span class="text-gray" data-i18n="platform.thresholdOr">或</span>
+            <div class="form-group">
+                <div class="label">
+                    <label for="reviewCutoffDateInput" class="control-label" data-i18n="platform.cutoffDateLabel">截止日期</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="reviewCutoffDateInput" placeholder="請選擇" data-i18n-placeholder="common.pleaseSelect" class="form-control calendar">
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="button button-red js-review-purge" data-i18n="platform.reviewActionPurge">刪除逾時資料</button>
+            <button type="button" class="button button-red js-review-delete" data-i18n="platform.reviewActionDelete">刪除逾時帳號</button>
+            <button type="button" class="button button-border js-review-freeze" data-i18n="platform.reviewActionFreeze">凍結逾時帳號</button>
+        </div>
+    </div>
+
+    <div class="flex-row column gap-8">
+        <div class="text-bold" data-i18n="platform.reviewStep2">② 預覽名單（可截圖）</div>
+        <div class="flex-row flex-wrap gap-16">
+            <span><span data-i18n="platform.reviewMatched">符合筆數</span>：{{ reviewCandidates.length }}</span>
+            <span><span data-i18n="platform.reviewThreshold">門檻</span>：<span data-i18n="platform.overdueDaysPrefix">逾期滿</span> 90 <span data-i18n="platform.overdueDaysSuffix">天</span></span>
+            <span><span data-i18n="platform.reviewAsOf">查詢時間</span>：2026-07-14 09:00 UTC</span>
+        </div>
+        <div class="table-container scrollTable">
+            <table class="default-table">
+                <colgroup>
+                    <col style="min-width:160px;">
+                    <col style="min-width:200px;">
+                    <col style="min-width:120px;">
+                    <col style="min-width:100px;">
+                    <col style="min-width:100px;">
+                    <col style="min-width:120px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th data-i18n="settings.tenant">租戶</th>
+                        <th data-i18n="settings.adminEmail">管理員 Email</th>
+                        <th data-i18n="platform.trialEnd">到期日</th>
+                        <th data-i18n="platform.daysOverdue">逾期天數</th>
+                        <th data-i18n="settings.userCount">使用者數</th>
+                        <th data-i18n="platform.storageUsedMb">儲存量(MB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in reviewCandidates %}
+                    <tr>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.trialEnd }}</td>
+                        <td class="text-center">{{ c.daysOverdue }}</td>
+                        <td class="text-center">{{ c.userCount }}</td>
+                        <td class="text-center">{{ c.storage }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="label">
+                <label for="reviewConfirmInput" class="control-label" data-i18n="platform.confirmTypePhrase">請輸入「刪除」以確認執行</label>
+            </div>
+            <div class="field">
+                <input type="text" id="reviewConfirmInput" placeholder="刪除" data-i18n-placeholder="platform.confirmDeletePhrase" class="form-control">
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="button button-red js-review-confirm" data-i18n="platform.confirmExecute">確認執行（不可逆）</button>
+            <button type="button" class="button button-border js-review-cancel" data-i18n="action.cancel">取消</button>
+        </div>
+    </div>
+
+    <div class="flex-row column gap-8">
+        <div class="text-bold" data-i18n="platform.reviewStep3">③ 處理結果（可截圖）</div>
+        <div class="flex-row flex-wrap gap-16">
+            <span><span data-i18n="platform.reviewResultPrefix">共</span> 2 <span data-i18n="platform.reviewResultOkMid">筆，成功</span> 1<span data-i18n="platform.reviewResultFailMid">，失敗</span> 1</span>
+            <span><span data-i18n="platform.reviewCompletedAt">完成時間</span>：2026-07-14 09:01 UTC</span>
+        </div>
+        <div class="table-container scrollTable">
+            <table class="default-table">
+                <colgroup>
+                    <col style="min-width:160px;">
+                    <col style="min-width:100px;">
+                    <col style="min-width:280px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th data-i18n="settings.tenant">租戶</th>
+                        <th data-i18n="platform.resultStatus">結果</th>
+                        <th data-i18n="platform.resultError">錯誤訊息</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reviewResults %}
+                    <tr>
+                        <td>{{ r.name }}</td>
+                        <td class="text-bold{% if not r.ok %} text-red{% endif %}" data-i18n="{% if r.ok %}platform.resultOk{% else %}platform.resultFail{% endif %}">{% if r.ok %}成功{% else %}失敗{% endif %}</td>
+                        <td>{{ r.error }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-row">
+            <button type="button" class="button button-primary js-review-done" data-i18n="platform.reviewDone">完成／返回</button>
+        </div>
+    </div>
+</div>
+
 {% include "components/manage-tenant-modal/manage-tenant-modal.html" %}
+
+{# manage-tenant-modal 內「成員」區塊的 .js-reset-password／.js-delete-user 彈窗本體：業務條件開窗
+     （先選定哪一位成員才知道重設/刪除誰），故 include 在本頁而非巢狀在 manage-tenant-modal 裡
+     （見該元件檔頭註解的理由）。resetPasswordModal 比照 5-5-1_userManagement 的模式；
+     deleteModal 的目標名稱由業務 js 動態填入 #deleteUserName（比照 1-2-1_uploadFile_pdf 的
+     deleteTargetId 模式，非本頁其他地方使用的靜態 deleteTargetName）。 #}
+{% set deleteTargetId = "deleteUserName" %}
+{% set deleteConfirmBinding = true %}
+{% set deleteToast = "使用者已刪除|刪除失敗，請稍後再試" %}
+{% set deleteToastKey = "toast.deleteUser" %}
+{% include "components/delete-modal/delete-modal.html" %}
+{% include "components/reset-password-modal/reset-password-modal.html" %}
+
+{# 免責聲明設定（平台全域，系統管理員設定一份全租戶共用）：SaaS 新需求，逆向自 apps/web app/(app)/platform；
+     真正把關在 product（PUT /platform/disclaimer，require_platform_admin）。免責聲明「本文」為法律文字、
+     單一語言逐字顯示、不翻譯 → textarea 本文不掛 data-i18n；區塊標題與儲存鈕文案（chrome）才走 i18n。 #}
+<div class="block mt-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="platform.disclaimerTitle">免責聲明設定</div>
+    <div class="form-group">
+        <div class="field">
+            <textarea class="form-control" rows="12">致使用者：
+歡迎使用本平台！在使用我們的服務之前，請您仔細閱讀並同意以下免責聲明，閱讀後即視為使用者同意此聲明。
+AI內容生成的性質
+本平台基於RAG（Retrieval-Augmented Generation）技術，提供專注於文字生成的人工智慧服務，包括對話或報告等文字形式的內容創作，主要透過由使用者上傳的資料作為參考進行。</textarea>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="免責聲明已儲存|儲存失敗" data-i18n-data-toast="toast.saveDisclaimer" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+    </div>
+    {# 免責聲明版本史：每次儲存 append 一版；可還原歷史版本（product 端 append 複本為當前，非覆寫）。示範 2 版。 #}
+    <div class="flex-row column gap-8">
+        <div class="text-bold" data-i18n="platform.disclaimerVersions">版本史</div>
+        {% set discVersions = [
+          { no: 2, time: "2026/07/14 10:00", current: true },
+          { no: 1, time: "2026/07/01 09:00", current: false }
+        ] %}
+        {% for v in discVersions %}
+        <div class="flex-row align-items-center gap-8">
+            <span>V{{ v.no }}（{{ v.time }}）</span>
+            {% if v.current %}
+            <span class="text-bold" data-i18n="platform.currentVersion">目前版本</span>
+            {% else %}
+            <button type="button" class="button button-border button-sm js-disclaimer-restore" data-toast="已還原此版本|還原失敗，請稍後再試" data-i18n-data-toast="toast.restoreDisclaimer" data-toast-type="success|error" data-i18n="action.restore">還原此版本</button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

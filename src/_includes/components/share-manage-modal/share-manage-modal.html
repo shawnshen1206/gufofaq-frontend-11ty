@@ -1,0 +1,49 @@
+{# 後台歷史分享連結「管理」modal（詳情頁 4-2「分享」鈕開啟）。沿用 ui/modals 結構。
+     可建立新的唯讀分享連結，並列出目前生效連結逐一複製/撤銷（撤銷＝軟刪，立即失效）。
+     與前台 faq-share-modal（單一連結、只複製）不同：此為登入態的多連結管理。
+     建立＝零輸入零目標歧義的直接動作（比照 5-8「產生 Token」），不掛 hook class，直接 data-toast 演出成敗；
+     每列複製鈕補 .shareBtn（真 app 剪貼簿 hook，同 faq-share-modal 的 .share-link-btn.shareBtn）；
+     撤銷鈕每列目標需由業務 js 認列，保留 hook class（.js-revoke-share），同樣掛 data-toast 演出成敗。 #}
+<dialog class="modals" id="shareManageModal" aria-labelledby="shareManageModal-title">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="shareManageModal-title" data-i18n="modals.shareManageTitle">分享連結管理</h3>
+                </div>
+                <div class="modals-body">
+                    <span data-i18n="modals.shareConfirmHint">分享前，請確認此連結內容</span>
+                    <div class="share-text">
+                        本連結內容由 AI 系統初步產出，僅作為草稿或參考依據使用，尚未經人工確認或修改，若需進一步採用，請先檢閱並確認內容之正確性與完整性。
+                    </div>
+                    <div class="flex-row mt-16 mb-16">
+                        <button type="button" class="button button-primary" data-toast="連結已建立|建立失敗，請稍後再試" data-i18n-data-toast="toast.createShare" data-toast-type="success|error">
+                            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+                            <span data-i18n="share.createLink">建立分享連結</span>
+                        </button>
+                    </div>
+                    {# 目前生效的分享連結（示範 2 筆）；每列＝連結唯讀框 + 複製 + 撤銷 #}
+                    {% set shareRows = [
+                      { url: "https://gufofaq.com/shared/shr_aaa" },
+                      { url: "https://gufofaq.com/shared/shr_bbb" }
+                    ] %}
+                    <div class="flex-row column gap-8">
+                        {% for row in shareRows %}
+                        <div class="flex-row align-items-center gap-8">
+                            <input class="form-control flex-1" aria-label="分享連結" data-i18n-aria-label="modals.shareLink" readonly value="{{ row.url }}">
+                            <button type="button" class="button button-border button-sm shareBtn" data-toast="連結已複製!" data-i18n-data-toast="modals.linkCopied" data-i18n="action.copy">複製</button>
+                            <button type="button" class="button button-red button-sm js-revoke-share" data-toast="連結已撤銷|撤銷失敗，請稍後再試" data-i18n-data-toast="toast.revokeShare" data-toast-type="success|error" data-i18n="action.revoke">撤銷</button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.close">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

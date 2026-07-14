@@ -155,6 +155,17 @@
             text-align: left;
         }
 
+        // 分享前的草稿提示區塊：faq-share-modal 與 share-manage-modal 兩顆分享 modal 共用同一份
+        // （搬自 faq-share-modal 的 scss，取自真 app FAQ scss/layout/_modal.scss）。
+        // §4 判準：兩個以上元件必須同值的東西才抽共用層——各寫一份遲早走鐘。
+        .share-text {
+            margin: 1rem 0 1.25rem 0;
+            font-size: 1.125rem;
+            background-color: var(--surface-sunken);
+            padding: 0.625rem;
+            border-radius: 8px;
+        }
+
     }
 
     .modals-footer {

@@ -110,3 +110,54 @@ permalink: 1-2-1_uploadFile_pdf.html
 {% set deleteToast = "刪除成功|刪除檔案失敗" %}
 {% set deleteToastKey = "toast.deleteFile" %}
 {% include "components/delete-modal/delete-modal.html" %}
+
+{# 批次匯入結果：逐檔各自 metadata 暫存後一次送出（product /datasets/{id}/documents/batch-import 逐檔各自成敗），
+   回傳後在此以 default-table 逐檔如實顯示（混合成敗都要顯示，不可只報成功＝fail-loud）。
+   成功列狀態＝匯入成功（text-bold 綠字），失敗列＝匯入失敗（text-red 紅字）+ 錯誤訊息。
+   示範 1 成功 1 失敗兩列；真實頁筆數由送出結果動態渲染。 #}
+{% set batchRows = [
+    {
+        filename: "20251119105623_公文範本.pdf",
+        ok: true,
+        message: ""
+    },
+    {
+        filename: "20251120091503_服務條款.pdf",
+        ok: false,
+        message: "萃取額度已用罄"
+    }
+] %}
+<div class="block mt-24 flex-row column gap-16">
+    <div class="text-md text-bold"><span data-i18n="dataImport.batchSummaryPrefix">共</span> 2 <span data-i18n="dataImport.batchSummaryOkMid">個檔案，成功</span> 1<span data-i18n="dataImport.batchSummaryFailMid">、失敗</span> 1</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="min-width:240px;">
+                <col style="width:120px; min-width:120px;">
+                <col style="min-width:200px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="dataImport.fileName">檔案名稱</th>
+                    <th data-i18n="dataImport.colStatus">狀態</th>
+                    <th data-i18n="dataImport.colMessage">訊息</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in batchRows %}
+                <tr>
+                    <td>{{ row.filename }}</td>
+                    <td>
+                        {% if row.ok %}
+                        <span class="text-bold" data-i18n="dataImport.importOk">匯入成功</span>
+                        {% else %}
+                        <span class="text-red" data-i18n="dataImport.importFailed">匯入失敗</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.message }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

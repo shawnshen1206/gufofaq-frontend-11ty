@@ -1,0 +1,53 @@
+{# 管理群組成員 modal，取自 5-5-2_groupManagement 頁「管理成員」鈕（.js-manage-members）：
+     把租戶使用者加入/移出選定的群組（複選）。開窗需先選定「管理哪一個群組」＝業務條件開窗，
+     故該鈕保留 hook class、不掛 data-open-modal（GUIDELINE §5）；彈窗本體回歸切版：
+     搜尋框 + 成員清單（每列一個 checkbox）+ 儲存。真 app 由業務 js 載入本租戶使用者、
+     依當前群組成員資格預勾，儲存時逐一 PATCH /users/{id} 的 group_ids；此處示範 3 筆。
+     成員清單 widget 沿用 ui/modals 既有的 .dataset-list-wrap > .dataset-list（select-dataset-modal
+     同款可捲動複選清單、自帶 scrollbar_modal()）：兩者是同一顆「可捲動、內含搜尋框的複選清單」，
+     不另開一份 _manage-members-modal.scss 各寫一次（§4：兩個以上元件必須同值的東西才抽共用層，
+     各自維護遲早走鐘）；.dataset-list-wrap/.dataset-list 沒有 .member-list 缺少的視覺差異
+     （padding/background/scrollbar 都是同一顆清單本就該有的樣子），故無需額外覆寫。
+     無參數——單一用途的確認彈窗，同 components/reset-password-modal 的模式。 #}
+{% set members = [
+    { email: "admin@example.com", checked: true },
+    { email: "editor@example.com", checked: true },
+    { email: "viewer@example.com" }
+] %}
+<dialog class="modals" id="manageMembersModal" aria-labelledby="manageMembersModal-title">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="manageMembersModal-title" data-i18n="settings.manageMembers">管理成員</h3>
+                </div>
+                <div class="modals-body">
+                    <p class="text-gray" data-i18n="settings.manageMembersHint">勾選要加入此群組的成員</p>
+                    <div class="dataset-list-wrap">
+                        <div class="form-group">
+                            <div class="field">
+                                <input type="text" placeholder="搜尋成員..." data-i18n-placeholder="settings.searchMemberPlaceholder" aria-label="搜尋成員" data-i18n-aria-label="settings.searchMember" class="form-control search">
+                                <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                            </div>
+                        </div>
+                        <div class="dataset-list">
+                            {% for member in members %}
+                            <label class="form-checkbox border-wrap">
+                                <input type="checkbox"{% if member.checked %} checked{% endif %}>
+                                <span>{{ member.email }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary btn-close-modals" data-toast="成員已更新|儲存失敗" data-i18n-data-toast="toast.saveMembers" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
