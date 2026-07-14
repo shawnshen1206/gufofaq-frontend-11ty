@@ -115,6 +115,7 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 - 重複資料（表格列、選項清單）寫在 front matter，元件用 `{% for %}` 渲染；範例資料放 2~3 筆即可
 - 短欄位（編號、時間、標題）資料化放 front matter；**長文／格式化內容**（AI 回答、免責聲明全文）直接寫在元件當樣式示範，不進 front matter——它在正式環境是 API 回傳或 markdown 渲染，這裡只示範它的長相
 - 一次性版面直接寫在頁面檔，不抽元件
+- **註解對真 app／product 行為的斷言，寫時要對過正本並附出處**（`main.js:859`、`extract.py:25`）；頁面或元件改版時，同步更新描述它的註解——註解與 markup 說的必須是同一件事
 
 ### 3-3. 什麼該切成元件
 
@@ -136,6 +137,8 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 - **深色模式（護眼）＝覆寫 token，不改元件**：深色由 `_var.scss` 的 `[data-theme="dark"]` 覆寫同一組語意 token 達成；元件只用 token 故自動換膚，**元件 scss 絕不寫 `[data-theme]` 分支（零例外）**。CSS 顏色換不動的東西有兩條路，**元件都不寫 `[data-theme]`**：①元件自己要用的（日／月圖示的顯示、插圖反相、底紋混色）在 `_var.scss` 給成**非顏色旗標**（`--theme-icon-*`、`--raster-invert`、`--pattern-blend`——值是 `block`／`none`／`invert()`／`multiply` 這類 CSS 關鍵字或函式，不是顏色），元件只掛 `var()`；②**單色 PNG 圖示一律用 `icon-mask()` 遮罩上色**（`_mixin.scss`）——PNG 的 alpha 就是字形，顏色交給語意 token，深色模式只是換值，故元件自己就換得動膚，不必反相、不必存 hover 版資產，彩色圖示也不會被翻掉色相；**只有 `<img>` 換不動**（CSS 選不到 `url()` 裡的顏色，也不能替 `<img>` 憑空生一個 mask url），故由全域的 `_dark-icons.scss` 依**檔名白名單** `img[src*="_black"]` 統一反相——這條規則不認識任何元件 class，新增黑圖示只要照命名慣例，不必回頭改它。彩色 `<img>`（徽章、檔型圖示）不反相。**只有全域層（`_var` / `_guideline-var` 的色源、`_base` 的 `color-scheme`、`_dark-icons` 的 `<img>` 檔名反相）允許讀主題旗標。**主題旗標掛 `<html data-theme>`，由 `base.html` `<head>` 的 no-flash 內聯腳本初始化（讀 localStorage → 否則跟系統），`ui/theme-toggle` 點擊切換。**那段 no-flash 腳本與 `<meta name="theme-color">` 是全站唯一允許複寫色碼的地方**（它跑在 CSS 之前，讀不到 `var()`），兩個值必須等於 `--surface-raised` 的淺／深色，有測試釘住；`theme-toggle.js` 則直接讀 computed 值，不複寫。**新增任何顏色＝在 `_var.scss` 同時給 light 與 dark 值**
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.chat-input-control`、`.chat-input-submit`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`、`.header-controls-slot`），不直接寫別人的 class 選擇器
+  - 「用」的範圍限 `ui/` 原子、全域層（utilities／form-check）與元件自己的正本：**`components/` 元件的私有 class 不外借**——第二個元件需要同一塊樣式時，把它升格成共用正本（`ui/` 原子或全域 partial）再兩邊沿用
+  - **markup 上的每個 class 都要有主人**：樣式正本（元件 scss／全域層）或行為掛點（hook class／js 狀態 class），兩者皆非的 class 不掛
   - 元件 scss **不得用 `#id` 選擇器**——那是比 class 更緊的耦合，且 id 是頁面層的東西
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
 - **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（斷點見 `_mixin.scss` 的 `nav-collapsed`，尺寸見 `_size.scss`）。判準是「**一邊改了、另一邊沒跟就會壞掉**」——`header` 的高度與 `mobile-nav` 浮層的起點是耦合；`992px`／`768px` 這種各元件各自收版的系統性斷點只是共用約定，不是耦合。各寫一份遲早走鐘
@@ -177,6 +180,8 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 - 分頁標題：front matter 的 `titleKey`（見 §3-1）→ `base.html` 輸出成 `<html data-page-title-key>`，切語言時 `lang-toggle.js` 靠它重譯 `<title>`
 - **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
 - **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。**showcase／說明性質的整頁**（內容是寫給切版者看的，不是 app chrome）整頁不翻
+- **翻譯字串不內嵌會隨資料變動的數字/名稱**：chrome 拆成前後綴 key、變動值放獨立節點或資料槽（正典：`pagination.totalPrefix`／`totalSuffix` 夾著 js 填數的 `.page-info-count`）
+- **英譯要保留原文之間的區別**：繁中原文不同的 key，英文譯文也要區別得開——會在同一畫面並列的欄位標題尤其（「成員」／「成員數」→ `Members`／`Member count`）
 - 新增 key 就要在 `en.json` 補英文。**漏了不會壞，只會在英文模式默默顯示繁中**——所以驗收一定要 runtime 逐頁看（見 §8）
 - `en.json` 的 key **依字母序插入**；每個 key 都要有 markup 引用（加了翻譯就要接上對應的 `data-i18n*`，反之亦然——有測試把關孤兒 key）
 
@@ -197,6 +202,7 @@ ui/pagination/
 
 - **只用標準 DOM API**（`querySelectorAll`、`addEventListener`、`classList`、`closest`…，MDN 查得到的才能用）；禁止 jQuery 與任何第三方套件
 - 只操作**自己元件**的 class；要操作別的元件，呼叫該元件 js 提供的函式（例：`faq-chatroom.js` 的讚/倒讚要先預選再開窗，故呼叫 `faq-feedback-modal.js` 匯出的 `openFeedback(vote)`；`chatroom.js` 的「查看來源」呼叫 `sources-block.js` 匯出的 `GufoSources.show()`，而不是自己去 `removeClass`）
+- **元件 js 查詢的每個 class 選擇器，在 `src/` 的生產 markup 都要打得到至少一個元素**（有測試把關）。頁面改版讓選擇器全數落空時，該支行為 js 連同三方登記一併撤下
 - 會去 DOM 找元素的，包在 `DOMContentLoaded` 裡綁定（載入時不碰 DOM 的純函式工具如 `ui/scroll-lock` 不必）；同元件可能出現多次時用 `querySelectorAll().forEach()`
 - **開合的高度動畫走 `ui/slide-toggle`**（`window.GufoSlide.down/up/toggle/set`，300ms，對應真 app 的 jQuery `slideDown/slideUp(300)`）。不要各自寫一份高度動畫，也不要退化成 `display` 一次切掉——那是「啪」一下，跟真 app 手感不同。它自己會處理重入（等同 `.stop(true,true)`）與 `prefers-reduced-motion`
 - **一個全域資源只能有一個擁有者，而最好的擁有者是 DOM 自己。** body 捲動鎖是純 CSS：`html:has(dialog.modals[open]), html:has(.nav-toggle.active) { overflow: hidden }`（`_base.scss`）。**js 不得自己去鎖**（有測試把關）——跳窗與手機選單各鎖各的話，先關的那個會把還開著的那個一起解鎖；用計數器可以修，但 `:has()` 是宣告式的 OR，狀態就在 DOM 上，連失衡的可能都沒有。CSS 做不到的只有「捲軸有多寬」（鎖起來時它就不見了，量不到），由 `ui/scroll-lock` 寫進 `--scrollbar-width` 供那條規則補 padding
@@ -210,7 +216,8 @@ ui/pagination/
     - 這不是「說謊」——說謊的是**只演成功那一種**（`data-open-modal` 掛在有條件開窗的鈕上就是這種）。列出全部結果才是誠實的原型
   - `data-toast-type` 只准 `success` / `error` / `warning` / `info`（有測試把關）。打錯字不會噴錯，只會彈出一個沒有語意的白盒子
   - **有條件的開窗是業務邏輯，不掛 `data-open-modal`**（先設定要刪哪一列的名字、依模型權限決定開哪一份、驗證失敗才跳…）。那種觸發鈕保留真 app 的 hook class（`.js-apply-production`、`.btn-delete-file`…），切版不假裝它會無條件開窗——掛上去等於在 markup 裡寫了一句謊話。判準不必查表：**hook class 就是「全站 scss 找不到它」的 class**，開窗鈕身上有這種 class 就代表它另有 js 主人（有測試把關）
-  - **條件開窗只免除 `data-open-modal`，不免除彈窗本體。** 觸發鈕會開的那個彈窗要建成切版元件、include 在使用頁，並在元件庫展示頁補 `data-open-modal` demo 觸發器（§1-2 第三條路）——彈窗長什麼樣是切版的視覺決策，不外包給 React（例：`apply-settings-modal`、`delete-modal`）。純重用既有已切彈窗、零新欄位版面時才免建
+  - **條件開窗只免除 `data-open-modal`，不免除彈窗本體。** 觸發鈕會開的那個彈窗要建成切版元件、include 在使用頁，並在元件庫展示頁補 `data-open-modal` demo 觸發器（§1-2 第三條路）——彈窗長什麼樣是切版的視覺決策，不外包給 React（例：`apply-settings-modal`、`delete-modal`）。純重用既有已切彈窗、零新欄位版面時才免建本體，但 include 照樣要有：彈窗本體要 include 在**每一個**出現該觸發鈕的正式頁面（觸發鈕隨元件走到哪頁，彈窗就跟到哪頁）；元件庫展示頁上的那份只是第三條路的可視化，不能替正式頁面供本體
+  - **hook class 只給業務行為**（要送 API、或要業務資料才能決定結果的動作）。純前端互動——同頁的顯示/隱藏、開合、複製、切換——沒有業務主人，是切版自己的行為：照本節寫成元件 js，當場就要動得起來
   - **不開任何窗的送 API 鈕，不適用條件開窗豁免**：顯示條件已由模板 `{% if %}` 處理、動作本身無需輸入的直接動作鈕（每列的儲存/撤銷…），照「送 API 的按鈕」規則掛 `data-toast` 列全結果
   - **每個分支結果都要看得到**：元件的空狀態（`{% for %}{% else %}`）等分支，至少一處（真實頁或元件庫展示頁）要用會觸發它的資料示範——沒有頁面演得出來的分支等於沒驗收過（同 `<dialog>` 可達性的精神）
 - **一個 `<dialog id>` 只能由一個元件宣告。** 兩個元件各寫一份同 id 的彈窗＝兩份會分岔的正本，而且元件庫的示範觸發器只打得開其中一份、另一份變成誰都看不到的死彈窗。真 app 兩個頁面各有一份同 id 的不同彈窗時，**切版要改名**——`id` 不是轉換契約（React 不靠 `getElementById`），真正要原樣保留的是 hook class 與資料屬性
@@ -234,7 +241,9 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 
 **真實 app 的業務 js 掛點要原樣保留，那是轉換契約、不是死碼。** hook class（`.js-apply-production`、`.btn-delete-file`、`.copyBtn`…）與資料屬性（`data-index`、`data-type`…）在切版裡沒有對應行為、也沒有樣式——但 React 端要靠它們認出「這顆按鈕該接什麼」。找死碼時**先去讀真 app**（見 README 的出處），確認它在那邊也沒人用，才是真的死碼。
 
-**切版新頁（真 app 無對應）的業務觸發鈕自創 hook class，命名 `js-<動詞>-<名詞>`**（`.js-reset-password`、`.js-manage-tenant`、`.js-revoke-token`…）——語意同上：標記「這顆鈕由 React 業務 js 接手」，全站 scss 不得引用它。
+**切版刻意不沿用真 app 某段行為時**（設計演進取代了它），在該頁檔頭註解記載「什麼取代了什麼」，並把因此失去掛點的元件 js 連同三方登記一併移除。
+
+**切版新頁（真 app 無對應）的業務觸發鈕自創 hook class，命名 `js-<動詞>-<名詞>`**（`.js-reset-password`、`.js-manage-tenant`、`.js-revoke-token`…）——語意同上：標記「這顆鈕由 React 業務 js 接手」，全站 scss 不得引用它。多步驟流程的一組鈕允許 `js-<流程名>-<動作>`（`.js-review-confirm`、`.js-review-cancel`）當命名空間。
 
 ---
 
@@ -243,6 +252,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 - **元件不得寫死「會因使用它的頁面而異」的資料。** 這類資料由頁面在 include 前 `{% set %}` 提供（依 §3-2「重複資料放頁面」），元件只負責 `{% for %}` 渲染——轉 React 即 props。
 - 兩種資料**可以**住在元件裡：(a) **全站不變的結構性設定**（如 header 的導覽選單）；(b) **純示範用的假資料**（同 §3-2：示範內容直接寫在元件當樣式示範）。一旦某頁需要不同的值，就由該頁 `set` 覆寫。
 - **示範資料要演得到元件的核心互動**：傳給元件的 demo 值比照既有頁挑（如分頁的 `total` 要大到讓省略號出現）——落在「全顯示」分支的小數字示範不到滑動視窗，等於沒展示。
+- **示範資料要自洽**：同頁與跨頁能互相推導的值（群組能力的聯集、總數與明細、狀態與徽章）要對得上——示範資料演的必須是一個真實可能的狀態。
 - 同頁重複使用同一元件時，**每次 include 前重新 set 全部參數**（§2：`set` 是全域的，上一次的值會留著）。
 - 元件吃哪些參數、include 了哪些子元件——寫在**該元件 html 的檔頭註解**（唯一正本），不在本文件維護清單。
 - 有些元件不用 include，直接在 markup 寫它的 class（`button`、`modals`…）；有些由 layout 自動提供（`header`、`footer`）。
@@ -298,6 +308,7 @@ CSS 不需任何翻譯：交付的樣式即正式環境的最終樣式。
 - [ ] 新顏色算過對比：白字 on 填充 ≥ 4.5:1、填充 on 底色 ≥ 3:1；新 token 在測試裡歸了角色
 - [ ] 新 key 都補了 `en.json`；**英文模式下逐頁 runtime 驗過，而且要實際觸發互動**（展開 accordion、開多選下拉、切主題）——JS 產生的字串靜態掃描看不到
 - [ ] 新增/改寫元件行為 js：邊界輸入（0、1、缺值、貼邊）逐一驗過，並把斷言寫進 `tests/guideline.test.mjs` 或等效可重跑腳本——一次性手動探索不算驗收，下一輪重跑不到就等於沒測過
+- [ ] 條件開窗鈕的彈窗本體在**每一個**使用頁都 include 了；元件 js 的 class 選擇器都打得到元素；示範資料自洽（聯集/總數對得上）
 
 ---
 

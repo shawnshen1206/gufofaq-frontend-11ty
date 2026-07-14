@@ -50,9 +50,9 @@
     }
 
     &.label-md {
+        // 真 app 此處 text-align: right；設計決策改欄位名稱一律靠左（block 預設），只留定寬對齊欄
         width: 80px;
         flex-shrink: 0;
-        text-align: right;
 
         @media screen and (max-width: 992px) {
             width: auto;
