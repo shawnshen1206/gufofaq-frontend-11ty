@@ -504,7 +504,7 @@ test("§4 不得依頁面覆寫元件（.page-xxx .button {}）", () => {
 // 收集全站「用到的 i18n key」——被 §4-2 的存在性測試與孤兒 key 反向測試共用（同一份收集邏輯，
 // 一份改就兩邊都跟著改，不會漏改其中一邊而分岔）。
 //
-// 除了 data-i18n* / data-key-open|close / data-placeholder-key / titleKey / {% set %} 資料陣列
+// 除了 data-i18n* / data-key-<態> / data-placeholder-key / titleKey / {% set %} 資料陣列
 // 的 i18nKey 系欄位，還收斂幾種「間接引用」寫法（不收的話，孤兒 key 測試會把它們全部誤判成孤兒）：
 //   - `{% set xxxKey = "real.key" %}`：頁面先把 key 存進一個變數，之後用 `{{ xxxKey }}` 消費
 //     （5-4-1/dataImport 等頁的 deleteToastKey / successRetryKey / editPlaceholderKey…）
@@ -523,7 +523,8 @@ function collectUsedI18nKeys() {
         read(f).split(/\r?\n/).forEach((line, i) => {
             const where = `${f}:${i + 1}`;
             for (const m of line.matchAll(/\bdata-i18n(?:-[a-z-]+)?="([^"]+)"/g)) note(m[1], where);
-            for (const m of line.matchAll(/\bdata-key-(?:open|close)="([^"]+)"/g)) note(m[1], where);
+            // 兩態切換的 data-key-<態>（§4-2）：prompt-edit 的 open/close、reveal-input 的 show/hide…—— 收任何狀態後綴
+            for (const m of line.matchAll(/\bdata-key-[a-z]+="([^"]+)"/g)) note(m[1], where);
             for (const m of line.matchAll(/\bdata-placeholder-key="([^"]+)"/g)) note(m[1], where);
             for (const m of line.matchAll(/^titleKey:\s*([\w.]+)\s*$/g)) note(m[1], where);
             // 全站的選單／目錄／麵包屑／欄位提示，key 都住在 {% set %} 的資料陣列裡，

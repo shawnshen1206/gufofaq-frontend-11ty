@@ -45,6 +45,7 @@
 // 頁面級區塊（ui/ 與 components/ 都有——桶歸屬看依賴，載入順序看層疊，兩者無關）
 // ⚠️ 這份清單的順序＝層疊順序，不要為了「照桶排整齊」而重排
 @use "../_includes/ui/default-table/default-table";
+@use "../_includes/ui/code-block/code-block";
 @use "../_includes/components/priority-table/priority-table";
 @use "../_includes/components/file-preview-modal/file-preview-modal";
 @use "../_includes/components/delete-modal/delete-modal";

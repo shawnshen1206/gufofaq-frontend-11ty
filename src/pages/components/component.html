@@ -505,8 +505,9 @@ bodyClass: guideline-page
                         <img src="./images/icon_info_black.png" width="48" height="48" decoding="async" alt="" class="icon">
                         <span class="sr-only" data-i18n="qaTest.configInfo">配置說明</span>
                     </button>
-                    {# 這幾個彈窗在真實頁是業務條件開窗（.js-reset-password／.js-manage-tenant／詳情頁「分享」鈕，
-                         不掛 data-open-modal，見 GUIDELINE §5）。「看得見」由本頁示範觸發器保證（第三條路）。 #}
+                    {# 這幾個彈窗在真實頁是業務條件開窗（.js-reset-password／.js-manage-tenant／詳情頁「分享」鈕／
+                         群組管理頁「管理成員」鈕 .js-manage-members，不掛 data-open-modal，見 GUIDELINE §5）。
+                         「看得見」由本頁示範觸發器保證（第三條路）。 #}
                     <button type="button" class="button button-dark" data-open-modal="resetPasswordModal">開啟重設密碼modal</button>
                     <button type="button" class="button button-dark" data-open-modal="manageTenantModal">開啟租戶管理modal</button>
                     <button type="button" class="button button-dark" data-open-modal="shareManageModal">開啟分享連結管理modal</button>

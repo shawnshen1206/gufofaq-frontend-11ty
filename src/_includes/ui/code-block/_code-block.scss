@@ -1,0 +1,21 @@
+// 程式碼區塊（5-9 萃取 API 的 curl 範例）：等寬字 + 內嵌面板底色 + 水平捲動。
+// 純樣式元件（無 html/js）：markup 直接寫 <pre class="code-block"><code>…</code></pre>。
+// 等寬字堆疊與 chat-message 的行內碼一致（單一共同語言）。顏色全用語意 token。
+.code-block {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    background-color: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+
+    code {
+        font-family: inherit;
+    }
+}

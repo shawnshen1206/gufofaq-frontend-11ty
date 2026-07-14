@@ -70,7 +70,9 @@ permalink: 5-4-1_promptManagement.html
     </div>
 </div>
 
-{# 編輯器：常時顯示、預填目前生效提示詞；儲存即建立新版本、不覆蓋舊版（沿用 5-4-2 歡迎語編輯器結構）。 #}
+{# 編輯器：常時顯示、預填目前生效提示詞；儲存即建立新版本、不覆蓋舊版（沿用 5-4-2 歡迎語編輯器結構）。
+     真 app 草稿卡開合（js/main.js:859-875，.js-add-prompt 開＋.prompt-card.draft .js-prompt-cancel 收合並清空）
+     已被本頁「編輯器常時顯示」的設計取代，該 hook 不保留（§5：刻意棄用要記載取代者）。 #}
 <div class="block prompt-card draft mb-10">
     <div class="flex-row column gap-16">
         <div class="text-md text-blue" data-i18n="settings.promptContent">提示詞內容</div>

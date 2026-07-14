@@ -25,7 +25,7 @@ permalink: 5-5-1_userManagement.html
 ] %}
 {% set members = [
   { email: "admin@example.com", isAdmin: true, groupIds: [], effectiveCaps: "全部能力" },
-  { email: "editor@example.com", isAdmin: false, groupIds: [1, 3], effectiveCaps: "資料集檢視、資料匯入／資料集管理、設定檢視" },
+  { email: "editor@example.com", isAdmin: false, groupIds: [3], effectiveCaps: "資料集檢視、資料匯入／資料集管理、設定檢視" },
   { email: "viewer@example.com", isAdmin: false, groupIds: [2], effectiveCaps: "資料集檢視、問答（後台測試區）、歷史紀錄" }
 ] %}
 
@@ -54,8 +54,8 @@ permalink: 5-5-1_userManagement.html
             </div>
         </div>
     </div>
-    <div class="flex-row flex-wrap gap-20 align-items-center">
-        <span class="text-bold" data-i18n="settings.groups">所屬群組</span>
+    <div class="flex-row flex-wrap gap-20 align-items-center" role="group" aria-labelledby="newMemberGroupsLabel">
+        <span id="newMemberGroupsLabel" class="text-bold" data-i18n="settings.groups">所屬群組</span>
         {% for group in groups %}
         <label class="form-checkbox">
             <input type="checkbox" name="new_member_group_{{ group.id }}">

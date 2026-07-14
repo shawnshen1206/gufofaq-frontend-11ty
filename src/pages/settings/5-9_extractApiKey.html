@@ -16,7 +16,9 @@ permalink: 5-9_extractApiKey.html
 
 {# 萃取 API 金鑰管理（獨立設定頁）。SaaS 新需求，逆向自 product extract.py：
      每租戶一把金鑰，供外部程式以 X-API-Key 標頭呼叫萃取端點（國家／時間）；
-     重新產生後舊金鑰立即失效。product /api-key 以 session 認證、對所有登入者開放（不加 require_admin）。 #}
+     重新產生後舊金鑰立即失效。/api-key 的 GET／POST 皆僅租戶管理者可用
+     （require_admin，比照 widget-tokens；extract.py:25-48）。
+     無金鑰首次態（api_key=null 顯示「尚未產生」）由 React 依 API 呈現，切版以已產生態示範。 #}
 <p class="text-gray" data-i18n="extractKey.intro">此金鑰供外部程式以 X-API-Key 標頭呼叫萃取 API（國家／時間），請妥善保管。重新產生後舊金鑰會立即失效。</p>
 
 {# 金鑰顯示欄：readonly，預設遮蔽（type=password）+ 顯示/隱藏切換 + 複製 + 產生/重新產生 #}
@@ -26,11 +28,15 @@ permalink: 5-9_extractApiKey.html
         <div class="col-6-md col-12-sm">
             <div class="form-group">
                 <div class="field">
-                    <input type="password" id="apiKeyInput" class="form-control" value="sk_aB3xYz9Qle8sample000apikeyvalue00" readonly>
+                    <input type="password" id="apiKeyInput" class="form-control" value="sk_aB3xYz9Qle8sample000apikeyvalue00" readonly aria-label="目前金鑰" data-i18n-aria-label="extractKey.currentKey">
                 </div>
             </div>
         </div>
-        <button type="button" class="button button-border js-toggle-key" data-i18n="extractKey.show">顯示</button>
+        {# 顯示/遮蔽切換＝純前端互動（無業務、無 API），由 ui/reveal-input 以 data-reveal-target 委派切 type；
+             兩態文字與 key 由 data-text-*/data-key-* 提供，JS 不寫死字串（見 §4-2/§5）。 #}
+        <button type="button" class="button button-border" data-reveal-target="apiKeyInput" aria-pressed="false"
+            data-text-show="顯示" data-text-hide="隱藏" data-key-show="extractKey.show" data-key-hide="extractKey.hide"
+            data-i18n="extractKey.show">顯示</button>
         <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="已複製金鑰" data-i18n-data-toast="toast.copyKey">
             <span class="tooltip" data-i18n="action.copy">複製</span>
         </button>
@@ -49,6 +55,6 @@ permalink: 5-9_extractApiKey.html
   -H "Content-Type: application/json" \
   -d '{"text":"我們下週三在東京開會","mode":3}'</code></pre>
     <div class="flex-row">
-        <button type="button" class="button button-border button-sm js-copy-curl" data-toast="文字已複製!" data-i18n-data-toast="common.copied" data-i18n="action.copy">複製</button>
+        <button type="button" class="button button-border button-sm copyBtn" data-toast="文字已複製!" data-i18n-data-toast="common.copied" data-i18n="action.copy">複製</button>
     </div>
 </div>
