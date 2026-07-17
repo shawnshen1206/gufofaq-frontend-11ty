@@ -14,6 +14,77 @@ permalink: 5-6-1_platformTenants.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
+{# 平台權限（Spec 2 B）：盤點所有握有平台角色（auditor/admin）的使用者，逐列可改角色（none/auditor/admin）。
+     逆向自 product GET /platform/admins（auditor 亦可讀）／PATCH /platform/users/{id}/platform-role（僅 admin）。
+     改角色是「選了就送」的即時動作（無條件送出後端才知道成敗、且最後一位 admin 降級會 409），故 select 掛業務
+     hook class（.js-set-platform-role，命名依 §5「切版新頁業務觸發鈕自創 hook class」，同 ab-test 的
+     .js-knowledge-select／.js-llm-select 先例：業務 select 掛 hook class），不掛 data-toast——click 委派抓不到
+     「選了哪個選項」，成敗訊息也得看後端回應（含 409 last_platform_admin 的專屬文案），非本頁能靜態列舉。
+     示範列僅列 auditor／admin（none 不會出現在真實列表——後端只回 platform_role != "none" 的使用者）。 #}
+{% set platformAdminRows = [
+  { email: "admin@example.com", tenant: "示範租戶 A", role: "admin" },
+  { email: "auditor@example.com", tenant: "示範租戶 B", role: "auditor" },
+  { email: "ops-admin@example.com", tenant: "示範租戶 C", role: "admin" }
+] %}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold mb-12" data-i18n="platform.platformRolesTitle">平台權限</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="min-width:220px;">
+                <col style="min-width:160px;">
+                <col style="min-width:160px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="common.email">電子郵件</th>
+                    <th data-i18n="settings.tenant">租戶</th>
+                    <th data-i18n="platform.platformRole">平台角色</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in platformAdminRows %}
+                <tr>
+                    <td>{{ row.email }}</td>
+                    <td>{{ row.tenant }}</td>
+                    <td>
+                        <select class="form-control singleSelect js-set-platform-role" aria-label="設定平台角色" data-i18n-aria-label="platform.platformRoleAriaLabel">
+                            <option value="none" data-i18n="platform.roleNone"{% if row.role == "none" %} selected{% endif %}>無</option>
+                            <option value="auditor" data-i18n="platform.roleAuditor"{% if row.role == "auditor" %} selected{% endif %}>稽核員</option>
+                            <option value="admin" data-i18n="platform.roleAdmin"{% if row.role == "admin" %} selected{% endif %}>系統管理員</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# 平台時區（Spec 3）：全平台唯一一份時區設定（非per-租戶），逆向自 product GET/PUT /platform/timezone
+     （GET 為 auditor 亦可讀，PUT 僅 admin）。有限選項的 select，值必為合法 IANA 時區，故直接動作 → data-toast
+     只演「成功／失敗」兩態（無「無效時區」分支——後端 400 的情境是直接呼叫 API 才會發生，本頁 select 選不出來）。 #}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="platform.timezoneTitle">平台時區</div>
+    <div class="flex-row gap-16 align-items-end flex-wrap mobile-column sm-gap-16">
+        <div class="form-group">
+            <div class="label">
+                <label for="platformTimezoneSelect" class="control-label" data-i18n="platform.timezoneTitle">平台時區</label>
+            </div>
+            <div class="field">
+                <select id="platformTimezoneSelect" class="form-control singleSelect">
+                    <option value="Asia/Taipei" selected>Asia/Taipei</option>
+                    <option value="Asia/Tokyo">Asia/Tokyo</option>
+                    <option value="Asia/Shanghai">Asia/Shanghai</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="button button-primary button-sm" data-toast="平台時區已儲存|儲存失敗" data-i18n-data-toast="toast.saveTimezone" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+    </div>
+</div>
+
 {# 建立租戶：平台管理員新增租戶（同時建立首位管理員帳號 + 預設額度）。逆向自 product POST /platform/tenants
      （body：name / admin_email / admin_password，密碼至少 8 碼；201）。沿用同頁 5-8 widget「產生 Token」的
      inline 建立區塊模式（非彈窗，無條件動作），data-toast 直接掛按鈕。 #}

@@ -15,7 +15,9 @@ permalink: 5-7_auditLog.html
 </div>
 
 {# 查詢區：操作類型篩選（singleSelect，對照後端 GET /audit?action= 精確比對）；此靜態頁列代表性選項，
-     React 端列完整操作類型清單。真實頁 tbody 由 React 依查詢結果渲染，此處以 set+for 資料化示範 3 筆。 #}
+     React 端列完整操作類型清單。真實頁 tbody 由 React 依查詢結果渲染，此處以 set+for 資料化示範 3 筆。
+     租戶（全部租戶 checkbox，送 scope=all）與操作者（送 operator=<id>）兩個篩選欄位僅平台管理員看得到
+     （React 端依 /api/me 的 is_platform_admin 決定是否渲染），此靜態頁展示的是平台管理員視角的完整版面。 #}
 <div class="block block-sm border corner-md mt-16">
     <div class="flex-row column gap-16">
         <div class="flex-row gap-8 mobile-column sm-gap-16">
@@ -35,6 +37,27 @@ permalink: 5-7_auditLog.html
                     </select>
                 </div>
             </div>
+            <div class="form-group col-2-md col-12-sm">
+                <div class="label">
+                    <label for="auditScopeAllInput" class="control-label" data-i18n="audit.allTenants">全部租戶</label>
+                </div>
+                <div class="field">
+                    <label class="switch">
+                        <input type="checkbox" id="auditScopeAllInput" class="switch-checkbox" role="switch">
+                        <span class="switch-box">
+                            <span class="switch-btn"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-3-md col-12-sm">
+                <div class="label">
+                    <label for="auditOperatorInput" class="control-label" data-i18n="audit.filterOperator">操作者</label>
+                </div>
+                <div class="field">
+                    <input type="number" id="auditOperatorInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control">
+                </div>
+            </div>
         </div>
         <div class="flex-row align-items-center justify-content-center gap-16">
             <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
@@ -43,11 +66,16 @@ permalink: 5-7_auditLog.html
     </div>
 </div>
 
-{# 示範 3 筆已載入狀態；操作類型/操作者/對象/詳情/IP 為假資料（§3-2，不翻）。 #}
+{# 示範 3 筆已載入狀態；操作類型/操作者/對象/詳情/IP 為假資料（§3-2，不翻）。
+     租戶（tenant）與代理者（impersonator）為平台管理員視角新增欄位：租戶示範同一租戶「acme」；
+     代理者示範第 1 筆由平台人員代理登入操作（staff@sys.tw），其餘兩筆為租戶自己操作（空白，非「—」，
+     對照 React 端 row.operator_email 缺值即留空的規格）。 #}
 {% set rows = [
     {
         time: "2026/07/13 14:22:05",
+        tenant: "acme",
         operator: "admin@acme.tw",
+        impersonator: "staff@sys.tw",
         action: "建立資料集",
         target: "dataset #12",
         detail: "{ name: 移民署 測試 }",
@@ -55,7 +83,9 @@ permalink: 5-7_auditLog.html
     },
     {
         time: "2026/07/13 13:10:44",
+        tenant: "acme",
         operator: "user@acme.tw",
+        impersonator: "",
         action: "問答",
         target: "chat_log #4821",
         detail: "{ tag: frontend }",
@@ -63,7 +93,9 @@ permalink: 5-7_auditLog.html
     },
     {
         time: "2026/07/13 09:02:11",
+        tenant: "acme",
         operator: "—",
+        impersonator: "",
         action: "登入失敗",
         target: "—",
         detail: "{ email: bad@acme.tw }",
@@ -75,7 +107,9 @@ permalink: 5-7_auditLog.html
     <table class="default-table">
         <colgroup>
             <col style="width:180px; min-width:180px;">
+            <col style="width:140px; min-width:140px;">
             <col style="width:200px; min-width:200px;">
+            <col style="width:160px; min-width:160px;">
             <col style="width:160px; min-width:160px;">
             <col style="width:160px; min-width:160px;">
             <col style="min-width:240px;">
@@ -84,7 +118,9 @@ permalink: 5-7_auditLog.html
         <thead>
             <tr>
                 <th data-i18n="audit.time">時間</th>
+                <th data-i18n="audit.tenant">租戶</th>
                 <th data-i18n="audit.operator">操作者</th>
+                <th data-i18n="audit.impersonator">代理者</th>
                 <th data-i18n="audit.actionType">操作類型</th>
                 <th data-i18n="audit.target">對象</th>
                 <th data-i18n="audit.detail">詳情</th>
@@ -95,7 +131,9 @@ permalink: 5-7_auditLog.html
             {% for row in rows %}
             <tr>
                 <td>{{ row.time }}</td>
+                <td>{{ row.tenant }}</td>
                 <td>{{ row.operator }}</td>
+                <td>{{ row.impersonator }}</td>
                 <td>{{ row.action }}</td>
                 <td>{{ row.target }}</td>
                 <td>{{ row.detail }}</td>
