@@ -1194,7 +1194,7 @@ test("§4 :root 與 [data-theme=dark] 的顏色 token 集合必須一致", () =>
     const tokens = (body) => new Set([...body.matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]));
     const light = tokens(blockAt(rootAt));
     const dark = tokens(blockAt(darkAt));
-    const NON_COLOR = new Set(["--fontFamily"]); // 字型不隨主題變
+    const NON_COLOR = new Set(["--fontFamily", "--fontFamilyMono"]); // 字型不隨主題變
     const onlyLight = [...light].filter((t) => !dark.has(t) && !NON_COLOR.has(t));
     const onlyDark = [...dark].filter((t) => !light.has(t));
     assert.deepEqual({ onlyLight, onlyDark }, { onlyLight: [], onlyDark: [] }, "漏一邊會靜默壞掉夜間模式");
@@ -1347,7 +1347,7 @@ const COLOR_ROLES = {
         "--control-knob", "--toggle-on", "--pattern-tint",
         "--shadow", "--shadow-strong", "--overlay", "--overlay-disabled", "--overlay-tint", "--brand-gradient"],
     // 非顏色，不參與分類
-    nonColor: ["--fontFamily", "--theme-icon-light", "--theme-icon-dark", "--raster-invert", "--pattern-blend"],
+    nonColor: ["--fontFamily", "--fontFamilyMono", "--theme-icon-light", "--theme-icon-dark", "--raster-invert", "--pattern-blend"],
 };
 
 test("§4 對比度硬規則：逐色實算（白字疊填充 ≥4.5、填充對底色 ≥3、內文疊表面 ≥4.5）", () => {
@@ -1685,4 +1685,61 @@ test("README.md「與真 app 的刻意差異」表要列出每個 SaaS 新頁", 
     assert.ok(newPages.length >= 4, `只找到 ${newPages.length} 個自述 SaaS 新頁 —— 這條測試在空轉`);
     const missing = newPages.filter((name) => !doc.includes(name));
     assert.equal(missing.length, 0, `這些 SaaS 新頁沒進 README 差異表：\n${missing.join("\n")}`);
+});
+
+test("§4 一列 col span 總和不得 > 12（nowrap flex-row 會把欄位擠扁）——超過就要 .flex-wrap", () => {
+    // round14：2-2-1 測試設定列從 3×col-4（=12）加到 5×col-4（=20），但容器沒 .flex-wrap。
+    // nowrap 下 5 個 col-4 各要 ~33%、共 ~165%，被 flex-shrink 擠成 ~20% 擠在一行——連原本 3 個 select 也跟著縮。
+    // 這類「一列 span 爆表」靜態掃不出（每個 col-4 自己合法），要對渲染後結構逐 flex-row 加總「直接子欄位」。
+    const VOID = new Set(["input", "img", "br", "hr", "col", "meta", "link", "source", "area", "base", "embed", "wbr", "track", "param", "keygen"]);
+    const classesOf = (attrs) => { const m = attrs.match(/\sclass=(?:"([^"]*)"|'([^']*)')/); return (m ? (m[1] ?? m[2]) : "").split(/\s+/).filter(Boolean); };
+    const span = (cl, bp) => { for (const c of cl) { const m = c.match(new RegExp(`^col-(\\d+)-${bp}$`)); if (m) return +m[1]; } return 0; };
+    const parse = (html) => {
+        const root = { tag: "#root", classes: [], children: [] };
+        const stack = [root];
+        for (const m of html.matchAll(/<(\/?)([a-zA-Z][\w-]*)((?:"[^"]*"|'[^']*'|[^>"'])*?)(\/?)>/g)) {
+            const [, close, tag, attrs, self] = m;
+            const t = tag.toLowerCase();
+            if (close) { for (let i = stack.length - 1; i > 0; i--) if (stack[i].tag === t) { stack.length = i; break; } continue; }
+            const node = { tag: t, classes: classesOf(attrs), children: [] };
+            stack[stack.length - 1].children.push(node);
+            if (!VOID.has(t) && !self) stack.push(node);
+        }
+        return root;
+    };
+    const walk = function* (n) { yield n; for (const c of n.children) yield* walk(c); };
+
+    const hits = [];
+    let rowsWithCols = 0;
+    for (const f of distHtml) {
+        for (const n of walk(parse(distDoc(f)))) {
+            // .column ＝永遠直向（不掉 col 寬）；.flex-wrap ＝允許換行，兩者都不會擠扁
+            if (!n.classes.includes("flex-row") || n.classes.includes("flex-wrap") || n.classes.includes("column")) continue;
+            const has = (c) => n.classes.includes(c);
+            // CSS cascade：col-md 無媒體查詢（永遠生效）；col-sm(≤992)／col-xs(≤768) 只在有宣告時覆寫。
+            // 故某斷點「有效欄寬」= 該斷點的 col 若有、否則沿用上一級（sm←md，xs←sm←md）——
+            // 只加總 col-N-sm 會漏掉「只宣告 col-N-md、在 sm 仍佔 N 欄」的子欄位（false-negative）。
+            const eff = (c, bp) => bp === "md" ? span(c.classes, "md")
+                : bp === "sm" ? (span(c.classes, "sm") || span(c.classes, "md"))
+                    : (span(c.classes, "xs") || span(c.classes, "sm") || span(c.classes, "md"));
+            const sum = (bp) => n.children.reduce((s, c) => s + eff(c, bp), 0);
+            const sumMd = sum("md");                                             // 桌機（無斷點）
+            const sumSm = has("mobile-column") ? 0 : sum("sm");                  // ≤992px：mobile-column 直向堆疊
+            const sumXs = has("mobile-column") || has("mobile-column-xs") ? 0 : sum("xs"); // ≤768px：兩種 mobile-column 都堆疊
+            if (sumMd > 0 || sumSm > 0 || sumXs > 0) rowsWithCols++;
+            for (const [bp, s] of [["md", sumMd], ["sm", sumSm], ["xs", sumXs]])
+                if (s > 12) hits.push(`dist/${f}  <flex-row.${n.classes.join(".")}> 直接子欄位 col-${bp} 總和 ${s} > 12（加 .flex-wrap 或降 span）`);
+        }
+    }
+    assert.ok(rowsWithCols >= 5, `只掃到 ${rowsWithCols} 個帶 col 的 flex-row —— 解析壞了？這條測試在空轉`);
+    assert.equal(hits.length, 0, `一列 col span 爆表，nowrap 下欄位會被擠扁（§4 欄位系統）：\n${fail(hits)}`);
+});
+
+test("§4 monospace 字型堆疊只在 _var.scss（元件用 var(--fontFamilyMono)、不各抄一份）", () => {
+    // round14：agent-activity 是第三個把 'Monaco','Menlo',… 抄進元件 scss 的（前有 ui/code-block、ui/chat-message，
+    // 各帶「與 X 一致」註解卻無共用 token）。共用堆疊一改就漏 → 抽成 --fontFamilyMono，元件只 var()。
+    assert.ok(/--fontFamilyMono:\s*['"]Monaco['"]/.test(read("src/scss/_var.scss")),
+        "_var.scss 沒有 --fontFamilyMono 定義 —— 這條測試的前提不成立（空轉）");
+    const offenders = srcScss.filter((f) => !f.endsWith("_var.scss") && /['"]Monaco['"]/.test(read(f)));
+    assert.equal(offenders.length, 0, `這些 scss 硬抄 monospace 堆疊，應改用 var(--fontFamilyMono)：\n${offenders.join("\n")}`);
 });

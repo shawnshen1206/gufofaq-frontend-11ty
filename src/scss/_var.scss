@@ -7,6 +7,7 @@
 
 :root {
     --fontFamily: NotoSans, "PingFangTC", Microsoft JhengHei, "微軟正黑體", "Helvetica", "sans-serif";
+    --fontFamilyMono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; // 行內碼／code-block／agent 工具 chip 共用（§4：多元件共用堆疊抽全域）
 
     /* 表面 surface（raised 比 base 亮＝用亮度表現抬升） */
     --surface: #f9f9f9; // app / 頁面底

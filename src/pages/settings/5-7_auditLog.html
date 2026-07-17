@@ -43,7 +43,7 @@ permalink: 5-7_auditLog.html
                 </div>
                 <div class="field">
                     <label class="switch">
-                        <input type="checkbox" id="auditScopeAllInput" class="switch-checkbox" role="switch">
+                        <input type="checkbox" id="auditScopeAllInput" class="switch-checkbox" role="switch" checked>
                         <span class="switch-box">
                             <span class="switch-btn"></span>
                         </span>
@@ -67,9 +67,12 @@ permalink: 5-7_auditLog.html
 </div>
 
 {# 示範 3 筆已載入狀態；操作類型/操作者/對象/詳情/IP 為假資料（§3-2，不翻）。
-     租戶（tenant）與代理者（impersonator）為平台管理員視角新增欄位：租戶示範同一租戶「acme」；
-     代理者示範第 1 筆由平台人員代理登入操作（staff@sys.tw），其餘兩筆為租戶自己操作（空白，非「—」，
-     對照 React 端 row.operator_email 缺值即留空的規格）。 #}
+     此頁展示平台管理員的「全部租戶」檢視（上方 switch 開＝scope=all），故 3 筆刻意分屬不同租戶
+     （acme / globex / initech），操作者信箱網域與各自租戶一致——§6：示範資料要演得到欄位的核心互動
+     （租戶欄／全部租戶 switch 的存在意義就是跨租戶），全填同一租戶等於沒展示。
+     代理者（impersonator）：第 1 筆由平台人員代理登入該租戶操作（staff@sys.tw）；其餘兩筆無代理關係
+     故留空——這裡的空白是「沒有代理者」（一種真實狀態），與操作者欄用「—」表示「登入失敗查無操作者」
+     是不同語意，兩者不可混用。 #}
 {% set rows = [
     {
         time: "2026/07/13 14:22:05",
@@ -83,8 +86,8 @@ permalink: 5-7_auditLog.html
     },
     {
         time: "2026/07/13 13:10:44",
-        tenant: "acme",
-        operator: "user@acme.tw",
+        tenant: "globex",
+        operator: "user@globex.io",
         impersonator: "",
         action: "問答",
         target: "chat_log #4821",
@@ -93,12 +96,12 @@ permalink: 5-7_auditLog.html
     },
     {
         time: "2026/07/13 09:02:11",
-        tenant: "acme",
+        tenant: "initech",
         operator: "—",
         impersonator: "",
         action: "登入失敗",
         target: "—",
-        detail: "{ email: bad@acme.tw }",
+        detail: "{ email: bad@initech.io }",
         ip: "198.51.100.2"
     }
 ] %}
