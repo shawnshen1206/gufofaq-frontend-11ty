@@ -1,0 +1,84 @@
+{# agent 工具活動列（測試區詳細）：SaaS 新需求／真 app 無對應。agent 模式問答時，chatbot 於 SSE 串流
+     過程回報每一次工具呼叫（工具名 + 參數 + 結果），此元件把它們列成可逐筆收合展開的表格，供測試區
+     檢視 agent 的推理軌跡。真值由 React 端串流事件驅動（見 Task 13）；此處為靜態示範，工具名／參數／
+     結果＝假資料，依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。
+     收合機制復用 ui/accordion（根 .js-accordion + 摘要列 .accordion-btn + 隱藏的 .detail-row > .accordion-content，
+     見 ui/accordion accordion.js；GufoSlide 300ms 動畫、aria-expanded 每路徑同步）——本元件不自帶 js。
+     每筆活動（摘要列＋隱藏詳細列）以 {% for %} 內嵌渲染（GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀
+     include 子元件，會靜默渲染成空白）。示範資料用元件專屬名 agentToolActivities（GUIDELINE §6：set 是
+     頁面全域，泛用名會與使用頁自己的同名變數互相覆蓋）。 #}
+{% set agentToolActivities = [
+    {
+        tool: "search_documents",
+        summary: "命中 8 筆相似片段",
+        params: "{ query: '新住民 結婚 應備文件', top_k: 8, index: 'immigration' }",
+        result: "回傳 8 筆片段（相似度 0.79–0.92），注入後續生成脈絡。"
+    },
+    {
+        tool: "ask_clarifying_question",
+        summary: "產生 2 個反問選項",
+        params: "{ options: ['結婚登記程序', '依親居留申請'] }",
+        result: "向使用者提出反問；選項併入 suggest_questions 一併回傳前端渲染成 chip。"
+    },
+    {
+        tool: "final_answer",
+        summary: "彙整並生成最終回答",
+        params: "{ cite: true, max_tokens: 1024 }",
+        result: "整合檢索脈絡輸出繁中回答，附參考來源引用。"
+    }
+] %}
+<div class="agent-activity js-accordion mt-24">
+    <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
+        <span class="text-lg text-bold" data-i18n="agent.toolActivity">工具活動</span>
+        <div class="flex-row align-items-center gap-8 flex-wrap">
+            <button type="button" class="button button-border button-sm js-expand-all" data-i18n="common.expandAll">全部展開</button>
+            <button type="button" class="button button-border button-sm js-collapse-all" data-i18n="common.collapseAll">全部收合</button>
+        </div>
+    </div>
+
+    <div class="table-container scrollTable mt-16">
+        <table class="default-table no-border">
+            <colgroup>
+                <col style="width:40px; min-width:40px;">
+                <col style="width:260px; min-width:260px;">
+                <col style="min-width: 360px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th data-i18n="agent.tool">工具</th>
+                    <th data-i18n="agent.resultSummary">結果摘要</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for act in agentToolActivities %}
+                <tr>
+                    <td>
+                        <button type="button" class="button accordion-btn" aria-expanded="false" title="展開表格" data-i18n-title="common.expandRow">
+                            <span class="sr-only" data-i18n="common.expandRow">展開表格</span>
+                        </button>
+                    </td>
+                    <td><span class="agent-activity-tool">{{ act.tool }}</span></td>
+                    <td>{{ act.summary }}</td>
+                </tr>
+                <tr class="detail-row">
+                    <td colspan="3" class="detail-cell">
+                        <div class="accordion-content">
+                            <table class="accordion-table">
+                                <tr>
+                                    <th data-i18n="agent.params">參數</th>
+                                    <td><code class="agent-activity-code">{{ act.params }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th data-i18n="agent.result">結果</th>
+                                    <td>{{ act.result }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

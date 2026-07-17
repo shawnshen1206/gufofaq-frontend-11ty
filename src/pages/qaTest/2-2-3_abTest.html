@@ -184,6 +184,10 @@ permalink: 2-2-3_abTest.html
     </div>
 </div>
 
+{# agent 工具活動（測試區詳細）：顯示本次問答 agent 呼叫的工具軌跡（工具名 + 參數/結果，逐筆收合展開）。
+     詳細只在測試區、不進共用 chatroom。示範假資料住元件內（用元件專屬名 agentToolActivities，見該元件檔頭註解）。 #}
+{% include "components/agent-activity/agent-activity.html" %}
+
 {# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
      來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染 #}
 {% set sources = [

@@ -95,7 +95,9 @@
                         {# 建議追問（A7，SaaS 新需求／真 app 無對應）：問答完成後 chatbot 於 SSE chat_room 塊回傳
                              suggest_questions 陣列（見 gufofaq-saas services/product/app/routers/ask.py:253 enable_suggest_questions、
                              :319/:353 chat_room chunk），渲染成一排可點 chip；點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
-                             此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。 #}
+                             此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。
+                             agent 模式亦承載反問選項：Task 7 已把 ask_clarifying_question 的 options 併進 suggest_questions
+                             一併回傳，故此同一塊 chip 也會渲染 agent 的反問選項，不另切 markup（React 端差異留 Task 13）。 #}
                         {% set suggestedQuestions = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
                         <div class="suggested-questions" role="group" aria-labelledby="suggestedQuestionsLabel">
                             <span id="suggestedQuestionsLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
@@ -104,6 +106,16 @@
                             {% endfor %}
                         </div>
                     </div>
+
+                    {# 串流狀態列（示範）：問答送出後、回答串流生成過程中即時顯示的狀態（如「搜尋資料中…」）。
+                         真值由 React 端 SSE 串流事件驅動（agent 模式會依當前工具切換文案，見 Task 13）；此處為靜態示範。
+                         依 GUIDELINE §4「動態出現的訊息要在 live region 裡」必掛 role="status" aria-live="polite"，
+                         輔具才會朗讀狀態變化。文字為 chrome 走 i18n。唯讀的問答紀錄預覽（chatInputHidden）沒有串流，不渲染。 #}
+                    {% if not chatInputHidden %}
+                    <div class="flex-row align-items-center gap-8 mt-10" role="status" aria-live="polite">
+                        <span class="text-gray" data-i18n="agent.searching">搜尋資料中…</span>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -1,0 +1,29 @@
+// agent 工具活動元件：收合／展開的外殼與詳細列外觀全部復用 ui/accordion + ui/default-table
+// （見 agent-activity.html），本檔只定義本元件自有的「工具名 chip」與「參數程式碼」視覺。
+// 顏色一律用 _var.scss 的語意 token（零裸 hex）；深色模式靠 token 覆寫，本檔不寫 [data-theme] 分支。
+// 等寬字堆疊與 ui/code-block、ui/chat-message 的行內碼一致（單一共同語言）。
+.agent-activity {
+    .agent-activity-tool {
+        display: inline-block;
+        padding: 0.125rem 0.5rem;
+        border-radius: 4px;
+        background-color: var(--surface-sunken);
+        color: var(--brand-text);
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.875rem;
+        word-break: break-word;
+    }
+
+    .agent-activity-code {
+        display: block;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        background-color: var(--surface-sunken);
+        color: var(--text);
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+}
