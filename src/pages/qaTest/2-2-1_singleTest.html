@@ -20,6 +20,8 @@ permalink: 2-2-1_singleTest.html
 </div>
 
 {# 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
+     對話模式（傳統搜尋／Agent 對話）與 Agent 最大迭代次數為新增測試設定（Task 12b），對齊 product qatest TestConfig 的 search_mode／agent_max_iterations；
+       業務讀值走 hook class js-chat-mode／js-agent-max-iter（React Task 13 接手），切版不接行為、兩者都直接顯示（「agent 才顯示迭代數」的條件顯示屬 React 業務邏輯）；
      提示詞收合／展開編輯區塊抽成 components/prompt-edit（見下方 include）；
      儲存/建版本等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） #}
 <div class="block">
@@ -63,6 +65,27 @@ permalink: 2-2-1_singleTest.html
                     <span class="text-gray">/</span>
                     <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" id="sampleTotalInput" value="6" aria-label="資料取樣總數" data-i18n-aria-label="qaTest.sampleTotal">
                 </div>
+            </div>
+        </div>
+        {# 對話模式：傳統搜尋 / Agent 對話（value 對應 product TestConfig.search_mode；option 文字是 chrome 走 i18n，value 為業務值不翻） #}
+        <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label for="chatModeSelect" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
+            </div>
+            <div class="field">
+                <select class="form-control singleSelect js-chat-mode" id="chatModeSelect">
+                    <option value="traditional" selected data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
+                    <option value="agent" data-i18n="qaTest.chatModeAgent">Agent 對話</option>
+                </select>
+            </div>
+        </div>
+        {# Agent 最大迭代次數：預設 5，對齊 TestConfig.agent_max_iterations 預設 #}
+        <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label for="agentMaxIterInput" class="control-label" data-i18n="qaTest.agentMaxIter">Agent 最大迭代次數</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control js-agent-max-iter" id="agentMaxIterInput" value="5">
             </div>
         </div>
     </div>

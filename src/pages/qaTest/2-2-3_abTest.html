@@ -78,6 +78,27 @@ permalink: 2-2-3_abTest.html
                     </div>
                 </div>
             </div>
+            {# 對話模式 + Agent 最大迭代次數（Task 12b）：每側各一組，id 以 -{{ ab.side }} 保持同頁唯一；
+                 對齊 product qatest TestConfig 的 search_mode／agent_max_iterations，業務讀值走 hook class js-chat-mode／js-agent-max-iter（React 接手） #}
+            <div class="form-group row mobile-col">
+                <div class="label ab-field-label">
+                    <label for="abChatModeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
+                </div>
+                <div class="field">
+                    <select id="abChatModeSelect-{{ ab.side }}" class="form-control singleSelect js-chat-mode">
+                        <option value="traditional" selected data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
+                        <option value="agent" data-i18n="qaTest.chatModeAgent">Agent 對話</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row mobile-col">
+                <div class="label ab-field-label">
+                    <label for="abAgentMaxIter-{{ ab.side }}" class="control-label" data-i18n="qaTest.agentMaxIter">Agent 最大迭代次數</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="abAgentMaxIter-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control js-agent-max-iter" value="5">
+                </div>
+            </div>
         </div>
 
         {# 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit #}
