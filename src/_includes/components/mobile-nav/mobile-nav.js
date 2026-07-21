@@ -57,8 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             var submenu = link.parentElement.querySelector("ul");
             if (!submenu) return;
-            var open = getComputedStyle(submenu).display === "none"; // 真 app 是 slideToggle(300)
-            window.GufoSlide.toggle(submenu);
+            // aria-expanded 用 toggle 的回傳值（目標態）：收合動畫進行中再點一次會反轉成展開，
+            // 自己讀 computed display 會在這條路徑跟實際結局脫鉤（§4 每條路徑同步）
+            var open = window.GufoSlide.toggle(submenu); // 真 app 是 slideToggle(300)
             link.setAttribute("aria-expanded", open ? "true" : "false");
         });
     });

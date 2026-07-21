@@ -76,18 +76,21 @@
         anim.onfinish = function () { settle(el, open); };
     }
 
+    // down/up/toggle/set 都回傳「這次動作的目標態」（true=展開）：呼叫端要同步 aria-expanded 時
+    // 用回傳值，不要自己再讀 computed display——動畫進行中 display 還是舊值，讀了會跟實際結局脫鉤。
     window.GufoSlide = {
-        down: function (el, ms) { run(el, true, ms); },
-        up: function (el, ms) { run(el, false, ms); },
+        down: function (el, ms) { run(el, true, ms); return true; },
+        up: function (el, ms) { run(el, false, ms); return false; },
         toggle: function (el, ms) {
             // 動畫進行中 computed display 還是展開值（display:none 要到 settle 才落地），
             // 用 isHidden 判斷會把「收合中再點一次」誤判成再收一次、吞掉反轉——
             // 進行中改看這次動畫的目標態並反轉（等同 jQuery .stop(true,true) + slideToggle）。
-            if (!el) return;
+            if (!el) return false;
             var open = el._gufoSlide ? !el._gufoTarget : isHidden(el);
             run(el, open, ms);
+            return open;
         },
         // 不帶動畫地設定狀態（初始態、或把還在動的東西直接扳到定位）
-        set: function (el, open) { if (!el) return; stop(el); el._gufoTarget = open; settle(el, open); },
+        set: function (el, open) { if (!el) return false; stop(el); el._gufoTarget = open; settle(el, open); return open; },
     };
 })();

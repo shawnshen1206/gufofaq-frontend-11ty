@@ -29,12 +29,14 @@ permalink: 1-1-3_preview_excel.html
 {# 資料預覽表格：真實頁 thead/tbody 由 js/previewExcel.js 依上傳的 excel 欄位動態產生（本檔為「動態產生」註解），
      此處欄位取用與後續 1-1-4_columnSelect_excel 欄位對應步驟一致的樣本（客服問題／客服回覆／建立時間／圖片連結），
      用 set+for 資料化示範 3 筆，父層與 table class 沿用 ui/default-table 同一組真實系統 class #}
+{# 第 1 筆的建立時間/圖片連結＝1-1-4 對應步驟的預覽值（同一份 excel 的同一列，§6 跨頁自洽）；
+     中文日期是刻意的髒資料，1-1-4 的 date 槽格式警告示範靠它 #}
 {% set previewRows = [
     {
         question: "如何申請入出國許可證",
         answer: "請攜帶護照及財力證明至服務站辦理",
-        date: "2024/12/01 13:29:24",
-        image: "https://example.com/image1.png"
+        date: "2024年12月1日 下午1時",
+        image: "https://img.example.gov.tw/faq/entry-visa.png"
     },
     {
         question: "外籍配偶居留證申請流程",

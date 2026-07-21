@@ -47,7 +47,6 @@
   "audit.time": "Time",
   "auth.login": "Login",
   "catalog.heading": "GufoFAQ frontend markup preview",
-  "catalog.linkAbTest": "A/B test",
   "catalog.linkColumnSelect": "Excel field mapping",
   "catalog.linkComponentLibrary": "Component library (style guide)",
   "catalog.linkDataImport": "Data import (select dataset)",

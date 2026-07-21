@@ -192,7 +192,7 @@ permalink: 2-2-3_abTest.html
                     </div>
                 </div>
             </div>
-            <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>0/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>0/1000</div>
+            <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>12/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>3/1000</div>
             <div class="chat-input-container">
                 <div class="input-wrap">
                     <div class="form-group chat-input-field">
@@ -216,41 +216,42 @@ permalink: 2-2-3_abTest.html
      元件內建預設軌跡是移民主題（配 2-2-1），見該元件檔頭註解。 #}
 {% set agentActivityRows = [
     {
-        tool: "search_documents",
+        tool: "search_knowledge_base",
         summary: "命中 6 筆相似片段",
-        params: "{ query: 'UH3240 USB-C 規格 特色', top_k: 8, index: 'products' }",
+        params: "{ query: 'UH3240 USB-C 規格 特色', top_k: 8 }",
         result: "回傳 6 筆片段（相似度 0.81–0.93），注入後續生成脈絡。"
     },
     {
-        tool: "final_answer",
-        summary: "彙整並生成最終回答",
-        params: "{ cite: true, max_tokens: 1024 }",
-        result: "整合檢索脈絡輸出規格整理，附參考來源引用。"
+        tool: "get_document",
+        summary: "取回產品規格書段落",
+        params: "{ doc_id: 'spec_uh3240_chunk12', with_context: true }",
+        result: "取得 UH3240 規格書段落全文，補齊輸出規格與供電數據，供 respond 節點生成回答。"
     }
 ] %}
 {% include "components/agent-activity/agent-activity.html" %}
 
 {# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
-     來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染 #}
+     來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染。
+     來源主題與本頁對話/agent 軌跡自洽（§6）：問的是 UH3240 規格，引用的就是產品規格書片段。 #}
 {% set sources = [
     {
-        no: "12173-1",
-        file: "vector8_chunk718_20240829024537_111-1021-5-_入出國及法令彙編1671頁.xlsx",
-        dataset: "移民署 測試",
-        title: "標題名稱ＡＡＡＡＡＡ",
-        time: "2023/11/01 13:00:01",
-        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        no: "13520-1",
+        file: "spec_uh3240_chunk12_20240829024537_UH3240_USB-C多埠集線器規格書12頁.xlsx",
+        dataset: "產品規格 測試",
+        title: "UH3240 輸出與供電規格",
+        time: "2024/08/29 02:45:37",
+        content: "HDMI 輸出支援 4K（3840×2160）@60Hz；USB-C PD 3.0 供電最高 92W，支援 5V／9V／15V／20V 檔位；USB 3.2 Gen 1 傳輸速率最高 5Gbps。",
         note1: "備註文字",
         note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
         reference: "來源名稱"
     },
     {
-        no: "12173-2",
-        file: "vector8_chunk719_20240829024538_111-1022-6-_入出國及法令彙編1672頁.xlsx",
-        dataset: "移民署 測試",
-        title: "標題名稱ＡＡＡＡＡＡ",
-        time: "2023/11/01 13:00:01",
-        content: "內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字",
+        no: "13520-2",
+        file: "spec_uh3240_chunk13_20240829024538_UH3240_USB-C多埠集線器規格書13頁.xlsx",
+        dataset: "產品規格 測試",
+        title: "UH3240 連接埠配置",
+        time: "2024/08/29 02:45:38",
+        content: "擴充埠配置：2× USB Type-A（5Gbps）、1× HDMI 2.0、1× USB-C DC-in；本體 USB-C 上行埠支援筆電直連與行動裝置。",
         note1: "備註文字",
         note2: "備註文字備註文字備註文字備註文字備註文字備註文字備註文字備註文字",
         reference: "來源名稱"

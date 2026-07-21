@@ -1,8 +1,11 @@
 {# agent 工具活動列（測試區詳細）：SaaS 新需求／真 app 無對應。agent 模式問答時，chatbot 於 SSE 串流
      過程回報每一次工具呼叫（工具名 + 參數 + 結果），此元件把它們列成可逐筆收合展開的表格，供測試區
-     檢視 agent 的推理軌跡（工具名對齊 GufoRAG chatbot agent_service 的 search_documents／
-     ask_clarifying_question／final_answer）。真值由 React 端串流事件驅動；此處為靜態示範，工具名／參數／
-     結果＝假資料，依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。
+     檢視 agent 的推理軌跡。工具名對齊 GufoRAG chatbot agent_service 的 BUILTIN_TOOL_NAMES
+     （search_knowledge_base／get_document／ask_clarifying_question…）；最終回答由 respond 圖節點生成、
+     不是工具，反問（ask_clarifying_question）會直接收斂結束回合（after_tools → __end__）——
+     故「同頁已顯示完整回答」的示範軌跡只含檢索/讀件工具、不含反問（§6 示範要是真實可能的狀態）。
+     真值由 React 端串流事件驅動；此處為靜態示範，工具名／參數／結果＝假資料，
+     依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。
      收合機制復用 ui/accordion（根 .js-accordion + 摘要列 .accordion-btn + 隱藏的 .detail-row > .accordion-content，
      見 ui/accordion accordion.js；GufoSlide 300ms 動畫、aria-expanded 每路徑同步）——本元件不自帶 js。
      每筆活動（摘要列＋隱藏詳細列）以 {% for %} 內嵌渲染（GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀
@@ -12,22 +15,22 @@
      agentToolActivities（GUIDELINE §6：set 是頁面全域，泛用名會與使用頁同名變數互相覆蓋）。 #}
 {% set agentToolActivities = agentActivityRows or [
     {
-        tool: "search_documents",
+        tool: "search_knowledge_base",
         summary: "命中 8 筆相似片段",
-        params: "{ query: '新住民 結婚 應備文件', top_k: 8, index: 'immigration' }",
+        params: "{ query: '新住民 結婚 應備文件', top_k: 8 }",
         result: "回傳 8 筆片段（相似度 0.79–0.92），注入後續生成脈絡。"
     },
     {
-        tool: "ask_clarifying_question",
-        summary: "產生 2 個反問選項",
-        params: "{ options: ['結婚登記程序', '依親居留申請'] }",
-        result: "向使用者提出反問；選項併入 suggest_questions 一併回傳前端渲染成 chip。"
+        tool: "search_knowledge_base",
+        summary: "補查面談流程，命中 5 筆",
+        params: "{ query: '結婚登記 面談 流程', top_k: 8 }",
+        result: "回傳 5 筆片段，與前次結果合併去重後供 respond 節點生成回答。"
     },
     {
-        tool: "final_answer",
-        summary: "彙整並生成最終回答",
-        params: "{ cite: true, max_tokens: 1024 }",
-        result: "整合檢索脈絡輸出繁中回答，附參考來源引用。"
+        tool: "get_document",
+        summary: "取回法令彙編原文段落",
+        params: "{ doc_id: 'vector8_chunk718', with_context: true }",
+        result: "取得入出國及法令彙編 1671 頁段落全文，補齊引用來源細節。"
     }
 ] %}
 <div class="agent-activity js-accordion mt-24">

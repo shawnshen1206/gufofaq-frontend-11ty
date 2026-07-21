@@ -9,6 +9,7 @@
      不另開一份 _manage-members-modal.scss 各寫一次（§4：兩個以上元件必須同值的東西才抽共用層，
      各自維護遲早走鐘）；.dataset-list-wrap/.dataset-list 沒有 .member-list 缺少的視覺差異
      （padding/background/scrollbar 都是同一顆清單本就該有的樣子），故無需額外覆寫。
+     搜尋框的關鍵字過濾由共用的 ui/list-filter 供給（同 widget 的 select-dataset-modal 同一份，§5 當場動）。
      無參數——單一用途的確認彈窗，同 components/reset-password-modal 的模式。 #}
 {# 示範資料變數用元件專屬名 manageMemberRows（不用泛用的 members）：{% set %} 是頁面全域，
      若叫 members 會和使用頁（如 5-5-1）自己的 members 互相覆蓋（§2）。 #}

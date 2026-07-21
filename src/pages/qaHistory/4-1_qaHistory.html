@@ -160,8 +160,10 @@ permalink: 4-1_qaHistory.html
                 <th>
                     {# 排序觸發器用真 button（§4：可點的東西不可用 img 假扮——img 不可聚焦、無鍵盤操作）；
                          .sort 是真 app 業務掛點（qaHistory.js $(document).on('click','.sort')），掛在 button 上選擇器照樣命中 #}
-                    <div class="th-sort" data-i18n="qa.conversationDate">
-                        對話日期
+                    {# data-i18n 掛在只含標題字的 span、不掛容器：lang-toggle 以 textContent 收集繁中預設，
+                         容器含 sr-only 子節點的話，切回繁中會把「對話日期 排序」整串寫回標題 #}
+                    <div class="th-sort">
+                        <span data-i18n="qa.conversationDate">對話日期</span>
                         <button type="button" class="sort" data-column="date">
                             <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="">
                             <span class="sr-only" data-i18n="common.sort">排序</span>

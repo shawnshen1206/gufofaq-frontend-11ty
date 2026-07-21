@@ -138,7 +138,8 @@
             </div>
         </div>
     </div>
-    <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>0/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>0/1000</div>
+    {# 次數為示範值：至少要 ≥ 同頁演出的已完成問答數（§6 自洽），真值由 React 依 API 填入 #}
+    <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>12/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>3/1000</div>
     {# chatInputHidden：true 時不渲染輸入區（2-1 是唯讀的問答紀錄預覽，真實頁沒有輸入框；
        單測頁 2-2-1 需要它）。qa-count 兩頁都留。 #}
     {% if not chatInputHidden %}

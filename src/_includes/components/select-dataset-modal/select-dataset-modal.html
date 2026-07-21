@@ -4,7 +4,8 @@
    確認鈕讀 input[name="dataset_radio"]:checked（:21）——這個 modal 的語意是「選一個要匯入的目標資料集」。
    真 app 的 component.html 展示版畫成 checkbox，那是展示版的失真；切版是給功能頁用的，照功能頁走。
    （label 沿用真 app 的 .form-checkbox.border-wrap，radio 也是掛這組 class。）
-   搜尋過濾與確認回填為純前端互動，由 select-dataset-modal.js 提供（§5 當場動得起來）。
+   純前端互動：搜尋過濾走共用的 ui/list-filter（本 widget 與 manage-members-modal 同款）、
+   確認回填由 select-dataset-modal.js 提供（§5 當場動得起來；綁 .btn-close-modals 範圍＝真 app 同款，含 X）。
    示範資料用元件專屬名 selectDatasetRows（§6：泛用名 datasets 會與資料集頁的同名變數互相覆蓋）。 #}
 {% set selectDatasetRows = [
     { label: "資料集AA", checked: true },

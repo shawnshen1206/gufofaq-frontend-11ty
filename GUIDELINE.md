@@ -141,7 +141,7 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
   - **markup 上的每個 class 都要有主人**：樣式正本（元件 scss／全域層）或行為掛點（hook class／js 狀態 class），兩者皆非的 class 不掛。§7 轉換契約的結構 class（modal 殼的 `.modals-content` 等）視同有主（主人＝契約本身）
   - **頂層根 class 名只能有一個 scss 主人**：兩個元件的 scss 都在頂層宣告同名根 class＝兩份會分岔的正本，改名或升格（同 `<dialog id>` 的單一宣告規則，有測試把關）。巢狀在自家根之下的同名子元素 class（`.logo`／`.row`…設計系統共同語言）各元件各自擁有，不算衝突
   - 元件 scss **不得用 `#id` 選擇器**——那是比 class 更緊的耦合，且 id 是頁面層的東西
-- 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
+- 禁止依頁面覆寫元件（`.guideline-page .button {...}` 這種 body-class 範圍選擇器只准出現在該頁自己的 chrome 檔，見 §9）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
 - **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（斷點見 `_mixin.scss` 的 `nav-collapsed`，尺寸見 `_size.scss`）。判準是「**一邊改了、另一邊沒跟就會壞掉**」——`header` 的高度與 `mobile-nav` 浮層的起點是耦合；`992px`／`768px` 這種各元件各自收版的系統性斷點只是共用約定，不是耦合。各寫一份遲早走鐘。**共用的字型堆疊同理**：monospace code 字型跨元件共用（如 code-block／chat-message 的行內碼），抽成 `--fontFamilyMono` token（`_var.scss`），元件的 `font-family` 只掛 `var(--fontFamily*)`——各抄一份 `'Monaco',…` 一改就漏（有測試以白名單把關）
 - **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`（尺標 2, 4, 8, 10, 12, 16, 20, 24, 32, 40；斷點內覆寫用 `sm-gap-*`／`xs-gap-*`，尺標 4~32）；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標少了最細的 2：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
@@ -224,7 +224,7 @@ ui/pagination/
   - **hook class 只給業務行為**（要送 API、或要業務資料才能決定結果的動作）。純前端互動——同頁的顯示/隱藏、開合、切換、複製——沒有業務主人，是切版自己的行為：照本節寫成元件 js，當場就要動得起來。**行為的內容以真 app 為準**：管理後台的 `.copyBtn` 真 app 本來就只彈 toast（不寫剪貼簿），切版比照即忠實；前台聊天訊息的複製真 app 有真剪貼簿，切版就要真的寫剪貼簿（faq-chatroom.js）
   - **不開任何窗的送 API 鈕，不適用條件開窗豁免**：顯示條件已由模板 `{% if %}` 處理、動作本身無需輸入的直接動作鈕（每列的儲存/撤銷…），照「送 API 的按鈕」規則掛 `data-toast` 列全結果
   - **業務 `<select>`／`<input>`（值交給 React 讀去送 API），掛 hook class、不掛 `data-toast`**：`data-toast`／`data-open-modal` 是 `document` 上的 **click** 委派，抓不到 select 的 `change`／「選了哪個選項」，成敗也要看後端（可能含 409 之類分支）——所以值載體元件比照條件開窗鈕：只保留 hook class 標記「React 接手」（如 `.js-chat-mode`、`.js-set-platform-role`、`.js-knowledge-select`），全站 scss 不得引用。命名：觸發**動作**的鈕用 `js-<動詞>-<名詞>`；純**值載體**用名詞式 `js-<名詞>`（`js-chat-mode`）亦可，別誤讀成違規。它們的成敗分支由 React 演，切版端不必也演不出（同條件開窗）
-  - **hook × data-toast 組合矩陣**：①條件開窗／type-to-confirm 鈕→只掛 hook；②值載體→只掛 hook；③直接送 API 的動作鈕→掛 `data-toast` 列全結果，**切版新頁**的這類鈕同時自創 `js-*` hook（React 綁定記號）、真 app 對應頁則沿用真 app 的掛點——class 或 **id 契約**都算（2-2-1 的 select 真 app 以 id 綁定故無 class hook、2-2-3 以 class 綁定故有，兩頁不對稱是契約的忠實保留，不是漏）；④純前端互動→不掛 hook、行為當場動起來
+  - **hook × data-toast 組合矩陣**：①條件開窗／type-to-confirm 鈕→只掛 hook；②值載體→只掛 hook；③直接送 API 的動作鈕→掛 `data-toast` 列全結果，**切版新頁**的這類鈕同時自創 `js-*` hook（React 綁定記號）、真 app 對應頁則沿用真 app 的掛點——class 或 **id 契約**都算（2-2-1 的知識檢索/LLM select 真 app 以 id 綁定（`#knowledgeConfigSelect`/`#llmModelSelect`）故無 class hook、2-2-3 同功能 select 以 class 綁定（`.js-knowledge-select`…）故有——兩頁不對稱是契約的忠實保留，不是漏；切版新增的對話模式 select 兩頁都是自創 `.js-chat-mode`）；④純前端互動→不掛 hook、行為當場動起來
   - **每個分支結果都要看得到**：元件的空狀態（`{% for %}{% else %}`）等分支，至少一處（真實頁或元件庫展示頁）要用會觸發它的資料示範——沒有頁面演得出來的分支等於沒驗收過（同 `<dialog>` 可達性的精神）。scss 定義的可見性狀態 class 同理（如遮罩的 `.active`）：沒有任何頁面演得出該狀態＝沒人看過它的長相，元件庫頁補靜態示範（feature-disabled-overlay 的做法）。頁面資料表若真實初始態為空，`{% for %}` 帶 `{% else %}` 鏡射真 app 的「無資料」列（示範資料照常演已載入態）
 - **一個 `<dialog id>` 只能由一個元件宣告。** 兩個元件各寫一份同 id 的彈窗＝兩份會分岔的正本，而且元件庫的示範觸發器只打得開其中一份、另一份變成誰都看不到的死彈窗。真 app 兩個頁面各有一份同 id 的不同彈窗時，**切版要改名**——`id` 不是轉換契約（React 不靠 `getElementById`），真正要原樣保留的是 hook class 與資料屬性
 - 跳窗用 `<dialog>` 元素 + `showModal()` / `close()`（標準 API，與既有切版相同）。**進出場動畫寫在 CSS**：`@starting-style` 給進場起點、`transition: display .3s allow-discrete, overlay .3s allow-discrete` 讓瀏覽器撐到退場跑完才 `display:none`。**不要用 setTimeout 延後 `close()`** —— 那顆 timer 會逼你再寫「關到一半又點關閉」「關到一半又重開」兩道重入守衛，而 transition 原生就會反向
@@ -261,7 +261,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 - **示範資料要自洽**：同頁與跨頁能互相推導的值（群組能力的聯集、總數與明細、狀態與徽章）要對得上——示範資料演的必須是一個真實可能的狀態。
 - **能從示範陣列推導的數字就從陣列渲染**（`{{ rows.length }}`），不烤字面量——列數一改，烤死的總計就開始說謊（5-6-1 審核結果拆成功/失敗兩陣列即為此）。例外：**分頁的 `total` 是演分頁滑窗的示範參數**（要大到讓省略號出現），不參與與示範列數的帳目核對。
 - 同頁重複使用同一元件時，**每次 include 前重新 set 全部參數**（§2：`set` 是全域的，上一次的值會留著）。
-- **元件內部的示範資料 `{% set %}` 變數，用元件專屬名、不用泛用名**（`manageMemberRows` 而非 `members`）：`set` 是頁面全域，被 include 時泛用名會和使用頁自己的同名變數互相覆蓋（§2），且沒有測試抓得到這種靜默覆蓋。
+- **元件內部的示範資料 `{% set %}` 變數，用元件專屬名、不用泛用名**（`manageMemberRows` 而非 `members`）：`set` 是頁面全域，被 include 時泛用名會和使用頁自己的同名變數互相覆蓋（§2）。渲染結果的靜默覆蓋沒有測試看得到，但變數名的撞名有——跨元件唯一、且不得與任何頁面層變數同名（有測試把關）。
 - 元件吃哪些參數、include 了哪些子元件——寫在**該元件 html 的檔頭註解**（唯一正本），不在本文件維護清單。
 - 有些元件不用 include，直接在 markup 寫它的 class（`button`、`modals`…）；有些由 layout 自動提供（`header`、`footer`）。
 

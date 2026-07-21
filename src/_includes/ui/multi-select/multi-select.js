@@ -184,6 +184,9 @@ document.addEventListener("DOMContentLoaded", function () {
         control.addEventListener("click", function () { setOpen(true); search.focus(); });
         search.addEventListener("focus", function () { setOpen(true); });
         search.addEventListener("input", function () {
+            // label 點擊轉送焦點時，document 級點外部委派可能剛把下拉關掉（composedPath 只含 label）——
+            // 焦點還在、使用者已在打字，就把下拉重新打開，否則是在過濾一個看不見的清單
+            if (!isOpen()) setOpen(true);
             // 重新過濾＝選項全部重建。不清掉 aria-activedescendant 的話，
             // 它會一直指著一個已經不存在的 id，輔具會報一個看不到的「目前選項」。
             activeIndex = -1;
