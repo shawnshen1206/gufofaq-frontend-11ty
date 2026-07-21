@@ -1,17 +1,24 @@
 // tab 頁籤切換：改寫自真實 app js/main.js「tab頁籤切換」（原用 jQuery），改用原生 DOM API
 // 只轉切版互動（切換 .active / 顯示對應群組），資料載入/API 等業務邏輯不在此列
+// 選中態同步進 ARIA：.active 只是視覺，報讀器聽不到——每一條改變選中態的路徑都同步 aria-current
+// （§4「狀態要寫進 ARIA」；markup 的初始 active 頁籤也帶 aria-current="true"）
 document.addEventListener("DOMContentLoaded", function () {
+    function setCurrent(tab, actives) {
+        actives.forEach(function (el) {
+            el.classList.remove("active");
+            el.removeAttribute("aria-current");
+        });
+        tab.classList.add("active");
+        tab.setAttribute("aria-current", "true");
+    }
+
     // 第一層頁籤切換
     document.querySelectorAll(".top-tabs .tab").forEach(function (tab) {
         tab.addEventListener("click", function () {
-            // 樣式切換
             var siblings = Array.prototype.filter.call(tab.parentElement.children, function (el) {
                 return el !== tab;
             });
-            tab.classList.add("active");
-            siblings.forEach(function (el) {
-                el.classList.remove("active");
-            });
+            setCurrent(tab, siblings);
 
             // 取得目標群組
             var target = tab.getAttribute("data-target");
@@ -25,13 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 第二層頁籤切換
+    // 第二層頁籤切換（真 app 行為：清掉所有 .sub-tabs 裡的選中，跨群組全域）
     document.querySelectorAll(".sub-tabs .tab").forEach(function (tab) {
         tab.addEventListener("click", function () {
-            document.querySelectorAll(".sub-tabs .tab").forEach(function (el) {
-                el.classList.remove("active");
-            });
-            tab.classList.add("active");
+            setCurrent(tab, Array.prototype.slice.call(document.querySelectorAll(".sub-tabs .tab")));
         });
     });
 
@@ -43,10 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var siblings = Array.prototype.filter.call(tab.parentElement.children, function (el) {
                         return el !== tab;
                     });
-                    tab.classList.add("active");
-                    siblings.forEach(function (el) {
-                        el.classList.remove("active");
-                    });
+                    setCurrent(tab, siblings);
                 });
             });
         }

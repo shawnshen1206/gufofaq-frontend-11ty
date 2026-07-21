@@ -1,16 +1,19 @@
 {# 租戶管理 modal，取自 5-6-1_platformTenants 頁「管理」鈕（.js-manage-tenant）：平台系統管理員管理指定租戶的
      額度／使用期／模型開通／凍結解凍／成員治理／危險操作。開窗需先選定哪個租戶才知道管理誰＝業務條件開窗，故該鈕保留真 app hook class、
      不掛 data-open-modal（GUIDELINE §5）。彈窗本體回歸切版，區塊：
-       1. 額度——form-control 文字欄 + 用量週期 select（無/每日/每月，逆向自 product QuotaIn.usage_period，
-          隨額度共用 footer「儲存」鈕一起送出）+ 重置當期用量鈕（直接動作，逆向自 POST
-          /platform/tenants/{id}/reset-usage，data-toast 演出成敗，不佔用共用 footer 鈕）
-       2. 使用期——「延展／縮短天數」數字欄 + 「指定到期日」日期欄（二擇一；日期選擇不在切版範圍，沿用 .calendar hook class 交由 React 套件實作）
+       1. 額度——三個數字欄對齊 product QuotaIn（qa_limit／extraction_limit／storage_limit_mb）+ 用量週期
+          select（無/每日/每月，QuotaIn.usage_period，隨額度共用 footer「儲存」鈕一起送出）+ 重置當期用量鈕
+          （直接動作，逆向自 POST /platform/tenants/{id}/reset-usage，data-toast 演出成敗，不佔用共用 footer 鈕）
+       2. 使用期——「延展／縮短天數」數字欄 + 「指定到期日」日期欄（exactly-one：product platform.py 兩者都給
+          回 400 "provide exactly one of extend_days or set_trial_end"，React 端送出前擇一；日期選擇不在
+          切版範圍，沿用 .calendar hook class 交由 React 套件實作）
        3. 模型開通——checkbox 清單，欄位寫法比照 5-5-1_userManagement「能力」checkbox
        4. 凍結／解凍——暫停使用期時鐘（直接動作，data-toast 演出成敗）
        5. 成員——逐位成員：代理登入／停用啟用（直接動作 data-toast）＋重設密碼（.js-reset-password）／刪除（.js-delete-user，button-red）＝業務條件用 hook class
        6. 危險操作——刪除資料（.js-delete-tenant-data）／刪除帳號（.js-delete-tenant-account）：破壞性 button-red，需輸入該租戶名稱字串相符才可執行（type-to-confirm），屬業務條件、用 hook class 不掛 data-toast
      額度／使用期／模型開通共用 footer「儲存」鈕（toast.manageTenant，成功/失敗）；代理登入等逐成員動作各自 data-toast。
-     成員清單為純示範假資料（§6b），正式環境由 React 讀 GET /platform/tenants/{id}/users 渲染。
+     成員清單為純示範假資料（§6b，通用名冊、不綁定使用頁的特定租戶列——本 modal 是全部列共用的一份本體，
+     內容由業務 js 依「點了哪列的管理鈕」動態載入），正式環境由 React 讀 GET /platform/tenants/{id}/users 渲染。
      .js-reset-password／.js-delete-user 的彈窗本體（components/reset-password-modal／components/delete-modal）
      不巢狀 include 在本檔：component.html 展示頁已各自獨立 include 過這兩顆（給其他頁的示範觸發器用），
      本檔若再巢狀 include 一次，會在 component.html 同時 include 本 modal 時產生同 id 的 <dialog> 兩份
@@ -33,14 +36,35 @@
                 </div>
                 <div class="modals-body">
                     <div class="flex-row column gap-24">
-                        <div class="flex-row gap-40 mobile-column sm-gap-16">
+                        {# 額度三欄位＝product QuotaIn 的 qa_limit／extraction_limit／storage_limit_mb（本 modal 是 React 藍圖，欄位集要跟契約） #}
+                        <div class="flex-row flex-wrap gap-40 mobile-column sm-gap-16">
                             <div class="col-6-md col-12-sm">
                                 <div class="form-group">
                                     <div class="label">
-                                        <label for="tenantQuotaInput" class="control-label" data-i18n="settings.quota">額度</label>
+                                        <label for="tenantQaLimitInput" class="control-label" data-i18n="platform.qaLimit">問答額度</label>
                                     </div>
                                     <div class="field">
-                                        <input type="text" id="tenantQuotaInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control">
+                                        <input type="number" id="tenantQaLimitInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" value="3000">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6-md col-12-sm">
+                                <div class="form-group">
+                                    <div class="label">
+                                        <label for="tenantExtractionLimitInput" class="control-label" data-i18n="platform.extractionLimit">萃取額度</label>
+                                    </div>
+                                    <div class="field">
+                                        <input type="number" id="tenantExtractionLimitInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" value="1000">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6-md col-12-sm">
+                                <div class="form-group">
+                                    <div class="label">
+                                        <label for="tenantStorageLimitInput" class="control-label" data-i18n="platform.storageLimitMb">儲存上限（MB）</label>
+                                    </div>
+                                    <div class="field">
+                                        <input type="number" id="tenantStorageLimitInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control" value="1000">
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +89,7 @@
                             <button type="button" class="button button-border button-sm" data-toast="已重置當期用量|重置失敗，請稍後再試" data-i18n-data-toast="toast.resetUsage" data-toast-type="success|error" data-i18n="platform.resetUsage">重置當期用量</button>
                         </div>
 
-                        {# 使用期：延展／縮短天數 或 指定到期日（二擇一，填了日期以日期為準；日期選擇沿用 .calendar hook 交由 React 套件實作）。 #}
+                        {# 使用期：延展／縮短天數 或 指定到期日（exactly-one——product 兩者都給回 400，React 送出前擇一；日期選擇沿用 .calendar hook 交由 React 套件實作）。 #}
                         <div class="flex-row column gap-8">
                             <div class="text-bold" data-i18n="settings.extendExpiry">使用期延展</div>
                             <div class="flex-row gap-40 mobile-column sm-gap-16">
@@ -128,7 +152,8 @@
                                     </div>
                                     <div class="btn-group">
                                         <button type="button" class="button button-border button-sm" data-toast="已代理登入該成員|權限不足，無法代理登入|代理登入失敗，請稍後再試" data-i18n-data-toast="toast.impersonateTenant" data-toast-type="success|warning|error" data-i18n="action.impersonate">代理登入</button>
-                                        <button type="button" class="button button-border button-sm" data-toast="已更新使用者狀態|更新失敗，請稍後再試" data-i18n-data-toast="toast.setUserActive" data-toast-type="success|error" data-i18n="{% if member.isActive %}platform.disableUser{% else %}platform.enableUser{% endif %}">{% if member.isActive %}停用{% else %}啟用{% endif %}</button>
+                                        {# 停用有具名 409 分支（product platform.py：不可停用最後一位在職租戶管理者）→ 列進結果（§5 全結果） #}
+                                        <button type="button" class="button button-border button-sm" data-toast="已更新使用者狀態|無法停用最後一位在職管理者|更新失敗，請稍後再試" data-i18n-data-toast="toast.setUserActive" data-toast-type="success|warning|error" data-i18n="{% if member.isActive %}platform.disableUser{% else %}platform.enableUser{% endif %}">{% if member.isActive %}停用{% else %}啟用{% endif %}</button>
                                         <button type="button" class="button button-border button-sm js-reset-password" data-i18n="settings.resetPassword">重設密碼</button>
                                         <button type="button" class="button button-red button-sm js-delete-user" data-i18n="action.delete">刪除</button>
                                     </div>

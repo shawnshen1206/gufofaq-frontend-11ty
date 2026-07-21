@@ -34,7 +34,9 @@ permalink: 2-2-3_abTest.html
             <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
         </div>
 
-        <div class="select-row flex-row column gap-16">
+        {# 真 app 此層有 .select-row class，但其樣式已依 §4 改寫為 .ab-field-label slot（見 _ab-test-block.scss），
+             js 也不查它（abTest.js 全檔 grep 零命中）——無主 class 不掛（§4） #}
+        <div class="flex-row column gap-16">
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label flex-row">
                     <label for="abKnowledgeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.knowledgeRetrieval">知識檢索</label>
@@ -78,16 +80,18 @@ permalink: 2-2-3_abTest.html
                     </div>
                 </div>
             </div>
-            {# 對話模式 + Agent 最大迭代次數（Task 12b）：每側各一組，id 以 -{{ ab.side }} 保持同頁唯一；
-                 對齊 product qatest TestConfig 的 search_mode／agent_max_iterations，業務讀值走 hook class js-chat-mode／js-agent-max-iter（React 接手） #}
+            {# 對話模式 + Agent 最大迭代次數：每側各一組，id 以 -{{ ab.side }} 保持同頁唯一；
+                 對齊 product qatest TestConfig 的 search_mode／agent_max_iterations（product 預設 traditional），
+                 業務讀值走 hook class js-chat-mode／js-agent-max-iter（React 接手）。
+                 示範選 agent（§6 示範資料要自洽：本頁下方展示 agent 工具軌跡，傳統搜尋模式不會有）。 #}
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label">
                     <label for="abChatModeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
                 </div>
                 <div class="field">
                     <select id="abChatModeSelect-{{ ab.side }}" class="form-control singleSelect js-chat-mode">
-                        <option value="traditional" selected data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
-                        <option value="agent" data-i18n="qaTest.chatModeAgent">Agent 對話</option>
+                        <option value="traditional" data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
+                        <option value="agent" selected data-i18n="qaTest.chatModeAgent">Agent 對話</option>
                     </select>
                 </div>
             </div>
@@ -110,7 +114,9 @@ permalink: 2-2-3_abTest.html
 
 {# 對話區：AB 雙欄比較訊息真實系統無對應既有元件（components/chatroom 是單欄 user/robot 結構），
      故聊天視窗外殼（.chatroom-wrap/.chatroom-block/.chat-input-container）逐字寫死、僅回覆訊息改用 .ab-compare 雙欄比較 markup，
-     與 2-2-1_singleTest 共用同一份聊天室外殼樣式；右側問答紀錄面板真實頁預設 hidden（AB頁尚未支援），逐字保留 #}
+     與 2-2-1_singleTest 共用同一份聊天室外殼樣式；右側問答紀錄面板真實頁預設 hidden（AB頁尚未支援），逐字保留。
+     刻意不含 chatroom 的串流狀態列與建議追問 chip：雙欄各自串流沒有單一狀態文案，
+     suggest_questions 也只在單一問答流回傳（ask.py 的 chat_room chunk 允許清單）——非漏植 #}
 <div class="mt-24">
     <div class="flex-row gap-10 mobile-column-xs xs-column-reverse">
         <div class="chatroom-wrap">
@@ -150,7 +156,7 @@ permalink: 2-2-3_abTest.html
                                                     <span class="tooltip" data-i18n="action.copy">複製</span>
                                                 </button>
                                                 <button type="button" class="button-icon watch watchBtn has-tooltip">
-                                                    <span class="tooltip" data-i18n="qaTest.viewSource">查看來源</span>
+                                                    <span class="tooltip" data-i18n="comp.viewSource">查看來源</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -174,7 +180,7 @@ permalink: 2-2-3_abTest.html
                                                     <span class="tooltip" data-i18n="action.copy">複製</span>
                                                 </button>
                                                 <button type="button" class="button-icon watch watchBtn has-tooltip">
-                                                    <span class="tooltip" data-i18n="qaTest.viewSource">查看來源</span>
+                                                    <span class="tooltip" data-i18n="comp.viewSource">查看來源</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -186,16 +192,16 @@ permalink: 2-2-3_abTest.html
                     </div>
                 </div>
             </div>
-            <div class="qa-count"><span data-i18n="qaTest.qaCount">問答次數：</span>0/3000<span data-i18n="qaTest.summaryCount">，摘要次數：</span>0/1000</div>
+            <div class="qa-count"><span data-i18n="comp.qaCount">問答次數：</span>0/3000<span data-i18n="comp.summaryCount">，摘要次數：</span>0/1000</div>
             <div class="chat-input-container">
                 <div class="input-wrap">
                     <div class="form-group chat-input-field">
                         <div class="field">
-                            <textarea class="form-control chat-input-control" placeholder="輸入問題" data-i18n-placeholder="qaTest.inputQuestion" aria-label="輸入問題" data-i18n-aria-label="qaTest.inputQuestion"></textarea>
+                            <textarea class="form-control chat-input-control" placeholder="輸入問題" data-i18n-placeholder="comp.enterQuestion" aria-label="輸入問題" data-i18n-aria-label="comp.enterQuestion"></textarea>
                             <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                         </div>
                     </div>
-                    <button type="submit" class="button button-primary chat-input-submit" data-i18n="action.submit">送出</button>
+                    <button type="submit" class="button button-primary chat-input-submit" data-toast="回答生成中...|回答生成成功|回答生成失敗" data-i18n-data-toast="toast.chatSubmit" data-toast-type="info|success|error" data-i18n="action.submit">送出</button>
                 </div>
             </div>
         </div>
@@ -206,7 +212,22 @@ permalink: 2-2-3_abTest.html
 </div>
 
 {# agent 工具活動（測試區詳細）：顯示本次問答 agent 呼叫的工具軌跡（工具名 + 參數/結果，逐筆收合展開）。
-     詳細只在測試區、不進共用 chatroom。示範假資料住元件內（用元件專屬名 agentToolActivities，見該元件檔頭註解）。 #}
+     詳細只在測試區、不進共用 chatroom。本頁對話問的是 UH3240 規格，故覆寫示範軌跡與之自洽（§6）；
+     元件內建預設軌跡是移民主題（配 2-2-1），見該元件檔頭註解。 #}
+{% set agentActivityRows = [
+    {
+        tool: "search_documents",
+        summary: "命中 6 筆相似片段",
+        params: "{ query: 'UH3240 USB-C 規格 特色', top_k: 8, index: 'products' }",
+        result: "回傳 6 筆片段（相似度 0.81–0.93），注入後續生成脈絡。"
+    },
+    {
+        tool: "final_answer",
+        summary: "彙整並生成最終回答",
+        params: "{ cite: true, max_tokens: 1024 }",
+        result: "整合檢索脈絡輸出規格整理，附參考來源引用。"
+    }
+] %}
 {% include "components/agent-activity/agent-activity.html" %}
 
 {# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），

@@ -1,0 +1,11 @@
+// 區段小標題（原真 app component.scss「優先等級表格」附帶樣式）。
+// 純樣式元件（無 html/js）：markup 直接寫 <div class="tablelist-title">。
+// 從 ui/default-table 升格：它其實是表格「外」的獨立標題（5-2-1 的優先級標題×4、
+// 5-2-1 欄位命名、knowledge-retrieval-modal 的分組標題都在表格外用它），
+// 寄生在 default-table 的 scss 裡等於一個沒有主人的 class（§4）——比照 data-info 先例獨立成原子。
+.tablelist-title {
+    font-size: 1.125rem;
+    text-align: left;
+    color: var(--brand-text);
+    padding: 11.625px 0;
+}

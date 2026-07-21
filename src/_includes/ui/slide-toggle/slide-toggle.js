@@ -57,6 +57,7 @@
     function run(el, open, ms) {
         if (!el) return;
         stop(el); // 舊動畫直接砍掉，不要兩個動畫搶同一個 height
+        el._gufoTarget = open; // 記下這次動畫的目標態，toggle 在動畫進行中靠它反轉
         // 沒有動畫需求（使用者要求減少動態、或瀏覽器不支援 WAAPI）就直接到位
         if (prefersReduced() || typeof el.animate !== "function") {
             settle(el, open);
@@ -78,8 +79,15 @@
     window.GufoSlide = {
         down: function (el, ms) { run(el, true, ms); },
         up: function (el, ms) { run(el, false, ms); },
-        toggle: function (el, ms) { run(el, isHidden(el), ms); },
+        toggle: function (el, ms) {
+            // 動畫進行中 computed display 還是展開值（display:none 要到 settle 才落地），
+            // 用 isHidden 判斷會把「收合中再點一次」誤判成再收一次、吞掉反轉——
+            // 進行中改看這次動畫的目標態並反轉（等同 jQuery .stop(true,true) + slideToggle）。
+            if (!el) return;
+            var open = el._gufoSlide ? !el._gufoTarget : isHidden(el);
+            run(el, open, ms);
+        },
         // 不帶動畫地設定狀態（初始態、或把還在動的東西直接扳到定位）
-        set: function (el, open) { if (!el) return; stop(el); settle(el, open); },
+        set: function (el, open) { if (!el) return; stop(el); el._gufoTarget = open; settle(el, open); },
     };
 })();

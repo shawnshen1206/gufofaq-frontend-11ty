@@ -5,7 +5,7 @@
      div/span 不一統一為 div）。 #}
 <div class="tab-group">
     {% for tab in qaRecordTabs %}
-    <button type="button" class="tab on-record{% if tab.active %} active{% endif %}" title="{{ tab.label }}">{{ tab.label }}</button>
+    <button type="button" class="tab on-record{% if tab.active %} active{% endif %}"{% if tab.active %} aria-current="true"{% endif %} title="{{ tab.label }}">{{ tab.label }}</button>
     {% else %}
     <div class="text-gray no-records" data-i18n="qa.noRecords">尚無問答紀錄</div>
     {% endfor %}

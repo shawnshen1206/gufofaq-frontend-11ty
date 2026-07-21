@@ -24,7 +24,8 @@ permalink: 5-4-2_welcomeMessage.html
                     <label for="welcomeProfileSelect" class="control-label" data-i18n="settings.profile">設定檔</label>
                 </div>
                 <div class="field">
-                    <select id="welcomeProfileSelect" class="form-control singleSelect">
+                    {# 值載體：切換設定檔即載入該檔版本列表（業務行為）→ 掛 hook class（§5 值載體條款），React 接 change #}
+                    <select id="welcomeProfileSelect" class="form-control singleSelect js-welcome-profile">
                         <option value="1" data-i18n="settings.config1">設置一</option>
                         <option value="2" data-i18n="settings.config2">設置二</option>
                         <option value="3" data-i18n="settings.config3">設置三</option>
@@ -77,7 +78,8 @@ permalink: 5-4-2_welcomeMessage.html
             <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
             <div class="form-group">
                 <div class="field">
-                    <textarea class="form-control size-lg prompt-input" placeholder="請輸入歡迎語內容" data-i18n-placeholder="settings.pleaseEnterWelcome" aria-label="歡迎語內容" data-i18n-aria-label="settings.welcomeContent">您好，我是智能客服，有什麼可以協助您的嗎？</textarea>
+                    {# js-welcome-input＝值載體 hook（比照 5-4-1 的 js-prompt-input：讀值方 .js-welcome-save 需要它）；.prompt-input 是樣式 slot #}
+                    <textarea class="form-control size-lg prompt-input js-welcome-input" placeholder="請輸入歡迎語內容" data-i18n-placeholder="settings.pleaseEnterWelcome" aria-label="歡迎語內容" data-i18n-aria-label="settings.welcomeContent">您好，我是智能客服，有什麼可以協助您的嗎？</textarea>
                 </div>
             </div>
         </div>

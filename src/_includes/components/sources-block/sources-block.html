@@ -41,7 +41,7 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th></th>
+                    <th><span class="sr-only" data-i18n="common.expand">展開</span></th>
                     <th data-i18n="common.seq">序號</th>
                     <th data-i18n="common.file">檔案</th>
                     <th data-i18n="common.dataset">資料集</th>
@@ -64,29 +64,32 @@
                 <tr class="detail-row">
                     <td colspan="4" class="detail-cell">
                         <div class="accordion-content">
+                            {# tr 一律包 tbody：table 直下放 tr 瀏覽器會自動補 tbody，轉 React 後 SSR/hydration 會 mismatch（§4） #}
                             <table class="accordion-table">
-                                <tr>
-                                    <th data-i18n="field.title">標題</th>
-                                    <td>{{ source.title }}</td>
-                                    <th data-i18n="common.time">時間</th>
-                                    <td>{{ source.time }}</td>
-                                </tr>
-                                <tr>
-                                    <th data-i18n="field.content">內容</th>
-                                    <td colspan="3">{{ source.content }}</td>
-                                </tr>
-                                <tr>
-                                    <th data-i18n="field.note1">備註1</th>
-                                    <td colspan="3">{{ source.note1 }}</td>
-                                </tr>
-                                <tr>
-                                    <th data-i18n="field.note2">備註2</th>
-                                    <td colspan="3">{{ source.note2 }}</td>
-                                </tr>
-                                <tr>
-                                    <th data-i18n="common.referenceData">參考資料</th>
-                                    <td colspan="3">{{ source.reference }}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th data-i18n="field.title">標題</th>
+                                        <td>{{ source.title }}</td>
+                                        <th data-i18n="common.time">時間</th>
+                                        <td>{{ source.time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th data-i18n="field.content">內容</th>
+                                        <td colspan="3">{{ source.content }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th data-i18n="field.note1">備註1</th>
+                                        <td colspan="3">{{ source.note1 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th data-i18n="field.note2">備註2</th>
+                                        <td colspan="3">{{ source.note2 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th data-i18n="common.referenceData">參考資料</th>
+                                        <td colspan="3">{{ source.reference }}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </td>

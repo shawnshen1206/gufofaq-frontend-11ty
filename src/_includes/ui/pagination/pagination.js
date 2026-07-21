@@ -97,13 +97,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // 省略號跳頁 target：一般情況跳 3 頁，但視窗貼近頭尾時 current±3 可能仍落在 [start,end] 視窗內
-        // （等於白按）。跳頁語意是「至少跳出目前視窗」，故 target 要再夾到視窗外一格（start-1 / end+1）。
+        // （等於白按）。跳頁語意是「至少跳出目前視窗」，故 target 要再夾到視窗外一格（start-1 / end+1）
+        // ——因此 aria-label 不烙固定頁數（實際距離會被夾動），只說方向。
         if (start > 2) {
-            html += ellipsisLi(Math.max(1, Math.min(current - 3, start - 1)), t("pagination.jumpPrev", "往前 3 頁"));
+            html += ellipsisLi(Math.max(1, Math.min(current - 3, start - 1)), t("pagination.jumpPrev", "往前跳頁"));
         }
         for (var i = start; i <= end; i++) html += pageLi(i, current);
         if (end < totalPages - 1) {
-            html += ellipsisLi(Math.min(totalPages, Math.max(current + 3, end + 1)), t("pagination.jumpNext", "往後 3 頁"));
+            html += ellipsisLi(Math.min(totalPages, Math.max(current + 3, end + 1)), t("pagination.jumpNext", "往後跳頁"));
         }
 
         // 尾頁碼恆顯
@@ -125,12 +126,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 事件委派：動態插入的頁碼 <a> 也吃得到
     document.addEventListener("click", function (e) {
-        var a = e.target.closest("a[data-page]");
+        var a = e.target.closest(".pagination a");
         if (!a) return;
+        // 分頁裡所有 <a> 都是 href="#"（真 app 同款 markup）：一律吃掉預設導航——
+        // 沒有 data-page 的（目前頁、disabled 箭頭）放行的話，"#" 會把頁面捲到頂、網址多個 #
+        e.preventDefault();
+        var page = a.getAttribute("data-page");
+        if (!page) return;
         var el = a.closest(".pagination");
         if (!el) return;
-        e.preventDefault();
-        el.setAttribute("data-current", a.getAttribute("data-page"));
+        el.setAttribute("data-current", page);
         render(el);
     });
 

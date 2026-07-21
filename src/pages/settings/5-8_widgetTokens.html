@@ -39,7 +39,7 @@ permalink: 5-8_widgetTokens.html
                     <label for="widgetOriginsInput" class="control-label required" data-i18n="widget.allowedOrigins">允許網域</label>
                 </div>
                 <div class="field">
-                    <textarea id="widgetOriginsInput" rows="3" placeholder="一行一個，例如 https://example.com" data-i18n-placeholder="widget.originsPlaceholder" class="form-control"></textarea>
+                    <textarea id="widgetOriginsInput" rows="3" placeholder="一行一個，例如 https://example.com" data-i18n-placeholder="widget.originsPlaceholder" class="form-control" required></textarea>
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
@@ -119,7 +119,7 @@ permalink: 5-8_widgetTokens.html
                     </td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="button button-border button-sm" data-toast="嵌入連結已複製" data-i18n-data-toast="widget.embedCopied" data-i18n="widget.copyEmbed">複製嵌入連結</button>
+                            <button type="button" class="button button-border button-sm copyBtn" data-toast="嵌入連結已複製" data-i18n-data-toast="widget.embedCopied" data-i18n="widget.copyEmbed">複製嵌入連結</button>
                             {% if not row.disabled %}
                             <button type="button" class="button button-red button-sm js-revoke-token" data-toast="已撤銷|撤銷失敗，請稍後再試" data-i18n-data-toast="toast.revokeWidgetToken" data-toast-type="success|error" data-i18n="action.revoke">撤銷</button>
                             {% endif %}

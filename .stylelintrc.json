@@ -4,7 +4,7 @@
     "color-no-hex": [true, { "message": "不得寫裸 hex —— 顏色一律用 _var.scss 的語意 token（var(--…)）" }],
     "color-named": ["never", { "message": "不得寫具名顏色 —— 顏色一律用 _var.scss 的語意 token（var(--…)）" }],
     "function-disallowed-list": [
-      ["rgb", "rgba", "hsl", "hsla"],
+      ["rgb", "rgba", "hsl", "hsla", "hwb", "lab", "lch", "oklab", "oklch", "color", "color-mix"],
       { "message": "不得寫裸色彩函式 —— 顏色一律用 _var.scss 的語意 token（透明請用 transparent）" }
     ]
   },

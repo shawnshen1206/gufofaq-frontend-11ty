@@ -1,4 +1,7 @@
-// 逐字複製自真實 app 的 scss/component.scss「文字編輯區」區段（verbatim，只搬移位置，line 2678-2716）
+// 照抄自真實 app scss/component.scss「文字編輯區」區段（line 2678-2716），另依規範做了申報過的調整：
+// .form-group:has(textarea)→.edit-field-group（§4 隔離）、拿掉 display:none 家族（見下註）、
+// 拿掉 box-sizing（真 app 同選擇器先 content-box 後 border-box、末條勝出＝實效 border-box，
+// 與全域 _base 相同故整條不寫，§4-1；editable-block.js 的 resizeInput 寬度計算即 border-box 式）。
 /*===============================
     文字編輯區
 ================================*/
@@ -21,7 +24,6 @@
         padding: 6px 8px;
         font-size: 1rem;
         width: fit-content;
-        box-sizing: content-box;
     }
 
     textarea.edit-field {

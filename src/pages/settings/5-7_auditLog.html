@@ -28,7 +28,9 @@ permalink: 5-7_auditLog.html
                 <div class="field">
                     <select id="auditActionSelect" class="form-control singleSelect">
                         <option value="" selected data-i18n="common.all">全部</option>
-                        <option value="login" data-i18n="audit.actLogin">登入</option>
+                        {# 動作值對齊 product 實際寫入的 action 詞彙（record_audit 只有 login.success/login.failed，沒有裸 "login"）；
+                             示範列第 3 筆即 login.failed #}
+                        <option value="login.failed" data-i18n="audit.actLoginFailed">登入失敗</option>
                         <option value="ask" data-i18n="audit.actAsk">問答</option>
                         <option value="import" data-i18n="audit.actImport">資料匯入</option>
                         <option value="dataset.create" data-i18n="audit.actDatasetCreate">建立資料集</option>
@@ -52,7 +54,7 @@ permalink: 5-7_auditLog.html
             </div>
             <div class="form-group col-3-md col-12-sm">
                 <div class="label">
-                    <label for="auditOperatorInput" class="control-label" data-i18n="audit.filterOperator">操作者</label>
+                    <label for="auditOperatorInput" class="control-label" data-i18n="audit.operator">操作者</label>
                 </div>
                 <div class="field">
                     <input type="number" id="auditOperatorInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control">
@@ -121,7 +123,7 @@ permalink: 5-7_auditLog.html
         <thead>
             <tr>
                 <th data-i18n="audit.time">時間</th>
-                <th data-i18n="audit.tenant">租戶</th>
+                <th data-i18n="settings.tenant">租戶</th>
                 <th data-i18n="audit.operator">操作者</th>
                 <th data-i18n="audit.impersonator">代理者</th>
                 <th data-i18n="audit.actionType">操作類型</th>

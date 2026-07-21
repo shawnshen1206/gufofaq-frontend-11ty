@@ -32,7 +32,7 @@ src/
 │   │       ├── _<元件名>.scss     ←   元件樣式（有才放；要在 main.scss @use）
 │   │       └── <元件名>.js        ←   元件行為（有才放；要三方登記，見 §5）
 │   └── ui/                 ← 小元件：不依賴其他元件的積木
-├── scss/                   ← 全域層：色 token / 尺寸 token / mixin / reset / base / utilities / main（元件樣式不放這）
+├── scss/                   ← 全域層：色 token / 尺寸 token / mixin / reset / base / utilities / main ＋依 §4 升格的共用基底 partial（如 _form-check）；元件專屬樣式不放這
 ├── i18n/en.json            ← 英文翻譯（繁中是原文、留在 markup，見 §4-2）
 ├── images/
 └── pages/<section>/<頁面>.html   ← 頁面 = 選 layout + 元件組合
@@ -53,7 +53,7 @@ src/
 
 **判斷依賴時只看 scss + js + 生產 markup。** `<元件名>.html` 有兩種身分：被真實頁面 include 的是**生產 markup**；只被元件總覽頁 include 的是**展示片段**——展示片段為了示範情境會用到別的元件，不算依賴（否則每個原子都會被推去 `components/`）。
 
-「專屬子片段」指**被另一個元件 include** 的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`）、`step-nodes`（step-btn-wrap 的步驟點，也可由頁面單獨 include）。它們即使零依賴也放在 `components/`。
+「專屬子片段」指**被另一個元件 include** 的部分：`mobile-nav`（header 的手機版選單，共用 header 的 `menuItems`）、`step-nodes`（step-btn-wrap 的步驟點，也可由頁面單獨 include）。它們即使零依賴也放在 `components/`。專屬子片段與其 parent 視為**同一個元件邊界**：跨這條邊界的 class 借用與 js 操作（header 放 `.nav-toggle` markup、mobile-nav 供其樣式與行為）不算 §4/§5 違規，但耦合點要在雙方檔頭註解互相指名。
 
 **`layouts/` 的樣式跟模板同住**：模板不是元件（無 markup、無行為、只服務單一模板），它的專屬樣式放 `layouts/<模板名>/_<模板名>.scss`，不進 `components/` 也不進全域 `scss/`。
 
@@ -73,7 +73,7 @@ src/
 
 | 語法 | 用途 | React 對應 |
 |---|---|---|
-| front matter（檔首兩條 `---` 之間的 YAML） | 頁面設定（layout、title、permalink）與頁面資料 | props / API 資料 |
+| front matter（檔首兩條 `---` 之間的 YAML） | 頁面設定（layout、title、permalink）；頁面資料放這或內容區頂端 `{% set %}`（§3-2） | props / API 資料 |
 | `{% include "桶/元件/檔.html" %}` | 引入元件 | `<Component />` |
 | `{% set 名 = 值 %}` | include 前傳參數 | props |
 | `{% for x in 清單 %}…{% else %}…{% endfor %}`（搭配 `{% if %}`） | 渲染重複結構；`{% else %}` 是清單為空時的空狀態列 | `.map()` / `list.length ? … : …` |
@@ -105,17 +105,17 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 
 - `titleKey`：切英文時 `<title>` 會變成 `GufoFAQ::` + 該 key 的英文。頁名與既有 key 的繁中相同就沿用，別另創。
 - `pageHeading`：**每頁必須恰好一個 `<h1>`**（有測試把關）。`page-shell` 用它產生 `<h1 class="sr-only" data-i18n="{{ titleKey }}">`——多數頁面的視覺標題其實是麵包屑或資料值（檔名／資料集名），故 h1 走 sr-only。**logo 不是 h1**（它是回首頁的連結）。
-- `titleKey` / `pageHeading` **只有走 `page-shell` 的頁面必填**（它靠這兩個欄位產生 h1）；用其他 layout 的頁面，自己在內容裡放唯一的 h1。
+- `titleKey` / `pageHeading` **只有走 `page-shell` 的頁面必填**（它靠這兩個欄位產生 h1）；用其他 layout 的頁面，由該 layout 或頁面內容供給唯一的 h1（chatbot-shell 自帶 sr-only h1）。
 
 > 各 layout 分別自動提供什麼、目前有哪些頁面用哪個 layout —— 見 [README.md](README.md)。
 
 ### 3-2. 內容區規則
 
 - 區塊順序 = include 的行序；調整版面 = 調整行序
-- 重複資料（表格列、選項清單）寫在 front matter，元件用 `{% for %}` 渲染；範例資料放 2~3 筆即可
+- 重複資料（表格列、選項清單）在頁面資料化——front matter 或內容區頂端的 `{% set %}` 皆可（全站現行慣例是 `{% set %}`；轉 React 兩者同樣是 data + `.map()`）——元件用 `{% for %}` 渲染；範例資料放 2~3 筆即可
 - 短欄位（編號、時間、標題）資料化放 front matter；**長文／格式化內容**（AI 回答、免責聲明全文）直接寫在元件當樣式示範，不進 front matter——它在正式環境是 API 回傳或 markdown 渲染，這裡只示範它的長相
 - 一次性版面直接寫在頁面檔，不抽元件
-- **註解對真 app／product 行為的斷言，寫時要對過正本並附出處**（`main.js:859`、`extract.py:25`）；頁面或元件改版時，同步更新描述它的註解——註解與 markup 說的必須是同一件事
+- **註解對真 app／product 行為的斷言，寫時要對過正本並附出處**（`main.js:859`、`extract.py:25`）；頁面或元件改版時，同步更新描述它的註解——註解與 markup 說的必須是同一件事。**跨 repo 的活正本（gufofaq-saas 等）優先引穩定符號**（檔名＋函式/欄位名，如 `field_schema.py 的 SLOTS`）——行號會漂移；已凍結的真 app 正本才引行號。內部任務編號（Task N）不是可驗出處，不引
 
 ### 3-3. 什麼該切成元件
 
@@ -138,22 +138,23 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 - 每個元件的 scss 只寫自己的 class；**A 元件的 scss 禁止出現 B 元件的 class**（無例外：外觀覆寫改成 owning 元件的 variant class，如 `link-modal.on-dark`、`list-style-disc.line-loose`；容器排版子元件改用 parent 自有的 slot class，如 `.chat-input-control`、`.chat-input-submit`、`.filter-field`、`.ab-side`）
   - 分清「用」與「改」：**沿用**別元件的 class 當 markup 可以；要**覆寫**其尺寸/排版時（連加一條 `max-height` 都算），加 parent 自有 slot class 再寫規則（如 `tab-wrap qa-side-tab-wrap`、`.header-controls-slot`），不直接寫別人的 class 選擇器
   - 「用」的範圍限 `ui/` 原子、全域層（utilities／form-check）與元件自己的正本：**`components/` 元件的私有 class 不外借**——第二個元件需要同一塊樣式時，把它升格成共用正本（`ui/` 原子或全域 partial）再兩邊沿用
-  - **markup 上的每個 class 都要有主人**：樣式正本（元件 scss／全域層）或行為掛點（hook class／js 狀態 class），兩者皆非的 class 不掛
+  - **markup 上的每個 class 都要有主人**：樣式正本（元件 scss／全域層）或行為掛點（hook class／js 狀態 class），兩者皆非的 class 不掛。§7 轉換契約的結構 class（modal 殼的 `.modals-content` 等）視同有主（主人＝契約本身）
+  - **頂層根 class 名只能有一個 scss 主人**：兩個元件的 scss 都在頂層宣告同名根 class＝兩份會分岔的正本，改名或升格（同 `<dialog id>` 的單一宣告規則，有測試把關）。巢狀在自家根之下的同名子元素 class（`.logo`／`.row`…設計系統共同語言）各元件各自擁有，不算衝突
   - 元件 scss **不得用 `#id` 選擇器**——那是比 class 更緊的耦合，且 id 是頁面層的東西
 - 禁止依頁面覆寫元件（`.page-xxx .button {...}`）；頁面專屬的一次性樣式也要歸戶成**純樣式元件**（無 html/js 只有 scss，如 `ui/ab-test-block`），不放全域樣式表
-- **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（斷點見 `_mixin.scss` 的 `nav-collapsed`，尺寸見 `_size.scss`）。判準是「**一邊改了、另一邊沒跟就會壞掉**」——`header` 的高度與 `mobile-nav` 浮層的起點是耦合；`992px`／`768px` 這種各元件各自收版的系統性斷點只是共用約定，不是耦合。各寫一份遲早走鐘。**共用的字型堆疊同理**：monospace code 字型跨 `code-block`／`chat-message`／`agent-activity` 共用，抽成 `--fontFamilyMono` token（`_var.scss`），元件只掛 `var(--fontFamilyMono)`——各抄一份 `'Monaco',…` 一改就漏（有測試擋硬抄）
-- **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`（尺標 2, 4, 8, 10, 12, 16, 20, 24, 32, 40）；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標少了最細的 2：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
+- **兩個以上元件必須同值的斷點／尺寸，抽成全域層的 mixin 或 token**（斷點見 `_mixin.scss` 的 `nav-collapsed`，尺寸見 `_size.scss`）。判準是「**一邊改了、另一邊沒跟就會壞掉**」——`header` 的高度與 `mobile-nav` 浮層的起點是耦合；`992px`／`768px` 這種各元件各自收版的系統性斷點只是共用約定，不是耦合。各寫一份遲早走鐘。**共用的字型堆疊同理**：monospace code 字型跨元件共用（如 code-block／chat-message 的行內碼），抽成 `--fontFamilyMono` token（`_var.scss`），元件的 `font-family` 只掛 `var(--fontFamily*)`——各抄一份 `'Monaco',…` 一改就漏（有測試以白名單把關）
+- **間距一律用工具 class**：水平間距交給 `flex-row` 的 `gap-*`（尺標 2, 4, 8, 10, 12, 16, 20, 24, 32, 40；斷點內覆寫用 `sm-gap-*`／`xs-gap-*`，尺標 4~32）；垂直（區塊與區塊之間）用 `mt-*`／`mb-*`／`my-*`（尺標少了最細的 2：4, 8, 10, 12, 16, 20, 24, 32, 40），歸零用 `m-0`。**不要寫行內 `style="margin-..."`**；間距值不在尺標上時優先靠齊尺標（±2px 屬可接受誤差），真的必須保留才允許行內 style 並註記原因
 - **目標是轉出的 React／Tailwind 零行內 style。** 切版因無 utility 系統，欄寬用 `<col style="width:...">`、JS 切換顯示用 `display` 行內先當替身——轉換時這兩者一律變成 class（欄寬 → `w-[N]`；display → conditional `className` 的 `hidden`/`block`，見 TAILWIND-CONVERSION）。**唯一無法消除、會留在行內的是「資料驅動的執行期尺寸」**（如 storage-bar `width: 84.3%` 來自真實資料 → `style={{width}}`；runtime 值沒有對應的 build-time class）。**顏色、字級、間距一律不寫行內。**
-- 工具 class 是「最後一手」的覆寫層：間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫，零例外）。**要壓過元件的字色，改由 owning 層提供變體**（如 `.page-title.plain`），不要讓工具 class 帶 `!important` 硬壓——工具層在 `main.scss` 早於元件層載入，硬壓是把層疊順序當成規則在用
+- 工具 class 是「最後一手」的覆寫層：取代行內 style 的單屬性版面工具——間距（`mt/mb/my/m-0`）、顯示（`hidden`）、對齊（`text-left/center/right`）、方向（`column`／`mobile-column(-xs)`／`xs-column-reverse`）——帶 `!important`（等同其所取代的行內 style 的優先權），元件樣式不可依賴蓋過它們；**情境限定的工具只在其情境生效**（`mobile-column` 家族只對 `.flex-row` 有規則，掛在別的元素上是死 class，不掛）；文字大小/顏色工具不帶 `!important`（允許元件情境覆寫，零例外）。**要壓過元件的字色，改由 owning 層提供變體**（如 `.page-title.plain`），不要讓工具 class 帶 `!important` 硬壓——工具層在 `main.scss` 早於元件層載入，硬壓是把層疊順序當成規則在用
 - 欄位系統：`.col-N-*` 欄寬以 calc() 自動扣除該列 gap 分攤，同列 span 總和 = 12 時恰好填滿一行（搭配 `.flex-wrap` 不會提早掉行）；直向排列（`.column`／斷點下的 `.mobile-column(-xs)`）時不扣，`.col-12-*` 恆為整寬。**一列 col span 總和不得超過 12**——nowrap 的 `flex-row` 裡 span 爆表時，欄位被 `flex-shrink` 一起擠扁（連沒動的鄰欄也縮）；要放更多欄位就給容器加 `.flex-wrap`，讓超出的欄位換到下一列（有測試逐 `flex-row` 加總直接子欄位把關）。用法見元件總覽頁的「04 欄位」節
-- **HTML 巢狀必須合法**：`span`／`p`／`button` 內不可放區塊元素（`div`、`ul`、`table`…；`button` 只吃 phrasing content，把 div 假扮的控制項換成真 button 時，內容也要一起換成 `span`）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）
+- **HTML 巢狀必須合法**：`span`／`p`／`button` 內不可放區塊元素（`div`、`ul`、`table`…；`button` 只吃 phrasing content，把 div 假扮的控制項換成真 button 時，內容也要一起換成 `span`）——瀏覽器會容錯，但轉 React 時 SSR/hydration 會報錯。長文/富文字容器（如 chatroom 的 `.robot-msg`）一律用 `div`。（`<a>` 是 HTML5 transparent content model，**可以**包區塊元素，如 `upload-card` 的 `<a>` 包整張卡。）**`<table>` 直下不放 `<tr>`**：一律包 `<thead>`／`<tbody>`——瀏覽器解析會自動補 tbody，SSR/hydration 兩邊的樹就長不一樣（有測試把關）
 - **可及性（a11y）基本要求**：圖示按鈕要有可及名稱——`aria-label`、按鈕內的文字（`.sr-only` / `.tooltip`），或圖片的非空 `alt`。**單掛 `title` 不算**（輔具不保證會念，觸控與鍵盤焦點也看不到它），有測試把關
 - **一組控制項要報出「這組在問什麼」**：一組 radio／checkbox／欄位沒有單一 `for` 可掛時，給那個浮空的 `<label>` 一個 `id`，容器掛 `role="radiogroup"`（或 `role="group"`）+ `aria-labelledby` 指向它。否則螢幕報讀器只念得出「設置一／設置二」，聽不出這組在選什麼；label 與表單控制項以 `for`/`id` 關聯，沒有可見 label 的控制項（如聊天輸入框）加 `aria-label`；不輸出空屬性（`for=""`、`name=""`、`id=""`、`href=""`）；裝飾性圖片 `alt=""`、有語意的圖片給有意義的 alt
   - **`role="group"` 的容器只能框「那一組」**：不可連同旁邊不屬於這組的控制項（送出鈕、無關的 switch）一起框，否則報讀器會把它們也念成這組的成員。旁邊的控制項要放在 group 容器**外**的 sibling（必要時把 group 收進一層只含 label＋該組的內層容器）
   - **id 在一頁裡必須唯一**（有測試在 dist 上把關）。同一元件在頁面出現多次時：**有迴圈變數就拿它組唯一 id**（`id="ms-{{ field.key }}"`、`id="applySample-{{ loop.index }}"`）；**沒有的**（如 `header-controls` 被 `header` 與 `mobile-nav` 各 include 一次）**一律不寫死 id**——改用 class + `querySelectorAll` 綁定、可及名稱用 `aria-label` 而非 `for`/`id`
 - **不要用 div 假扮控制項**：可點的東西一律用真 `<button type="button">`／`<a>`。`div[role="button"][tabindex="0"]` 少了 Enter/Space（WCAG 2.1.1），原生按鈕免費具備。模擬 select 也用 `<button class="form-control">`。`role` 換成 `tab`／`checkbox`／`switch` 也一樣不行
 - **`<button>` 不得省略 `type`**：預設值是 `submit`，放在表單裡就會誤送出（有測試把關）
-- **狀態要寫進 ARIA**：可開合的控制項（下拉、accordion、側欄、多選）掛 `aria-expanded`，且**每一條改變狀態的路徑都要同步**（含「全部展開／收合」與「點外部收合」）；`<dialog>` 用 `aria-labelledby` 接上自己的 `.modals-title`；動態出現的訊息要在 live region 裡（toast 容器 `role="status" aria-live="polite"`、錯誤訊息 `role="alert"`）
+- **狀態要寫進 ARIA**：可開合的控制項（下拉、accordion、側欄、多選）掛 `aria-expanded`，且**每一條改變狀態的路徑都要同步**（含「全部展開／收合」與「點外部收合」）；**頁籤類選擇控制項的選中態掛 `aria-current="true"`**（`.active` 只是視覺，每一條改變選中的路徑都同步，初始 markup 也帶）；**toggle 鈕「換標籤」與 `aria-pressed` 二擇一**（並用會念出「隱藏、已按下」的矛盾）；**tooltip 的顯示條件必含 `:focus-visible`**（只掛 `:hover` 的話，鍵盤使用者永遠看不到圖示鈕唯一的可見標籤）；`<dialog>` 用 `aria-labelledby` 接上自己的 `.modals-title`；動態出現的訊息要在 live region 裡（toast 容器 `role="status" aria-live="polite"`、錯誤訊息 `role="alert"`）
 - **`<img>` 一律帶 `width`／`height`**（原生尺寸即可，CSS 仍可覆寫）：提供 aspect-ratio、消除版位跳動；再加 `decoding="async"`。站上圖多為首屏 icon，**不要**加 `loading="lazy"`
 
 ### 4-1. 現代瀏覽器基底（`_base.scss` 提供，元件不得破壞）
@@ -175,11 +176,12 @@ bodyClass: chatbot-page                # 選填：base.html 用它產生 <body c
 
 **繁中是原文、留在字串出現的地方；英文放 `src/i18n/en.json`。** 不可把繁中抽進 `zh.json`——那會讓 HTML 變空殼、破壞無 JS 基準，也破壞「`data-i18n="key">文字</` → `{t("key")}`」的 React 轉換契約。
 
-- 可見文字：`<span data-i18n="qa.records">問答紀錄</span>`
+- 可見文字：`<span data-i18n="qa.qaRecords">問答紀錄</span>`
 - 屬性：`data-i18n-<目標屬性>`（`-title` / `-aria-label` / `-placeholder` / `-alt` / `-data-toast`）——後綴永遠等於它要翻譯的那個屬性名，零例外
 - **由元件 js 讀 `data-*` 資料槽再畫出來的文字**不在上表的自動翻譯範圍，繁中原文與 i18n key 要分別給：單一值用 `data-<槽名>` + `data-<槽名>-key`（`ui/multi-select` 的 placeholder）；兩態切換用 `data-text-<態>` + `data-key-<態>`（`components/prompt-edit` 的展開↔收合）。元件 js 拿 key 走 `GufoI18n.t(key, 繁中原文)`（見 §5）
 - 分頁標題：front matter 的 `titleKey`（見 §3-1）→ `base.html` 輸出成 `<html data-page-title-key>`，切語言時 `lang-toggle.js` 靠它重譯 `<title>`
 - **同一個 key 的繁中原文必須一致**：切回繁中時的預設值是**從 DOM 就地擷取、以 key 為索引**，同 key 不同繁中會互相覆蓋。頁名與既有 key 的繁中相同才沿用，不同就另立 key
+- **反向也成立：繁中原文相同的 UI chrome 沿用既有 key、不另立**（新 key 前先以原文全文檢索 en.json）；僅語意確實不同、英譯必須區別（「所屬群組」的單/複數欄位）才分 key——同文異 key 遲早讓英譯自己分岔。**英文語法不需要的字段允許空字串譯文**（`"comp.copyright": ""`、量詞後綴），空值＝刻意省略、不是漏翻
 - **只翻 UI chrome，不翻假資料**：聊天訊息、提示詞、免責聲明內文、示範檔名／資料集名、表格 cell 值、示範 Excel 欄位一律不翻。**showcase／說明性質的整頁**（內容是寫給切版者看的，不是 app chrome）整頁不翻
 - **翻譯字串不內嵌會隨資料變動的數字/名稱**：chrome 拆成前後綴 key、變動值放獨立節點或資料槽（正典：`pagination.totalPrefix`／`totalSuffix` 夾著 js 填數的 `.page-info-count`）
 - **標點（冒號等）折進它所標示的翻譯 key，不要留成 span 外的字面量**：`<span data-i18n>門檻</span>：值` 在英文模式會露出全形 `：`；改成 `<span data-i18n>門檻：</span>值`、key 值含對應標點（如 `"Threshold: "`）。例外：同一 key 也用在無標點情境（表頭、表單 label）時不折——那裡的標點屬於版面而非 label，且折了會污染那些用途
@@ -207,11 +209,11 @@ ui/pagination/
 - **元件 js 查詢的每個 class 選擇器，在 `src/` 的生產 markup 都要打得到至少一個元素**（有測試把關）。頁面改版讓選擇器全數落空時，該支行為 js 連同三方登記一併撤下
 - 會去 DOM 找元素的，包在 `DOMContentLoaded` 裡綁定（載入時不碰 DOM 的純函式工具如 `ui/scroll-lock` 不必）；同元件可能出現多次時用 `querySelectorAll().forEach()`
 - **開合的高度動畫走 `ui/slide-toggle`**（`window.GufoSlide.down/up/toggle/set`，300ms，對應真 app 的 jQuery `slideDown/slideUp(300)`）。不要各自寫一份高度動畫，也不要退化成 `display` 一次切掉——那是「啪」一下，跟真 app 手感不同。它自己會處理重入（等同 `.stop(true,true)`）與 `prefers-reduced-motion`
-- **一個全域資源只能有一個擁有者，而最好的擁有者是 DOM 自己。** body 捲動鎖是純 CSS：`html:has(dialog.modals[open]), html:has(.nav-toggle.active) { overflow: hidden }`（`_base.scss`）。**js 不得自己去鎖**（有測試把關）——跳窗與手機選單各鎖各的話，先關的那個會把還開著的那個一起解鎖；用計數器可以修，但 `:has()` 是宣告式的 OR，狀態就在 DOM 上，連失衡的可能都沒有。CSS 做不到的只有「捲軸有多寬」（鎖起來時它就不見了，量不到），由 `ui/scroll-lock` 寫進 `--scrollbar-width` 供那條規則補 padding
+- **一個全域資源只能有一個擁有者，而最好的擁有者是 DOM 自己。** body 捲動鎖是純 CSS：`html:has(:modal), html:has([data-scroll-lock].active) { overflow: hidden }`（`_base.scss`）——`:modal` 涵蓋所有 `showModal()` 的 dialog（不認識任何元件 class）；全螢幕浮層的觸發鈕（手機選單的漢堡）掛 **`data-scroll-lock` 屬性**宣告加入（與 `data-open-modal`/`data-toast` 同一個宣告式家族），js 只切自己的 `.active`。**js 不得自己去鎖**（有測試把關）——跳窗與手機選單各鎖各的話，先關的那個會把還開著的那個一起解鎖；用計數器可以修，但 `:has()` 是宣告式的 OR，狀態就在 DOM 上，連失衡的可能都沒有。CSS 做不到的只有「捲軸有多寬」（鎖起來時它就不見了，量不到），由 `ui/scroll-lock` 寫進 `--scrollbar-width` 供那條規則補 padding
 - **用 CSS 斷點決定顯示與否的東西，它的 js 不要複寫那個斷點值**：問 CSS 就好（`getComputedStyle(navToggle).display === "none"`）。斷點只有 mixin 那一份真相
 - **視窗尺寸變化會讓「唯一關得掉它的那顆鈕」消失**：手機選單開著時拉寬過收合斷點，漢堡被 CSS 藏起來，遮罩與 body 鎖卻留著 → 只能重整。凡是「只在某斷點內才有觸發器」的開合，都要在 `resize` 時自我收合
 - **`showModal()` 的 `<dialog>` 在瀏覽器的 top layer**：頁面層的 `position: fixed` 不管 z-index 開多大都蓋不過它。要蓋過它，自己也得進 top layer —— `#toastContainer` 掛 `popover="manual"`，`ui/toast` 每次彈 toast 前重新 `showPopover()` 一次（top layer 的疊放順序＝進入順序，先進去的反而在下面）。popover 不搶焦點，且 toast 不會隨著跳窗關閉一起消失
-- **markup 零 inline 事件處理器**（`onclick=`／`onClick=`…）與零 `javascript:` href（`javascript:void(0)` 更是一顆死連結）：行為住在元件 js 裡。要「在 markup 宣告一個行為」時，掛**資料屬性**、由 owning 元件的 js 做事件委派——**無條件**開跳窗用 `data-open-modal="<dialog id>"`（`ui/modals`），彈提示用 `data-toast`（＋選填 `data-toast-type`，`ui/toast`），列印本頁用 `data-print`（`ui/print`）。委派掛在 `document` 上，動態插入的元素也吃得到
+- **markup 零 inline 事件處理器**（`onclick=`／`onClick=`…）與零 `javascript:` href（`javascript:void(0)` 更是一顆死連結）：行為住在元件 js 裡。頁級內嵌 `<script>` 只有兩支法定例外：base.html 的 no-flash 主題腳本、元件庫展示頁的目錄捲動 chrome。JS 發起的 `behavior:'smooth'` 捲動要自行讀 `prefers-reduced-motion` 退 `auto`（`_base` 的全域關動畫管不到 JS 捲動）。要「在 markup 宣告一個行為」時，掛**資料屬性**、由 owning 元件的 js 做事件委派——**無條件**開跳窗用 `data-open-modal="<dialog id>"`（`ui/modals`），彈提示用 `data-toast`（＋選填 `data-toast-type`，`ui/toast`），列印本頁用 `data-print`（`ui/print`）。委派掛在 `document` 上，動態插入的元素也吃得到
 - **`document` 級委派的「點外部」判斷用 `event.composedPath()`**，不用 `event.target` 的存在性／`contains()`——同頁別的 document 委派可能先跑並用 `innerHTML` 重繪把 target 拔出文件，composedPath 在 dispatch 當下就固定、不受後續 DOM 突變影響
   - **切版是原型：每個動作的每一種結果都要演得出來。** 送 API 的按鈕（儲存 / 刪除 / 上傳 / 套用 / 查詢 / 下載）在 `data-toast` 裡用 `|` 列出它**所有**可能的結果，`data-toast-type` 用同樣順序對位；每點一次換下一個。設計師才看得到成功、失敗、警告長什麼樣，React 端也才知道這顆鈕要接哪幾種 toast
     - 例：`data-toast="帳號資訊已儲存|儲存失敗" data-toast-type="success|error"`。翻譯照舊掛 `data-i18n-data-toast`，`en.json` 的值同樣用 `|` 分隔
@@ -219,10 +221,11 @@ ui/pagination/
   - `data-toast-type` 只准 `success` / `error` / `warning` / `info`（有測試把關）。打錯字不會噴錯，只會彈出一個沒有語意的白盒子
   - **有條件的開窗是業務邏輯，不掛 `data-open-modal`**（先設定要刪哪一列的名字、依模型權限決定開哪一份、驗證失敗才跳…）。那種觸發鈕保留真 app 的 hook class（`.js-apply-production`、`.btn-delete-file`…），切版不假裝它會無條件開窗——掛上去等於在 markup 裡寫了一句謊話。判準不必查表：**hook class 就是「全站 scss 找不到它」的 class**，開窗鈕身上有這種 class 就代表它另有 js 主人（有測試把關）
   - **條件開窗只免除 `data-open-modal`，不免除彈窗本體。** 觸發鈕會開的那個彈窗要建成切版元件、include 在使用頁，並在元件庫展示頁補 `data-open-modal` demo 觸發器（§1-2 第三條路）——彈窗長什麼樣是切版的視覺決策，不外包給 React（例：`apply-settings-modal`、`delete-modal`）。純重用既有已切彈窗、零新欄位版面時才免建本體，但 include 照樣要有：彈窗本體要 include 在**每一個**出現該觸發鈕的正式頁面（觸發鈕隨元件走到哪頁，彈窗就跟到哪頁）；元件庫展示頁上的那份只是第三條路的可視化，不能替正式頁面供本體
-  - **hook class 只給業務行為**（要送 API、或要業務資料才能決定結果的動作）。純前端互動——同頁的顯示/隱藏、開合、複製、切換——沒有業務主人，是切版自己的行為：照本節寫成元件 js，當場就要動得起來
+  - **hook class 只給業務行為**（要送 API、或要業務資料才能決定結果的動作）。純前端互動——同頁的顯示/隱藏、開合、切換、複製——沒有業務主人，是切版自己的行為：照本節寫成元件 js，當場就要動得起來。**行為的內容以真 app 為準**：管理後台的 `.copyBtn` 真 app 本來就只彈 toast（不寫剪貼簿），切版比照即忠實；前台聊天訊息的複製真 app 有真剪貼簿，切版就要真的寫剪貼簿（faq-chatroom.js）
   - **不開任何窗的送 API 鈕，不適用條件開窗豁免**：顯示條件已由模板 `{% if %}` 處理、動作本身無需輸入的直接動作鈕（每列的儲存/撤銷…），照「送 API 的按鈕」規則掛 `data-toast` 列全結果
   - **業務 `<select>`／`<input>`（值交給 React 讀去送 API），掛 hook class、不掛 `data-toast`**：`data-toast`／`data-open-modal` 是 `document` 上的 **click** 委派，抓不到 select 的 `change`／「選了哪個選項」，成敗也要看後端（可能含 409 之類分支）——所以值載體元件比照條件開窗鈕：只保留 hook class 標記「React 接手」（如 `.js-chat-mode`、`.js-set-platform-role`、`.js-knowledge-select`），全站 scss 不得引用。命名：觸發**動作**的鈕用 `js-<動詞>-<名詞>`；純**值載體**用名詞式 `js-<名詞>`（`js-chat-mode`）亦可，別誤讀成違規。它們的成敗分支由 React 演，切版端不必也演不出（同條件開窗）
-  - **每個分支結果都要看得到**：元件的空狀態（`{% for %}{% else %}`）等分支，至少一處（真實頁或元件庫展示頁）要用會觸發它的資料示範——沒有頁面演得出來的分支等於沒驗收過（同 `<dialog>` 可達性的精神）
+  - **hook × data-toast 組合矩陣**：①條件開窗／type-to-confirm 鈕→只掛 hook；②值載體→只掛 hook；③直接送 API 的動作鈕→掛 `data-toast` 列全結果，**切版新頁**的這類鈕同時自創 `js-*` hook（React 綁定記號）、真 app 對應頁則沿用真 app 的掛點——class 或 **id 契約**都算（2-2-1 的 select 真 app 以 id 綁定故無 class hook、2-2-3 以 class 綁定故有，兩頁不對稱是契約的忠實保留，不是漏）；④純前端互動→不掛 hook、行為當場動起來
+  - **每個分支結果都要看得到**：元件的空狀態（`{% for %}{% else %}`）等分支，至少一處（真實頁或元件庫展示頁）要用會觸發它的資料示範——沒有頁面演得出來的分支等於沒驗收過（同 `<dialog>` 可達性的精神）。scss 定義的可見性狀態 class 同理（如遮罩的 `.active`）：沒有任何頁面演得出該狀態＝沒人看過它的長相，元件庫頁補靜態示範（feature-disabled-overlay 的做法）。頁面資料表若真實初始態為空，`{% for %}` 帶 `{% else %}` 鏡射真 app 的「無資料」列（示範資料照常演已載入態）
 - **一個 `<dialog id>` 只能由一個元件宣告。** 兩個元件各寫一份同 id 的彈窗＝兩份會分岔的正本，而且元件庫的示範觸發器只打得開其中一份、另一份變成誰都看不到的死彈窗。真 app 兩個頁面各有一份同 id 的不同彈窗時，**切版要改名**——`id` 不是轉換契約（React 不靠 `getElementById`），真正要原樣保留的是 hook class 與資料屬性
 - 跳窗用 `<dialog>` 元素 + `showModal()` / `close()`（標準 API，與既有切版相同）。**進出場動畫寫在 CSS**：`@starting-style` 給進場起點、`transition: display .3s allow-discrete, overlay .3s allow-discrete` 讓瀏覽器撐到退場跑完才 `display:none`。**不要用 setTimeout 延後 `close()`** —— 那顆 timer 會逼你再寫「關到一半又點關閉」「關到一半又重開」兩道重入守衛，而 transition 原生就會反向
 - **JS 不得寫死要顯示的字串。** 由 JS 產生／切換的文字（accordion 的展開↔收合、multi-select 的空狀態、prompt-edit 的按鈕字…）走 `window.GufoI18n.t(key, "繁中原文")`；除了寫入文字，**還要同步改寫該元素的 `data-i18n` / `data-i18n-title` key**，並監聽 `gufo:langchange` 依「當下狀態」重畫。否則英文模式下一互動就冒出繁中（`lang-toggle.js` 匯出這兩者）
@@ -256,6 +259,7 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 - 兩種資料**可以**住在元件裡：(a) **全站不變的結構性設定**（如 header 的導覽選單）；(b) **純示範用的假資料**（同 §3-2：示範內容直接寫在元件當樣式示範）。一旦某頁需要不同的值，就由該頁 `set` 覆寫。
 - **示範資料要演得到元件的核心互動**：傳給元件的 demo 值比照既有頁挑（如分頁的 `total` 要大到讓省略號出現）——落在「全顯示」分支的小數字示範不到滑動視窗，等於沒展示。
 - **示範資料要自洽**：同頁與跨頁能互相推導的值（群組能力的聯集、總數與明細、狀態與徽章）要對得上——示範資料演的必須是一個真實可能的狀態。
+- **能從示範陣列推導的數字就從陣列渲染**（`{{ rows.length }}`），不烤字面量——列數一改，烤死的總計就開始說謊（5-6-1 審核結果拆成功/失敗兩陣列即為此）。例外：**分頁的 `total` 是演分頁滑窗的示範參數**（要大到讓省略號出現），不參與與示範列數的帳目核對。
 - 同頁重複使用同一元件時，**每次 include 前重新 set 全部參數**（§2：`set` 是全域的，上一次的值會留著）。
 - **元件內部的示範資料 `{% set %}` 變數，用元件專屬名、不用泛用名**（`manageMemberRows` 而非 `members`）：`set` 是頁面全域，被 include 時泛用名會和使用頁自己的同名變數互相覆蓋（§2），且沒有測試抓得到這種靜默覆蓋。
 - 元件吃哪些參數、include 了哪些子元件——寫在**該元件 html 的檔頭註解**（唯一正本），不在本文件維護清單。
@@ -274,9 +278,9 @@ tag 式多選由本範本提供（切版需要展示互動）：在原生 `<sele
 | 元件的 `xxx.js` | 行為規格：改寫成該元件的 `useState` / 事件處理（DOM 操作 → state 驅動） |
 | `{% include %}` | `<Xxx />` |
 | `{% set xxx %}` | props |
-| front matter 資料 + `{% for %}` | `data.map(item => <Row item={item} />)` |
+| 頁面資料（front matter 或 `{% set %}`）+ `{% for %}` | `data.map(item => <Row item={item} />)` |
 | `.open`、`.active`、`.done`、`.error` 狀態 class | `useState` 布林 / props（`className={open ? "x open" : "x"}`） |
-| `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件。**進出場動畫在 CSS**（`@starting-style` + `display`/`overlay` 的 `allow-discrete`），沒有計時器可搬；**捲動鎖也在 CSS**（`html:has(dialog.modals[open])`），不要在 React 裡重寫一份 |
+| `<dialog>` + `showModal()` | React 可沿用 dialog，或換 Dialog 元件。**進出場動畫在 CSS**（`@starting-style` + `display`/`overlay` 的 `allow-discrete`），沒有計時器可搬；**捲動鎖也在 CSS**（`html:has(:modal), html:has([data-scroll-lock].active)`），不要在 React 裡重寫一份 |
 | 所有 modal 的外殼（`.modals` > `.modals-dialog.modals-<尺寸>` > `.modals-wrap` > `ui/modal-close` + `.modals-content`） | 除了 `.modals-dialog` 的尺寸 class 之外逐字元相同 → 收成一個 `<Modal size>{children}</Modal>`，各 modal 只剩自己的 header/body/footer（實際有幾個 modal、各是什麼尺寸屬現況，見 README） |
 | `data-open-modal="X"` / `data-toast="…"`（事件委派） | `onClick={() => open("X")}` / `onClick={() => toast("…")}`；資料屬性只是切版期沒有 props 時的替身 |
 | `<a data-i18n="key">文字</a>` | `{t("key")}`（next-intl 等）；`src/i18n/en.json` 直接當英文 message catalog，繁中原文由 markup 抽出成 zh catalog |
@@ -398,3 +402,5 @@ document.addEventListener("gufo:langchange", redraw);
 > ⚠️ **加全域規則前先做前後版面比對。** `*{box-sizing:border-box}` 這類規則會改變「原本沒宣告過」的元素的尺寸計算。做法：`git stash` → build → 用 playwright 擷取每個元素的 x/y/w/h 指紋 → 還原 → 再擷取 → 逐項比對，確認零位移再提交。
 
 > ⚠️ **Showcase 頁的專屬色走專用色檔、不寫裸 hex**：`_guideline`（styles `component.html`）的 chrome 色（gotop 鈕、section 分隔線、說明面板…）是 showcase 自己的色、非 app token——收進 `_var` 會汙染「app 唯一色源」，故獨立成 `_guideline-var.scss`（`--gl-*`，定義在 `.guideline-page` 上，零全站足跡）。**架構不妥協：一樣走變數、不寫裸 hex，只是換一支色源檔。**（`_catalog` 用色恰好都是 app 色，直接用 `_var` token 即可。）
+>
+> `_guideline.scss` 本體是真 app guideline.scss 的**受控鏡像**：允許它在 `.guideline-page` 範圍內保留原檔對元件／工具 class 的覆寫與展示用選擇器——這是 §4「禁止依頁面覆寫元件」的**唯一豁免檔**，且僅限既有鏡像內容，新增行不得擴大覆寫面。

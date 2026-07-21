@@ -1,8 +1,9 @@
 {# 管理群組成員 modal，取自 5-5-2_groupManagement 頁「管理成員」鈕（.js-manage-members）：
      把租戶使用者加入/移出選定的群組（複選）。開窗需先選定「管理哪一個群組」＝業務條件開窗，
      故該鈕保留 hook class、不掛 data-open-modal（GUIDELINE §5）；彈窗本體回歸切版：
-     搜尋框 + 成員清單（每列一個 checkbox）+ 儲存。真 app 由業務 js 載入本租戶使用者、
-     依當前群組成員資格預勾，儲存時逐一 PATCH /users/{id} 的 group_ids；此處示範 3 筆。
+     搜尋框 + 成員清單（每列一個 checkbox）+ 儲存。5-5-2 是 SaaS 新頁（21 頁真 app 無對應）：
+     成員載入/預勾/儲存由 React 業務 js 實作，契約在 product（gufofaq-saas groups.py：
+     「成員指派走 PATCH /users/{id} 的 group_ids」）；此處示範 3 筆。
      成員清單 widget 沿用 ui/modals 既有的 .dataset-list-wrap > .dataset-list（select-dataset-modal
      同款可捲動複選清單、自帶 scrollbar_modal()）：兩者是同一顆「可捲動、內含搜尋框的複選清單」，
      不另開一份 _manage-members-modal.scss 各寫一次（§4：兩個以上元件必須同值的東西才抽共用層，
@@ -25,7 +26,8 @@
                     <h3 class="modals-title" id="manageMembersModal-title" data-i18n="settings.manageMembers">管理成員</h3>
                 </div>
                 <div class="modals-body">
-                    <p class="text-gray" data-i18n="settings.manageMembersHint">勾選要加入此群組的成員</p>
+                    {# §4：一組 checkbox 要報出「這組在問什麼」——浮空提示給 id、清單容器掛 role=group + aria-labelledby #}
+                    <p id="manageMembersHint" class="text-gray" data-i18n="settings.manageMembersHint">勾選要加入此群組的成員</p>
                     <div class="dataset-list-wrap">
                         <div class="form-group">
                             <div class="field">
@@ -33,7 +35,7 @@
                                 <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                             </div>
                         </div>
-                        <div class="dataset-list">
+                        <div class="dataset-list" role="group" aria-labelledby="manageMembersHint">
                             {% for member in manageMemberRows %}
                             <label class="form-checkbox border-wrap">
                                 <input type="checkbox"{% if member.checked %} checked{% endif %}>

@@ -65,5 +65,6 @@ permalink: 2-1_qaRecord.html
 ] %}
 {% set sourcesHidden = true %}
 {% set sourcesRating = { value: "讚", icon: "./images/icon_good.png" } %}
-{% set sourcesDetailHref = "4-2_qaHistory_detail.html?sn=12173" %}
+{# query 參數用真 app 的 ?logSn=（qaHistory.js 列模板同款），非自創 ?sn= #}
+{% set sourcesDetailHref = "4-2_qaHistory_detail.html?logSn=12173" %}
 {% include "components/sources-block/sources-block.html" %}

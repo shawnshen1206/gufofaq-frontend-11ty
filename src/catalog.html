@@ -9,7 +9,7 @@ bodyClass: catalog-page
    在 app i18n 範圍內（chrome 要翻譯）；連結清單資料化，新增頁面時在此加一筆（label 是繁中原文，i18nKey 是英文的 key）。 #}
 {% set sections = [
     {
-        title: "資料匯入", i18nKey: "catalog.secDataImport",
+        title: "資料匯入", i18nKey: "nav.dataImport",
         links: [
             { label: "資料匯入（選擇資料集）", href: "1-1-1_dataImport.html", i18nKey: "catalog.linkDataImport" },
             { label: "上傳 Excel", href: "1-1-2_uploadFile_excel.html", i18nKey: "catalog.linkUploadExcel" },
@@ -23,7 +23,7 @@ bodyClass: catalog-page
     {
         title: "資料集", i18nKey: "catalog.secDataset",
         links: [
-            { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "catalog.linkDatasetList" },
+            { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
             { label: "新增資料集", href: "3-1-2_dataImport_input.html", i18nKey: "catalog.linkDatasetNew" },
             { label: "資料集預覽", href: "3-1-3_previewDataset.html", i18nKey: "catalog.linkDatasetPreview" },
             { label: "檔案內容預覽", href: "3-1-5_previewFile_detail.html", i18nKey: "catalog.linkFilePreview" },
@@ -31,32 +31,32 @@ bodyClass: catalog-page
         ]
     },
     {
-        title: "服務預覽", i18nKey: "catalog.secServicePreview",
+        title: "服務預覽", i18nKey: "nav.servicePreview",
         links: [
-            { label: "前台對話預覽", href: "2-1_qaRecord.html", i18nKey: "catalog.linkQaRecord" }
+            { label: "前台對話預覽", href: "2-1_qaRecord.html", i18nKey: "nav.frontPreview" }
         ]
     },
     {
-        title: "問答測試區", i18nKey: "catalog.secQaTest",
+        title: "問答測試區", i18nKey: "nav.qaTest",
         links: [
-            { label: "單測", href: "2-2-1_singleTest.html", i18nKey: "catalog.linkSingleTest" },
+            { label: "單測", href: "2-2-1_singleTest.html", i18nKey: "nav.singleTest" },
             { label: "AB 測試", href: "2-2-3_abTest.html", i18nKey: "catalog.linkAbTest" }
         ]
     },
     {
-        title: "歷史紀錄", i18nKey: "catalog.secHistory",
+        title: "歷史紀錄", i18nKey: "nav.history",
         links: [
-            { label: "歷史問答紀錄", href: "4-1_qaHistory.html", i18nKey: "catalog.linkQaHistory" },
-            { label: "對話詳細內容", href: "4-2_qaHistory_detail.html", i18nKey: "catalog.linkQaHistoryDetail" }
+            { label: "歷史問答紀錄", href: "4-1_qaHistory.html", i18nKey: "qa.qaHistoryTitle" },
+            { label: "對話詳細內容", href: "4-2_qaHistory_detail.html", i18nKey: "qa.detailPageTitle" }
         ]
     },
     {
-        title: "設定", i18nKey: "catalog.secSettings",
+        title: "設定", i18nKey: "nav.settings",
         links: [
-            { label: "帳號資訊", href: "5-1-1_accountInfo.html", i18nKey: "catalog.linkAccountInfo" },
-            { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html", i18nKey: "catalog.linkKnowledgeRetrieval" },
-            { label: "統計模組", href: "5-3_statsModule.html", i18nKey: "catalog.linkStatsModule" },
-            { label: "提示詞管理", href: "5-4-1_promptManagement.html", i18nKey: "catalog.linkPromptManagement" },
+            { label: "帳號資訊", href: "5-1-1_accountInfo.html", i18nKey: "nav.accountInfo" },
+            { label: "知識檢索邏輯", href: "5-2-1_knowledgeRetrieval.html", i18nKey: "nav.knowledgeRetrieval" },
+            { label: "統計模組", href: "5-3_statsModule.html", i18nKey: "nav.statsModule" },
+            { label: "提示詞管理", href: "5-4-1_promptManagement.html", i18nKey: "nav.promptMgmt" },
             { label: "歡迎語設定", href: "5-4-2_welcomeMessage.html", i18nKey: "nav.welcomeMsg" },
             { label: "使用者管理", href: "5-5-1_userManagement.html", i18nKey: "nav.userMgmt" },
             { label: "群組管理", href: "5-5-2_groupManagement.html", i18nKey: "nav.groupMgmt" },

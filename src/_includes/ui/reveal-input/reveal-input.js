@@ -1,5 +1,7 @@
 // 密碼欄顯示/遮蔽切換（5-9 萃取 API 金鑰）：點按鈕把目標 <input> 的 type 在 password↔text 間切換，
-// 按鈕文字「顯示↔隱藏」隨狀態切換並同步 aria-pressed。純前端互動（無業務、無 API），故為切版自有元件行為。
+// 按鈕文字「顯示↔隱藏」隨狀態切換。純前端互動（無業務、無 API），故為切版自有元件行為。
+// 狀態語意走「換標籤」而非 aria-pressed（ARIA APG：toggle 鈕换標籤與 pressed 二擇一，
+// 兩者並用會念出「隱藏、已按下」這種矛盾）。
 // 宣告式：按鈕掛 data-reveal-target="<input id>"（比照 data-open-modal / data-toast 的事件委派，見 §5），
 // 兩態文字與 i18n key 由 markup 的 data-text-* / data-key-* 提供，JS 不寫死字串（見 §4-2）。
 document.addEventListener("DOMContentLoaded", function () {
@@ -25,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!input) return;
         var revealed = input.type !== "text"; // 切換後的狀態
         input.type = revealed ? "text" : "password";
-        btn.setAttribute("aria-pressed", revealed ? "true" : "false");
         label(btn, revealed);
     });
 

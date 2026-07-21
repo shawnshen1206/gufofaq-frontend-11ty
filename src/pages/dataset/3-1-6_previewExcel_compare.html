@@ -11,7 +11,7 @@ permalink: 3-1-6_previewExcel_compare.html
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
   { label: "資料集列表", href: "3-1-1_datasetList.html", i18nKey: "nav.datasetList" },
-  { label: "客服問答知識庫", href: "3-1-3_previewDataset.html?sn=1002", class: "folder-name-link" },
+  { label: "客服問答知識庫", href: "3-1-3_previewDataset.html?sn=101", class: "folder-name-link" },
   { label: "商品清單.xlsx", class: "file-name" }
 ] %}
 <div class="flex-row column gap-16">
@@ -23,7 +23,7 @@ permalink: 3-1-6_previewExcel_compare.html
 {# 頁籤：ui/tab 水平單層頁籤（.tab-row.fit-content > .tab-group > .tab.tab-md），行為沿用已全域註冊的 tab.js #}
 <div class="tab-row fit-content mt-16">
     <div class="tab-group">
-        <button type="button" class="tab tab-md active" title="比對資料" data-i18n-title="dataset.compareData" data-i18n="dataset.compareData">比對資料</button>
+        <button type="button" class="tab tab-md active" aria-current="true" title="比對資料" data-i18n-title="dataset.compareData" data-i18n="dataset.compareData">比對資料</button>
         <button type="button" class="tab tab-md" title="原始資料" data-i18n-title="dataset.rawData" data-i18n="dataset.rawData">原始資料</button>
     </div>
 </div>
@@ -53,7 +53,11 @@ permalink: 3-1-6_previewExcel_compare.html
                 <th>
                     <div class="th-sort">
                         {{ col.label }}
-                        <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="排序" data-i18n-alt="common.sort" class="sort" data-column="{{ col.key }}">
+                        {# 排序觸發器用真 button（§4）；.sort＝真 app 掛點（previewExcelCompare.js .sort click），掛 button 照樣命中 #}
+                        <button type="button" class="sort" data-column="{{ col.key }}">
+                            <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="">
+                            <span class="sr-only" data-i18n="common.sort">排序</span>
+                        </button>
                     </div>
                 </th>
                 {% endfor %}

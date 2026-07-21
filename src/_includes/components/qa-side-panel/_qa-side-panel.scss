@@ -6,6 +6,7 @@
     align-items: flex-start;
     flex-shrink: 0;
     position: fixed;
+    // 72px 取自真 app 已編譯 css 的原值（來意未註明；≠ $header-height(56)+16 的推導證據，不擅改成 calc）
     top: max(72px, 100vh - 550px);
     top: max(72px, 100dvh - 550px); // 行動瀏覽器：扣掉會伸縮的網址列
     right: 0;

@@ -15,7 +15,7 @@
                     {% endfor %}
                 </ul>
                 {% else %}
-                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.title or item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
+                <a href="{{ item.href }}"{% if item.class %} class="{{ item.class }}"{% endif %} title="{{ item.label }}"{% if item.i18nKey %} data-i18n="{{ item.i18nKey }}" data-i18n-title="{{ item.i18nKey }}"{% endif %}>{{ item.label }}</a>
                 {% endif %}
             </li>
             {% endfor %}

@@ -13,11 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (input) input.click();
         });
 
-        if (input) {
-            input.addEventListener("click", function (e) {
-                e.stopPropagation(); // 防止觸發父層 click 導致無限迴圈
-            });
-        }
+        // input 是 box 的「兄弟」，input.click() 的事件不會冒泡經過 box——
+        // 舊版在這裡多掛一個 stopPropagation 防「無限迴圈」，但那個迴圈結構上不存在，已移除（§3-2 註解要與事實相符）。
 
         // 拖曳進入
         ["dragenter", "dragover"].forEach(function (evtName) {

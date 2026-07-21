@@ -2,7 +2,8 @@
      只轉結構＋樣式，串流/送出/markdown 渲染屬業務邏輯，不在此元件內（見 qaRecord.js / singleTest.js）。
      .robot-msg 是 Markdown 區塊容器（內含 p/ul/table…），依 GUIDELINE §4 用 div——原始切版的 span 包區塊元素是無效巢狀，轉 React SSR 會 hydration 錯誤。
      參數（頁面 include 前 set，見 §6）：chatInputHidden —— true 時不渲染輸入區（2-1 唯讀預覽沒有輸入框；2-2-1 需要）。 #}
-{% set messages = [
+{# 示範資料用元件專屬名 chatroomMessages（§6：set 是頁面全域，泛用名會與使用頁同名變數互相覆蓋） #}
+{% set chatroomMessages = [
     {
         role: "robot",
         time: "13:29",
@@ -20,7 +21,7 @@
         <div class="chat-message-container">
             <div class="message-container">
                 <div class="first-chat">
-                    {% for msg in messages %}
+                    {% for msg in chatroomMessages %}
                     {% if msg.role == "robot" %}
                     <div class="message-wrap">
                         <div class="message-row by-robot">
@@ -34,7 +35,7 @@
                     {% endfor %}
                 </div>
                 <div class="chat-box">
-                    {% for msg in messages %}
+                    {% for msg in chatroomMessages %}
                     {% if msg.role == "user" %}
                     <div class="message-wrap">
                         <div class="message-row by-user">
@@ -93,26 +94,42 @@
                             </button>
                         </div>
                         {# 建議追問（A7，SaaS 新需求／真 app 無對應）：問答完成後 chatbot 於 SSE chat_room 塊回傳
-                             suggest_questions 陣列（見 gufofaq-saas services/product/app/routers/ask.py:253 enable_suggest_questions、
-                             :319/:353 chat_room chunk），渲染成一排可點 chip；點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
+                             suggest_questions 陣列（gufofaq-saas ask.py：chat_room chunk 允許清單含 suggest_questions、
+                             meta 帶 enable_suggest_questions——引符號不引行號，該檔行號常變動），渲染成一排可點 chip；
+                             點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
                              此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。
                              agent 模式的反問選項也共用這塊 chip（同為可點 chip、不另切 markup）；反問選項如何併入
-                             suggest_questions 回傳陣列屬後端契約，React 端依實際 SSE 回傳實作。 #}
-                        {% set suggestedQuestions = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
-                        <div class="suggested-questions" role="group" aria-labelledby="suggestedQuestionsLabel">
-                            <span id="suggestedQuestionsLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
-                            {% for q in suggestedQuestions %}
+                             suggest_questions 回傳陣列屬後端契約，React 端依實際 SSE 回傳實作。
+                             只在互動模式渲染：唯讀的問答紀錄預覽（chatInputHidden，2-1）沒有「送出下一題」可言，
+                             且 history API 不回傳 suggest_questions（gufofaq-saas history.py 查無此欄）。
+                             變數用元件專屬名；label id 同理取元件專屬名（faq-chatroom 另有一份自己的 chip 區） #}
+                        {% if not chatInputHidden %}
+                        {% set chatroomSuggested = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
+                        <div class="suggested-questions" role="group" aria-labelledby="chatroomSuggestedLabel">
+                            <span id="chatroomSuggestedLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
+                            {% for q in chatroomSuggested %}
                             <button type="button" class="button button-border button-sm js-ask-suggested">{{ q }}</button>
                             {% endfor %}
                         </div>
+                        {% endif %}
                     </div>
 
                     {# 串流狀態列（示範）：問答送出後、回答串流生成過程中即時顯示的狀態（如「搜尋資料中…」）。
                          真值由 React 端 SSE 串流事件驅動（正式環境 agent 模式下會依當前工具動態更新文案）；此處為靜態
-                         示範一種狀態文案，展示這塊 live region 的樣式。依 GUIDELINE §4「動態出現的訊息要在 live region 裡」
-                         必掛 role="status" aria-live="polite"，輔具才會朗讀狀態變化。文字為 chrome 走 i18n。
-                         唯讀的問答紀錄預覽（chatInputHidden）沒有串流，不渲染。 #}
+                         示範。§6 示範資料要自洽：狀態列不可與「已答畢」並存，故補一則生成中的第二問——
+                         畫面敘事＝第一問已答（含建議追問），使用者又送出第二問、正在搜尋資料。
+                         依 GUIDELINE §4「動態出現的訊息要在 live region 裡」必掛 role="status" aria-live="polite"，
+                         輔具才會朗讀狀態變化。文字為 chrome 走 i18n。
+                         唯讀的問答紀錄預覽（chatInputHidden）沒有串流，第二問與狀態列都不渲染。 #}
                     {% if not chatInputHidden %}
+                    <div class="message-wrap">
+                        <div class="message-row by-user">
+                            <div class="message-content">
+                                <span>面談流程大約需要多久？</span>
+                            </div>
+                            <div class="message-time">13:32</div>
+                        </div>
+                    </div>
                     <div class="flex-row align-items-center gap-8 mt-10" role="status" aria-live="polite">
                         <span class="text-gray" data-i18n="agent.searching">搜尋資料中…</span>
                     </div>

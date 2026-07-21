@@ -77,7 +77,8 @@
         width: 100%;
         padding: 1rem 1.5rem 2rem 1.5rem;
 
-        .input-wrap {
+        // .faq-input-wrap：自有名（原 .input-wrap 與 ui/chatroom-shell 的同名 class 撞主人，§4 一名一主改名）
+        .faq-input-wrap {
             display: flex;
             align-items: center;
             gap: 0.625rem;

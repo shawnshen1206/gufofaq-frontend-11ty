@@ -42,13 +42,15 @@
                         class="sr-only" data-i18n="comp.share">分享</span></button>
             </div>
             {# 建議追問（A7，SaaS 新需求／真 app 無對應）：問答完成後 chatbot 於 SSE chat_room 塊回傳
-                 suggest_questions 陣列（見 gufofaq-saas services/product/app/routers/ask.py:253 enable_suggest_questions、
-                 :319/:353 chat_room chunk），渲染成一排可點 chip；點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
-                 此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。 #}
-            {% set suggestedQuestions = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
-            <div class="suggested-questions" role="group" aria-labelledby="suggestedQuestionsLabel">
-                <span id="suggestedQuestionsLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
-                {% for q in suggestedQuestions %}
+                 suggest_questions 陣列（gufofaq-saas ask.py：chat_room chunk 允許清單含 suggest_questions、
+                 meta 帶 enable_suggest_questions——引符號不引行號），渲染成一排可點 chip；
+                 點擊＝把該題當下一題送出（業務行為，React 端 onAskSuggested）。
+                 此處示範資料，正式環境由回傳陣列驅動（空陣列則整塊不渲染）。
+                 變數與 label id 用元件專屬名（components/chatroom 另有一份自己的 chip 區，§6／id 唯一） #}
+            {% set faqSuggested = ["結婚登記要準備哪些文件？", "面談流程大約需要多久？"] %}
+            <div class="suggested-questions" role="group" aria-labelledby="faqSuggestedLabel">
+                <span id="faqSuggestedLabel" class="suggested-questions-label" data-i18n="comp.suggestedQuestions">建議追問：</span>
+                {% for q in faqSuggested %}
                 <button type="button" class="button button-border button-sm js-ask-suggested">{{ q }}</button>
                 {% endfor %}
             </div>
@@ -61,9 +63,11 @@
     </button>
 
     <div class="faq-chat-input">
-        <div class="input-wrap">
+        {# .faq-input-wrap：本元件自有 class——.input-wrap 的樣式正本屬 ui/chatroom-shell，一個 class 名只能有一個 scss 主人（§4） #}
+        <div class="faq-input-wrap">
             <div class="faq-chat-field form-group">
-                <input type="text" placeholder="請輸入問題..." data-i18n-placeholder="comp.pleaseEnterQuestion" class="form-control" aria-label="輸入問題" data-i18n-aria-label="comp.enterQuestion">
+                {# id/class chat-input-txt＝真 app 業務掛點（Standard main.js getElementById('chat-input-txt') 讀值送問答），值載體原樣保留（§5） #}
+                <input type="text" id="chat-input-txt" placeholder="請輸入問題..." data-i18n-placeholder="comp.pleaseEnterQuestion" class="chat-input-txt form-control" aria-label="輸入問題" data-i18n-aria-label="comp.enterQuestion">
                 <span class="error-prompt" role="alert" data-i18n="comp.inputError">輸入錯誤！</span>
             </div>
             <button type="submit" class="button button-primary flex-shrink-0" data-toast="回答生成中...|回答生成成功|回答生成失敗" data-i18n-data-toast="toast.chatSubmit" data-toast-type="info|success|error" data-i18n="action.submit">送出</button>

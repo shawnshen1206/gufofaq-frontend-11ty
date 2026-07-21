@@ -11,7 +11,7 @@ bodyClass: guideline-page
   { label: "知識檢索邏輯" }
 ] %}
 {# 元件庫展示頁（style-guide catalog），取自真實 app pages/components/component.html。
-   本頁有自己的版型（.full-container + aside 導覽 + .main-container 18 節），不是一般頁面 chrome，
+   本頁有自己的版型（.full-container + aside 導覽 + .main-container 分節，節數見 aside 目錄），不是一般頁面 chrome，
    故不用 layouts/page-shell（header/main/footer），改直接掛 layouts/base/base.html。
    各節盡量 {% include %} 已建好的 ui/* 、components/* 展示檔（DRY，避免與其他頁面的元件標記漂移），
    純版面/文字類（欄位 Columns、文字與顏色）與跳窗展示版內容（previewTextModal）等無對應元件檔的原始展示，逐字手寫。 #}
@@ -46,6 +46,7 @@ bodyClass: guideline-page
             <li><a class="aside-link" href="#blockSection">區塊Block</a></li>
             <li><a class="aside-link" href="#toastSection">Toast通知</a></li>
             <li><a class="aside-link" href="#tooltipSection">Tooltip提示</a></li>
+            <li><a class="aside-link" href="#featureDisabledSection">功能未啟用遮罩</a></li>
         </ul>
     </aside>
     <div class="main-container">
@@ -82,7 +83,8 @@ bodyClass: guideline-page
             <h2 class="section-title"><span>01</span><span>版型</span></h2>
             <div class="caption">
                 <ul>
-                    <li>版面由三個區塊構成：Header(紅框)、主要內容區(綠框)、頁尾(黃框)</li>
+                    {# 真 app 此處另有一張標紅/綠/黃框的版型截圖（guideline_images/layout.png）；本頁未搬那張圖，文字不再指涉顏色框 #}
+                    <li>版面由三個區塊構成：Header、主要內容區、頁尾</li>
                     <li>頁面向下滾動後，header 會 fixed 在最上方</li>
                 </ul>
             </div>
@@ -367,7 +369,7 @@ bodyClass: guideline-page
                 <ul>
                     <li>表格請給予.default-table設定主要表格樣式</li>
                     <li>表格父層用「.table-container」包覆，如需要讓表格可以左右滾動，請加上「.scrollTable」的class</li>
-                    <li>如表格欄位需排序，請在th子層加上&lt;img class="sort"&gt;，並使用「div.th-sort」包住欄位標題文字及排序圖示</li>
+                    <li>如表格欄位需排序，請在th子層加上&lt;button type="button" class="sort"&gt;（內含排序圖示 img 與 sr-only 名稱），並使用「div.th-sort」包住欄位標題文字及排序鈕</li>
                     <li>表格欄位中內容較多時，請使用「div.ellipsis-2」包覆</li>
                     <li>表格不需要左右邊框和標題欄位邊框時，請在table加上「.no-border」這個class</li>
                     <li>表格欄位中的按鈕請用「.btn-group」包覆</li>
@@ -501,7 +503,9 @@ bodyClass: guideline-page
                     <button type="button" class="button button-dark" data-open-modal="ProductionSettingsNoPermissionModal">套用為正式設定（無權限）</button>
                     <button type="button" class="button button-dark" data-open-modal="ProductionSettingsModal">套用為正式設定（單測確認版）</button>
                     <button type="button" class="button button-dark" data-open-modal="ProductionSettingsCompareModal">套用為正式設定（A/B 比對版）</button>
-                    <button type="button" class="info-btn" title="配置說明" data-open-modal="knowledgeModal">
+                    {# 示範觸發器照抄真實頁（2-2-1/2-2-3）的完整寫法，title 與 sr-only 的 i18n 同進退——
+                         只翻一半會在英文模式出現 title 繁中、sr-only 英文的裂縫 #}
+                    <button type="button" class="info-btn" title="配置說明" data-i18n-title="qaTest.configInfo" data-open-modal="knowledgeModal">
                         <img src="./images/icon_info_black.png" width="48" height="48" decoding="async" alt="" class="icon">
                         <span class="sr-only" data-i18n="qaTest.configInfo">配置說明</span>
                     </button>
@@ -619,6 +623,26 @@ bodyClass: guideline-page
                 </ul>
             </div>
             {% include "ui/tooltip/tooltip.html" %}
+        </section>
+
+        <section id="featureDisabledSection">
+            <h2 class="section-title"><span>22</span><span>功能未啟用遮罩</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>外層加「.feature-disabled-wrap」（position:relative 錨點），遮罩「.feature-disabled-overlay」預設 display:none，加「.active」顯示</li>
+                    <li>真實頁（5-2-1）由 React 依租戶功能開通狀態切 .active；此處以靜態 .active 展示可見樣貌（唯一看得到它的地方）</li>
+                </ul>
+            </div>
+            <div class="feature-disabled-wrap block">
+                {# 佔位內容：遮罩蓋在「看得見但不能用」的面板上，示範也要有一塊被蓋的內容（不寫行內尺寸，高度由內容撐） #}
+                <p class="text-gray">此區塊示意被遮罩蓋住的頁面內容——真實頁（5-2-1）此處是知識檢索設定表單。</p>
+                <div class="feature-disabled-overlay active">
+                    <div class="feature-disabled-box">
+                        <div class="feature-disabled-title">功能未啟用</div>
+                        <div class="feature-disabled-desc">此功能目前尚未開放使用</div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <footer class="footer">
@@ -757,14 +781,19 @@ bodyClass: guideline-page
 </button>
 
 <script>
-    // go to top + aside 導覽平滑捲動：改寫自真實 app 展示頁內嵌 script（原用 jQuery），改用原生 DOM API
+    // go to top + aside 導覽平滑捲動：改寫自真實 app 展示頁內嵌 script（原用 jQuery），改用原生 DOM API。
+    // 展示頁專屬 chrome、不重用於任何真實頁，故循真 app 原樣留在頁內（§5 內嵌 script 僅限 base.html
+    // no-flash 與本頁這支）。JS 捲動吃不到 _base 的 prefers-reduced-motion 全域關閉，自行退 auto。
     (function () {
         var mainContainer = document.querySelector('.main-container');
         var gotop = document.querySelector('.btn_gotop');
+        function scrollBehavior() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        }
 
         if (mainContainer && gotop) {
             gotop.addEventListener('click', function () {
-                mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                mainContainer.scrollTo({ top: 0, behavior: scrollBehavior() });
             });
 
             mainContainer.addEventListener('scroll', function () {
@@ -781,7 +810,7 @@ bodyClass: guideline-page
                 var target = document.querySelector(link.getAttribute('href'));
                 if (!target || !mainContainer) return;
                 event.preventDefault();
-                mainContainer.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
+                mainContainer.scrollTo({ top: target.offsetTop - 16, behavior: scrollBehavior() });
             });
         });
     })();

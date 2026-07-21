@@ -33,8 +33,9 @@ permalink: 5-9_extractApiKey.html
             </div>
         </div>
         {# 顯示/遮蔽切換＝純前端互動（無業務、無 API），由 ui/reveal-input 以 data-reveal-target 委派切 type；
-             兩態文字與 key 由 data-text-*/data-key-* 提供，JS 不寫死字串（見 §4-2/§5）。 #}
-        <button type="button" class="button button-border" data-reveal-target="apiKeyInput" aria-pressed="false"
+             兩態文字與 key 由 data-text-*/data-key-* 提供，JS 不寫死字串（見 §4-2/§5）。
+             狀態語意走換標籤、不掛 aria-pressed（兩者並用會念出矛盾，見 reveal-input.js）。 #}
+        <button type="button" class="button button-border" data-reveal-target="apiKeyInput"
             data-text-show="顯示" data-text-hide="隱藏" data-key-show="extractKey.show" data-key-hide="extractKey.hide"
             data-i18n="extractKey.show">顯示</button>
         <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="已複製金鑰" data-i18n-data-toast="toast.copyKey">

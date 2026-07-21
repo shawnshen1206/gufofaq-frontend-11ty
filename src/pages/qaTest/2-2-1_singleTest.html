@@ -20,8 +20,8 @@ permalink: 2-2-1_singleTest.html
 </div>
 
 {# 測試設定區：知識檢索／LLM模型／資料取樣數為 singleSelect（沿用 ui/tab 展示片段旁的 form-group + select.singleSelect 原生寫法，非 multiSelect）；
-     對話模式（傳統搜尋／Agent 對話）與 Agent 最大迭代次數為新增測試設定（Task 12b），對齊 product qatest TestConfig 的 search_mode／agent_max_iterations；
-       業務讀值走 hook class js-chat-mode／js-agent-max-iter（React Task 13 接手），切版不接行為、兩者都直接顯示（「agent 才顯示迭代數」的條件顯示屬 React 業務邏輯）；
+     對話模式（傳統搜尋／Agent 對話）與 Agent 最大迭代次數為 SaaS 新增測試設定，對齊 product qatest TestConfig 的 search_mode／agent_max_iterations（qatest.py 預設 traditional／5）；
+       業務讀值走 hook class js-chat-mode／js-agent-max-iter（React 業務 js 接手），切版不接行為、兩者都直接顯示（「agent 才顯示迭代數」的條件顯示屬 React 業務邏輯）；
      提示詞收合／展開編輯區塊抽成 components/prompt-edit（見下方 include）；
      儲存/建版本等互動屬業務邏輯，不在此靜態頁內（見 singleTest.js） #}
 <div class="block">
@@ -67,15 +67,16 @@ permalink: 2-2-1_singleTest.html
                 </div>
             </div>
         </div>
-        {# 對話模式：傳統搜尋 / Agent 對話（value 對應 product TestConfig.search_mode；option 文字是 chrome 走 i18n，value 為業務值不翻） #}
+        {# 對話模式：傳統搜尋 / Agent 對話（value 對應 product TestConfig.search_mode，預設 traditional；option 文字是 chrome 走 i18n，value 為業務值不翻）。
+             示範選 agent（§6 示範資料要自洽：本頁下方展示 agent 工具軌跡與串流狀態，傳統搜尋模式不會有）。 #}
         <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
             <div class="label">
                 <label for="chatModeSelect" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
             </div>
             <div class="field">
                 <select class="form-control singleSelect js-chat-mode" id="chatModeSelect">
-                    <option value="traditional" selected data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
-                    <option value="agent" data-i18n="qaTest.chatModeAgent">Agent 對話</option>
+                    <option value="traditional" data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
+                    <option value="agent" selected data-i18n="qaTest.chatModeAgent">Agent 對話</option>
                 </select>
             </div>
         </div>

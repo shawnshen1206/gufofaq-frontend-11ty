@@ -49,7 +49,7 @@ permalink: 5-5-1_userManagement.html
                     <label for="newMemberPasswordInput" class="control-label required" data-i18n="settings.initialPassword">初始密碼</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="newMemberPasswordInput" placeholder="請輸入初始密碼" data-i18n-placeholder="settings.pleaseEnterInitialPassword" class="form-control" required>
+                    <input type="password" id="newMemberPasswordInput" placeholder="請輸入初始密碼" data-i18n-placeholder="settings.pleaseEnterInitialPassword" class="form-control" required>
                 </div>
             </div>
         </div>
@@ -73,7 +73,8 @@ permalink: 5-5-1_userManagement.html
             </span>
         </label>
         <span class="text-bold" data-i18n="settings.tenantAdmin">租戶管理者</span>
-        <button type="button" class="button button-primary">
+        {# 直接送 API 的建立動作（product users.py create_user，409＝Email 已存在）→ data-toast 列全結果（§5） #}
+        <button type="button" class="button button-primary" data-toast="成員已新增|請填寫 Email 與至少 8 碼密碼|新增失敗（Email 可能已被使用），請稍後再試" data-i18n-data-toast="toast.createUser" data-toast-type="success|warning|error">
             <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
             <span data-i18n="settings.addMember">新增成員</span>
         </button>

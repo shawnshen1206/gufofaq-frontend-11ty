@@ -7,8 +7,8 @@
 // 這裡不再有 300ms 的 setTimeout、不再有 `.show`/`.hide` class、也不再需要「關到一半又重開」的重入守衛：
 // `close()` 立刻拿掉 `[open]`，瀏覽器自己把元素撐到退場動畫跑完；中途 `showModal()` 會讓 transition 原生反向。
 document.addEventListener("DOMContentLoaded", function () {
-    // body 捲動鎖不在這裡：`_base.scss` 的 `html:has(dialog.modals[open]) { overflow: hidden }` 宣告式地鎖。
-    // `[open]` 一被 close() 拿掉，鎖就自動解開 —— Esc、巢狀、和手機選單同時開，全部免費。
+    // body 捲動鎖不在這裡：`_base.scss` 的 `html:has(:modal), html:has([data-scroll-lock].active)` 宣告式地鎖。
+    // dialog 一被 close() 拿掉 :modal 態，鎖就自動解開 —— Esc、巢狀、和手機選單同時開，全部免費。
 
     function openModal(id) {
         var modal = document.getElementById(id);

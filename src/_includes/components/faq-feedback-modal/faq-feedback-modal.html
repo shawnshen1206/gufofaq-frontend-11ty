@@ -8,8 +8,10 @@
                     <h3 class="modals-title" id="likeModal-title" data-i18n="modals.helpUsImprove">幫助我們改進</h3>
                 </div>
                 <div class="modals-body">
-                    <span><span data-i18n="modals.feedbackHelpful">這個回答對你有幫助嗎？</span><span class="text-red" data-i18n="common.required">(必填)</span></span>
-                    <div class="feedback-vote" role="group" aria-label="這個回答對你有幫助嗎？" data-i18n-aria-label="modals.feedbackHelpful">
+                    {# §4：浮空 label 給 id、group 掛 aria-labelledby（同 faq-chatroom 的 chip 區做法）——
+                         不用 aria-label 複製字面（可及名稱會自動含 (必填)、切語言也不必另掛屬性翻譯） #}
+                    <span id="feedbackVoteLabel"><span data-i18n="modals.feedbackHelpful">這個回答對你有幫助嗎？</span><span class="text-red" data-i18n="common.required">(必填)</span></span>
+                    <div class="feedback-vote" role="group" aria-labelledby="feedbackVoteLabel">
                         <button type="button" class="feedback-vote-btn like" data-vote="like" aria-pressed="false" data-i18n="modals.like">
                             <span class="feedback-vote-icon"></span>讚
                         </button>
@@ -23,7 +25,7 @@
                         </div>
                         <div class="field">
                             <textarea class="form-control" id="feedbackText" rows="3" placeholder="請告訴我們原因（選填）" data-i18n-placeholder="modals.feedbackReasonPlaceholder"></textarea>
-                            <span class="error-prompt" role="alert" data-i18n="modals.inputError">輸入錯誤！</span>
+                            <span class="error-prompt" role="alert" data-i18n="comp.inputError">輸入錯誤！</span>
                         </div>
                     </div>
                 </div>

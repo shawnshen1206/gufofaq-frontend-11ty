@@ -80,15 +80,24 @@
 - `data-open-modal`／`data-toast`／`data-print` → `onClick`；移除屬性、不自創 hook class、不留 document 委派。
 - `GufoSlide`→`useSlideToggle`、`showToast`→`useToast()`、`openModal`→受控 `<Modal>`、`aria-expanded`→綁 state。
 - 捲動鎖：開關掛 `data-scroll-lock`（`html:has([data-scroll-lock].active)` 在 `_base.scss`）。
-- 業務 hook class（`.watchBtn`／`.copyBtn`／`.js-apply-production`…）保留。
-- 業務邏輯（抓資料／SSE／圖表／表單驗證／日期）不轉。
+- 業務 hook class（`.watchBtn`／`.copyBtn`／`.js-apply-production`／`.js-chat-mode`…）保留——含 `js-` 開頭的**業務**
+  hook（條件開窗／值載體／切版新頁自創的 React 綁定記號，GUIDELINE §5 的組合矩陣）；業務值載體 `<select>`／`<input>`
+  轉成受控元件、hook class 留在 className、change 綁定交業務層。真 app 以 **id 契約**綁定的控制項（2-2-1 的
+  `#chatModeSelect` 家族）id 照帶。
+- 業務邏輯（抓資料／SSE／圖表／表單驗證／日期）不轉。串流狀態列（`role="status"` live region）與建議追問 chip
+  （`.js-ask-suggested`）markup 照切版轉、內容改由 SSE 事件驅動（切版是凍結的一格示範）。
+- 零自帶 js、行為全借共用原子 hook 的元件（agent-activity 借 `ui/accordion` 的 `.js-accordion`／`.js-expand-all`／
+  `.js-collapse-all`）：React 端由共用 Accordion 邏輯（含 setAll 全展/全收、aria-expanded 每路徑同步）供行為，
+  元件自己不重寫一份。
 - 量測用臨時 DOM 節點（append 到 `document.body` 量文字寬等）加 `position:absolute`——append 目標可能是
   flex/grid 容器（節點會被 blockify 拉伸），absolute 讓它退出環境佈局。
 
 ## ⑤ 平台原生機制保留
 
 - `<dialog>`／`popover`／`:has()`／`@starting-style`／`allow-discrete`／`mask`／`dvh` 保留，不改成 div + state。
-- `.js-*` 不帶；`fpdiff.mjs` element identity 排除 `.js-*`。
+- **切版自有行為**的 `.js-*`（`js-accordion`／`js-expand-all`／`js-side-toggle`／`js-prompt-toggle`／`js-lang-toggle`…，
+  行為已改寫成 state）不帶；**業務** `.js-*` hook 依 §④ 保留——兩者判準：GUIDELINE §5（hook 是否標記「React 業務 js 接手」）。
+  `fpdiff.mjs` element identity 排除 `.js-*`。
 
 ## ⑥ 視覺指紋驗收
 

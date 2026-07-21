@@ -209,7 +209,7 @@
 }
 
 // 建議追問（A7）：機器人答案下方一列可點 chip；點擊＝把該題當下一題送出（業務行為由 consumer 綁——
-// 見 React 端 onAskSuggested；11ty 保留 .js-suggested-question 業務掛點）。複用 ui/button 的 .button-border.button-sm。
+// 見 React 端 onAskSuggested；11ty 保留 .js-ask-suggested 業務掛點）。複用 ui/button 的 .button-border.button-sm。
 .suggested-questions {
     margin-top: 0.5rem;
     display: flex;

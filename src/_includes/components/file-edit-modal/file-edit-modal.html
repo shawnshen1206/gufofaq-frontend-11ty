@@ -1,5 +1,7 @@
 {# 檔案編輯 modal（PDF 自填），class/id 沿用真實 app pages/components/component.html #editModal 系統。
-     固定 14 槽 schema（title/content/source/date/category/number/flag/tags/privilege/note1..note5）：每槽一個輸入框供逐筆手填，label 用各槽預設顯示名。
+     固定 14 槽 schema（title/content/source/date/category/number/flag/tags/privilege/note1..note5，
+     出處：gufofaq-saas services/product/app/field_schema.py 的 SLOTS——default_label 逐字對齊）：
+     每槽一個輸入框供逐筆手填，label 用各槽預設顯示名。
      內容（content）由 PDF 自動擷取，故 render 成 disabled textarea（沿用真實系統 .form-control.disabled + disabled 屬性）；
      其餘槽為可填 input。資料驅動：set editFields + for 內嵌渲染欄位列（依 §9，元件內部 for 不再巢狀 include 子元件）。
      editConfirmBinding —— true＝儲存鈕交給業務 js 綁定（不掛 btn-close-modals 自動關窗）。

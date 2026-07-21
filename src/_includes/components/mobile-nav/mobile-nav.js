@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         navToggle.classList.toggle("active", open);
         navToggle.setAttribute("aria-expanded", open ? "true" : "false");
         overlay.classList.toggle("active", open);
-        // body 捲動鎖是純 CSS：`html:has(.nav-toggle.active)`（見 _base.scss）。這裡只負責切 .active。
+        // body 捲動鎖是純 CSS：`html:has([data-scroll-lock].active)`（見 _base.scss；nav-toggle 掛 data-scroll-lock）。這裡只負責切 .active。
         // 真 app 是 slideDown/slideUp(300)，不是 display 一次切掉
         if (open) {
             window.GufoSlide.down(menuWrap);

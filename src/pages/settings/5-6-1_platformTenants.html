@@ -27,7 +27,7 @@ permalink: 5-6-1_platformTenants.html
   { email: "ops-admin@example.com", tenant: "示範租戶 C", role: "admin" }
 ] %}
 <div class="block mb-16 flex-row column gap-16">
-    <div class="text-md text-bold mb-12" data-i18n="platform.platformRolesTitle">平台權限</div>
+    <div class="text-md text-bold" data-i18n="platform.platformRolesTitle">平台權限</div>
     <div class="table-container scrollTable">
         <table class="default-table">
             <colgroup>
@@ -97,7 +97,7 @@ permalink: 5-6-1_platformTenants.html
                     <label for="tenantNameInput" class="control-label required" data-i18n="settings.tenantName">租戶名稱</label>
                 </div>
                 <div class="field">
-                    <input type="text" id="tenantNameInput" placeholder="例如：宇宙股份有限公司" data-i18n-placeholder="settings.tenantNamePlaceholder" class="form-control">
+                    <input type="text" id="tenantNameInput" placeholder="例如：宇宙股份有限公司" data-i18n-placeholder="settings.tenantNamePlaceholder" class="form-control" required>
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
@@ -108,7 +108,7 @@ permalink: 5-6-1_platformTenants.html
                     <label for="tenantAdminEmailInput" class="control-label required" data-i18n="settings.adminEmail">管理員 Email</label>
                 </div>
                 <div class="field">
-                    <input type="email" id="tenantAdminEmailInput" placeholder="admin@example.com" class="form-control">
+                    <input type="email" id="tenantAdminEmailInput" placeholder="admin@example.com" class="form-control" required>
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
@@ -119,14 +119,14 @@ permalink: 5-6-1_platformTenants.html
                     <label for="tenantAdminPasswordInput" class="control-label required" data-i18n="settings.adminPassword">管理員密碼</label>
                 </div>
                 <div class="field">
-                    <input type="password" id="tenantAdminPasswordInput" placeholder="至少 8 碼" data-i18n-placeholder="settings.adminPasswordPlaceholder" class="form-control">
+                    <input type="password" id="tenantAdminPasswordInput" placeholder="至少 8 碼" data-i18n-placeholder="settings.adminPasswordPlaceholder" class="form-control" required>
                     <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex-row">
-        <button type="button" class="button button-primary" data-toast="租戶已建立|請填寫租戶名稱、管理員 Email 與至少 8 碼密碼|建立失敗（Email 可能已被使用），請稍後再試" data-i18n-data-toast="toast.createTenant" data-toast-type="success|warning|error">
+        <button type="button" class="button button-primary" data-toast="租戶已建立|請填寫租戶名稱、管理員 Email 與至少 8 碼密碼|建立失敗（名稱或 Email 可能已被使用），請稍後再試" data-i18n-data-toast="toast.createTenant" data-toast-type="success|warning|error">
             <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
             <span data-i18n="settings.createTenant">建立租戶</span>
         </button>
@@ -135,17 +135,21 @@ permalink: 5-6-1_platformTenants.html
 
 {# 平台管理（僅平台系統管理員，跨租戶）：控制各租戶能使用哪些功能。SaaS 新需求，逆向自 apps/web app/(app)/platform；
      真正把關在 product（require_platform_admin），本頁僅提供管理介面。
-     功能鍵集合對齊 product app/authz.py CAPABILITIES（data/ask/history/settings）。 #}
+     功能鍵集合對齊 product app/authz.py CAPABILITIES 全部 5 鍵（data/ask/history/settings/audit——
+     平台開通維持粗粒度整項開關，authz.py 自註「維持 5 key 不變」）。
+     示範租戶 D 同時出現在下方 ISO 審核精靈的名單/結果（§6 跨區自洽：逾期 150 天者列表要掛 ISO 待審徽章）。 #}
 {% set features = [
   { key: "data", label: "資料匯入／資料集管理", i18nKey: "settings.capData" },
   { key: "ask", label: "問答（後台測試區）", i18nKey: "settings.capAsk" },
   { key: "history", label: "歷史紀錄", i18nKey: "settings.capHistory" },
-  { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" }
+  { key: "settings", label: "設定類（提示詞／檢索設定）", i18nKey: "settings.capSettings" },
+  { key: "audit", label: "稽核日誌檢視", i18nKey: "settings.capAudit" }
 ] %}
 {% set tenants = [
-  { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings"], frozen: false, reviewDue: false },
+  { name: "示範租戶 A", userCount: 8, features: ["data", "ask", "history", "settings", "audit"], frozen: false, reviewDue: false },
   { name: "示範租戶 B", userCount: 3, features: ["data", "ask"], frozen: true, reviewDue: false },
-  { name: "示範租戶 C", userCount: 1, features: ["ask"], frozen: false, reviewDue: true }
+  { name: "示範租戶 C", userCount: 1, features: ["ask"], frozen: false, reviewDue: true },
+  { name: "示範租戶 D", userCount: 4, features: ["data", "ask"], frozen: false, reviewDue: true }
 ] %}
 
 {# 帳號治理工具列：匯出租戶／使用者 CSV（帳號列表，稽核用）。直接下載動作 → data-toast 演出成敗（走 BFF 檔案透傳）。 #}
@@ -160,7 +164,7 @@ permalink: 5-6-1_platformTenants.html
 {# 租戶功能開通：default-table；每租戶每功能一個 ui/switch（開通/停用）。名稱欄附治理徽章：
      reviewDue → 紅色「ISO 待審」（title 提示逾期滿 90 天）、frozen → 「已凍結」狀態。 #}
 <div class="block flex-row column gap-16">
-    <div class="text-md text-bold" data-i18n="settings.tenantFeatures">租戶功能開通</div>
+    <div class="text-md text-bold" data-i18n="nav.tenantEnable">租戶功能開通</div>
     <div class="table-container scrollTable">
         <table class="default-table">
             <colgroup>
@@ -227,9 +231,13 @@ permalink: 5-6-1_platformTenants.html
   { name: "示範租戶 C", email: "c-admin@example.com", trialEnd: "2026-03-01", daysOverdue: 135, userCount: 1, storage: 12.4 },
   { name: "示範租戶 D", email: "d-admin@example.com", trialEnd: "2026-02-14", daysOverdue: 150, userCount: 4, storage: 88.0 }
 ] %}
-{% set reviewResults = [
-  { name: "示範租戶 C", ok: true, error: "" },
-  { name: "示範租戶 D", ok: false, error: "從 GufoRAG 刪租戶索引失敗（tenant=42）" }
+{# 結果拆成功/失敗兩個陣列：step-3 的「共 N 筆，成功 X，失敗 Y」全部從陣列長度推導（§6 可推導的值不烤死），
+     表格先渲染成功列再渲染失敗列 #}
+{% set reviewOkResults = [
+  { name: "示範租戶 C", error: "" }
+] %}
+{% set reviewFailResults = [
+  { name: "示範租戶 D", error: "從 GufoRAG 刪租戶索引失敗（tenant=42）" }
 ] %}
 <div class="block mt-16 flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="platform.reviewTitle">ISO 季度審核</div>
@@ -321,7 +329,7 @@ permalink: 5-6-1_platformTenants.html
     <div class="flex-row column gap-8">
         <div class="text-bold" data-i18n="platform.reviewStep3">③ 處理結果（可截圖）</div>
         <div class="flex-row flex-wrap gap-16">
-            <span><span data-i18n="platform.reviewResultPrefix">共</span> 2 <span data-i18n="platform.reviewResultOkMid">筆，成功</span> 1<span data-i18n="platform.reviewResultFailMid">，失敗</span> 1</span>
+            <span><span data-i18n="platform.reviewResultPrefix">共</span> {{ reviewOkResults.length + reviewFailResults.length }} <span data-i18n="platform.reviewResultOkMid">筆，成功</span> {{ reviewOkResults.length }}<span data-i18n="platform.reviewResultFailMid">，失敗</span> {{ reviewFailResults.length }}</span>
             <span><span data-i18n="platform.reviewCompletedAt">完成時間：</span>2026-07-14 09:01 UTC</span>
         </div>
         <div class="table-container scrollTable">
@@ -339,10 +347,17 @@ permalink: 5-6-1_platformTenants.html
                     </tr>
                 </thead>
                 <tbody>
-                    {% for r in reviewResults %}
+                    {% for r in reviewOkResults %}
                     <tr>
                         <td>{{ r.name }}</td>
-                        <td class="text-bold{% if not r.ok %} text-red{% endif %}" data-i18n="{% if r.ok %}platform.resultOk{% else %}platform.resultFail{% endif %}">{% if r.ok %}成功{% else %}失敗{% endif %}</td>
+                        <td class="text-bold" data-i18n="platform.resultOk">成功</td>
+                        <td>{{ r.error }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for r in reviewFailResults %}
+                    <tr>
+                        <td>{{ r.name }}</td>
+                        <td class="text-bold text-red" data-i18n="platform.resultFail">失敗</td>
                         <td>{{ r.error }}</td>
                     </tr>
                     {% endfor %}

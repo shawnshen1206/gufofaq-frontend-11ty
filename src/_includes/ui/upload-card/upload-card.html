@@ -2,7 +2,8 @@
      真實 app 點卡片後由業務 JS 驗證+上傳+取 sn 才跳頁（§5 不做）；此處提供「簡化版靜態跳轉」：
      卡片直接連到該類型的上傳頁（excel→1-1-2、pdf/word/image→1-2-1）。
      卡片是可點的東西，一律是真 `<a>`（§4）；不做「不跳轉的卡片」——那會退化成 javascript:void(0) 死連結。 #}
-{% set cards = [
+{# 示範資料用元件專屬名 uploadCards（§6：set 是頁面全域，泛用名會與使用頁同名變數互相覆蓋） #}
+{% set uploadCards = [
     {
         type: "excel",
         href: "1-1-2_uploadFile_excel.html",
@@ -46,7 +47,7 @@
 ] %}
 
 <div class="upload-card-list">
-    {% for card in cards %}
+    {% for card in uploadCards %}
     <a href="{{ card.href }}" class="upload-card" data-type="{{ card.type }}" title="上傳{{ card.type }}" data-i18n-title="{{ card.titleKey }}">
         <div class="upload-content">
             <div class="upload-header">

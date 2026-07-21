@@ -38,6 +38,13 @@ document.addEventListener("DOMContentLoaded", function () {
         select.setAttribute("aria-hidden", "true");
         select.setAttribute("tabindex", "-1");
 
+        // §5「把原生語意換掉就要自己補回來」：原生 select 被移出無障礙樹後，
+        // 頁面的 <label for="select id"> 到不了替身——把它接到 combobox（aria-labelledby），
+        // label 點擊被轉送到隱藏 select 的焦點也一併轉給搜尋框。
+        var pageLabel = select.id ? document.querySelector('label[for="' + select.id + '"]') : null;
+        if (pageLabel && !pageLabel.id) pageLabel.id = id + "-label";
+        select.addEventListener("focus", function () { search.focus(); });
+
         var control = document.createElement("div");
         control.className = "multi-select-control";
 
@@ -59,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         search.setAttribute("aria-autocomplete", "list");
         search.setAttribute("aria-controls", dropdown.id);
         search.setAttribute("aria-expanded", "false");
+        if (pageLabel) search.setAttribute("aria-labelledby", pageLabel.id);
 
         tagList.appendChild(search);
         control.appendChild(tagList);
@@ -137,7 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.classList.toggle("has-tags", selected.length > 0);
             var ph = placeholder();
             search.placeholder = selected.length > 0 ? "" : ph;
-            search.setAttribute("aria-label", ph);
+            // 有頁面 label 時名稱走 aria-labelledby（欄位名），placeholder 只是提示；沒有才退 aria-label
+            if (!pageLabel) search.setAttribute("aria-label", ph);
             wrapper.title = ph;
         }
 
@@ -188,7 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 case "ArrowDown":
                     event.preventDefault();
                     if (!isOpen()) setOpen(true);
-                    setActive(activeIndex < 0 ? 0 : activeIndex + 1);
+                    // 首尾環繞與 ArrowUp 對稱（底部再往下回到第一項）
+                    setActive(activeIndex < 0 || activeIndex >= list.length - 1 ? 0 : activeIndex + 1);
                     break;
                 case "ArrowUp":
                     event.preventDefault();
@@ -207,6 +217,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (isOpen() && activeIndex >= 0 && list[activeIndex] && (event.key === "Enter" || search.value === "")) {
                         event.preventDefault();
                         list[activeIndex].click();
+                    } else if (event.key === "Enter") {
+                        // 游標沒停在任何選項時 Enter 也要吃掉：combobox 若被放進 <form>，
+                        // 不攔會觸發原生表單送出（implicit submission）整頁重載
+                        event.preventDefault();
                     }
                     break;
                 case "Escape":

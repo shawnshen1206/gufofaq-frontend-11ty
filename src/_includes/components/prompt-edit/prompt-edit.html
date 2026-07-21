@@ -2,12 +2,13 @@
      展開/收合（切換 .open，注入編輯 textarea / 首行預覽）為純視覺互動，由 prompt-edit.js 提供；
      實際儲存/建新版本等 API 屬業務邏輯不在此。
      參數：promptDefaultOpen（true 時加 data-default-open，AB 測試頁的預設展開欄用）。 #}
+{# 示範提示詞取領域中性的知識庫助手文案（§6 示範自洽：本元件同時用在 2-2-1（移民問答情境）與
+     2-2-3（產品問答情境），綁定單一領域的提示詞會與其中一頁的對話矛盾） #}
 <div class="prompt-edit"{% if promptDefaultOpen %} data-default-open="true"{% endif %} data-full-text="角色定位：
-你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
+你是一位專業的知識庫問答助手，負責依據已上傳的資料回應使用者詢問。
 知識來源限制：
 你的回答必須僅依據以下資料來源：
-• 《產品規格資料庫》（PDF規格書）
-• 《使用手冊》（操作說明）
+• 《知識庫檢索結果》（本次問答檢索到的資料片段）
 回應原則：
 • 優先使用條列式呈現資訊
 • 語氣清楚、專業且易懂
@@ -15,7 +16,7 @@
 • 若資料不足，需明確說明『無法從現有資料判斷』
 輸出格式：
 • 使用條列式（• 或 -）
-• 必要時分段（例如：規格 / 使用方式 / 注意事項）">
+• 必要時分段（例如：說明 / 流程 / 注意事項）">
     <div class="flex-row align-items-center gap-8">
         <span class="control-label" data-i18n="comp.prompt">提示詞</span>
 
@@ -38,7 +39,8 @@
             儲存
         </button>
 
-        <button type="button" class="button button-green js-prompt-reset" data-i18n="action.resetDefault">
+        {# 送 API 的直接動作鈕（真 app singleTest.js .js-prompt-reset：取目前正式提示詞、成敗各一種 toast）→ data-toast 列全結果（§5） #}
+        <button type="button" class="button button-green js-prompt-reset" data-toast="已回復至目前正式提示詞|無法取得正式提示詞" data-i18n-data-toast="toast.resetPrompt" data-toast-type="success|error" data-i18n="action.resetDefault">
             回復至預設
         </button>
 

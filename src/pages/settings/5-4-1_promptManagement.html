@@ -24,7 +24,8 @@ permalink: 5-4-1_promptManagement.html
                     <label for="promptProfileSelect" class="control-label" data-i18n="settings.profile">設定檔</label>
                 </div>
                 <div class="field">
-                    <select id="promptProfileSelect" class="form-control singleSelect">
+                    {# 值載體：切換設定檔即載入該檔版本列表（業務行為）→ 掛 hook class（§5 值載體條款），React 接 change #}
+                    <select id="promptProfileSelect" class="form-control singleSelect js-prompt-profile">
                         <option value="1" data-i18n="settings.config1">設置一</option>
                         <option value="2" data-i18n="settings.config2">設置二</option>
                         <option value="3" data-i18n="settings.config3">設置三</option>
@@ -80,7 +81,9 @@ permalink: 5-4-1_promptManagement.html
             <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
             <div class="form-group">
                 <div class="field">
-                    <textarea class="form-control size-lg prompt-input" placeholder="請輸入提示詞內容" data-i18n-placeholder="settings.pleaseEnterPromptContent" aria-label="提示詞內容" data-i18n-aria-label="settings.promptContent">角色定位：
+                    {# js-prompt-input＝真 app 值載體 hook（promptManagement.js 的 .js-prompt-save handler find('.js-prompt-input').val()）——
+                         讀值方 .js-prompt-save 有保留，值載體不可單獨拆掉（§5）；.prompt-input 是樣式 slot、兩者並存 #}
+                    <textarea class="form-control size-lg prompt-input js-prompt-input" placeholder="請輸入提示詞內容" data-i18n-placeholder="settings.pleaseEnterPromptContent" aria-label="提示詞內容" data-i18n-aria-label="settings.promptContent">角色定位：
 你是一位專業的產品客服助手，負責回應使用者的產品相關詢問。
 知識來源限制：</textarea>
                 </div>
@@ -96,7 +99,7 @@ permalink: 5-4-1_promptManagement.html
 <div class="prompt-card-list flex-row column gap-10">
     {% set versions = [
       { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204" },
-      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:38", refCount: "14" },
+      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:36", refCount: "14" },
       { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/18 15:02:32", refCount: "300" }
     ] %}
     {% for v in versions %}

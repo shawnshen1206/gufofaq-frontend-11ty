@@ -3,8 +3,10 @@
    **是單選**：真 app 的 dataImport.js:127 塞的是 <input type="radio" name="dataset_radio">，
    確認鈕讀 input[name="dataset_radio"]:checked（:21）——這個 modal 的語意是「選一個要匯入的目標資料集」。
    真 app 的 component.html 展示版畫成 checkbox，那是展示版的失真；切版是給功能頁用的，照功能頁走。
-   （label 沿用真 app 的 .form-checkbox.border-wrap，radio 也是掛這組 class。） #}
-{% set datasets = [
+   （label 沿用真 app 的 .form-checkbox.border-wrap，radio 也是掛這組 class。）
+   搜尋過濾與確認回填為純前端互動，由 select-dataset-modal.js 提供（§5 當場動得起來）。
+   示範資料用元件專屬名 selectDatasetRows（§6：泛用名 datasets 會與資料集頁的同名變數互相覆蓋）。 #}
+{% set selectDatasetRows = [
     { label: "資料集AA", checked: true },
     { label: "資料集BB" },
     { label: "資料集CC" },
@@ -29,8 +31,9 @@
                                         <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
                                     </div>
                                 </div>
-                                <div class="dataset-list">
-                                    {% for dataset in datasets %}
+                                {# 一組 radio 要報出「這組在問什麼」（§4）：單一用途 modal 直接由標題供名 #}
+                                <div class="dataset-list" role="radiogroup" aria-labelledby="datasetModal-title">
+                                    {% for dataset in selectDatasetRows %}
                                     <label class="form-checkbox border-wrap">
                                         <input type="radio" name="dataset_radio" value="{{ dataset.label }}"{% if dataset.checked %} checked{% endif %}>
                                         <span>{{ dataset.label }}</span>

@@ -1,6 +1,6 @@
-// 篩選列欄位群（5-4-1 提示詞管理、2-2-1 單測共用）：讓一列篩選欄位均分剩餘寬度、可被壓縮。
-// 純樣式元件（無 html/js）：markup 由頁面自組——外層 .filter-fields，
-// 每個欄位（頁面上是 form-group）加本元件的 slot class .filter-field。
+// 篩選列欄位群（5-4-1/5-4-2、2-2-1 共用）：讓一列篩選欄位均分剩餘寬度、可被壓縮。
+// 無 html（markup 由頁面自組——外層 .filter-fields，每個欄位加本元件的 slot class .filter-field）；
+// 行為 js 見同資料夾 filter-fields.js（.js-filter-clear 清除鈕）。
 // （原始規則來自真實 app css/style.css 的 .filter-fields .form-group，依 GUIDELINE §4
 //  「容器排版子元件改用 parent 自有的 slot class」改為 .filter-field，不指名 ui/form-control 的 class。）
 // 即使頁面只有單一欄位，也必須包在 .filter-fields 裡：漏了外層，.filter-field 這個巢狀選擇器

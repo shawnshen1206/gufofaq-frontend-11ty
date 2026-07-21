@@ -1,13 +1,16 @@
 {# agent 工具活動列（測試區詳細）：SaaS 新需求／真 app 無對應。agent 模式問答時，chatbot 於 SSE 串流
      過程回報每一次工具呼叫（工具名 + 參數 + 結果），此元件把它們列成可逐筆收合展開的表格，供測試區
-     檢視 agent 的推理軌跡。真值由 React 端串流事件驅動（見 Task 13）；此處為靜態示範，工具名／參數／
+     檢視 agent 的推理軌跡（工具名對齊 GufoRAG chatbot agent_service 的 search_documents／
+     ask_clarifying_question／final_answer）。真值由 React 端串流事件驅動；此處為靜態示範，工具名／參數／
      結果＝假資料，依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。
      收合機制復用 ui/accordion（根 .js-accordion + 摘要列 .accordion-btn + 隱藏的 .detail-row > .accordion-content，
      見 ui/accordion accordion.js；GufoSlide 300ms 動畫、aria-expanded 每路徑同步）——本元件不自帶 js。
      每筆活動（摘要列＋隱藏詳細列）以 {% for %} 內嵌渲染（GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀
-     include 子元件，會靜默渲染成空白）。示範資料用元件專屬名 agentToolActivities（GUIDELINE §6：set 是
-     頁面全域，泛用名會與使用頁自己的同名變數互相覆蓋）。 #}
-{% set agentToolActivities = [
+     include 子元件，會靜默渲染成空白）。
+     參數：agentActivityRows（選填，[{ tool, summary, params, result }]）——使用頁的對話主題與內建預設
+     （移民主題，配 2-2-1）不同時覆寫，讓軌跡與同頁對話自洽（§6）；內部變數用元件專屬名
+     agentToolActivities（GUIDELINE §6：set 是頁面全域，泛用名會與使用頁同名變數互相覆蓋）。 #}
+{% set agentToolActivities = agentActivityRows or [
     {
         tool: "search_documents",
         summary: "命中 8 筆相似片段",
@@ -45,7 +48,7 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th></th>
+                    <th><span class="sr-only" data-i18n="common.expand">展開</span></th>
                     <th data-i18n="agent.tool">工具</th>
                     <th data-i18n="agent.resultSummary">結果摘要</th>
                 </tr>
@@ -64,15 +67,18 @@
                 <tr class="detail-row">
                     <td colspan="3" class="detail-cell">
                         <div class="accordion-content">
+                            {# tr 一律包 tbody：table 直下放 tr 瀏覽器會自動補 tbody，轉 React 後 SSR/hydration 會 mismatch（§4） #}
                             <table class="accordion-table">
-                                <tr>
-                                    <th data-i18n="agent.params">參數</th>
-                                    <td><code class="agent-activity-code">{{ act.params }}</code></td>
-                                </tr>
-                                <tr>
-                                    <th data-i18n="agent.result">結果</th>
-                                    <td>{{ act.result }}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th data-i18n="agent.params">參數</th>
+                                        <td><code class="agent-activity-code">{{ act.params }}</code></td>
+                                    </tr>
+                                    <tr>
+                                        <th data-i18n="agent.result">結果</th>
+                                        <td>{{ act.result }}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </td>

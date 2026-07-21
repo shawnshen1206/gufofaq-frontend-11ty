@@ -12,7 +12,10 @@
         flex-direction: column;
     }
 
-    .item-title {
+    // 以 .ab-compare-item 墊高特異度到 (0,3,0)：真 app 原選擇器 .ab-compare .message-content .item-title
+    // 也是三層、贏過 chat-message 的 .message-content .robot-msg p (0,2,1)；§4 去掉他人 class 改寫時
+    // 層疊勝負必須不變——只寫 .ab-compare .item-title (0,2,0) 會輸，margin/line-height 變死宣告。
+    .ab-compare-item .item-title {
         border-bottom: solid 1px var(--border);
         text-align: center;
         padding: 0.5rem 0;

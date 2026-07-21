@@ -143,7 +143,10 @@ permalink: 3-1-1_datasetList.html
 </div>
 
 {# 刪除確認鈕交給業務 js：真 app 的 datasetList.js:360 綁 #confirmDeleteBtn，
-   API 刪完 (:342) 才 closeModal。寫死 btn-close-modals ＝ 按了確認、窗關了、什麼都沒刪。 #}
+   API 刪完 (:342) 才 closeModal。寫死 btn-close-modals ＝ 按了確認、窗關了、什麼都沒刪。
+   deleteTargetName：本頁刪的是資料集，示範名取 rows 第一筆（真 app 由 datasetList.js:231 填入資料集名）——
+   不設的話 delete-modal 預設是「檔案名稱2.pdf」，會變成刪資料集卻顯示檔名（§6 示範自洽）。 #}
+{% set deleteTargetName = "客服問答知識庫" %}
 {% set deleteConfirmBinding = true %}
 {% set deleteToast = "刪除成功|刪除資料集失敗" %}
 {% set deleteToastKey = "toast.deleteDataset" %}

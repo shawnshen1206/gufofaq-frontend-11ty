@@ -2,10 +2,9 @@
      type：success（預設）/ error / warning / info。需搭配 layouts/base/base.html 裡的 #toastContainer。
      元件 js 若要在別的時機彈，呼叫全域 showToast(message, type, duration, host)。
 
-     **什麼時候可以在 markup 掛 data-toast**：只有「結果在前端就已經確定」的動作 —— 全站只有複製到剪貼簿
-     （`.copyBtn` / `.shareBtn`）。「儲存 / 刪除 / 上傳 / 套用」的成敗要等 API 回來才知道，
-     在 markup 掛一句「已成功儲存」＝按了就彈綠色成功，而其實什麼都沒存 —— 跟寫死 data-open-modal 是同一種謊。
-     那些 toast 由業務 js 依 API 結果決定訊息與型別（真 app 的訊息 → 型別對照見 TAILWIND-CONVERSION.md）。
+     **什麼時候在 markup 掛 data-toast**（現行規則見 GUIDELINE §5）：送 API 的直接動作鈕以 `|` 列出**所有**
+     可能結果（data-toast-type 同序對位、每點一次輪播下一個）——設計師才看得到成功/失敗/警告各長什麼樣；
+     說謊的是「只演成功那一種」。條件開窗鈕與業務值載體不掛（hook class 標記 React 接手）。
 
      以下四顆是型別展示（showcase，不譯）。 #}
 <div class="flex-row gap-16 flex-wrap">

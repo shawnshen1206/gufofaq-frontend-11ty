@@ -1,4 +1,4 @@
-// 逐位元照抄自真 app scss/component.scss 2337-2357（tooltip 區塊），只搬檔案位置，宣告一字不改
+// 照抄自真 app scss/component.scss 2337-2357（tooltip 區塊）；調整：色值 token 化、顯示條件增補 :focus-visible（見下註）
 /*===============================
     tooltip
 ================================*/
@@ -20,9 +20,12 @@
     z-index: 10;
 }
 
-// 顯示由 host hover 驅動：host（放 tooltip 的按鈕）掛 tooltip 自有的 .has-tooltip 觸發 class，
+// 顯示由 host hover／鍵盤焦點驅動：host（放 tooltip 的按鈕）掛 tooltip 自有的 .has-tooltip 觸發 class，
 // 只用 tooltip 自己的 class——不寫裸 button 選擇器（§4 裸元素選擇器只准 _normalize/_base），也不指名別元件的 .button-icon。
-// 轉 Tailwind：.has-tooltip → group、.has-tooltip:hover .tooltip → group-hover:opacity-100。
-.has-tooltip:hover .tooltip {
+// :focus-visible 併列：tooltip 常是圖示鈕唯一的可見標籤，只掛 hover 的話鍵盤使用者永遠看不到（§4 a11y）；
+// 真 app 只有 hover——這是申報過的 a11y 增補，非失真。
+// 轉 Tailwind：.has-tooltip → group、兩條顯示規則 → group-hover:opacity-100 group-focus-visible:opacity-100。
+.has-tooltip:hover .tooltip,
+.has-tooltip:focus-visible .tooltip {
     opacity: 1;
 }

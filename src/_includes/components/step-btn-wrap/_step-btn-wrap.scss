@@ -1,4 +1,6 @@
-// 逐位元照抄自真實 app scss/component.scss 步驟按鈕 section（.step-btn-wrap，行 2608-2643）
+// 照抄自真實 app scss/component.scss 步驟按鈕 section（.step-btn-wrap，行 2608-2643），
+// 另依規範調整：排版選擇器不用 ui/button 的 .button（§4 隔離），也不用 .btn-prev/.btn-next——
+// 那兩顆是真 app JS hook（§5：hook 不得被 scss 樣式），改用本元件自有 slot class .step-prev/.step-next。
 .step-btn-wrap {
     display: flex;
     justify-content: space-between;
@@ -9,13 +11,12 @@
         gap: 16px;
     }
 
-    // §4 隔離：改用本元件自己的語意 class .btn-prev/.btn-next（已在所有 step 按鈕上），不指名 ui/button(.button)
-    .btn-prev,
-    .btn-next {
+    .step-prev,
+    .step-next {
         flex-shrink: 0;
     }
 
-    .btn-next {
+    .step-next {
         @media screen and (max-width: 992px) {
             align-self: flex-end;
         }
@@ -25,7 +26,7 @@
         justify-content: center;
         position: relative;
 
-        .btn-next {
+        .step-next {
             position: absolute;
             right: 0;
             top: 0;

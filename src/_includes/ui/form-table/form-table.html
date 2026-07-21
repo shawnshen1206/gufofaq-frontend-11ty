@@ -2,7 +2,8 @@
 {# 表單表格是用 div 模擬 table：最外層「.form-table-wrap」包覆多個「.form-table-group」（含 div.subtitle 標題 + div.form-table）；
      每個 .form-table 由多個 .row 組成，.row 內是多個 .col（每個 .col 含 div.th + div.td）；
      td 內含圖示用 td:has(.icon)（自動調整排版）；長文字需捲軸請用 div.long-text 包覆 #}
-{% set groups = [
+{# 示範資料用元件專屬名 formTableGroups（§6：頁面層 5-5-1/5-5-2 已有自己的 groups 變數，泛用名會互相覆蓋） #}
+{% set formTableGroups = [
     {
         subtitle: "滿意度回饋",
         rows: [
@@ -34,12 +35,13 @@
 ] %}
 
 <div class="form-table-wrap">
-    {% for group in groups %}
+    {% for group in formTableGroups %}
     <div class="form-table-group">
         <div class="subtitle">{{ group.subtitle }}</div>
         <div class="form-table">
             {% for row in group.rows %}
-            <div class="row mobile-column">
+            {# mobile-column 只在 .flex-row 上生效（.flex-row.mobile-column 選擇器），掛在 .row 上是死 class——不掛（§4）；直向堆疊由 col-12-sm 承擔 #}
+            <div class="row">
                 {% for field in row %}
                 <div class="col {{ field.colClass }}">
                     <div class="th">{{ field.label }}</div>

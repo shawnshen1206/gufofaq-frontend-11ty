@@ -172,7 +172,7 @@ tailwind-scrollbar        → scrollbar-thin 等，處理自訂捲軸（見 §5-
 ## ⑤ 逃生口 → 零 CSS 處理（**這裡最容易轉錯，逐項照做**）
 
 ### 5-1. 捲軸（`src/scss/_mixin.scss` 的 `scrollbar()/scrollbar_thin()/scrollbar_modal()`）
-用 `tailwind-scrollbar` plugin。用到的地方：**9 個元件**（form-control、chatroom、faq-chatroom、multi-select、tab、default-table、form-table、modals、mobile-nav）+ **整頁 html**（`_base.scss`）+ 元件庫頁（`_guideline.scss`）。多數用 `scrollbar_thin`/`scrollbar_modal`（thumb = `--scrollbar-thumb`；`faq-chatroom` 的 `.faq-chat-scroll` 亦此類）→ 掛：
+用 `tailwind-scrollbar` plugin。用到的地方：**9 個元件**（form-control、chatroom-shell、faq-chatroom、multi-select、tab、default-table、form-table、modals、mobile-nav）+ **整頁 html**（`_base.scss`）+ 元件庫頁（`_guideline.scss`）。多數用 `scrollbar_thin`/`scrollbar_modal`（thumb = `--scrollbar-thumb`；`faq-chatroom` 的 `.faq-chat-scroll` 亦此類）→ 掛：
 ```
 scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 ```
@@ -235,7 +235,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 - `body.chatbot-page { overflow: hidden }` 只限這頁，別寫成全域。
 
 ### 5-9. CSS 動畫（`@keyframes`）——**Tailwind 純 utility 表達不了具名 keyframe**
-**本專案全站沒有任何 `@keyframes`**（grep 可證）。modal 的進出場不是動畫，是 `<dialog>` 的 `[open]` 屬性驅動的 discrete transition：`opacity`/`transform` 搭配 `transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete` 與 `@starting-style`（見 `_modals.scss`）。轉 v4 用 `starting:` variant + `transition-discrete`（`transition-behavior: allow-discrete`），**不是** `tailwindcss-animate`。`.modals::backdrop` 同理：`[open]::backdrop` 從 `@starting-style` 的 transparent 過渡到 `var(--overlay)`。唯一的具名動畫是 toast 自己的 `.toast.show` 淡入（`_toast.scss`），那才需要 keyframe/utility。
+**本專案全站沒有任何 `@keyframes`**（grep 可證）。modal 的進出場不是動畫，是 `<dialog>` 的 `[open]` 屬性驅動的 discrete transition：`opacity`/`transform` 搭配 `transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete` 與 `@starting-style`（見 `_modals.scss`）。轉 v4 用 `starting:` variant + `transition-discrete`（`transition-behavior: allow-discrete`），**不是** `tailwindcss-animate`。`.modals::backdrop` 同理：`[open]::backdrop` 從 `@starting-style` 的 transparent 過渡到 `var(--overlay)`。toast 的 `.toast.show` 淡入也是 `transition: opacity`（`_toast.scss`），不是 keyframe——全站零 keyframe，一顆都不需要 `tailwindcss-animate`。
 
 ---
 
@@ -254,7 +254,7 @@ scrollbar-thin scrollbar-thumb-scrollbar-thumb scrollbar-track-transparent
 11. **單色圖示是遮罩不是背景圖**（§5-5）：`.button-icon` 系列、箭頭、搜尋/時間框…清單自己數（`grep -o 'mask:url("[^"]*")' dist/css/main.css | sort -u`）→ 建議一律改成 `fill="currentColor"` 的內嵌 SVG。若照搬遮罩，記得上色的是 `background-color`（墨色）而非 `color`；Tailwind 無 mask utility，需 arbitrary property。
 12. **顏色不全在 token**（§1 附註）：一批 token 外硬寫色需 arbitrary color，別假設都有 token。
 13. **值以 SCSS + dist 為準**：本文件是規則；遇到衝突，以實際 `_<name>.scss` 的宣告與 `dist/<page>.html` 的最終外觀為準（兩者已對齊真 app）。
-14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom 5`、`login-wrapper 1` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
+14. **z-index 值一律 arbitrary**：Tailwind 只出 `z-0..z-50`，但 code 有 `toast 2000`、`.skip-link 2000`、`header 1000`（子選單 `15`）、`modals 1000`（含 `.modals-close 1`）、`feature-disabled-overlay 100`、`mobile-nav 97~100`、`multi-select 20`、`switch 10`、`tooltip 10`、`qa-side-panel 10/2/1`、`chatroom-shell 5`、`login-wrapper 1` → 一律 `z-[N]`，別夾成 `z-50` 破壞疊層（小值如 `5` 也沒有對應 utility）。
 15. **事件委派的資料屬性不是樣式**：`data-open-modal="X"`（`ui/modals`）與 `data-toast="…"`（`ui/toast`）是切版期「markup 沒有 props 可傳」的替身，由掛在 `document` 的委派接手。轉 React 時**一律換成 `onClick`**（`onClick={() => openModal("X")}`），不要保留這兩個屬性、也不要保留 document-level 委派。
 16. **版面值裡的 `max()/min()/calc()`**：如 `qa-side-panel` 的 `top: max(72px, 100vh - 550px)` → arbitrary 並把算式包進 `calc()`：`top-[max(72px,calc(100vh-550px))]`（底線代空白、留意巢狀）。
 17. **相鄰兄弟選擇器機械轉抓不到**：`success-box p+p`、`header li+li`、`radio &+span`、`form-table &+.form-table-group`、`switch :checked+.switch-box` 這類 `+`/`~` 選擇器，class→className 會漏 → 用 `[&+p]:…` 等 arbitrary variant，或改結構。

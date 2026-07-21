@@ -23,7 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 var checkAllBox = container.querySelector(".check-all");
 
                 if (checkAllBox) {
-                    checkAllBox.checked = checkedCount === checkOnes.length;
+                    var nextAll = checkedCount === checkOnes.length;
+                    if (checkAllBox.checked !== nextAll) {
+                        checkAllBox.checked = nextAll;
+                        // 程式改值不會自己發 change：與上面連動 .check-one 時的 dispatch 對稱，監聽全選態的一方才收得到
+                        checkAllBox.dispatchEvent(new Event("change", { bubbles: true }));
+                    }
                 }
             }
         });

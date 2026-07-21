@@ -1,4 +1,4 @@
-// 捲軸寬度量測。**鎖捲動本身是純 CSS**（`_base.scss` 的 `html:has(dialog.modals[open]) { overflow: hidden }`）。
+// 捲軸寬度量測。**鎖捲動本身是純 CSS**（`_base.scss` 的 `html:has(:modal), html:has([data-scroll-lock].active) { overflow: hidden }`）。
 //
 // 曾經這裡是一個共享計數器：跳窗與手機選單是兩個互不知情的擁有者，各鎖各的話，
 // 先關的那個會把還開著的那個一起解鎖。`:has()` 是宣告式的 OR —— 狀態就在 DOM 上，

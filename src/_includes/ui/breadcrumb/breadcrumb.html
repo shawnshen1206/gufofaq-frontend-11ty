@@ -1,4 +1,4 @@
-{# 展示片段，取自真實 app pages/components/component.html 03 麵包屑 section（節錄，class 沿用真實系統） #}
+{# 生產元件（被全站真實頁 include），參數化改寫自真實 app pages/components/component.html 03 麵包屑 section（class 沿用真實系統） #}
 {# 用法：include 前先 set breadcrumbItems（陣列，元素為 { label, href, i18nKey, class }）。
    規則比照真實 app：最後一項＝目前頁（純文字），其餘皆為連結；href 省略時退回 "#"（不輸出空屬性，§4）。
    i18nKey 省略＝該項是資料值（檔名／資料集名），不翻譯。

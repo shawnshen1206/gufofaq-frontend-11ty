@@ -13,8 +13,9 @@ permalink: 4-1_qaHistory.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-{# 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入（js 依 query 切換頁籤與資料來源），
-     此靜態頁一律呈現同一份查詢表單；開始/結束時間欄位沿用真實 class（flatpickr 由 js/qaHistory.js 掛載，此處僅保留樣式用 class，不掛 JS）；
+{# 查詢區：真實頁 pages/qaHistory/4-1_qaHistory.html 的篩選表單，?source=frontend|backend 由前一頁連結帶入
+     （qaHistory.js 依 query 鎖定「使用者類型」select 並隱藏該欄位），此靜態頁一律呈現同一份查詢表單；
+     開始/結束時間欄位沿用真實 class（flatpickr 由 js/main.js 掛載 .start-date/.end-date，此處僅保留樣式用 class，不掛 JS）；
      使用者類型／滿意度為 singleSelect（非 multiSelect），保留原生 select #}
 <div class="block block-sm border corner-md mt-16">
     <div class="flex-row column gap-16">
@@ -95,44 +96,45 @@ permalink: 4-1_qaHistory.html
         </div>
         <div class="flex-row align-items-center justify-content-center gap-16">
             <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
-            <button type="button" class="button button-primary" data-toast="查詢成功|正在查詢資料...|載入資料失敗，請重新整理頁面" data-i18n-data-toast="toast.query" data-toast-type="success|info|error" data-i18n="action.query">查詢</button>
+            <button type="button" class="button button-primary" data-toast="正在查詢資料...|查詢成功|載入資料失敗，請重新整理頁面" data-i18n-data-toast="toast.query" data-toast-type="info|success|error" data-i18n="action.query">查詢</button>
             <button type="button" class="button button-green" data-toast="下載已開始|只提供31日間的問答記錄下載|下載失敗" data-i18n-data-toast="toast.downloadRecords" data-toast-type="success|warning|error" data-i18n="action.download">下載</button>
         </div>
     </div>
 </div>
 
 {# 資料表格：真實頁 tbody 為 js/qaHistory.js 依查詢結果動態渲染（初始「共0筆資料」），
-     此處以 set+for 資料化示範 3 筆已載入狀態，欄位與真實 thead 一致；對話編號連結至已轉換的 4-2_qaHistory_detail.html #}
+     此處以 set+for 資料化示範 3 筆已載入狀態。cell 級結構鏡射真 app 的列模板（qaHistory.js createRow：
+     編號純文字、link-file 連結掛在「使用者對話內容」、AI 內容包 div.ellipsis-2 截斷、query 參數為 ?logSn=）。 #}
 {% set rows = [
     {
         id: "12173",
         roomId: "6537",
         userMsg: "新住民結婚注意事項",
-        aiMsg: "您好！關於新住民結婚的注意事項，以下是一些重要的要點……",
+        aiMsg: "您好！關於新住民結婚的注意事項，以下是一些重要的要點：申請結婚登記需雙方親自到戶政事務所辦理，並準備有效身分證明與結婚證明文件；部分情況需健康檢查合格證明。",
         userType: "前台問答",
         rating: "讚",
         date: "2024/12/01 13:29:24",
-        href: "4-2_qaHistory_detail.html?sn=12173"
+        href: "4-2_qaHistory_detail.html?logSn=12173"
     },
     {
         id: "12174",
         roomId: "6538",
         userMsg: "護照效期不足可以出國嗎",
-        aiMsg: "護照效期建議至少保留6個月以上，若不足可能影響入境……",
+        aiMsg: "護照效期建議至少保留6個月以上，若不足可能影響入境；各國規定不同，行前請先確認目的地國的效期要求與簽證條件。",
         userType: "後台問答",
         rating: "無意見",
         date: "2024/12/02 09:12:03",
-        href: "4-2_qaHistory_detail.html?sn=12174"
+        href: "4-2_qaHistory_detail.html?logSn=12174"
     },
     {
         id: "12175",
         roomId: "6539",
         userMsg: "欠稅被限制出國要如何解除",
-        aiMsg: "欠稅限制出國的解除方式，需先向稅捐機關繳清或提供擔保……",
+        aiMsg: "欠稅限制出國的解除方式，需先向稅捐機關繳清欠稅或提供相當擔保，經核准後由財政部函請移民署解除限制。",
         userType: "前台問答",
         rating: "倒讚",
         date: "2024/12/03 16:45:51",
-        href: "4-2_qaHistory_detail.html?sn=12175"
+        href: "4-2_qaHistory_detail.html?logSn=12175"
     }
 ] %}
 <div class="data-info"><span data-i18n="qa.totalOf">共</span> {{ rows.length }} <span data-i18n="qa.records">筆資料</span></div>
@@ -156,9 +158,14 @@ permalink: 4-1_qaHistory.html
                 <th data-i18n="qa.userType">使用者類型</th>
                 <th data-i18n="qa.rating">滿意度</th>
                 <th>
+                    {# 排序觸發器用真 button（§4：可點的東西不可用 img 假扮——img 不可聚焦、無鍵盤操作）；
+                         .sort 是真 app 業務掛點（qaHistory.js $(document).on('click','.sort')），掛在 button 上選擇器照樣命中 #}
                     <div class="th-sort" data-i18n="qa.conversationDate">
                         對話日期
-                        <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="排序" data-i18n-alt="common.sort" class="sort">
+                        <button type="button" class="sort" data-column="date">
+                            <img src="./images/icon_ascending_order_black.png" width="20" height="37" decoding="async" alt="">
+                            <span class="sr-only" data-i18n="common.sort">排序</span>
+                        </button>
                     </div>
                 </th>
             </tr>
@@ -166,15 +173,22 @@ permalink: 4-1_qaHistory.html
         <tbody>
             {% for row in rows %}
             <tr>
-                <td>
-                    <a href="{{ row.href }}" title="{{ row.id }}" class="link-file">{{ row.id }}</a>
-                </td>
+                <td>{{ row.id }}</td>
                 <td>{{ row.roomId }}</td>
-                <td>{{ row.userMsg }}</td>
-                <td>{{ row.aiMsg }}</td>
+                <td>
+                    <a href="{{ row.href }}" title="{{ row.userMsg }}" class="link-file">{{ row.userMsg }}</a>
+                </td>
+                <td>
+                    <div class="ellipsis-2">{{ row.aiMsg }}</div>
+                </td>
                 <td>{{ row.userType }}</td>
                 <td>{{ row.rating }}</td>
                 <td>{{ row.date }}</td>
+            </tr>
+            {% else %}
+            {# 真實頁初始即空（查詢後才有資料）：空狀態列鏡射真 app 的「無資料」渲染 #}
+            <tr>
+                <td colspan="7" class="text-center" data-i18n="common.noData">無資料</td>
             </tr>
             {% endfor %}
         </tbody>

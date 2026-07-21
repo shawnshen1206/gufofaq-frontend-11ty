@@ -66,7 +66,11 @@
             document.querySelectorAll("[data-i18n-" + pair[0] + "]").forEach(function (el) {
                 var k = el.getAttribute("data-i18n-" + pair[0]);
                 var v = pick(k, lang);
-                el.setAttribute(pair[1], v != null ? v : (defaults.attr[pair[0]] || {})[k]);
+                if (v == null) v = (defaults.attr[pair[0]] || {})[k];
+                // 與 setText 同款守衛：元件 js 事後掛上的 data-i18n-* 不在 collectDefaults 的快照裡，
+                // key 又缺英文時 v 是 undefined——直接 setAttribute 會把字面 "undefined" 寫進屬性
+                if (v == null) return;
+                el.setAttribute(pair[1], v);
             });
         });
         // <title>（分頁標題）：<html data-page-title-key="key"> 提供頁名 key，切英文＝GufoFAQ::+英文頁名。
@@ -97,7 +101,10 @@
         fetch("./i18n/en.json")
             .then(function (r) { return r.json(); })
             .then(function (d) { enDict = d; cb(); })
-            .catch(function () { cb(); });
+            .catch(function () {
+                // fetch 失敗（file:// 直開被 CORS 擋、或網路錯誤）就不切換：
+                // 沒字典還把 <html lang> 與按鈕扳成英文，會變成「介面說是英文、內容全是繁中」的假狀態
+            });
     }
 
     document.addEventListener("DOMContentLoaded", function () {

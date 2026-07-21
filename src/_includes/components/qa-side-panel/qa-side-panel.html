@@ -8,7 +8,9 @@
         <span class="qa-side-panel-title" data-i18n="qa.qaRecords">問答紀錄</span>
     </button>
     <div class="qa-side-panel-body">
-        <button type="button" class="button button-orange w100">
+        {# 真 app（singleTest.js）以 .qa-side-panel .button-orange 選這顆鈕清空對話並 toast「已開啟新對話」——
+             樣式 class 當掛點的契約靠自創 hook class 顯名化（§5 切版新頁命名慣例），並照直接動作規則演出結果 #}
+        <button type="button" class="button button-orange w100 js-new-conversation" data-toast="已開啟新對話" data-i18n-data-toast="toast.newConversation">
             <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
             <span data-i18n="comp.newConversation">開啟新對話</span>
         </button>
