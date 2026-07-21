@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 上一頁
         html += arrowLi("prev", current > 1, current - 1,
-            t("pagination.prev", "上一頁"), t("pagination.prevDisabled", "上一頁不可用"),
+            t("action.prevPage", "上一頁"), t("pagination.prevDisabled", "上一頁不可用"),
             "./images/icon_arrow_left_blue.png", "./images/icon_arrow_left_gray.png");
 
         // 首頁碼恆顯
