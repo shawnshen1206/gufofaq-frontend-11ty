@@ -13,24 +13,27 @@
      參數：agentActivityRows（選填，[{ tool, summary, params, result }]）——使用頁的對話主題與內建預設
      （移民主題，配 2-2-1）不同時覆寫，讓軌跡與同頁對話自洽（§6）；內部變數用元件專屬名
      agentToolActivities（GUIDELINE §6：set 是頁面全域，泛用名會與使用頁同名變數互相覆蓋）。 #}
+{# 參數形狀對齊真簽章（agent_service.py）：search_knowledge_base 只收 query——搜尋筆數由
+     closure 從聊天室設定注入、設計上不讓 LLM 傳；get_document 收 document_id（穩定內容雜湊）、
+     回整份文件（全部片段）。示範參數多寫一顆欄位＝對正本說謊（§3-2）。 #}
 {% set agentToolActivities = agentActivityRows or [
     {
         tool: "search_knowledge_base",
         summary: "命中 8 筆相似片段",
-        params: "{ query: '新住民 結婚 應備文件', top_k: 8 }",
+        params: "{ query: '新住民 結婚 應備文件' }",
         result: "回傳 8 筆片段（相似度 0.79–0.92），注入後續生成脈絡。"
     },
     {
         tool: "search_knowledge_base",
         summary: "補查面談流程，命中 5 筆",
-        params: "{ query: '結婚登記 面談 流程', top_k: 8 }",
+        params: "{ query: '結婚登記 面談 流程' }",
         result: "回傳 5 筆片段，與前次結果合併去重後供 respond 節點生成回答。"
     },
     {
         tool: "get_document",
-        summary: "取回法令彙編原文段落",
-        params: "{ doc_id: 'vector8_chunk718', with_context: true }",
-        result: "取得入出國及法令彙編 1671 頁段落全文，補齊引用來源細節。"
+        summary: "取回法令彙編全文",
+        params: "{ document_id: '9f2ab318e5' }",
+        result: "取得「入出國及法令彙編（1671 頁）」整份文件內容（全部片段），補齊引用來源細節。"
     }
 ] %}
 <div class="agent-activity js-accordion mt-24">

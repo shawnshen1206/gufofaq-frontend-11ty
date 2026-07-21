@@ -12,6 +12,7 @@ document.addEventListener("input", function (e) {
     if (!list) return;
     var keyword = search.value.toLowerCase();
     list.querySelectorAll("label").forEach(function (label) {
-        label.classList.toggle("hidden", label.textContent.toLowerCase().indexOf(keyword) === -1);
+        // trim：textContent 含 markup 縮排空白，真 app 比對的是 label 內 span 的純文字
+        label.classList.toggle("hidden", label.textContent.trim().toLowerCase().indexOf(keyword) === -1);
     });
 });

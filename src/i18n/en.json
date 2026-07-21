@@ -461,7 +461,7 @@
   "settings.featureDisabledDesc": "This feature is not yet available",
   "settings.fieldNaming": "Field naming",
   "settings.fieldNamingDesc": "Name the display names for this setting's 14 field slots",
-  "settings.frontQaDefault": "Default for front-end Q&A",
+  "settings.frontQaDefault": "Default for frontend Q&A",
   "settings.groupList": "Group list",
   "settings.groupMgmtIntro": "Groups are permission groups: capabilities are defined on the group, and a user inherits them by joining (the union across all their groups). Datasets belong to a group, and write access follows group membership.",
   "settings.groupName": "Group name",

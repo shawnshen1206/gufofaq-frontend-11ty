@@ -218,14 +218,14 @@ permalink: 2-2-3_abTest.html
     {
         tool: "search_knowledge_base",
         summary: "命中 6 筆相似片段",
-        params: "{ query: 'UH3240 USB-C 規格 特色', top_k: 8 }",
+        params: "{ query: 'UH3240 USB-C 規格 特色' }",
         result: "回傳 6 筆片段（相似度 0.81–0.93），注入後續生成脈絡。"
     },
     {
         tool: "get_document",
-        summary: "取回產品規格書段落",
-        params: "{ doc_id: 'spec_uh3240_chunk12', with_context: true }",
-        result: "取得 UH3240 規格書段落全文，補齊輸出規格與供電數據，供 respond 節點生成回答。"
+        summary: "取回產品規格書全文",
+        params: "{ document_id: '5c7de401aa' }",
+        result: "取得「UH3240 USB-C 多埠集線器規格書」整份文件內容，補齊輸出規格與供電數據，供 respond 節點生成回答。"
     }
 ] %}
 {% include "components/agent-activity/agent-activity.html" %}
