@@ -13,10 +13,15 @@
     justify-content: center;
     padding: 24px;
 
-    // 元件庫展示變體：fixed 全螢幕遮罩照貼會蓋掉整個元件庫頁，示範時退回文流內
+    // 元件庫展示變體：fixed 全螢幕遮罩照貼會蓋掉整個元件庫頁，示範時退回文流內；
+    // 給面板一個固定高度，讓 panel-body 的內捲（正式版靠 88dvh 封頂觸發）在文流內也演得出來
     &.demo-static {
         position: static;
         z-index: auto;
+
+        .subscription-panel {
+            max-height: 360px;
+        }
     }
 }
 

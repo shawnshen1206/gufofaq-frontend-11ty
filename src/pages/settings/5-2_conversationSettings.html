@@ -146,11 +146,12 @@ permalink: 5-2_conversationSettings.html
         {% for level in priorityLevels %}
         <div class="flex-row column gap-16 priority-box">
             <div class="flex-row align-items-center gap-12">
-                {# tablelist-title/tablelist-asking＝真 app 5-2-1 markup 原樣（無樣式無行為的僅存於 markup 的
-                     真 app class，轉換契約保留）；switch 的可及名稱以 aria-labelledby 併讀「層級＋意圖判斷啟用」，
-                     三顆才分得出高/中/低（id 用迴圈變數組，§4）。 #}
+                {# tablelist-title＝ui/tablelist-title 純樣式原子（有 scss 主人），且真 app 業務 js 會改寫其文字
+                     （abTest.js／singleTest.js 的 .text(...)）＝轉換契約，保留。（真 app 同處另有的 tablelist-asking
+                     容器兩 repo 皆無 scss／js／契約＝無主 class，§4 不掛，排版全交 flex 工具。）
+                     switch 的可及名稱以 aria-labelledby 併讀「層級＋意圖判斷啟用」，三顆才分得出高/中/低（id 用迴圈變數組，§4）。 #}
                 <div class="tablelist-title" id="intentLevelTitle-{{ loop.index }}" data-i18n="{{ level.i18nKey }}">{{ level.title }}</div>
-                <div class="tablelist-asking flex-row align-items-center gap-8">
+                <div class="flex-row align-items-center gap-8">
                     <span id="intentEnableLabel-{{ loop.index }}" data-i18n="settings.intentEnable">意圖判斷啟用</span>
                     <label class="switch priority-switch">
                         <input type="checkbox" class="switch-checkbox" role="switch" aria-labelledby="intentLevelTitle-{{ loop.index }} intentEnableLabel-{{ loop.index }}">

@@ -637,13 +637,20 @@ bodyClass: guideline-page
                     <li>面板兩型：三段式「.subscription-panel」（.panel-header/.panel-body/.panel-footer，首登免責與強制改密用）、置中訊息「.subscription-expired-box」（.title/.desc，到期與凍結用）</li>
                 </ul>
             </div>
-            {# 示範文案鏡射 gufofaq-saas SubscriptionGate 的 zh messages（免責態＋到期態）；React 條件渲染的元件、非任何生產頁 markup，故照 showcase 慣例不掛 data-i18n #}
+            {# chrome（面板標題、同意鈕、到期標題/說明）逐字鏡射 gufofaq-saas SubscriptionGate 的 zh messages；
+               免責本文則是正式環境 GET /api/disclaimer 的長法律文字（product disclaimer.py，不走 i18n），此處取節錄
+               示意其長相（§3-2）——長到足以觸發面板的 max-height 封頂＋內捲（正式版靠 88dvh，展示版靠 demo-static 的固定高）。
+               React 條件渲染的元件、非任何生產頁 markup，故照 showcase 慣例整段不掛 data-i18n #}
             <div class="subscription-overlay demo-static">
                 <div class="subscription-panel">
                     <div class="panel-header">免責聲明</div>
                     <div class="panel-body">
-                        <p class="m-0 mb-8">本服務所提供之回答內容由 AI 自動生成，僅供參考，不構成任何法律或專業建議。</p>
-                        <p class="m-0">繼續使用即表示您已了解並同意上述聲明。</p>
+                        <p class="m-0 mb-8">致使用者：歡迎使用本平台！在使用我們的服務之前，請您仔細閱讀並同意以下免責聲明，閱讀後即視為使用者同意此聲明。</p>
+                        <p class="m-0 mb-8">AI 內容生成的性質：本平台基於 RAG（Retrieval-Augmented Generation）技術，提供專注於文字生成的人工智慧服務，主要透過由使用者上傳的資料作為參考進行。生成內容仍可能因資料完整性、準確性及模型技術的限制而有成效差異，請於核實與審慎判斷後使用。</p>
+                        <p class="m-0 mb-8">用戶責任：本平台默認使用者對於上傳的參考資料的所有文字內容負責；您上傳或生成的任何內容，均應確保不違反任何法律法規、不侵犯他人權利。</p>
+                        <p class="m-0 mb-8">無損害賠償：在任何情況下，本平台及其營運團隊均不對因使用本平台服務而引發的間接、偶然、特殊、懲罰性或後果性損害負責，包括但不限於營運損失、業務中斷、企業資訊的損失或其他財務損失。</p>
+                        <p class="m-0 mb-8">智慧財產權：使用本平台時應尊重相關的智慧財產權法律。平台生成時使用的參考內容可能受版權保護，使用者需確保不侵犯第三方的版權、商標或其他智慧財產權。</p>
+                        <p class="m-0">服務變更與可用性：本平台保留隨時修改、暫停或終止服務的權利，無需提前通知。使用者應理解服務可能因技術、法律或相關政策調整而有所變更。</p>
                     </div>
                     <div class="panel-footer">
                         <button type="button" class="button button-primary">我已閱讀並同意，開始使用（30 天）</button>
