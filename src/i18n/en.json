@@ -441,7 +441,7 @@
   "settings.agentModeOnly": "Only applies in Agent mode",
   "settings.agentSystemPrompt": "Agent system prompt",
   "settings.agentTools": "Agent tools",
-  "settings.agentToolsIntro": "Tools the Agent can call in Agent mode: built-in tools, bound glossary tables, and platform-registered MCP Servers.",
+  "settings.agentToolsIntro": "Tools the Agent can call in Agent mode: built-in tools, bound glossary tables, and platform-enabled MCP Servers.",
   "settings.aliases": "Aliases",
   "settings.botRole": "Bot role",
   "settings.builtinTools": "Built-in tools",
