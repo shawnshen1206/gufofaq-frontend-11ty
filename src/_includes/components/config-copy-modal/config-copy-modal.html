@@ -10,7 +10,12 @@
          渲染；5-2 示範目標設置一非前台預設，故該頁不演）；
        configCopyShowError＝送出失敗的持久錯誤列（React 依 error state 渲染）。
      契約在 gufofaq-saas product app/routers/config.py（POST /config/profiles/{no}/copy-from），
-     套用由 React 業務 js 帶條件驗證後直送，故 .js-config-copy-apply；示範來源 2 筆。 #}
+     套用由 React 業務 js 帶條件驗證後直送，故 .js-config-copy-apply；示範來源 2 筆。
+     對 product ConfigCopyModal.tsx 的刻意差異：①移除其 .config-copy-body（§4 無主 class——兩 repo scss
+     皆不寫、e2e 不查，排版由工具 class 承擔，待回流）；②錯誤列補 role="alert"（§4 動態訊息 live region，
+     product 漏掛、待回流）；③錯誤列移入 gap-16 容器內（間距歸 gap 單一來源；product 在容器外、無間距
+     控制，待回流）；④copyConfigProductionWarning 英文用 frontend（站內拼寫統一 §4-2；product 作
+     front-end，待統一）。 #}
 {# 元件內部示範資料用元件專屬變數名（§6）：六個複製群組＝GufoRAG chatbot services/config.py 的 COPY_GROUPS #}
 {% set configCopyGroups = [
     { i18nKey: "settings.copyConfigGroupPrompts", label: "提示詞：五層系統提示詞（聊天室／產品／意圖／回答／Agent）、機器人人設、回答格式、歡迎語" },

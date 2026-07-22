@@ -7,7 +7,11 @@
      hook class js-qa-question-col／js-qa-answer-col）→ 匯入（切版新頁的直送 API 鈕：data-toast 列全結果＋
      自創 js-qa-import-submit；warning 分支「未選欄」屬留在窗內就能修正的驗證，故不掛 btn-close-modals、
      關窗交 React 成功才關）。欄位選項為執行期資料（上傳檔的欄）、option value＝欄標題字串
-     （datasets.py QaImportIn.question_col/answer_col），React 讀檔填入；此處示範 2 欄。 #}
+     （datasets.py QaImportIn.question_col/answer_col），React 讀檔填入；此處示範 2 欄。
+     參數（示範開關；product QaImportModal 已出貨的兩個 React 條件渲染狀態，元件庫頁 set true 演出）：
+       qaImportShowParsing＝上傳後解析中（React 依 uploading 渲染）；
+       qaImportShowError＝解析失敗的持久錯誤列（React 依 error 渲染；文案為執行期值——excelOnly／
+         previewFailed／API detail，示範取 previewFailed）。 #}
 <dialog class="modals" id="qaImportModal" aria-labelledby="qaImportModal-title">
     <div class="modals-dialog modals-md">
         <div class="modals-wrap">
@@ -19,6 +23,12 @@
                 <div class="modals-body">
                     <div class="flex-row column gap-16">
                         {% include "ui/upload-box/upload-box.html" %}
+                        {% if qaImportShowParsing %}
+                        <p class="text-gray" data-i18n="dataImport.parsing">解析中…</p>
+                        {% endif %}
+                        {% if qaImportShowError %}
+                        <p class="text-red" role="alert" data-i18n="qaSet.previewFailed">讀取 Excel 欄位失敗，請確認檔案格式</p>
+                        {% endif %}
                         <div class="form-group row mobile-col">
                             <div class="label label-md">
                                 <label for="qaQuestionCol" class="control-label required" data-i18n="qaSet.questionColumn">問題欄</label>

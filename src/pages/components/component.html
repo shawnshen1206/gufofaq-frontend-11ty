@@ -791,10 +791,13 @@ bodyClass: guideline-page
 {% include "components/share-manage-modal/share-manage-modal.html" %}
 {% include "components/manage-members-modal/manage-members-modal.html" %}
 {% include "components/glossary-entries-modal/glossary-entries-modal.html" %}
-{# 元件庫版演出兩個 React 條件渲染分支（§5 分支要看得到）：production 警告＋inline 錯誤列；真實頁 5-2 不 set、不演 #}
+{# 元件庫版演出 React 條件渲染分支（§5 分支要看得到）：config-copy 的 production 警告＋inline 錯誤列、
+   qa-import 的解析中＋解析失敗列；真實頁（5-2、3-3）不 set、不演 #}
 {% set configCopyShowWarning = true %}
 {% set configCopyShowError = true %}
 {% include "components/config-copy-modal/config-copy-modal.html" %}
+{% set qaImportShowParsing = true %}
+{% set qaImportShowError = true %}
 {% include "components/qa-import-modal/qa-import-modal.html" %}
 
 <button type="button" class="button btn_gotop">
