@@ -146,7 +146,7 @@
 }
 
 // .tablelist-title 已升格為 ui/tablelist-title 純樣式原子：它是表格「外」的獨立區段標題
-// （5-2-1×4、5-6-1、knowledge-retrieval-modal 都當標題用），寄生在表格元件裡沒有主人（§4）。
+// （5-2、knowledge-retrieval-modal 都當標題用），寄生在表格元件裡沒有主人（§4）。
 
 // 表格中檔案數量組：markup 只出現在 default-table 家族的儲存格內（3-1-1 檔案數 cell），
 // 屬表格 cell 的內容件——與 .filter-field 之於 filter-fields 同款「正本在元件、markup 在使用頁」，留此。

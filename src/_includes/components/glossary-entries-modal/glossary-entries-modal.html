@@ -1,0 +1,67 @@
+{# 術語表詞條編輯 modal，取自 3-2_glossaryManagement 頁「管理詞條」鈕（.js-manage-entries）：
+     開窗需先選定「編輯哪一張術語表」＝業務條件開窗，故該鈕保留 hook class、不掛 data-open-modal
+     （GUIDELINE §5）；彈窗本體回歸切版：詞條清單表（term/definition/aliases 逐列）＋新增/移除列＋儲存。
+     3-2 是 SaaS 新頁（21 頁真 app 無對應）：詞條載入/編輯/整批取代由 React 業務 js 實作，契約在
+     gufofaq-saas product app/routers/glossary.py（「編輯一張表→整批 PUT /glossary/{id}/entries」，
+     不做逐筆 diff）；此處示範 2 筆。新增/移除列動業務輸入（值交給 React 去 PUT），故 hook class
+     js-add-entry／js-remove-entry；aliases 以逗號分隔字串編輯。標題的表名是執行期資料，由 React 填。 #}
+{# 示範資料變數用元件專屬名 glossaryEntryRows（不用泛用名）：{% set %} 是頁面全域（§2/§6）。 #}
+{% set glossaryEntryRows = [
+    { term: "年終獎金", definition: "依年度考核與公司獲利發放的額外獎金。", aliases: "年終, 分紅" },
+    { term: "特別休假", definition: "年資達標後每年給予的有薪假。", aliases: "特休, 年假" }
+] %}
+<dialog class="modals" id="glossaryEntriesModal" aria-labelledby="glossaryEntriesModal-title">
+    <div class="modals-dialog modals-lg">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="glossaryEntriesModal-title" data-i18n="settings.manageEntries">管理詞條</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="glossary-entries-list">
+                        <div class="table-container scrollTable">
+                            <table class="default-table">
+                                <colgroup>
+                                    <col style="width:200px; min-width:200px;">
+                                    <col style="min-width:280px;">
+                                    <col style="min-width:200px;">
+                                    <col style="width:90px; min-width:90px;">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="settings.term">詞條</th>
+                                        <th data-i18n="settings.definition">定義</th>
+                                        <th data-i18n="settings.aliases">別名</th>
+                                        <th><span class="sr-only" data-i18n="common.actions">操作</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entry in glossaryEntryRows %}
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="{{ entry.term }}" aria-label="詞條" data-i18n-aria-label="settings.term"></td>
+                                        <td><input type="text" class="form-control" value="{{ entry.definition }}" aria-label="定義" data-i18n-aria-label="settings.definition"></td>
+                                        <td><input type="text" class="form-control" value="{{ entry.aliases }}" aria-label="別名" data-i18n-aria-label="settings.aliases"></td>
+                                        <td><button type="button" class="button button-border button-sm js-remove-entry" data-i18n="action.delete">刪除</button></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td colspan="4" class="text-center text-gray" data-i18n="common.noData">無資料</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex-row">
+                            <button type="button" class="button button-border button-sm js-add-entry" data-i18n="settings.addEntry">新增詞條</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary btn-close-modals" data-toast="詞條已儲存|儲存失敗" data-i18n-data-toast="toast.saveGlossaryEntries" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

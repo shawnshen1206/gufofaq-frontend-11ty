@@ -36,6 +36,17 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".sub-tabs .tab").forEach(function (tab) {
         tab.addEventListener("click", function () {
             setCurrent(tab, Array.prototype.slice.call(document.querySelectorAll(".sub-tabs .tab")));
+
+            // 帶 data-target 的子頁籤：切換對應的 .tab-content 內容面板（對話設定 hub 的主題子頁籤）。
+            // 元件庫雙層示範的子頁籤沒有 data-target，維持原行為、不碰內容面板。
+            var target = tab.getAttribute("data-target");
+            if (target) {
+                document.querySelectorAll(".tab-content").forEach(function (panel) {
+                    panel.style.display = "none";
+                });
+                var activePanel = document.getElementById(target);
+                if (activePanel) activePanel.style.display = "";
+            }
         });
     });
 

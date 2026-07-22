@@ -1,0 +1,158 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::MCP Server 管理
+titleKey: nav.mcpServers
+pageHeading: MCP Server 管理
+permalink: 5-6-2_platformMcpServers.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "平台管理", href: "", i18nKey: "nav.platformMgmt" },
+  { label: "MCP Server 管理", i18nKey: "nav.mcpServers" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 平台管理者專屬：MCP Server 全域註冊表（SaaS 新需求，真 app 無對應）。逆向自 gufofaq-saas
+     product /platform/mcp（代理 GufoRAG chatbot /api/mcp，require_platform_admin）。
+     MCP Server ＝ Stdio 子程序（command/args/env）＝在 agent 主機執行任意指令，等同 RCE，
+     故只准平台管理者註冊；租戶端只能在對話設定頁「勾選」已啟用的 server（product mcp.py
+     list_tenant_mcp_catalog 只回啟用中；不碰此頁）。示範 3 筆：前 2 筆啟用（＝5-2 勾選清單的
+     兩個選項，跨頁自洽）、第 3 筆停用（演停用態，不出現在 5-2）。 #}
+{% set mcpServers = [
+  { name: "時間工具", command: "uvx", args: "mcp-server-time", description: "提供目前時間與時區換算。", active: true },
+  { name: "內部文件搜尋", command: "npx", args: "-y @acme/doc-mcp", description: "查詢內部知識庫文件。", active: true },
+  { name: "舊版文件搜尋", command: "npx", args: "-y @acme/doc-mcp-legacy", description: "舊版內部文件查詢，已停用。", active: false }
+] %}
+
+<p class="text-gray" data-i18n="settings.mcpServersIntro">MCP Server 讓 Agent 連上外部工具。註冊即在 Agent 主機執行指定指令，屬高權限操作，僅平台管理者可管理；租戶只能在對話設定勾選已註冊的 Server。</p>
+
+{# 新增 MCP Server：名稱＋執行指令（必填）＋參數＋環境變數＋描述＋啟用＋新增鈕（三態 toast：
+     成功／名稱已存在／失敗——chatbot routes/mcp.py 的 create 只查名稱重複（400），連線測試是獨立的
+     /servers/{id}/test 端點、不在建立路徑上）#}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.addMcpServer">新增 MCP Server</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMcpNameInput" class="control-label required" data-i18n="widget.tokenName">名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newMcpNameInput" placeholder="請輸入 Server 名稱" data-i18n-placeholder="settings.pleaseEnterMcpName" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMcpCommandInput" class="control-label required" data-i18n="settings.mcpCommand">執行指令</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newMcpCommandInput" placeholder="python / npx / uvx / node" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMcpArgsInput" class="control-label" data-i18n="agent.params">參數</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newMcpArgsInput" placeholder="以空白分隔" data-i18n-placeholder="settings.pleaseEnterMcpArgs" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMcpEnvInput" class="control-label" data-i18n="settings.mcpEnv">環境變數</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newMcpEnvInput" placeholder="KEY=value，以逗號分隔" data-i18n-placeholder="settings.pleaseEnterMcpEnv" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-12-md">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newMcpDescInput" class="control-label" data-i18n="settings.mcpDescription">描述</label>
+                </div>
+                <div class="field">
+                    <textarea id="newMcpDescInput" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row align-items-center gap-16">
+        <label class="form-checkbox">
+            <input type="checkbox" checked>
+            <span data-i18n="widget.active">啟用</span>
+        </label>
+        <button type="button" class="button button-primary" data-toast="MCP Server 已建立|名稱已存在|建立失敗，請稍後再試" data-i18n-data-toast="toast.createMcpServer" data-toast-type="success|warning|error">
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+            <span data-i18n="settings.addMcpServer">新增 MCP Server</span>
+        </button>
+    </div>
+</div>
+
+{# Server 清單：default-table。名稱／執行指令／描述（逐列可就地編輯）＋狀態＋操作
+     （儲存｜測試連線｜刪除）。測試連線是送 API 的動作鈕（列全結果 toast），儲存同理。
+     刪除需先選定「哪一個 Server」＝業務條件開窗 → hook class（.js-delete-mcp）。示範 3 筆（見上）。 #}
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.mcpServerList">MCP Server 清單</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="width:180px; min-width:180px;">
+                <col style="width:220px; min-width:220px;">
+                <col style="min-width:260px;">
+                <col style="width:90px; min-width:90px;">
+                <col style="width:320px; min-width:320px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="widget.tokenName">名稱</th>
+                    <th data-i18n="settings.mcpCommand">執行指令</th>
+                    <th data-i18n="settings.mcpDescription">描述</th>
+                    <th data-i18n="widget.active">啟用</th>
+                    <th data-i18n="common.actions">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for server in mcpServers %}
+                {# data-mcp-id＝React 列鍵契約（saas 端 <tr data-mcp-id={server.id}>），示範以 loop.index 代 id（同 3-3 data-qa-set-id）#}
+                <tr data-mcp-id="{{ loop.index }}">
+                    <td><input type="text" class="form-control" value="{{ server.name }}" aria-label="名稱" data-i18n-aria-label="widget.tokenName"></td>
+                    <td><input type="text" class="form-control" value="{{ server.command }} {{ server.args }}" aria-label="執行指令" data-i18n-aria-label="settings.mcpCommand"></td>
+                    <td><input type="text" class="form-control" value="{{ server.description }}" aria-label="描述" data-i18n-aria-label="settings.mcpDescription"></td>
+                    <td class="text-center">
+                        <label class="form-checkbox in-cell">
+                            <input type="checkbox"{% if server.active %} checked{% endif %}>
+                            <span class="sr-only" data-i18n="widget.active">啟用</span>
+                        </label>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm" data-toast="MCP Server 已更新|儲存失敗" data-i18n-data-toast="toast.saveMcpServer" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                            <button type="button" class="button button-border button-sm" data-toast="連線成功，已取得工具清單|連線測試失敗" data-i18n-data-toast="toast.testMcpServer" data-toast-type="success|error" data-i18n="settings.testConnection">測試連線</button>
+                            <button type="button" class="button button-red button-sm js-delete-mcp" data-i18n="action.delete">刪除</button>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-gray" data-i18n="common.noData">無資料</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# 刪除 modal：.js-delete-mcp 條件開窗（先選定要刪哪個 Server），確認鈕歸業務 js
+   （deleteConfirmBinding）；Server 名由業務 js 填入 #deleteMcpName。 #}
+{% set deleteTargetId = "deleteMcpName" %}
+{% set deleteConfirmBinding = true %}
+{% set deleteToast = "MCP Server 已刪除|刪除失敗，請稍後再試" %}
+{% set deleteToastKey = "toast.deleteMcpServer" %}
+{% include "components/delete-modal/delete-modal.html" %}

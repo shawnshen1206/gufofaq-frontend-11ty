@@ -53,7 +53,7 @@ src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
 │   ├── ui/                 不依賴其他元件的元件（47 個）
-│   └── components/         會用到其他元件，或某大元件的專屬子片段（36 個）
+│   └── components/         會用到其他元件，或某大元件的專屬子片段（39 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
 │   ├── _mixin.scss         共用 mixin：scrollbar 系列、icon-mask（單色 PNG 遮罩上色）、nav-collapsed（header↔mobile-nav 的 1250px 斷點，兩者必須同值）
@@ -73,7 +73,7 @@ src/
 ├── 404.html                GitHub Pages 的 404 fallback
 ├── catalog.html            部署站台首頁＝頁面目錄（permalink → index.html；右上角有語言/深淺鈕，在 i18n 範圍內）
 └── pages/                  內頁：依 section 分資料夾，permalink 輸出扁平檔名到 dist/ 根
-    ├── dataImport/(7) dataset/(5) qaHistory/(2) qaRecord/(1) qaTest/(2) settings/(11)  ← 管理端，走 page-shell
+    ├── dataImport/(7) dataset/(7) qaHistory/(2) qaRecord/(1) qaTest/(2) settings/(10)  ← 管理端，走 page-shell
     ├── faq/(1)                                                                        ← 前台 FAQ，走 chatbot-shell
     └── components/(1)                                                                 ← 元件總覽（showcase），走 base
 tests/guideline.test.mjs    GUIDELINE 規則的可執行版本（npm test）
@@ -87,7 +87,7 @@ dist/                       build 輸出（勿手改）
 
 | layout | 自動提供 | 用它的頁面 |
 |---|---|---|
-| `layouts/page-shell/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 28 頁；front matter 必填 `titleKey` / `pageHeading` |
+| `layouts/page-shell/page-shell.html` | `<head>` + skip-link + `header`（導覽 + 語言/夜間）+ `<main id="main">`（含 h1）+ `footer` | 管理端 29 頁；front matter 必填 `titleKey` / `pageHeading` |
 | `layouts/chatbot-shell/chatbot-shell.html` | `<head>` + skip-link + `chatbot-header`（logo + 語言/夜間，無導覽）+ 滿版 `<main id="main">` + `footer` | 前台 FAQ 聊天頁 |
 | `layouts/base/base.html` | 只有 `<head>` + 空白外框 + script 清單 | 登入頁、404、頁面目錄、元件總覽（各自在內容裡放唯一的 h1） |
 
@@ -112,7 +112,7 @@ dist/                       build 輸出（勿手改）
 | `components/prompt-edit` | 單測/AB測試頁的「提示詞」收合編輯區；`promptDefaultOpen`（true 時加 `data-default-open`）。展開/收合（切換 `.open`、注入編輯 textarea）由 `prompt-edit.js` 提供；實際儲存/建版本 API 屬業務邏輯不在範圍。 |
 | `components/qa-side-panel` | 單測/AB測試頁的可收合問答紀錄側欄（toggle + 開啟新對話 + 頁籤）；`sidePanelHidden`（true 加 `.hidden`）。展開/收合（切換 `.collapsed`）由 `qa-side-panel.js` 提供。內含 `qa-record-tabs`（其 `qaRecordTabs` 由頁面提供）。 |
 | `components/chatroom` | `chatInputHidden`（true 時不渲染輸入區；`2-1` 是唯讀的問答紀錄預覽，真實頁沒有輸入框，單測頁 `2-2-1` 需要）。 |
-| `components/priority-table` | 頁面 set `rows = [{ category, description, prompt, priority }]`；渲染 5 欄意圖判斷表（`.default-table.priority-table`）。`rows` 空陣列＝空狀態。用於 5-2-1（依優先級分組，每組 set 後 include）。 |
+| `components/priority-table` | 頁面 set `rows = [{ category, description, prompt, priority }]`；渲染 5 欄意圖判斷表（`.default-table.priority-table`）。`rows` 空陣列＝空狀態。用於 5-2（檢索與欄位子頁籤依優先級分組，每組 set 後 include）。 |
 | `components/delete-modal` | `deleteTargetId`（設了就渲染空 `<span id>`，由業務 js 填入待刪除項目名稱）／`deleteTargetName`（靜態示範名稱）／`deleteConfirmBinding`（true＝確認鈕交給業務 js 綁定、不自動關窗）／`deleteConfirmClass`・`deleteToast`・`deleteToastKey`（確認鈕的 hook class 與成敗 toast，見元件檔頭）。 |
 | `components/agent-activity` | 選填 `agentActivityRows = [{ tool, summary, params, result }]`——使用頁對話主題與內建預設（移民主題）不同時覆寫（2-2-3 傳 USB-C 主題）；未設用內建示範軌跡。 |
 | `components/success-box` | 上傳完成卡：`successRetryHref/Label/Key`、`successViewHref/Label/Key`、`successHideDesc`（true 只留空 `.success-desc` 由業務 js 填）——完整語意見元件檔頭。 |
@@ -126,7 +126,7 @@ dist/                       build 輸出（勿手改）
 ### 自動引入
 
 `header` 與 `footer` 由 `page-shell` 自動提供；`chatbot-header` 與 `footer` 由 `chatbot-shell` 自動提供。頁面都不需 include。
-含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`mobile-nav`（含 `header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`faq-chatroom`（含 `faq-feedback-modal`、`faq-share-modal`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）。
+含子元件的元件：`header`（含 `mobile-nav`、`header-controls`）、`mobile-nav`（含 `header-controls`）、`chatbot-header`（含 `header-controls`）、`header-controls`（含 `theme-toggle`）、`footer`（含 `disclaimer-modal`）、`faq-chatroom`（含 `faq-feedback-modal`、`faq-share-modal`）、`step-btn-wrap`（含 `step-nodes`）、`qa-side-panel`（含 `qa-record-tabs`）、`qa-import-modal`（含 `upload-box`）。
 
 **無條件開窗**才掛 `data-open-modal="<dialog id>"`（`ui/modals` 事件委派），彈提示掛 `data-toast`。
 **有條件開窗**（先設定要刪哪一列、依權限決定開哪一份、驗證失敗才跳）是業務邏輯：觸發鈕保留真 app 的 hook class（`.js-apply-production`、`.btn-delete-file`…），切版不掛 `data-open-modal`——掛了就變成無條件開窗，說了謊。這種彈窗的「看得見」由元件庫頁的示範觸發器保證。`ui/default-table` 的展示片段也 include 了 `ui/accordion`，但展示用途不算依賴（GUIDELINE §1-1），故它留在 `ui/`。
@@ -135,15 +135,15 @@ dist/                       build 輸出（勿手改）
 ### 純樣式 / 純行為元件（直接寫 class）
 
 這類元件**不用 include**，直接在 markup 寫它的 class：`ui/button`、`ui/block`（白底容器基底，配 `.block-sm`／`.block-lg`／`.border`／`.corner-md`）、`ui/default-table`、`ui/form-control`（提供 `.form-group`／`.label`／`.field`／`.form-control` 等 class）、`ui/form-table`、`ui/link-file`、`ui/modals`、`ui/accordion`、`ui/multi-select`（js 增強頁面上的 `.multiSelect`）、`ui/login-wrapper`（無 html，class 寫在 `src/login.html`）、`ui/error-page`（無 html，class 寫在 `src/404.html`）。
-另有幾個 class 直接寫在使用頁的元件：`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`；純 scss）、`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-4-1、5-4-2、2-2-1；scss + js）、`ui/prompt-card`（5-4-1 版本卡，editor textarea 加 slot class `.prompt-input`；純 scss——編輯器改為常時顯示後，草稿卡開合已無 markup 掛點，js 隨之撤除，見 GUIDELINE §5）、`ui/code-block`（5-9 curl 範例區塊，等寬字 + `--surface-sunken` 底色；純 scss）、`ui/tablelist-title`（區段小標題，5-2-1／5-6-1／knowledge-retrieval-modal；純 scss）。
+另有幾個 class 直接寫在使用頁的元件：`ui/ab-test-block`（2-2-3 設定區，兩側容器加 `.ab-side`、欄位標籤加 `.ab-field-label`；純 scss）、`ui/filter-fields`（篩選列，欄位加 slot class `.filter-field`，用於 5-2、2-2-1；scss + js，`.js-filter-clear` 另供 4-1、5-7）、`ui/prompt-card`（5-2 提示詞／歡迎語子頁籤的版本卡，editor textarea 加 slot class `.prompt-input`；純 scss——編輯器改為常時顯示後，草稿卡開合已無 markup 掛點，js 隨之撤除，見 GUIDELINE §5）、`ui/code-block`（5-9 curl 範例區塊，等寬字 + `--surface-sunken` 底色；純 scss）、`ui/tablelist-title`（區段小標題，5-2／knowledge-retrieval-modal；純 scss）、`ui/subscription-gate`（SaaS 使用期閘門遮罩；純 scss、無 html——React app-shell 依 subscription_status 條件渲染，唯一可見處為元件庫頁的靜態示範，見 GUIDELINE §5）。
 
 ### Modal 清單（GUIDELINE §7 的「Modal 殼」現況）
 
-`modals-sm`：deleteModal。`modals-md`：datasetModal、disclaimerModal、intentionModal、knowledgeModal、likeModal、shareModal、shareManageModal、manageMembersModal、manageTenantModal、resetPasswordModal、editModal、passwordModal、previewTextModal（元件庫展示版）、ProductionSettingsModal、ProductionSettingsNoPermissionModal、ProductionSettingsCompareModal。`modals-lg`：previewModal（iframe 檔案預覽）。實際以 `grep '<dialog' src` 為準。
+`modals-sm`：deleteModal。`modals-md`：datasetModal、disclaimerModal、intentionModal、knowledgeModal、likeModal、shareModal、shareManageModal、manageMembersModal、manageTenantModal、resetPasswordModal、editModal、passwordModal、previewTextModal（元件庫展示版）、ProductionSettingsModal、ProductionSettingsNoPermissionModal、ProductionSettingsCompareModal、configCopyModal、qaImportModal。`modals-lg`：previewModal（iframe 檔案預覽）、glossaryEntriesModal。實際以 `grep '<dialog' src` 為準。
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 83 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
+> **上列不是完整清單**（`src/_includes/` 目前有 86 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 
@@ -169,8 +169,9 @@ dist/                       build 輸出（勿手改）
 
 | 位置 | 真 app 的狀況 |
 |---|---|
-| `5-5-1_userManagement`、`5-6-1_platformTenants` | 沒有這兩頁（真 app 管理端 21 頁，本專案加成 28 頁） |
-| `5-4-2_welcomeMessage`、`5-7_auditLog`、`5-8_widgetTokens`、`5-5-2_groupManagement`、`5-9_extractApiKey` | 沒有這五頁（皆為 SaaS 新增需求：歡迎語版本管理、稽核日誌、Widget Token 自助管理、群組（分組）＋群組權限管理、萃取 API 金鑰自助管理（逆向自 product extract.py），真 app 21 頁裡都查無對應頁面） |
+| `5-5-1_userManagement`、`5-6-1_platformTenants`、`5-6-2_platformMcpServers` | 沒有這三頁（真 app 管理端 21 頁，本專案加成 29 頁；`5-6-2` MCP Server 註冊表為平台管理者專屬） |
+| `5-7_auditLog`、`5-8_widgetTokens`、`5-5-2_groupManagement`、`5-9_extractApiKey`、`3-2_glossaryManagement`、`3-3_qaSetManagement` | 沒有這六頁（皆為 SaaS 新增需求：稽核日誌、Widget Token 自助管理、群組（分組）＋群組權限管理、萃取 API 金鑰自助管理（逆向自 product extract.py）、術語表管理（逆向自 product glossary.py，對 GufoRAG chatbot 術語表的租戶隔離代理）、QA 集管理（QA 集＝kind='qa' 的 TenantIndex，逆向自 product datasets.py 的 import_qa／qa_direct 管道），真 app 21 頁裡都查無對應頁面） |
+| `5-2_conversationSettings`（對話設定 hub） | 沒有這頁（SaaS 新需求：把散落於 5-2-1／5-4-1／5-4-2 的 GufoRAG per-profile 對話設定整合成單一 hub，並補齊內容政策／Agent 工具（內建工具白名單＋術語表／MCP 勾選）等後端已支援、前端原無入口的旋鈕。逆向自 product settings_hub.py 的 `_PROFILE_FIELD_DEFAULTS`／`ProfileConfigIn`；主題子頁籤沿用 ui/tab 雙層機制，本頁整合並取代原三頁——含原 5-4-2 歡迎語版本管理，故該頁亦已移除） |
 | `catalog.html`（部署首頁＝頁面目錄）、`404.html` | 沒有；GitHub Pages 部署需要 |
 | `4-1_qaHistory` 底部的 `ui/pagination` 頁碼列 | 真 app 的 4-1 只有 `.data-info`（「共 N 筆資料」）。它的 `.pagination` 只出現在 component / 1-1-3 / 3-1-1 / 3-1-3 / 3-1-6 |
 | `2-1_qaRecord` 的 `.qa-count` | 真 app 的 2-1 沒有（它來自 2-2-1）。輸入框則以 `chatInputHidden` 關掉——那個真 app 的 2-1 也沒有 |

@@ -1,0 +1,57 @@
+{# QA 問答匯入 modal，取自 3-3_qaSetManagement 頁「匯入問答」鈕（.js-qa-import）：開窗需先選定
+     「匯入到哪個 QA 集」＝業務條件開窗，故該鈕保留 hook class、不掛 data-open-modal（GUIDELINE §5）。
+     QA 匯入騎現有 Excel 管道（gufofaq-saas product app/routers/datasets.py 的 import_qa：內部組
+     mapping={title:[問題欄], content:[答案欄]} 走 _do_excel_mapping_import）——UI 只需選問題欄、答案欄。
+     上傳 Excel（ui/upload-box，button 版點開原生檔案窗；本元件依賴 upload-box 全預設值——使用頁
+     include 本元件前不得殘留 upload* 參數（§2），現況兩使用頁皆從未 set）→ 選問題欄/答案欄（值載體
+     hook class js-qa-question-col／js-qa-answer-col）→ 匯入（切版新頁的直送 API 鈕：data-toast 列全結果＋
+     自創 js-qa-import-submit；warning 分支「未選欄」屬留在窗內就能修正的驗證，故不掛 btn-close-modals、
+     關窗交 React 成功才關）。欄位選項為執行期資料（上傳檔的欄）、option value＝欄標題字串
+     （datasets.py QaImportIn.question_col/answer_col），React 讀檔填入；此處示範 2 欄。 #}
+<dialog class="modals" id="qaImportModal" aria-labelledby="qaImportModal-title">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="qaImportModal-title" data-i18n="qaSet.importQa">匯入問答</h3>
+                </div>
+                <div class="modals-body">
+                    <div class="flex-row column gap-16">
+                        {% include "ui/upload-box/upload-box.html" %}
+                        <div class="form-group row mobile-col">
+                            <div class="label label-md">
+                                <label for="qaQuestionCol" class="control-label required" data-i18n="qaSet.questionColumn">問題欄</label>
+                            </div>
+                            <div class="field col-12-sm">
+                                <select id="qaQuestionCol" class="form-control js-qa-question-col">
+                                    <option value="" data-i18n="qaSet.selectColumn">請選擇欄位</option>
+                                    <option value="客服問題">客服問題</option>
+                                    <option value="客服回覆">客服回覆</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row mobile-col">
+                            <div class="label label-md">
+                                <label for="qaAnswerCol" class="control-label required" data-i18n="qaSet.answerColumn">答案欄</label>
+                            </div>
+                            <div class="field col-12-sm">
+                                <select id="qaAnswerCol" class="form-control js-qa-answer-col">
+                                    <option value="" data-i18n="qaSet.selectColumn">請選擇欄位</option>
+                                    <option value="客服問題">客服問題</option>
+                                    <option value="客服回覆">客服回覆</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary js-qa-import-submit" data-toast="問答已匯入|請選擇問題欄與答案欄|匯入失敗，請稍後再試" data-i18n-data-toast="toast.importQa" data-toast-type="success|warning|error" data-i18n="action.import">匯入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>

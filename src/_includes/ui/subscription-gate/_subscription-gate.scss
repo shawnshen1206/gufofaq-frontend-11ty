@@ -1,0 +1,75 @@
+// 使用期閘門遮罩：首次登入強制免責聲明、到期／凍結完全鎖住、首登強制改密。非設計給稿元件
+// （產品規則，逆向自 gufofaq-saas apps/web/components/SubscriptionGate），以設計系統 token 組版。
+// 純樣式元件（無 html/js）：app-shell 行為（依 /me 的
+// subscription_status 疊在全站之上、四種狀態條件渲染）由 React 實作，此處只定義視覺 token 組版；
+// 可見樣貌由元件庫頁的靜態示範（.demo-static）演出（§5：整個元件僅由 React 條件渲染時，元件庫頁是唯一看得到它的地方）。
+.subscription-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    // 元件庫展示變體：fixed 全螢幕遮罩照貼會蓋掉整個元件庫頁，示範時退回文流內
+    &.demo-static {
+        position: static;
+        z-index: auto;
+    }
+}
+
+.subscription-panel {
+    background-color: var(--surface-raised);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px var(--shadow-strong);
+    width: 100%;
+    max-width: 720px;
+    max-height: 88vh;
+    max-height: 88dvh; // 行動瀏覽器網址列伸縮：vh 佔比尺寸一律配同值 dvh（§4-1）
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .panel-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        text-align: center;
+    }
+
+    .panel-body {
+        padding: 20px 24px;
+        overflow-y: auto;
+        line-height: 1.7;
+        color: var(--text);
+        font-size: 0.9375rem;
+    }
+
+    .panel-footer {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+}
+
+.subscription-expired-box {
+    text-align: center;
+    padding: 40px 24px;
+
+    .title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .desc {
+        margin-top: 12px;
+        color: var(--text-muted);
+    }
+}

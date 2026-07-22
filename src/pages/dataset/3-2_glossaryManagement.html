@@ -1,0 +1,125 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::術語表管理
+titleKey: nav.glossaryMgmt
+pageHeading: 術語表管理
+permalink: 3-2_glossaryManagement.html
+---
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "資料配置", href: "", i18nKey: "nav.dataConfig" },
+  { label: "術語表管理", i18nKey: "nav.glossaryMgmt" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+{# 租戶術語表管理（SaaS 新需求，21 頁真 app 無對應）。逆向自 gufofaq-saas product
+     app/routers/glossary.py：術語表＝對 GufoRAG chatbot 術語表的租戶隔離代理，每張表在 agent
+     模式各生成一個查詢工具；能力閘 data:read 檢視／data:write 編輯，真正把關在 product。
+     版型比照 5-5-2_groupManagement（新增區＋清單表＋條件開窗 modal）。示範 2 筆。 #}
+{% set glossaryTables = [
+  { name: "人資術語", whenToConsult: "詢問薪資、假勤、福利相關名詞時查閱。", toolPrompt: "回答人資名詞時，優先採用本表定義。", entryCount: 2 },
+  { name: "產品術語", whenToConsult: "詢問產品功能與模組名稱時查閱。", toolPrompt: "", entryCount: 8 }
+] %}
+
+<p class="text-gray" data-i18n="settings.glossaryMgmtIntro">術語表讓機器人在 Agent 模式下查詢名詞定義：每張表對應一個查詢工具，填「何時查閱」引導機器人在對的時機使用它。</p>
+
+{# 新增術語表：名稱（必填）＋何時查閱＋工具提示（textarea）＋新增鈕（三態 toast：成功／名稱未填／失敗——
+     product glossary.py 的 create 只擋空名（400「術語表名稱不可為空」），無重名檢查；React 端 client 先驗空名同文案）#}
+<div class="block mb-16 flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.addGlossaryTable">新增術語表</div>
+    <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newGlossaryNameInput" class="control-label required" data-i18n="settings.glossaryTableName">術語表名稱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newGlossaryNameInput" placeholder="請輸入術語表名稱" data-i18n-placeholder="settings.pleaseEnterGlossaryTableName" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="col-6-md col-12-sm">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newGlossaryWhenInput" class="control-label" data-i18n="settings.glossaryWhenToConsult">何時查閱</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="newGlossaryWhenInput" placeholder="請輸入何時查閱此表" data-i18n-placeholder="settings.pleaseEnterWhenToConsult" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-12-md">
+            <div class="form-group">
+                <div class="label">
+                    <label for="newGlossaryPromptInput" class="control-label" data-i18n="settings.glossaryToolPrompt">工具提示</label>
+                </div>
+                <div class="field">
+                    <textarea id="newGlossaryPromptInput" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <button type="button" class="button button-primary" data-toast="術語表已建立|請輸入術語表名稱|建立失敗，請稍後再試" data-i18n-data-toast="toast.createGlossaryTable" data-toast-type="success|warning|error">
+            <img src="./images/icon_add_white.png" width="48" height="48" decoding="async" alt="" class="icon">
+            <span data-i18n="settings.addGlossaryTable">新增術語表</span>
+        </button>
+    </div>
+</div>
+
+{# 術語表清單：default-table。名稱／何時查閱／工具提示（逐列可就地編輯）＋詞條數＋操作
+     （儲存｜管理詞條｜刪除）。管理詞條與刪除都需先選定「哪一張表」＝業務條件開窗，
+     故用 hook class（.js-manage-entries／.js-delete-glossary），不掛 data-open-modal（§5）。
+     刪除無綁定守衛：product 驗過 ownership 即刪；設定檔的 glossary_table_ids 允許懸空、
+     載入時略過失效 id 並記 warning log（GufoRAG services/glossary.py）。示範 2 筆。 #}
+<div class="block flex-row column gap-16">
+    <div class="text-md text-bold" data-i18n="settings.glossaryTableList">術語表清單</div>
+    <div class="table-container scrollTable">
+        <table class="default-table">
+            <colgroup>
+                <col style="width:200px; min-width:200px;">
+                <col style="min-width:260px;">
+                <col style="min-width:260px;">
+                <col style="width:90px; min-width:90px;">
+                <col style="width:300px; min-width:300px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th data-i18n="settings.glossaryTableName">術語表名稱</th>
+                    <th data-i18n="settings.glossaryWhenToConsult">何時查閱</th>
+                    <th data-i18n="settings.glossaryToolPrompt">工具提示</th>
+                    <th data-i18n="settings.entryCount">詞條數</th>
+                    <th data-i18n="common.actions">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tbl in glossaryTables %}
+                <tr data-glossary-id="{{ loop.index }}">
+                    <td><input type="text" class="form-control" value="{{ tbl.name }}" aria-label="術語表名稱" data-i18n-aria-label="settings.glossaryTableName"></td>
+                    <td><input type="text" class="form-control" value="{{ tbl.whenToConsult }}" aria-label="何時查閱" data-i18n-aria-label="settings.glossaryWhenToConsult"></td>
+                    <td><input type="text" class="form-control" value="{{ tbl.toolPrompt }}" aria-label="工具提示" data-i18n-aria-label="settings.glossaryToolPrompt"></td>
+                    <td class="text-center">{{ tbl.entryCount }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="button button-border button-sm" data-toast="術語表已更新|儲存失敗" data-i18n-data-toast="toast.saveGlossaryTable" data-toast-type="success|error" data-i18n="action.save">儲存</button>
+                            <button type="button" class="button button-border button-sm js-manage-entries" data-i18n="settings.manageEntries">管理詞條</button>
+                            <button type="button" class="button button-red button-sm js-delete-glossary" data-i18n="action.delete">刪除</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "components/glossary-entries-modal/glossary-entries-modal.html" %}
+{# 刪除 modal：.js-delete-glossary 條件開窗（先選定要刪哪張表），確認鈕歸業務 js
+   （deleteConfirmBinding，不自動關窗）；表名由業務 js 填入 #deleteGlossaryName。 #}
+{% set deleteTargetId = "deleteGlossaryName" %}
+{% set deleteConfirmBinding = true %}
+{% set deleteToast = "術語表已刪除|刪除失敗，請稍後再試" %}
+{% set deleteToastKey = "toast.deleteGlossaryTable" %}
+{% include "components/delete-modal/delete-modal.html" %}

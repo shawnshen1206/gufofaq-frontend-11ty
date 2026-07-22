@@ -8,7 +8,7 @@ bodyClass: guideline-page
 {% set breadcrumbItems = [
   { label: "首頁", href: "2-1_qaRecord.html" },
   { label: "設定", href: "#" },
-  { label: "知識檢索邏輯" }
+  { label: "對話設定" }
 ] %}
 {# 元件庫展示頁（style-guide catalog），取自真實 app pages/components/component.html。
    本頁有自己的版型（.full-container + aside 導覽 + .main-container 分節，節數見 aside 目錄），不是一般頁面 chrome，
@@ -46,7 +46,7 @@ bodyClass: guideline-page
             <li><a class="aside-link" href="#blockSection">區塊Block</a></li>
             <li><a class="aside-link" href="#toastSection">Toast通知</a></li>
             <li><a class="aside-link" href="#tooltipSection">Tooltip提示</a></li>
-            <li><a class="aside-link" href="#featureDisabledSection">功能未啟用遮罩</a></li>
+            <li><a class="aside-link" href="#subscriptionGateSection">使用期閘門遮罩</a></li>
         </ul>
     </aside>
     <div class="main-container">
@@ -510,12 +510,15 @@ bodyClass: guideline-page
                         <span class="sr-only" data-i18n="qaTest.configInfo">配置說明</span>
                     </button>
                     {# 這幾個彈窗在真實頁是業務條件開窗（.js-reset-password／.js-manage-tenant／詳情頁「分享」鈕／
-                         群組管理頁「管理成員」鈕 .js-manage-members，不掛 data-open-modal，見 GUIDELINE §5）。
-                         「看得見」由本頁示範觸發器保證（第三條路）。 #}
+                         .js-manage-members／.js-manage-entries／.js-copy-config／.js-qa-import…各 hook 見對應 modal 檔頭，
+                         不掛 data-open-modal，見 GUIDELINE §5）。「看得見」由本頁示範觸發器保證（第三條路）。 #}
                     <button type="button" class="button button-dark" data-open-modal="resetPasswordModal">開啟重設密碼modal</button>
                     <button type="button" class="button button-dark" data-open-modal="manageTenantModal">開啟租戶管理modal</button>
                     <button type="button" class="button button-dark" data-open-modal="shareManageModal">開啟分享連結管理modal</button>
                     <button type="button" class="button button-dark" data-open-modal="manageMembersModal">開啟管理成員modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="glossaryEntriesModal">開啟術語表詞條modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="configCopyModal">開啟跨設定檔複製modal</button>
+                    <button type="button" class="button button-dark" data-open-modal="qaImportModal">開啟 QA 匯入 modal</button>
                 </div>
                 <div class="caption description mt-16">
                     <ul>
@@ -625,21 +628,33 @@ bodyClass: guideline-page
             {% include "ui/tooltip/tooltip.html" %}
         </section>
 
-        <section id="featureDisabledSection">
-            <h2 class="section-title"><span>22</span><span>功能未啟用遮罩</span></h2>
+        <section id="subscriptionGateSection">
+            <h2 class="section-title"><span>22</span><span>使用期閘門遮罩</span></h2>
             <div class="caption">
                 <ul>
-                    <li>外層加「.feature-disabled-wrap」（position:relative 錨點），遮罩「.feature-disabled-overlay」預設 display:none，加「.active」顯示</li>
-                    <li>真實頁（5-2-1）由 React 依租戶功能開通狀態切 .active；此處以靜態 .active 展示可見樣貌（唯一看得到它的地方）</li>
+                    <li>純樣式元件 ui/subscription-gate：真實環境由 React app-shell 依 /me 的 subscription_status 疊在全站之上、四種狀態（首登免責、到期、凍結、強制改密）條件渲染——本節是唯一看得到它的地方（GUIDELINE §5）</li>
+                    <li>「.subscription-overlay」正式版是 position:fixed 全螢幕遮罩；此處掛示範變體「.demo-static」退回文流內，結構與正式版相同</li>
+                    <li>面板兩型：三段式「.subscription-panel」（.panel-header/.panel-body/.panel-footer，首登免責與強制改密用）、置中訊息「.subscription-expired-box」（.title/.desc，到期與凍結用）</li>
                 </ul>
             </div>
-            <div class="feature-disabled-wrap block">
-                {# 佔位內容：遮罩蓋在「看得見但不能用」的面板上，示範也要有一塊被蓋的內容（不寫行內尺寸，高度由內容撐） #}
-                <p class="text-gray">此區塊示意被遮罩蓋住的頁面內容——真實頁（5-2-1）此處是知識檢索設定表單。</p>
-                <div class="feature-disabled-overlay active">
-                    <div class="feature-disabled-box">
-                        <div class="feature-disabled-title">功能未啟用</div>
-                        <div class="feature-disabled-desc">此功能目前尚未開放使用</div>
+            {# 示範文案鏡射 gufofaq-saas SubscriptionGate 的 zh messages（免責態＋到期態）；React 條件渲染的元件、非任何生產頁 markup，故照 showcase 慣例不掛 data-i18n #}
+            <div class="subscription-overlay demo-static">
+                <div class="subscription-panel">
+                    <div class="panel-header">免責聲明</div>
+                    <div class="panel-body">
+                        <p class="m-0 mb-8">本服務所提供之回答內容由 AI 自動生成，僅供參考，不構成任何法律或專業建議。</p>
+                        <p class="m-0">繼續使用即表示您已了解並同意上述聲明。</p>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="button button-primary">我已閱讀並同意，開始使用（30 天）</button>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-overlay demo-static mt-16">
+                <div class="subscription-panel">
+                    <div class="subscription-expired-box">
+                        <div class="title">使用期已到期</div>
+                        <div class="desc">您的 30 天使用期已結束。如需繼續使用，請聯絡平台管理員。</div>
                     </div>
                 </div>
             </div>
@@ -775,6 +790,12 @@ bodyClass: guideline-page
 {% include "components/manage-tenant-modal/manage-tenant-modal.html" %}
 {% include "components/share-manage-modal/share-manage-modal.html" %}
 {% include "components/manage-members-modal/manage-members-modal.html" %}
+{% include "components/glossary-entries-modal/glossary-entries-modal.html" %}
+{# 元件庫版演出兩個 React 條件渲染分支（§5 分支要看得到）：production 警告＋inline 錯誤列；真實頁 5-2 不 set、不演 #}
+{% set configCopyShowWarning = true %}
+{% set configCopyShowError = true %}
+{% include "components/config-copy-modal/config-copy-modal.html" %}
+{% include "components/qa-import-modal/qa-import-modal.html" %}
 
 <button type="button" class="button btn_gotop">
     TOP

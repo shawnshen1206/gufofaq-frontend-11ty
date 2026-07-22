@@ -17,8 +17,8 @@ permalink: 5-1-1_accountInfo.html
 {# 使用期倒數：與 ui/countdown-box 完全一致（同一份真實頁抽出），直接 include #}
 {% include "ui/countdown-box/countdown-box.html" %}
 
-{# 帳號資訊：真實頁欄位多數為 disabled 唯讀（帳號/檢索模式/規格/資料儲存上限/資料取用規則/選用模型皆由後端配置決定，僅公司單位、
-     系統提示詞可編輯），欄位不重複、無需 for 迴圈資料化，逐欄位沿用真實 class 手寫 #}
+{# 帳號資訊：只留真帳號層欄位——帳號(唯讀)/公司單位(可編輯)/規格·資料儲存上限(唯讀)。per-profile 對話設定
+     （系統提示詞/檢索模式/資料取用規則/選用模型）已移至對話設定頁 5-2_conversationSettings，此頁不再顯示。 #}
 <div class="block flex-row column gap-24">
     <div class="text-center text-xl" data-i18n="nav.accountInfo">帳號資訊</div>
     <div class="flex-row column gap-16">
@@ -45,95 +45,25 @@ permalink: 5-1-1_accountInfo.html
                 </div>
             </div>
         </div>
-        <div class="flex-row gap-40">
-            <div class="col-12-md">
-                <div class="form-group">
-                    <div class="label">
-                        <label for="systemPromptInput" class="control-label" data-i18n="settings.systemPrompt">系統提示詞</label>
-                    </div>
-                    <div class="field">
-                        <textarea id="systemPromptInput" rows="10" class="form-control account-prompt"
-                            placeholder="請輸入您的提示詞" data-i18n-placeholder="settings.pleaseEnterPrompt"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="flex-row gap-40 mobile-column sm-gap-16">
-            <div class="col-4-md col-12-sm">
+            <div class="col-6-md col-12-sm">
                 <div class="form-group">
                     <div class="label">
-                        <label id="retrievalModeLabel" class="control-label" data-i18n="settings.retrievalMode">檢索模式</label>
-                    </div>
-                    <div class="field flex-row gap-16 mobile-column-xs" role="group" aria-labelledby="retrievalModeLabel">
-                        <div class="col-6-md col-12-xs">
-                            <div class="form-group row">
-                                <div class="label">
-                                    <label for="retrievalTopicInput" class="control-label" data-i18n="settings.topic">主題</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="retrievalTopicInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled retrieval-topic"
-                                        value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6-md col-12-xs">
-                            <div class="form-group row">
-                                <div class="label">
-                                    <label for="retrievalVectorInput" class="control-label" data-i18n="settings.vector">向量</label>
-                                </div>
-                                <div class="field">
-                                    <input type="text" id="retrievalVectorInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled retrieval-vector"
-                                        value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-8-md col-12-sm flex-row gap-40 mobile-column sm-gap-16">
-                <div class="col-6-md col-12-sm">
-                    <div class="form-group">
-                        <div class="label">
-                            <label for="accountSpecInput" class="control-label" data-i18n="settings.spec">規格</label>
-                        </div>
-                        <div class="field">
-                            <input type="text" id="accountSpecInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-spec"
-                                value="" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6-md col-12-sm">
-                    <div class="form-group">
-                        <div class="label">
-                            <label for="accountStorageLimitInput" class="control-label" data-i18n="settings.storageLimit">資料儲存上限</label>
-                        </div>
-                        <div class="field">
-                            <input type="text" id="accountStorageLimitInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-storage-limit"
-                                value="" disabled>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flex-row gap-40 mobile-column-xs xs-gap-16">
-            <div class="col-6-md col-12-xs">
-                <div class="form-group">
-                    <div class="label">
-                        <label for="accountDataRuleInput" class="control-label" data-i18n="settings.dataAccessRule">資料取用規則</label>
+                        <label for="accountSpecInput" class="control-label" data-i18n="settings.spec">規格</label>
                     </div>
                     <div class="field">
-                        <input type="text" id="accountDataRuleInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-data-rule"
+                        <input type="text" id="accountSpecInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-spec"
                             value="" disabled>
                     </div>
                 </div>
             </div>
-            <div class="col-6-md col-12-xs">
+            <div class="col-6-md col-12-sm">
                 <div class="form-group">
                     <div class="label">
-                        <label for="accountModelInput" class="control-label" data-i18n="settings.selectedModel">選用模型</label>
+                        <label for="accountStorageLimitInput" class="control-label" data-i18n="settings.storageLimit">資料儲存上限</label>
                     </div>
                     <div class="field">
-                        <input type="text" id="accountModelInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-model"
+                        <input type="text" id="accountStorageLimitInput" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control disabled account-storage-limit"
                             value="" disabled>
                     </div>
                 </div>

@@ -1,0 +1,751 @@
+---
+layout: layouts/page-shell/page-shell.html
+title: GufoFAQ::對話設定
+titleKey: nav.conversationSettings
+pageHeading: 對話設定
+permalink: 5-2_conversationSettings.html
+---
+{# 對話設定 hub（SaaS 新需求，21 頁真 app 無對應）。逆向自 gufofaq-saas product
+     app/routers/settings_hub.py（_PROFILE_FIELD_DEFAULTS／ProfileConfigIn）＝GufoRAG per-profile
+     ChatConfig 中「租戶該調」的旋鈕，收進單一頁。本頁已整合並取代原散落的三頁（檔案已刪、導覽已改指本頁）：
+     知識檢索邏輯（5-2-1）、提示詞管理（5-4-1）、歡迎語設定（5-4-2）。取代關係（§5）：
+     － 5-4-1 草稿卡編輯契約（.js-prompt-input／.js-prompt-save@promptManagement.js）由 components/prompt-edit
+        （singleTest.js 同名契約）＋ /prompts 版本端點取代；
+     － 真 app 5-2-1 的 #featureDisabledOverlay（knowledgeRetrieval.js toggleDisabledOverlay）由 SaaS 訂閱閘門
+        ui/subscription-gate 在 app-shell 層取代，不再屬本頁。
+     階層＝資料真實階層：跨三設置共用的（前台預設）在 profile 頁籤之外；每設置
+     各一份的旋鈕在 profile 頁籤底下的主題子頁籤內。設計正本：spec 2026-07-22-conversation-
+     settings-hub-design.md。 #}
+{% set breadcrumbItems = [
+  { label: "首頁", href: "2-1_qaRecord.html", i18nKey: "nav.home" },
+  { label: "設定", href: "", i18nKey: "nav.settings" },
+  { label: "對話設定", i18nKey: "nav.conversationSettings" }
+] %}
+<div class="flex-row column gap-16">
+    {% include "ui/breadcrumb/breadcrumb.html" %}
+</div>
+
+<p class="text-gray" data-i18n="settings.conversationSettingsIntro">一頁設定三套設定檔（設置一／二／三）的全部對話行為。每個旋鈕各設置一份，於上方切換設置；前台問答預設使用哪一套為跨設置共用設定。</p>
+
+{# ── 租戶層（跨三設置共用；profile 頁籤之外）──
+     設置頁籤（沿用 ui/tab 的 .tab-row.fit-content > .tab-group Pattern A）+ 前台問答預設使用 radio，
+     兩者共用同一份「設置一/二/三」清單資料化（沿 5-2-1）。active＝檢視中頁籤；default＝前台預設設置，
+     radio 綁 default。data-setting-sn 是 React 讀值（切換即重載該設置全部 config），非內容切換。 #}
+{% set settingTabs = [
+  { label: "設置一", active: true, i18nKey: "settings.config1" },
+  { label: "設置二", default: true, i18nKey: "settings.config2" },
+  { label: "設置三", i18nKey: "settings.config3" }
+] %}
+<div class="page-title-wrap flex-row flex-wrap gap-16 mb-8">
+    <div class="tab-row fit-content">
+        <div class="tab-group">
+            {% for tab in settingTabs %}
+            <button type="button" class="tab tab-md{% if tab.active %} active{% endif %}"{% if tab.active %} aria-current="true"{% endif %}
+                data-setting-sn="{{ loop.index }}" title="{{ tab.label }}" data-i18n="{{ tab.i18nKey }}" data-i18n-title="{{ tab.i18nKey }}">{{ tab.label }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group row mobile-col-xs">
+        <div class="label">
+            <label id="frontQaDefaultLabel" class="control-label" data-i18n="settings.frontQaDefault">前台問答預設使用</label>
+        </div>
+        <div class="field">
+            <div class="flex-row flex-wrap gap-24" role="radiogroup" aria-labelledby="frontQaDefaultLabel">
+                {% for tab in settingTabs %}
+                <label class="form-radio">
+                    <input type="radio" name="frontEnd_qa"{% if tab.default %} checked{% endif %}>
+                    <span data-i18n="{{ tab.i18nKey }}">{{ tab.label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── 設置層頂端：對話模式總開關（settings_hub.py ProfileConfigIn.search_mode 傳統/agent）＋ Agent 最大迭代次數（沿 2-2-1）。
+     驅動下方各子頁籤「僅某模式生效」欄位的標示。值載體走 hook class js-chat-mode／js-agent-max-iter
+     （React 接手，切版不接行為），不掛 data-toast（§5）。 #}
+<div class="block mb-10">
+    <div class="filter-fields flex-row flex-wrap gap-16 mobile-column">
+        <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label for="profileChatMode" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
+            </div>
+            <div class="field">
+                <select class="form-control singleSelect js-chat-mode" id="profileChatMode">
+                    <option value="traditional" selected data-i18n="qaTest.chatModeTraditional">傳統搜尋</option>
+                    <option value="agent" data-i18n="qaTest.chatModeAgent">Agent 對話</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+            <div class="label">
+                <label for="profileAgentMaxIter" class="control-label" data-i18n="qaTest.agentMaxIter">Agent 最大迭代次數</label>
+            </div>
+            <div class="field">
+                <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control js-agent-max-iter" id="profileAgentMaxIter" value="5">
+            </div>
+        </div>
+    </div>
+    <div class="text-gray mt-8" data-i18n="settings.modeApplicabilityHint">對話模式決定下方哪些欄位生效，另一模式專用的欄位會標示。</div>
+</div>
+
+{# ── 主題子頁籤（two-level tab 的第二層 .sub-tabs，每個 data-target 對應一個 .tab-content 面板）。
+     子頁籤切換由 ui/tab 的 tab.js 依 data-target 切換 .tab-content（沿用其雙層頁籤機制）。 #}
+<div class="tab-row mb-10">
+    <div class="tab-group sub-tabs">
+        <button type="button" class="tab active" aria-current="true" data-target="panelRetrieval" title="檢索與欄位" data-i18n="settings.retrievalAndFields" data-i18n-title="settings.retrievalAndFields">檢索與欄位</button>
+        <button type="button" class="tab" data-target="panelGeneration" title="生成設定" data-i18n="settings.generationSettings" data-i18n-title="settings.generationSettings">生成設定</button>
+        <button type="button" class="tab" data-target="panelPrompts" title="提示詞" data-i18n="comp.prompt" data-i18n-title="comp.prompt">提示詞</button>
+        <button type="button" class="tab" data-target="panelWelcome" title="歡迎語" data-i18n="settings.welcomeMessage" data-i18n-title="settings.welcomeMessage">歡迎語</button>
+        <button type="button" class="tab" data-target="panelPolicy" title="內容政策" data-i18n="settings.contentPolicy" data-i18n-title="settings.contentPolicy">內容政策</button>
+        <button type="button" class="tab" data-target="panelAgentTools" title="Agent 工具" data-i18n="settings.agentTools" data-i18n-title="settings.agentTools">Agent 工具</button>
+        <button type="button" class="tab" data-target="panelQaDirect" title="QA 直答" data-i18n="settings.qaDirect" data-i18n-title="settings.qaDirect">QA 直答</button>
+    </div>
+</div>
+
+{# ═══ 子頁籤 1：檢索與欄位（沿用 5-2-1：意圖分級 priority-table + 高/中/低啟用開關 + 14 槽欄位命名）═══ #}
+<div class="tab-content" id="panelRetrieval">
+    {# 從其他設定檔複製…：target＝目前檢視中的設定檔（上方設置頁籤）。開窗需先選來源＝業務條件開窗，
+         鈕保留 hook class .js-copy-config、不掛 data-open-modal（§5）；彈窗本體見頁尾 include。 #}
+    <div class="flex-row mb-8">
+        <button type="button" class="button button-border js-copy-config" data-i18n="settings.copyConfig">從其他設定檔複製…</button>
+    </div>
+    <div class="block flex-row column gap-10 relative">
+        {# 全部啟用/停用意圖：真 app（main.js #openPrioritySwitch/#closePrioritySwitch）本地勾/取消全部 switch、
+             不送 API，啟用先驗「任務描述不得為空」失敗才開 intentionModal——條件開窗業務判斷（§5），id 即掛點。 #}
+        <div class="switch-control-row">
+            <button type="button" id="openPrioritySwitch" class="button button-border" data-i18n="settings.enableAllIntent">啟用全部意圖判斷</button>
+            <button type="button" id="closePrioritySwitch" class="button button-border" data-i18n="settings.disableAllIntent">停用全部意圖判斷</button>
+        </div>
+
+        {% set priorityLevels = [
+          {
+            title: "高優先級",
+            i18nKey: "comp.highPriority",
+            rows: [
+              { category: "入出國與法規", description: "處理入境、出境、簽證、停留等問題", prompt: "我是移民署的智能客服，專門處理與入出境、居留、停留、簽證有關的問題。請使用條列、清楚的說明回應民眾，並根據法規給出指引。", priority: "高優先級" },
+              { category: "證件與資料申請", description: "協助查詢入出國紀錄、統一證號等申辦方式", prompt: "我是移民署的智能客服，擅長協助民眾查詢入出國紀錄、統一證號申請等行政流程。請清楚說明所需文件、申請條件與流程。", priority: "高優先級" }
+            ]
+          },
+          {
+            title: "中優先級",
+            i18nKey: "comp.mediumPriority",
+            rows: [
+              { category: "婚姻與家庭", description: "涉外婚姻登記、外籍配偶居留等問題", prompt: "我是移民署的智能客服，協助說明涉外婚姻登記、外籍配偶居留申請相關規定。", priority: "中優先級" }
+            ]
+          },
+          {
+            title: "低優先級",
+            i18nKey: "comp.lowPriority",
+            rows: [
+              { category: "權益與申訴服務類", description: "", prompt: "", priority: "低優先級" }
+            ]
+          }
+        ] %}
+        {% for level in priorityLevels %}
+        <div class="flex-row column gap-16 priority-box">
+            <div class="flex-row align-items-center gap-12">
+                {# tablelist-title/tablelist-asking＝真 app 5-2-1 markup 原樣（無樣式無行為的僅存於 markup 的
+                     真 app class，轉換契約保留）；switch 的可及名稱以 aria-labelledby 併讀「層級＋意圖判斷啟用」，
+                     三顆才分得出高/中/低（id 用迴圈變數組，§4）。 #}
+                <div class="tablelist-title" id="intentLevelTitle-{{ loop.index }}" data-i18n="{{ level.i18nKey }}">{{ level.title }}</div>
+                <div class="tablelist-asking flex-row align-items-center gap-8">
+                    <span id="intentEnableLabel-{{ loop.index }}" data-i18n="settings.intentEnable">意圖判斷啟用</span>
+                    <label class="switch priority-switch">
+                        <input type="checkbox" class="switch-checkbox" role="switch" aria-labelledby="intentLevelTitle-{{ loop.index }} intentEnableLabel-{{ loop.index }}">
+                        <span class="switch-box">
+                            <span class="switch-btn"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            {% set rows = level.rows %}
+            {% include "components/priority-table/priority-table.html" %}
+        </div>
+        {% endfor %}
+
+        <div class="flex-row column gap-16">
+            <div class="flex-row align-items-center gap-12">
+                <div class="tablelist-title" data-i18n="settings.unused">未使用</div>
+            </div>
+            {% set rows = [] %}
+            {% include "components/priority-table/priority-table.html" %}
+        </div>
+    </div>
+
+    {% set fieldSlots = [
+      { key: "title", defaultLabel: "標題", label: "問題標題" },
+      { key: "content", defaultLabel: "內容", label: "回覆內容" },
+      { key: "source", defaultLabel: "來源", label: "來源" },
+      { key: "date", defaultLabel: "日期", label: "建立日期" },
+      { key: "category", defaultLabel: "分類", label: "分類" },
+      { key: "number", defaultLabel: "數值", label: "數值" },
+      { key: "flag", defaultLabel: "標記", label: "標記" },
+      { key: "tags", defaultLabel: "標籤", label: "標籤" },
+      { key: "privilege", defaultLabel: "權限", label: "權限" },
+      { key: "note1", defaultLabel: "備註1", label: "備註1" },
+      { key: "note2", defaultLabel: "備註2", label: "備註2" },
+      { key: "note3", defaultLabel: "備註3", label: "備註3" },
+      { key: "note4", defaultLabel: "備註4", label: "備註4" },
+      { key: "note5", defaultLabel: "備註5", label: "備註5" }
+    ] %}
+    <div class="block flex-row column gap-16 mt-16">
+        <div class="flex-row column gap-8">
+            <div class="tablelist-title" data-i18n="settings.fieldNaming">欄位命名</div>
+            <div class="text-gray" data-i18n="settings.fieldNamingDesc">為此設定的 14 個欄位槽命名「此設定的顯示名」</div>
+        </div>
+        <div class="flex-row flex-wrap gap-16">
+            {% for slot in fieldSlots %}
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label label-md">
+                    <label for="fieldName-{{ slot.key }}" class="control-label" data-i18n="field.{{ slot.key }}">{{ slot.defaultLabel }}</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="fieldName-{{ slot.key }}" placeholder="此設定的顯示名" data-i18n-placeholder="settings.displayNamePlaceholder"
+                        class="form-control" value="{{ slot.label }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{# ═══ 子頁籤 2：生成設定 ═══
+     全部欄位為值載體 → 掛 hook class js-<noun>、不掛 data-toast（§5）；統一由底部「儲存對話設定」直送。
+     模式適用性以 gufofaq-saas docs/mode-matrix.md 實測矩陣為準：僅某模式生效的欄位加 text-gray 標示
+     （search_total_number、use_knowledge_mode 為傳統搜尋專用）。 #}
+<div class="tab-content" id="panelGeneration" style="display: none;">
+    <div class="block">
+        <div class="flex-row flex-wrap gap-16">
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genModel" class="control-label" data-i18n="settings.modelName">模型</label></div>
+                <div class="field">
+                    <select class="form-control singleSelect js-model-name" id="genModel">
+                        <option value="openai:gpt-4o" selected>openai:gpt-4o</option>
+                        <option value="openai:gpt-4o-mini">openai:gpt-4o-mini</option>
+                        <option value="openai:gpt-4.1">openai:gpt-4.1</option>
+                        <option value="anthropic:claude-3-5-sonnet">anthropic:claude-3-5-sonnet</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genTemp" class="control-label" data-i18n="settings.temperature">溫度</label></div>
+                <div class="field"><input type="text" id="genTemp" class="form-control js-temperature" value="0.0" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"></div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genSearchTotal" class="control-label" data-i18n="settings.searchTotalNumber">取用資料筆數</label></div>
+                <div class="field">
+                    <input type="text" id="genSearchTotal" class="form-control js-search-total-number" value="16" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter">
+                    <span class="text-gray" data-i18n="settings.traditionalModeOnly">僅傳統搜尋模式生效</span>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genSearchSelected" class="control-label" data-i18n="settings.searchSelectedNumber">選用資料筆數</label></div>
+                <div class="field"><input type="text" id="genSearchSelected" class="form-control js-search-selected-number" value="8" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"></div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genRatio" class="control-label" data-i18n="settings.dataSourceRatio">資料來源比例（主題／向量）</label></div>
+                <div class="field"><input type="text" id="genRatio" class="form-control js-data-source-ratio" value="0.0" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"></div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genKnowledgeMode" class="control-label" data-i18n="settings.useKnowledgeMode">知識使用模式</label></div>
+                <div class="field">
+                    <select class="form-control singleSelect js-use-knowledge-mode" id="genKnowledgeMode">
+                        <option value="none" data-i18n="settings.knowledgeModeNone">不參考知識</option>
+                        <option value="assist" data-i18n="settings.knowledgeModeAssist">輔助參考</option>
+                        <option value="strict" selected data-i18n="settings.knowledgeModeStrict">嚴格限定</option>
+                    </select>
+                    <span class="text-gray" data-i18n="settings.traditionalModeOnly">僅傳統搜尋模式生效</span>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><span class="control-label" data-i18n="settings.enableRerank">啟用重排序</span></div>
+                <div class="field">
+                    <label class="switch">
+                        <input type="checkbox" class="switch-checkbox js-enable-rerank" role="switch" aria-label="啟用重排序" data-i18n-aria-label="settings.enableRerank">
+                        <span class="switch-box"><span class="switch-btn"></span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genReranker" class="control-label" data-i18n="settings.rerankerName">重排序模型</label></div>
+                <div class="field">
+                    <select class="form-control singleSelect js-reranker-name" id="genReranker">
+                        <option value="llm_reranker" selected>llm_reranker</option>
+                        <option value="bge_reranker">bge_reranker</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genMemory" class="control-label" data-i18n="settings.memoryCount">對話記憶輪數</label></div>
+                <div class="field"><input type="text" id="genMemory" class="form-control js-memory-count" value="5" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter"></div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><span class="control-label" data-i18n="settings.enableSuggestQuestions">啟用建議問題</span></div>
+                <div class="field">
+                    <label class="switch">
+                        <input type="checkbox" class="switch-checkbox js-enable-suggest-questions" role="switch" aria-label="啟用建議問題" data-i18n-aria-label="settings.enableSuggestQuestions" checked>
+                        <span class="switch-box"><span class="switch-btn"></span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><span class="control-label" data-i18n="settings.enableCitation">啟用引用標註</span></div>
+                <div class="field">
+                    <label class="switch">
+                        <input type="checkbox" class="switch-checkbox js-enable-citation" role="switch" aria-label="啟用引用標註" data-i18n-aria-label="settings.enableCitation">
+                        <span class="switch-box"><span class="switch-btn"></span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="genResponseFormat" class="control-label" data-i18n="settings.responseFormat">回應格式</label></div>
+                <div class="field">
+                    <select class="form-control singleSelect js-response-format" id="genResponseFormat">
+                        <option value="markdown" selected>Markdown</option>
+                        <option value="html">HTML</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ═══ 子頁籤 3：提示詞 ═══
+     產品系統提示詞（含版本史）沿用 components/prompt-edit + 版本卡（5-4-1 結構，另有 /prompts 版本端點）；
+     機器人身分／Agent／回應／意圖判斷／聊天室提示詞為值載體、隨底部「儲存對話設定」直送。
+     模式適用性以 gufofaq-saas docs/mode-matrix.md 實測矩陣為準：agent/respond 僅 Agent 模式生效、
+     intension 僅傳統搜尋模式生效（agent 無意圖路由階段）、role/chatroom 兩模式皆用。 #}
+<div class="tab-content" id="panelPrompts" style="display: none;">
+    <div class="block mb-10 flex-row column gap-16">
+        <div class="text-md text-bold" data-i18n="settings.systemPrompt">系統提示詞</div>
+        {% include "components/prompt-edit/prompt-edit.html" %}
+    </div>
+
+    {# 版本史篩選（關鍵字／日期區間／版本）——沿用 5-4-1 提示詞管理的篩選列，設定檔改由上方設置頁籤決定，
+         故此處不含設定檔選擇。值載體掛 hook class（§5，React 接 change）；查詢＝直送版本列表 API 的鈕→data-toast。
+         版本示範資料先 set 於此：版本下拉選項與版本卡都由它渲染（§6 能推導就從陣列渲染，兩處不會分岔）。 #}
+    {% set versions = [
+      { label: "V3", timeRange: "2026/01/20 13:09:37～", refCount: "204" },
+      { label: "V2", timeRange: "2026/01/18 15:02:33～2026/01/20 13:09:36", refCount: "14" },
+      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/18 15:02:32", refCount: "300" }
+    ] %}
+    <div class="block mb-10">
+        <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
+            <div class="filter-fields flex-row gap-16 mobile-column">
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="promptKeywordInput" class="control-label" data-i18n="settings.keyword">關鍵字</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="promptKeywordInput" class="form-control js-prompt-keyword" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword">
+                        <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                    </div>
+                </div>
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="promptDateRangeInput" class="control-label" data-i18n="settings.dateRange">日期區間</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="promptDateRangeInput" class="form-control calendar range-date js-prompt-date-range" placeholder="起迄日" data-i18n-placeholder="settings.dateRangePlaceholder">
+                        <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                    </div>
+                </div>
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="promptVersionSelect" class="control-label" data-i18n="settings.version">版本</label>
+                    </div>
+                    <div class="field">
+                        <select id="promptVersionSelect" class="form-control singleSelect js-prompt-version">
+                            <option></option>
+                            {% for v in versions %}
+                            <option value="{{ v.label }}">{{ v.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row flex-wrap gap-16 align-items-center">
+                <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
+                <button type="button" class="button button-primary js-prompt-search" data-toast="查詢成功|無法載入提示詞版本列表" data-i18n-data-toast="toast.queryPrompt" data-toast-type="success|error" data-i18n="action.query">查詢</button>
+            </div>
+        </div>
+    </div>
+
+    {# 卡片內容＝長文格式示範（§3-2：長文直接寫在迴圈內當樣式示範，各卡相同——它示範「提示詞長什麼樣」，
+         不是各版本的真實差異；文案取 prompt-edit 同款知識庫助手，與上方編輯器自洽）。 #}
+    <div class="prompt-card-list flex-row column gap-10 mb-10">
+        {% for v in versions %}
+        <div class="block prompt-card">
+            <div class="flex-row column gap-16">
+                <div class="flex-row justify-content-between align-items-center flex-wrap gap-16">
+                    <div class="text-md text-blue">{{ v.label }}（{{ v.timeRange }}）</div>
+                    <div class="flex-row align-items-center gap-8">
+                        <span><span data-i18n="settings.referencedCount">被問答引用次數：</span> {{ v.refCount }} <span data-i18n="settings.timesUnit">次</span></span>
+                        <span class="divider-vertical"></span>
+                        <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="提示詞已複製！" data-i18n-data-toast="prompt.copied">
+                            <span class="tooltip" data-i18n="action.copy">複製</span>
+                        </button>
+                        <span class="divider-vertical"></span>
+                        <button type="button" class="button button-border button-sm js-prompt-restore" data-toast="已還原此版本|還原失敗，請稍後再試" data-i18n-data-toast="toast.restorePrompt" data-toast-type="success|error" data-i18n="action.restore">還原此版本</button>
+                    </div>
+                </div>
+                <div class="prompt-content">
+                    <p>角色定位：<br>你是一位專業的知識庫問答助手，負責依據已上傳的資料回應使用者詢問。</p>
+                    <p>知識來源限制：<br>你的回答必須僅依據以下資料來源：</p>
+                    <ul class="list-style-disc line-loose">
+                        <li>《知識庫檢索結果》（本次問答檢索到的資料片段）</li>
+                    </ul>
+                    <p>回應原則：</p>
+                    <ul class="list-style-disc line-loose">
+                        <li>優先使用「<span class="text-red">條列式</span>」呈現資訊</li>
+                        <li>語氣清楚、專業且易懂</li>
+                        <li>不可臆測或補充未出現在資料中的內容</li>
+                        <li>若資料不足，需明確說明「無法從現有資料判斷」</li>
+                    </ul>
+                    <p>輸出格式：</p>
+                    <ul class="list-style-disc line-loose">
+                        <li>使用條列式（• 或 -）</li>
+                        <li>必要時分段（例如：說明 / 流程 / 注意事項）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# 各欄模式適用性見本子頁籤檔頭註（依 docs/mode-matrix.md 實測）：role/chatroom 兩模式皆用、不標。 #}
+    <div class="block flex-row column gap-16">
+        <div class="text-md text-bold" data-i18n="settings.advancedPrompts">進階提示詞</div>
+        <div class="form-group">
+            <div class="label"><label for="botRoleInput" class="control-label" data-i18n="settings.botRole">機器人身分</label></div>
+            <div class="field"><input type="text" id="botRoleInput" class="form-control js-role" value="智能助手" placeholder="例如：產品客服助手" data-i18n-placeholder="settings.pleaseEnterBotRole"></div>
+        </div>
+        <div class="form-group">
+            <div class="label">
+                <label for="agentSystemPromptInput" class="control-label" data-i18n="settings.agentSystemPrompt">Agent 系統提示詞</label>
+                <span class="text-gray" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</span>
+            </div>
+            <div class="field"><textarea id="agentSystemPromptInput" class="form-control js-agent-system-prompt"></textarea></div>
+        </div>
+        <div class="form-group">
+            <div class="label">
+                <label for="respondSystemPromptInput" class="control-label" data-i18n="settings.respondSystemPrompt">回應提示詞</label>
+                <span class="text-gray" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</span>
+            </div>
+            <div class="field"><textarea id="respondSystemPromptInput" class="form-control js-respond-system-prompt"></textarea></div>
+        </div>
+        <div class="form-group">
+            <div class="label">
+                <label for="intensionSystemPromptInput" class="control-label" data-i18n="settings.intensionSystemPrompt">意圖判斷提示詞</label>
+                <span class="text-gray" data-i18n="settings.traditionalModeOnly">僅傳統搜尋模式生效</span>
+            </div>
+            <div class="field"><textarea id="intensionSystemPromptInput" class="form-control js-intension-system-prompt"></textarea></div>
+        </div>
+        <div class="form-group">
+            <div class="label"><label for="chatroomSystemPromptInput" class="control-label" data-i18n="settings.chatroomSystemPrompt">聊天室提示詞</label></div>
+            <div class="field"><textarea id="chatroomSystemPromptInput" class="form-control js-chatroom-system-prompt"></textarea></div>
+        </div>
+    </div>
+</div>
+
+{# ═══ 子頁籤 4：歡迎語（沿用 5-4-2 編輯器＋版本卡，另有 /welcome 版本端點）═══ #}
+<div class="tab-content" id="panelWelcome" style="display: none;">
+    <div class="block prompt-card draft mb-10">
+        <div class="flex-row column gap-16">
+            <div class="text-md text-blue" data-i18n="settings.welcomeMessage">歡迎語</div>
+            <div>
+                <p class="prompt-text" data-i18n="settings.draftSaveHint">儲存後將自動建立新版本，不覆蓋舊有版本</p>
+                <div class="form-group">
+                    <div class="field">
+                        <textarea class="form-control size-lg prompt-input js-welcome-input" placeholder="請輸入歡迎語內容" data-i18n-placeholder="settings.pleaseEnterWelcome" aria-label="歡迎語內容" data-i18n-aria-label="settings.welcomeContent">您好，我是智能客服，有什麼可以協助您的嗎？</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row justify-content-center gap-16">
+                <button type="button" class="button button-primary js-welcome-save" data-toast="已儲存為新版本|內容欄位不可為空|儲存歡迎語失敗，請稍後再試" data-i18n-data-toast="toast.saveWelcome" data-toast-type="success|warning|error" data-i18n="action.saveNewVersion">儲存為新版本</button>
+            </div>
+        </div>
+    </div>
+
+    {# 版本史篩選（關鍵字／日期區間／版本）——沿用 5-4-2 歡迎語設定的篩選列，設定檔改由上方設置頁籤決定，
+         故此處不含設定檔選擇。值載體掛 hook class（§5，React 接 change）；查詢＝直送版本列表 API 的鈕→data-toast。
+         版本示範資料先 set 於此：版本下拉選項與版本卡都由它渲染（§6 能推導就從陣列渲染）。 #}
+    {% set welcomeVersions = [
+      { label: "V2", timeRange: "2026/01/20 13:09:37～", content: "您好，我是智能客服，有什麼可以協助您的嗎？" },
+      { label: "V1", timeRange: "2026/01/02 14:09:37～2026/01/20 13:09:36", content: "你好，請問有甚麼問題需要我幫你解答的?" }
+    ] %}
+    <div class="block mb-10">
+        <div class="flex-row flex-wrap gap-24 mobile-column sm-gap-16">
+            <div class="filter-fields flex-row gap-16 mobile-column">
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="welcomeKeywordInput" class="control-label" data-i18n="settings.keyword">關鍵字</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="welcomeKeywordInput" class="form-control js-welcome-keyword" placeholder="請輸入關鍵字查詢" data-i18n-placeholder="settings.pleaseEnterKeyword">
+                        <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                    </div>
+                </div>
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="welcomeDateRangeInput" class="control-label" data-i18n="settings.dateRange">日期區間</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="welcomeDateRangeInput" class="form-control calendar range-date js-welcome-date-range" placeholder="起迄日" data-i18n-placeholder="settings.dateRangePlaceholder">
+                        <span class="error-prompt" role="alert" data-i18n="common.errorText">錯誤訊息文字</span>
+                    </div>
+                </div>
+                <div class="form-group filter-field row mobile-col col-4-md col-12-sm">
+                    <div class="label">
+                        <label for="welcomeVersionSelect" class="control-label" data-i18n="settings.version">版本</label>
+                    </div>
+                    <div class="field">
+                        <select id="welcomeVersionSelect" class="form-control singleSelect js-welcome-version">
+                            <option></option>
+                            {% for v in welcomeVersions %}
+                            <option value="{{ v.label }}">{{ v.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row flex-wrap gap-16 align-items-center">
+                <button type="button" class="button button-border js-filter-clear" data-i18n="action.clear">清除</button>
+                <button type="button" class="button button-primary js-welcome-search" data-toast="查詢成功|無法載入歡迎語版本列表" data-i18n-data-toast="toast.queryWelcome" data-toast-type="success|error" data-i18n="action.query">查詢</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="prompt-card-list flex-row column gap-10">
+        {% for v in welcomeVersions %}
+        <div class="block prompt-card">
+            <div class="flex-row column gap-16">
+                <div class="flex-row justify-content-between align-items-center flex-wrap gap-16">
+                    <div class="text-md text-blue">{{ v.label }}（{{ v.timeRange }}）</div>
+                    <div class="flex-row align-items-center gap-8">
+                        <button type="button" class="button-icon copy copyBtn has-tooltip" data-toast="歡迎語已複製！" data-i18n-data-toast="welcome.copied">
+                            <span class="tooltip" data-i18n="action.copy">複製</span>
+                        </button>
+                        <span class="divider-vertical"></span>
+                        <button type="button" class="button button-border button-sm js-welcome-restore" data-toast="已還原此版本|還原失敗，請稍後再試" data-i18n-data-toast="toast.restoreWelcome" data-toast-type="success|error" data-i18n="action.restore">還原此版本</button>
+                    </div>
+                </div>
+                <div class="prompt-content">
+                    <p>{{ v.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# ═══ 子頁籤 5：內容政策（NET-NEW）═══
+     政策主題表（每列 主題/定義/範例/輸入動作/輸出動作/拒絕訊息，逐列可就地編輯）＋新增/刪除列，
+     結構比照 glossary-entries-modal 的詞條編輯器；新增/刪除列動業務輸入（值交給 React 去 PUT），
+     故 hook class js-add-policy-topic／js-remove-policy-topic（§5）。詞彙過濾＋兩則封鎖訊息為值載體。
+     全部隨底部「儲存對話設定」直送（policy 分組 merge 寫回 GufoRAG ChatConfig）。示範 2 筆。 #}
+<div class="tab-content" id="panelPolicy" style="display: none;">
+    <p class="text-gray" data-i18n="settings.policyIntro">定義敏感主題與詞彙過濾：對命中的輸入／輸出可封鎖、記錄或不處理，並設定被封鎖時回覆使用者的拒絕訊息。</p>
+    {% set policyTopics = [
+      { name: "個資與隱私", definition: "涉及身分證字號、電話、住址等個人資料的查詢或代辦請求。", examples: "幫我查某人的電話與地址", inputAction: "block", outputAction: "block", refusal: "很抱歉，我無法協助處理涉及個人隱私的請求。" },
+      { name: "醫療診斷", definition: "要求提供醫療診斷、處方或用藥建議。", examples: "我這個症狀該吃什麼藥", inputAction: "record", outputAction: "record", refusal: "醫療相關問題請諮詢專業醫師，我僅能提供一般性資訊。" }
+    ] %}
+    <div class="block mb-16 flex-row column gap-16">
+        <div class="text-md text-bold" data-i18n="settings.policyTopics">政策主題</div>
+        <div class="table-container scrollTable">
+            <table class="default-table">
+                <colgroup>
+                    <col style="width:160px; min-width:160px;">
+                    <col style="min-width:220px;">
+                    <col style="min-width:180px;">
+                    <col style="width:120px; min-width:120px;">
+                    <col style="width:120px; min-width:120px;">
+                    <col style="min-width:220px;">
+                    <col style="width:90px; min-width:90px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th data-i18n="settings.policyTopicName">主題名稱</th>
+                        <th data-i18n="settings.definition">定義</th>
+                        <th data-i18n="settings.policyExamples">範例</th>
+                        <th data-i18n="settings.policyInputAction">輸入動作</th>
+                        <th data-i18n="settings.policyOutputAction">輸出動作</th>
+                        <th data-i18n="settings.policyRefusal">拒絕訊息</th>
+                        <th><span class="sr-only" data-i18n="common.actions">操作</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for topic in policyTopics %}
+                    <tr>
+                        <td><input type="text" class="form-control" value="{{ topic.name }}" aria-label="主題名稱" data-i18n-aria-label="settings.policyTopicName"></td>
+                        <td><input type="text" class="form-control" value="{{ topic.definition }}" aria-label="定義" data-i18n-aria-label="settings.definition"></td>
+                        <td><input type="text" class="form-control" value="{{ topic.examples }}" aria-label="範例" data-i18n-aria-label="settings.policyExamples"></td>
+                        <td>
+                            <select class="form-control select-sm singleSelect" aria-label="輸入動作" data-i18n-aria-label="settings.policyInputAction">
+                                <option value="block" data-i18n="settings.policyActionBlock"{% if topic.inputAction == "block" %} selected{% endif %}>封鎖</option>
+                                <option value="record" data-i18n="settings.policyActionRecord"{% if topic.inputAction == "record" %} selected{% endif %}>記錄</option>
+                                <option value="off" data-i18n="settings.policyActionOff"{% if topic.inputAction == "off" %} selected{% endif %}>不處理</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control select-sm singleSelect" aria-label="輸出動作" data-i18n-aria-label="settings.policyOutputAction">
+                                <option value="block" data-i18n="settings.policyActionBlock"{% if topic.outputAction == "block" %} selected{% endif %}>封鎖</option>
+                                <option value="record" data-i18n="settings.policyActionRecord"{% if topic.outputAction == "record" %} selected{% endif %}>記錄</option>
+                                <option value="off" data-i18n="settings.policyActionOff"{% if topic.outputAction == "off" %} selected{% endif %}>不處理</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" value="{{ topic.refusal }}" aria-label="拒絕訊息" data-i18n-aria-label="settings.policyRefusal"></td>
+                        <td><button type="button" class="button button-border button-sm js-remove-policy-topic" data-i18n="action.delete">刪除</button></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-gray" data-i18n="common.noData">無資料</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-row">
+            <button type="button" class="button button-border button-sm js-add-policy-topic" data-i18n="settings.addPolicyTopic">新增主題</button>
+        </div>
+    </div>
+
+    <div class="block flex-row column gap-16">
+        <div class="form-group">
+            <div class="label"><label for="policyWordFilters" class="control-label" data-i18n="settings.policyWordFilters">詞彙過濾</label></div>
+            <div class="field">
+                <textarea id="policyWordFilters" class="form-control js-policy-word-filters"></textarea>
+                <span class="text-gray" data-i18n="settings.policyWordFiltersHint">每行一個詞彙，或以逗號分隔。</span>
+            </div>
+        </div>
+        <div class="flex-row flex-wrap gap-16">
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="policyBlockedInput" class="control-label" data-i18n="settings.policyBlockedInputMsg">輸入封鎖訊息</label></div>
+                <div class="field"><textarea id="policyBlockedInput" class="form-control js-policy-blocked-input-msg">您的提問包含不允許的內容，請調整後再試。</textarea></div>
+            </div>
+            <div class="form-group col-6-md col-12-sm">
+                <div class="label"><label for="policyBlockedOutput" class="control-label" data-i18n="settings.policyBlockedOutputMsg">輸出封鎖訊息</label></div>
+                <div class="field"><textarea id="policyBlockedOutput" class="form-control js-policy-blocked-output-msg">很抱歉，這個問題我無法回答。</textarea></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ═══ 子頁籤 6：Agent 工具（NET-NEW）═══
+     內建工具白名單（勾選；未勾任何＝全部啟用＝enabled_builtin_tools None。後端另有 []＝全部停用
+     （settings_hub.py 明分 None/[]），本 UI 刻意不提供「全停用」入口——React 端同（page.tsx 送
+     next.length ? next : null））、綁定術語表、勾選 MCP Server（從平台**已啟用**清單選——product
+     mcp.py list_tenant_mcp_catalog 只回啟用中的 server；示範 2 筆）。皆為 Agent 模式；值載體隨底部
+     「儲存對話設定」直送。builtin_tool_overrides（自訂描述/extra_prompt）後端已支援、本頁與 React
+     皆刻意緩做（spec 列為進階旋鈕，UI 待需求）。工具名／術語表名／Server 名為業務資料（識別字），不翻。 #}
+<div class="tab-content" id="panelAgentTools" style="display: none;">
+    <p class="text-gray" data-i18n="settings.agentToolsIntro">Agent 模式下可呼叫的工具：內建工具、綁定的術語表、以及平台已啟用的 MCP Server。</p>
+    <div class="text-gray mb-8" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</div>
+    {% set builtinTools = ["get_current_datetime", "date_tool", "calculate", "convert_units", "date_calculate", "lunar", "search_knowledge_base", "search_qa", "get_document", "summarize_document", "list_available_datasets", "ask_clarifying_question", "analyze_user_intent"] %}
+    <div class="block mb-16 flex-row column gap-8">
+        <div class="text-md text-bold" id="builtinToolsLabel" data-i18n="settings.builtinTools">內建工具</div>
+        <div class="text-gray" data-i18n="settings.builtinToolsHint">未勾選任何工具＝全部啟用（預設）。</div>
+        <div class="flex-row flex-wrap gap-16" role="group" aria-labelledby="builtinToolsLabel">
+            {% for tool in builtinTools %}
+            <label class="form-checkbox">
+                <input type="checkbox" class="js-builtin-tool" value="{{ tool }}" checked>
+                <span>{{ tool }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="block flex-row column gap-16">
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <label for="glossaryTablesSelect" class="control-label" data-i18n="settings.glossaryTables">綁定術語表</label>
+            </div>
+            <div class="field col-12-sm">
+                <select id="glossaryTablesSelect" class="form-control multiSelect js-glossary-tables" multiple="multiple" data-placeholder="請選擇" data-placeholder-key="common.pleaseSelect">
+                    <option value="1" selected>人資術語</option>
+                    <option value="2">產品術語</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <label for="mcpServersSelect" class="control-label" data-i18n="settings.mcpServers">MCP Server</label>
+            </div>
+            <div class="field col-12-sm">
+                <select id="mcpServersSelect" class="form-control multiSelect js-mcp-servers" multiple="multiple" data-placeholder="請選擇" data-placeholder-key="common.pleaseSelect">
+                    <option value="1">時間工具</option>
+                    <option value="2">內部文件搜尋</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ═══ 子頁籤 7：QA 直答（NET-NEW，Spec B）═══
+     使用者問句完美命中某 QA 集的問題時，直接回該 QA 的答案原文（qa_direct）；judge 模式再加一道 LLM 裁決。
+     模式(off/exact/judge)＋judge 判準 textarea 是租戶旋鈕，隨底部「儲存對話設定」直送 settings PUT；
+     「參與直答的 QA 集」multi-select 是 RetrievalProfile.qa_direct_dataset_ids（另走 retrieval PUT
+     /profiles/{no}/qa-direct-datasets），故三者皆值載體、掛 hook class（js-qa-direct-*，全站 scss 不引用），
+     React 接手送 API。QA 集名為業務資料（識別字），不翻。 #}
+<div class="tab-content" id="panelQaDirect" style="display: none;">
+    <p class="text-gray" data-i18n="settings.qaDirectIntro">問句完全命中某 QA 集的問題時，直接回該問答的答案原文、不經 AI 重組；judge 模式再加一道 LLM 裁決。</p>
+    <div class="block mb-16 flex-row column gap-16">
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <span class="control-label" id="qaDirectModeLabel" data-i18n="settings.qaDirectMode">直答模式</span>
+            </div>
+            <div class="field col-12-sm">
+                <div class="flex-row flex-wrap gap-24" role="radiogroup" aria-labelledby="qaDirectModeLabel">
+                    <label class="form-radio">
+                        <input type="radio" name="qaDirectMode" class="js-qa-direct-mode" value="off" checked>
+                        <span data-i18n="settings.qaDirectModeOff">停用</span>
+                    </label>
+                    <label class="form-radio">
+                        <input type="radio" name="qaDirectMode" class="js-qa-direct-mode" value="exact">
+                        <span data-i18n="settings.qaDirectModeExact">完全命中</span>
+                    </label>
+                    <label class="form-radio">
+                        <input type="radio" name="qaDirectMode" class="js-qa-direct-mode" value="judge">
+                        <span data-i18n="settings.qaDirectModeJudge">完全命中＋LLM 裁決</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <label for="qaDirectCriteria" class="control-label" data-i18n="settings.qaDirectCriteria">judge 判準</label>
+            </div>
+            <div class="field col-12-sm">
+                <textarea id="qaDirectCriteria" class="form-control size-sm js-qa-direct-criteria" placeholder="補充判準（僅 judge 模式生效）..." data-i18n-placeholder="settings.qaDirectCriteriaPlaceholder"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="block flex-row column gap-16">
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <label for="qaDirectDatasetsSelect" class="control-label" data-i18n="settings.qaDirectDatasets">參與直答的 QA 集</label>
+            </div>
+            <div class="field col-12-sm">
+                <select id="qaDirectDatasetsSelect" class="form-control multiSelect js-qa-direct-datasets" multiple="multiple" data-placeholder="請選擇" data-placeholder-key="common.pleaseSelect">
+                    <option value="1" selected>客服問答集</option>
+                    <option value="2">產品 FAQ</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# 統一儲存：直送 PUT /settings/profiles/{no}（分組 merge 寫回生成/政策/agent-提示詞/內建工具/MCP 勾選）。
+     切版新頁的直送 API 鈕→data-toast 列全結果（§5）＋自創 js-save-profile-config（React 綁定記號）。 #}
+<div class="flex-row justify-content-center mt-24">
+    <button type="button" class="button button-primary js-save-profile-config" data-toast="對話設定已儲存|部分欄位未通過驗證|儲存失敗，請稍後再試" data-i18n-data-toast="toast.saveProfileConfig" data-toast-type="success|warning|error" data-i18n="settings.saveConfig">儲存對話設定</button>
+</div>
+
+{# 意圖啟用確認 modal（intentionModal）：檢索與欄位子頁籤開啟某層意圖、但仍有資料集未填任務描述時彈出
+   （條件開窗業務判斷，觸發鈕掛 hook class 不掛 data-open-modal，見上方 §5 註）。對應 React IntentEnableModal。 #}
+{% include "components/intent-enable-modal/intent-enable-modal.html" %}
+
+{# 跨設定檔複製 modal（configCopyModal）：由檢索與欄位子頁籤的 .js-copy-config 業務條件開窗
+   （不掛 data-open-modal，見 §5 註）。對應 React ConfigCopyModal。 #}
+{% include "components/config-copy-modal/config-copy-modal.html" %}

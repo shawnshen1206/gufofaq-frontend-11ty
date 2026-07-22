@@ -1,4 +1,4 @@
-// 篩選列欄位群（5-4-1/5-4-2、2-2-1 共用）：讓一列篩選欄位均分剩餘寬度、可被壓縮。
+// 篩選列欄位群（5-2、2-2-1 共用）：讓一列篩選欄位均分剩餘寬度、可被壓縮。
 // 無 html（markup 由頁面自組——外層 .filter-fields，每個欄位加本元件的 slot class .filter-field）；
 // 行為 js 見同資料夾 filter-fields.js（.js-filter-clear 清除鈕）。
 // （原始規則來自真實 app css/style.css 的 .filter-fields .form-group，依 GUIDELINE §4

@@ -1,0 +1,74 @@
+{# 跨設定檔複製 modal（NET-NEW 功能，非 11ty 給稿；此處補立切版正本以符轉換契約）。取自對話設定
+     hub「檢索與欄位」子頁籤的「從其他設定檔複製…」鈕（.js-copy-config）：開窗需先選定「來源設定檔」
+     ＝業務條件開窗，故該鈕保留 hook class、不掛 data-open-modal（GUIDELINE §5）。彈窗本體＝來源設定檔
+     選擇（排除目前檢視中的設定檔）＋六個地位平等、預設全勾的複製群組（依 GufoRAG chatbot COPY_GROUPS，
+     資料化於下方 configCopyGroups）。標題「複製到「<目標>」」的目標設定檔名是執行期資料：前後綴拆
+     i18n key（§4-2），名字放 #configCopyTarget 資料槽由 React 填（同 delete-modal 的 deleteTargetId
+     慣例），示範值＝5-2 檢視中的設置一。
+     參數（示範開關；React 端為條件渲染，元件庫頁 set true 演出該分支）：
+       configCopyShowWarning＝目標為前台公開問答生效設定檔時的對外影響警告（React 依 targetIsProduction
+         渲染；5-2 示範目標設置一非前台預設，故該頁不演）；
+       configCopyShowError＝送出失敗的持久錯誤列（React 依 error state 渲染）。
+     契約在 gufofaq-saas product app/routers/config.py（POST /config/profiles/{no}/copy-from），
+     套用由 React 業務 js 帶條件驗證後直送，故 .js-config-copy-apply；示範來源 2 筆。 #}
+{# 元件內部示範資料用元件專屬變數名（§6）：六個複製群組＝GufoRAG chatbot services/config.py 的 COPY_GROUPS #}
+{% set configCopyGroups = [
+    { i18nKey: "settings.copyConfigGroupPrompts", label: "提示詞：五層系統提示詞（聊天室／產品／意圖／回答／Agent）、機器人人設、回答格式、歡迎語" },
+    { i18nKey: "settings.copyConfigGroupRetrieval", label: "檢索與生成：模型、溫度、取樣數（總數／選用數）、資料來源比例、知識模式、QA 直答模式與判準、重排序、記憶輪數、建議問題、標題自動命名（僅首次）、時區、搜尋模式與 Agent 迭代上限、引用、Langfuse 追蹤、資料集分層與逐層意圖、欄位顯示標籤" },
+    { i18nKey: "settings.copyConfigGroupPolicy", label: "合規：敏感詞、禁止主題、輸入擋下訊息、輸出擋下訊息" },
+    { i18nKey: "settings.copyConfigGroupTools", label: "工具：內建工具啟停與客製設定、MCP 伺服器選用" },
+    { i18nKey: "settings.copyConfigGroupGlossary", label: "術語表綁定：本設定檔生效的術語表" },
+    { i18nKey: "settings.copyConfigGroupDatasetBinding", label: "答題索引綁定：答題索引、QA 直答索引" }
+] %}
+<dialog class="modals" id="configCopyModal" aria-labelledby="configCopyModal-title">
+    <div class="modals-dialog modals-md">
+        <div class="modals-wrap">
+            {% include "ui/modal-close/modal-close.html" %}
+            <div class="modals-content">
+                <div class="modals-header">
+                    <h3 class="modals-title" id="configCopyModal-title"><span data-i18n="settings.copyConfigModalTitlePrefix">複製到「</span><span id="configCopyTarget">設置一</span><span data-i18n="settings.copyConfigModalTitleSuffix">」</span></h3>
+                </div>
+                <div class="modals-body">
+                    <div class="flex-row column gap-16">
+                        {% if configCopyShowError %}
+                        {# 送出失敗的持久錯誤列（React 依 error state 條件渲染；文案為執行期 API 錯誤，示範網路錯誤態） #}
+                        <p class="text-red" role="alert" data-i18n="common.networkError">網路錯誤，請稍後再試</p>
+                        {% endif %}
+                        <div class="form-group">
+                            <div class="label">
+                                <label for="configCopySourceSelect" class="control-label" data-i18n="settings.copyConfigSource">來源設定檔</label>
+                            </div>
+                            <div class="field">
+                                <select id="configCopySourceSelect" class="form-control singleSelect">
+                                    <option value="2" data-i18n="settings.config2">設置二</option>
+                                    <option value="3" data-i18n="settings.config3">設置三</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {% if configCopyShowWarning %}
+                        {# 目標＝前台公開問答生效的設定檔時顯示：這次複製會直接改變對外行為（D-2 的唯一警告）。 #}
+                        <p class="text-red config-copy-warning" data-i18n="settings.copyConfigProductionWarning">目標設定檔是前台公開問答目前使用的正式設定檔——這次複製會直接影響前台公開問答的對外行為，請先確認來源設定檔內容適用於對外服務。</p>
+                        {% endif %}
+
+                        <fieldset class="config-copy-groups" role="group" aria-labelledby="configCopyGroupsLabel">
+                            <legend id="configCopyGroupsLabel" class="control-label" data-i18n="settings.copyConfigGroups">複製項目</legend>
+                            {% for group in configCopyGroups %}
+                            <label class="form-checkbox config-copy-group-row">
+                                <input type="checkbox" checked>
+                                <span data-i18n="{{ group.i18nKey }}">{{ group.label }}</span>
+                            </label>
+                            {% endfor %}
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modals-footer">
+                    <div class="button-row center">
+                        <button type="button" class="button button-border btn-close-modals" data-i18n="action.cancel">取消</button>
+                        <button type="button" class="button button-primary js-config-copy-apply" data-toast="設定已複製|複製失敗，請稍後再試" data-i18n-data-toast="toast.copyConfig" data-toast-type="success|error" data-i18n="action.copy">複製</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
