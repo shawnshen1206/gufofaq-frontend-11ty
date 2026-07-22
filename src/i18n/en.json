@@ -642,7 +642,7 @@
   "toast.chatSubmit": "Generating answer…|Answer generated|Failed to generate answer",
   "toast.copyConfig": "Configuration copied|Copy failed. Please try again later.",
   "toast.copyKey": "Key copied",
-  "toast.createGlossaryTable": "Glossary table created|Enter a glossary table name|Failed to create. Please try again later.",
+  "toast.createGlossaryTable": "Glossary table created|Table name cannot be empty|Failed to create. Please try again later.",
   "toast.createGroup": "Group created|Group name already exists|Failed to create group. Please try again later.",
   "toast.createMcpServer": "MCP Server created|Name already exists|Failed to create. Please try again later.",
   "toast.createQaSet": "QA set created|A QA set with this name already exists|Failed to create. Please try again later.",

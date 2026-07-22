@@ -30,7 +30,8 @@ permalink: 5-6-2_platformMcpServers.html
 
 {# 新增 MCP Server：名稱＋執行指令（必填）＋參數＋環境變數＋描述＋啟用＋新增鈕（三態 toast：
      成功／名稱已存在／失敗——chatbot routes/mcp.py 的 create 只查名稱重複（400），連線測試是獨立的
-     /servers/{id}/test 端點、不在建立路徑上）#}
+     /servers/{id}/test 端點、不在建立路徑上。product catalog 的 toast.createMcpServer 仍含
+     「或連線測試失敗」死分支，此處為修正後值，待回流 product）#}
 <div class="block mb-16 flex-row column gap-16">
     <div class="text-md text-bold" data-i18n="settings.addMcpServer">新增 MCP Server</div>
     <div class="flex-row flex-wrap gap-16 mobile-column sm-gap-16">

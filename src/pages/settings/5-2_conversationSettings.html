@@ -316,7 +316,9 @@ permalink: 5-2_conversationSettings.html
      產品系統提示詞（含版本史）沿用 components/prompt-edit + 版本卡（5-4-1 結構，另有 /prompts 版本端點）；
      機器人身分／Agent／回應／意圖判斷／聊天室提示詞為值載體、隨底部「儲存對話設定」直送。
      模式適用性以 gufofaq-saas docs/mode-matrix.md 實測矩陣為準：agent/respond 僅 Agent 模式生效、
-     intension 僅傳統搜尋模式生效（agent 無意圖路由階段）、role/chatroom 兩模式皆用。 #}
+     intension 僅傳統搜尋模式生效（agent 無意圖路由階段）、role/chatroom 兩模式皆用——「進階提示詞」
+     區塊即據此取代 product 的「Agent 提示詞」段（settings.agentPrompts，其整段「僅 Agent」暗示與
+     矩陣相反），待回流 product。 #}
 <div class="tab-content" id="panelPrompts" style="display: none;">
     <div class="block mb-10 flex-row column gap-16">
         <div class="text-md text-bold" data-i18n="settings.systemPrompt">系統提示詞</div>
@@ -545,6 +547,7 @@ permalink: 5-2_conversationSettings.html
      政策主題表（每列 主題/定義/範例/輸入動作/輸出動作/拒絕訊息，逐列可就地編輯）＋新增/刪除列，
      結構比照 glossary-entries-modal 的詞條編輯器；新增/刪除列動業務輸入（值交給 React 去 PUT），
      故 hook class js-add-policy-topic／js-remove-policy-topic（§5）。詞彙過濾＋兩則封鎖訊息為值載體。
+     policyActionOff 英譯 Ignore 為修正後值（對齊 policyIntro 詞彙；product catalog 仍作 Off，待回流）。
      全部隨底部「儲存對話設定」直送（policy 分組 merge 寫回 GufoRAG ChatConfig）。示範 2 筆。 #}
 <div class="tab-content" id="panelPolicy" style="display: none;">
     <p class="text-gray" data-i18n="settings.policyIntro">定義敏感主題與詞彙過濾：對命中的輸入／輸出可封鎖、記錄或不處理，並設定被封鎖時回覆使用者的拒絕訊息。</p>
@@ -637,7 +640,9 @@ permalink: 5-2_conversationSettings.html
      next.length ? next : null））、綁定術語表、勾選 MCP Server（從平台**已啟用**清單選——product
      mcp.py list_tenant_mcp_catalog 只回啟用中的 server；示範 2 筆）。皆為 Agent 模式；值載體隨底部
      「儲存對話設定」直送。builtin_tool_overrides（自訂描述/extra_prompt）後端已支援、本頁與 React
-     皆刻意緩做（spec 列為進階旋鈕，UI 待需求）。工具名／術語表名／Server 名為業務資料（識別字），不翻。 #}
+     皆刻意緩做（spec 列為進階旋鈕，UI 待需求）。工具名／術語表名／Server 名為業務資料（識別字），不翻。
+     agentToolsIntro 的「已啟用」為修正後值（product catalog 仍作「已註冊」，與 mcp.py 只回啟用中不符，
+     待回流）。 #}
 <div class="tab-content" id="panelAgentTools" style="display: none;">
     <p class="text-gray" data-i18n="settings.agentToolsIntro">Agent 模式下可呼叫的工具：內建工具、綁定的術語表、以及平台已啟用的 MCP Server。</p>
     <div class="text-gray mb-8" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</div>
