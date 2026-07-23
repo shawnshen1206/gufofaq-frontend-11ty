@@ -508,6 +508,8 @@
   "settings.frontQaDefault": "Default for frontend Q&A",
   "settings.generationSettings": "Generation settings",
   "settings.glossaryMgmtIntro": "Glossary tables let the QA agent look up term definitions and aliases; \"when to consult\" is the tool description the LLM uses to decide when to check this table.",
+  "settings.glossaryNormalizeRegex": "Query normalize regex (optional)",
+  "settings.glossaryNormalizeRegexPlaceholder": "e.g. [-.\\s] to strip separators; no quantifiers (* + ? {})",
   "settings.glossaryTableList": "Glossary tables",
   "settings.glossaryTableName": "Table name",
   "settings.glossaryTables": "Bound glossary tables",
