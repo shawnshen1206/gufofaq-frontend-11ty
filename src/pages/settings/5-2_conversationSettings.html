@@ -783,6 +783,25 @@ permalink: 5-2_conversationSettings.html
             </div>
         </div>
     </div>
+
+    {# 可回答性 grounding 閘（agent 模式）：收斂到的素材不足以回答時誠實查無、不硬生成無依據的答案。
+       mode(off/on)＋criteria 是租戶旋鈕，隨底部「儲存對話設定」直送 settings PUT；掛 hook class
+       js-answerability-*（全站 scss 不引用），React 接手送 API。與 QA 直答同屬「可回答性」決策、故同頁。 #}
+    <div class="block flex-row column gap-16 mt-16">
+        <div class="text-gray" data-i18n="settings.answerabilityIntro">Agent 模式：收斂到的資料不足以回答時，誠實告知查無、不硬生成無依據的答案。</div>
+        <label class="form-checkbox">
+            <input type="checkbox" class="js-answerability-mode">
+            <span data-i18n="settings.answerabilityEnable">啟用可回答性閘（素材不足即誠實查無）</span>
+        </label>
+        <div class="form-group row mobile-col">
+            <div class="label label-md">
+                <label for="answerabilityCriteria" class="control-label" data-i18n="settings.answerabilityCriteria">補充判準</label>
+            </div>
+            <div class="field col-12-sm">
+                <textarea id="answerabilityCriteria" class="form-control size-sm js-answerability-criteria" placeholder="補充判準（附加在內建 grounding 判準之後）..." data-i18n-placeholder="settings.answerabilityCriteriaPlaceholder"></textarea>
+            </div>
+        </div>
+    </div>
 </div>
 
 {# 統一儲存：直送 PUT /settings/profiles/{no}（分組 merge 寫回生成/政策/agent-提示詞/內建工具/MCP 勾選）。
