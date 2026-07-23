@@ -633,6 +633,49 @@ permalink: 5-2_conversationSettings.html
             </div>
         </div>
     </div>
+
+    {# 出口替換規則（NET-NEW，Spec 乙）：生成後對答案做 match→replacement 直接替換（別名任一命中→
+       同一 replacement）。確定性後處理、**兩模式皆生效**（與術語表僅 agent 不同）。逐列增刪用 hook
+       class js-add-osub／js-remove-osub（§5）。別名逗號分隔（比照 glossary aliases）；${0}=命中文字、
+       ${name}=regex 具名群組、$$=字面$；regex 禁量詞（ReDoS，backref 靠字面 alternation 非 \w+）。
+       值載體隨底部「儲存對話設定」直送（policy 分組 merge → ChatConfig output_replacements）。示範 1 筆。 #}
+    <div class="block flex-row column gap-16">
+        <div class="text-md text-bold" data-i18n="settings.outputReplacements">出口替換規則</div>
+        <div class="text-gray" data-i18n="settings.outputReplacementsHint">生成答案後，把命中的別名（任一）替換成指定內容；${0}=命中文字、regex 具名群組用 ${name}、$$ 表字面 $。regex 不可含量詞。兩種對話模式皆生效。</div>
+        <div class="table-container scrollTable">
+            <table class="default-table">
+                <colgroup>
+                    <col style="min-width:240px;">
+                    <col style="min-width:280px;">
+                    <col style="width:80px; min-width:80px;">
+                    <col style="width:90px; min-width:90px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th data-i18n="settings.aliases">別名（逗號分隔）</th>
+                        <th data-i18n="settings.outputReplacementReplacement">替換內容</th>
+                        <th data-i18n="settings.outputReplacementIsRegex">Regex</th>
+                        <th data-i18n="common.actions">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rule in [{ aliases: "推貿費, 推廣貿易費, 貿推費", replacement: "[${0}](https://www.trade.gov.tw/tpf)", isRegex: false }] %}
+                    <tr>
+                        <td><input type="text" class="form-control js-osub-aliases" value="{{ rule.aliases }}" aria-label="別名（逗號分隔）" data-i18n-aria-label="settings.aliases"></td>
+                        <td><input type="text" class="form-control js-osub-replacement" value="{{ rule.replacement }}" aria-label="替換內容" data-i18n-aria-label="settings.outputReplacementReplacement"></td>
+                        <td class="text-center"><label class="form-checkbox in-cell"><input type="checkbox" class="js-osub-is-regex"{% if rule.isRegex %} checked{% endif %}><span class="sr-only" data-i18n="settings.outputReplacementIsRegex">Regex</span></label></td>
+                        <td><button type="button" class="button button-border button-sm js-remove-osub" data-i18n="action.delete">刪除</button></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center text-gray" data-i18n="common.noData">無資料</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-row">
+            <button type="button" class="button button-border button-sm js-add-osub" data-i18n="settings.addOutputReplacement">新增替換規則</button>
+        </div>
+    </div>
 </div>
 
 {# ═══ 子頁籤 6：Agent 工具（NET-NEW）═══
