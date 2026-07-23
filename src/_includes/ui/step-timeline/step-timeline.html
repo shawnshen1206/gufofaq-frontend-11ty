@@ -1,0 +1,26 @@
+{# 執行步驟時間軸（agent 子圖多切 node 的觀測性）：管理者看到每個回答「執行到哪一步、用了哪些工具」。
+   真值由 lib/sse accumulateSse 的 steps 驅動（chatbot status chunk 的 step_id/step_status/seq/tools）；
+   狀態 class：is-completed（--success 綠點）/ is-running（--brand-text 藍點）/ 其餘 pending（--border 灰點）。
+   本 demo 靜態示範三步；React（components/StepTimeline/StepTimeline.tsx）逐字對照重寫，由 steps 陣列 .map()。
+   step-timeline / step-* class 是 scss 引用的視覺 hook（非 DOM-query），逐字保留。 #}
+<div class="step-timeline mt-24">
+    <span class="text-lg text-bold" data-i18n="agent.stepTimeline">執行步驟</span>
+    <ol class="step-timeline-list mt-16">
+        <li class="step-item is-completed">
+            <span class="step-dot"></span>
+            <span class="step-label">Agent 推理</span>
+            <span class="step-status" data-i18n="agent.stepCompleted">已完成</span>
+        </li>
+        <li class="step-item is-completed">
+            <span class="step-dot"></span>
+            <span class="step-label">檢索知識庫</span>
+            <span class="step-tools">search_knowledge_base</span>
+            <span class="step-status" data-i18n="agent.stepCompleted">已完成</span>
+        </li>
+        <li class="step-item is-running">
+            <span class="step-dot"></span>
+            <span class="step-label">生成答案</span>
+            <span class="step-status" data-i18n="agent.stepRunning">進行中</span>
+        </li>
+    </ol>
+</div>

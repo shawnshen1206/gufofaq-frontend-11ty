@@ -114,6 +114,9 @@ permalink: 2-2-1_singleTest.html
      詳細只在測試區、不進共用 chatroom。示範假資料住元件內（見該元件檔頭註解）。 #}
 {% include "components/agent-activity/agent-activity.html" %}
 
+{# 執行步驟時間軸（agent 子圖多切 node 觀測性）：由 lib/sse steps 驅動，agent 模式顯示。 #}
+{% include "ui/step-timeline/step-timeline.html" %}
+
 {# 參考來源表格區塊：真實頁預設 hidden（點擊訊息列「查看來源」才顯示），表頭與 components/sources-block 一致，
      來源列資料 set sources（示範 2 筆）交給 components/sources-block 內嵌 for 渲染（同 2-1_qaRecord.html 手法） #}
 {% set sources = [
