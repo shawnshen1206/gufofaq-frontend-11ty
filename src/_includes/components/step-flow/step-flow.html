@@ -12,8 +12,11 @@
    每節點（摘要列＋隱藏詳細列）以 {% for %} 內嵌渲染（GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀
      include 子元件，會靜默渲染成空白）。真值由 React 端串流事件驅動（lib/sse steps/toolActivity/
      thinkingByNode/summary + lib/stepFlow computeFlow）；此處為靜態示範。
-   參數：stepFlowNodes（選填，[{ label, state, time, tools, params, result, verdict, thinking }]）——
-     使用頁不同對話主題時覆寫，讓示範與同頁對話自洽（§6）；內部變數用元件專屬名 stepFlowNodeRows。
+   參數：stepFlowNodes（選填，[{ label, state, time, tools, params, result, verdict, thinking }]）＋
+     stepFlowSummary（選填，{ tokens, latency, ttft, results, model }）——使用頁換對話主題時「兩個一起覆寫」，
+     否則摘要（檢索筆數/模型）會與節點對不上（§6 自洽）；內部變數用元件專屬名 stepFlowNodeRows／stepFlowSummaryData。
+   進度「目前 X / N」全由 stepFlowNodeRows 推導（X＝已執行到的最後一步序號，N＝節點數），不烤字面量——
+     使用頁改節點數，烤死的總數就會說謊（§6）。
    示範資料＝假資料（工具名/參數/結果/推理），依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。 #}
 {% set stepFlowNodeRows = stepFlowNodes or [
     { label: "初始化對話", state: "completed", time: "12ms" },
@@ -26,29 +29,38 @@
     { label: "完成對話", state: "pending", time: "" },
     { label: "輸出合規檢查", state: "pending", time: "" }
 ] %}
+{# 整體執行摘要：與 stepFlowNodes 同型的可覆寫資料（來自 chat_room chunk 的既有欄），使用頁換主題時
+     連同節點一起覆寫才不會自打架（§6）；未設用內建示範。缺欄由 React 端不顯示，靜態示範一律備齊。 #}
+{% set stepFlowSummaryData = stepFlowSummary or {
+    tokens: "1,284", latency: "2.4s", ttft: "480ms", results: "8", model: "openai:gpt-4o-mini"
+} %}
+{# 進度序號由陣列推導：已執行到的最後一步（completed/running/failed 都算已執行；skipped 是未走分支、
+     pending 尚未到，都不算）。nunjucks 迴圈內 set 會外溢到迴圈外（同 frame），故可累加取最後一步。 #}
+{% set stepFlowCurrent = 0 %}
+{% for node in stepFlowNodeRows %}{% if node.state == "completed" or node.state == "running" or node.state == "failed" %}{% set stepFlowCurrent = loop.index %}{% endif %}{% endfor %}
 <div class="step-flow js-accordion mt-24">
     <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
         <span class="text-lg text-bold" data-i18n="agent.execFlow">執行流程</span>
         <div class="flex-row align-items-center gap-8 flex-wrap">
-            {# 進度＝已完成數＋1（當前）/ 節點總數；由 React 依 computeFlow 算，此處示範靜態值。前後綴走 i18n、數字為資料 #}
-            <span class="step-flow-progress"><span data-i18n="agent.stepProgressPrefix">目前</span> 5 / 9</span>
+            {# 進度前後綴走 i18n、數字由陣列推導（stepFlowCurrent／stepFlowNodeRows.length），不烤字面量（§6） #}
+            <span class="step-flow-progress"><span data-i18n="agent.stepProgressPrefix">目前</span> {{ stepFlowCurrent }} / {{ stepFlowNodeRows.length }}</span>
             <button type="button" class="button button-border button-sm js-expand-all" data-i18n="common.expandAll">全部展開</button>
             <button type="button" class="button button-border button-sm js-collapse-all" data-i18n="common.collapseAll">全部收合</button>
         </div>
     </div>
 
-    {# 整體執行摘要（來自 chat_room chunk 的既有欄；缺欄不顯示）：一眼看完本次成本/效能。
+    {# 整體執行摘要（stepFlowSummaryData，來自 chat_room chunk 的既有欄）：一眼看完本次成本/效能。
          label 走 i18n，數值為資料（不翻）。 #}
     <div class="step-flow-summary flex-row flex-wrap gap-16 mt-16">
-        <span class="step-flow-metric"><span data-i18n="agent.summaryTokens">Token</span> 1,284</span>
-        <span class="step-flow-metric"><span data-i18n="agent.summaryLatency">延遲</span> 2.4s</span>
-        <span class="step-flow-metric"><span data-i18n="agent.summaryTtft">首字</span> 480ms</span>
-        <span class="step-flow-metric"><span data-i18n="agent.summaryResults">檢索</span> 8</span>
-        <span class="step-flow-metric"><span data-i18n="settings.modelName">模型</span> openai:gpt-5-mini</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryTokens">Token</span> {{ stepFlowSummaryData.tokens }}</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryLatency">延遲</span> {{ stepFlowSummaryData.latency }}</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryTtft">首字</span> {{ stepFlowSummaryData.ttft }}</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryResults">檢索</span> {{ stepFlowSummaryData.results }}</span>
+        <span class="step-flow-metric"><span data-i18n="settings.modelName">模型</span> {{ stepFlowSummaryData.model }}</span>
     </div>
 
     <div class="table-container scrollTable mt-16">
-        <table class="default-table no-border step-flow-table">
+        <table class="default-table no-border">
             <colgroup>
                 <col style="width:40px; min-width:40px;">
                 <col style="min-width:220px;">
@@ -65,7 +77,7 @@
                     <td class="step-node-state">
                         {% if node.state == "completed" %}<span data-i18n="agent.stepCompleted">已完成</span>{% elif node.state == "running" %}<span data-i18n="agent.stepRunning">進行中</span>{% elif node.state == "skipped" %}<span data-i18n="agent.stepSkipped">略過</span>{% elif node.state == "failed" %}<span data-i18n="platform.resultFail">失敗</span>{% else %}<span data-i18n="agent.stepPending">待處理</span>{% endif %}
                     </td>
-                    <td class="step-node-toggle-cell">
+                    <td>
                         {% if node.tools or node.params or node.result or node.verdict or node.thinking %}
                         <button type="button" class="button accordion-btn" aria-expanded="false" title="展開表格" data-i18n-title="common.expandRow">
                             <span class="sr-only" data-i18n="common.expandRow">展開表格</span>

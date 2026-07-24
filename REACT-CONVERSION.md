@@ -86,7 +86,7 @@
   `#knowledgeConfigSelect`／`#llmModelSelect`、faq-chatroom 的 `#chat-input-txt`）id 照帶。
 - 業務邏輯（抓資料／SSE／圖表／表單驗證／日期）不轉。串流狀態列（`role="status"` live region）與建議追問 chip
   （`.js-ask-suggested`）markup 照切版轉、內容改由 SSE 事件驅動（切版是凍結的一格示範）。
-- 零自帶 js、行為全借共用原子 hook 的元件（agent-activity 借 `ui/accordion` 的 `.js-accordion`／`.js-expand-all`／
+- 零自帶 js、行為全借共用原子 hook 的元件（step-flow 借 `ui/accordion` 的 `.js-accordion`／`.js-expand-all`／
   `.js-collapse-all`）：React 端由共用 Accordion 邏輯（含 setAll 全展/全收、aria-expanded 每路徑同步）供行為，
   元件自己不重寫一份。
 - 量測用臨時 DOM 節點（append 到 `document.body` 量文字寬等）加 `position:absolute`——append 目標可能是

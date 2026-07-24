@@ -245,9 +245,10 @@ permalink: 2-2-3_abTest.html
 </div>
 
 {# 執行流程（測試區詳細觀測）：類 mermaid 直式流程圖，取代原 agent 工具活動軌跡（併入流程圖節點）。
-     本頁對話問的是 UH3240 規格，故覆寫示範節點與之自洽（§6，stepFlowNodes 元件專屬名）；元件內建
-     預設節點是移民主題（配 2-2-1），見該元件檔頭註解。11ty 此處單處 demo 元件結構；React 端 AB 兩側
-     各自即時渲染一份 StepFlow（每側獨立串流步驟，屬業務層——見 ab-test/page.tsx）。 #}
+     本頁對話問的是 UH3240 規格，故「節點與摘要一起覆寫」與之自洽（§6，stepFlowNodes／stepFlowSummary
+     元件專屬名）——摘要的檢索筆數要對上節點的「命中 6 筆」、模型對上選取的設定，否則同頁自打架。
+     元件內建預設節點是移民主題（配 2-2-1），見該元件檔頭註解。11ty 此處單處 demo 元件結構；React 端
+     AB 兩側各自即時渲染一份 StepFlow（每側獨立串流步驟，屬業務層——見 ab-test/page.tsx）。 #}
 {% set stepFlowNodes = [
     { label: "初始化對話", state: "completed", time: "10ms" },
     { label: "Agent 推理", state: "completed", time: "300ms", thinking: "問題要規格全表，決定先搜尋知識庫、必要時取回規格書全文。" },
@@ -258,6 +259,9 @@ permalink: 2-2-3_abTest.html
     { label: "完成對話", state: "pending", time: "" },
     { label: "輸出合規檢查", state: "pending", time: "" }
 ] %}
+{% set stepFlowSummary = {
+    tokens: "1,096", latency: "2.1s", ttft: "450ms", results: "6", model: "openai:gpt-4o-mini"
+} %}
 {% include "components/step-flow/step-flow.html" %}
 
 {# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），

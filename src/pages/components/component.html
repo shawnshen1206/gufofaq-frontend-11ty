@@ -47,6 +47,7 @@ bodyClass: guideline-page
             <li><a class="aside-link" href="#toastSection">Toast通知</a></li>
             <li><a class="aside-link" href="#tooltipSection">Tooltip提示</a></li>
             <li><a class="aside-link" href="#subscriptionGateSection">使用期閘門遮罩</a></li>
+            <li><a class="aside-link" href="#stepFlowSection">執行流程觀測</a></li>
         </ul>
     </aside>
     <div class="main-container">
@@ -665,6 +666,33 @@ bodyClass: guideline-page
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="stepFlowSection">
+            <h2 class="section-title"><span>23</span><span>執行流程觀測</span></h2>
+            <div class="caption">
+                <ul>
+                    <li>components/step-flow：後台測試區（單測 2-2-1／AB 2-2-3）的詳細執行觀測——把整條正典管線畫成類 mermaid 直式流程圖，頂端整體執行摘要，每節點可展開看工具/參數/結果/grounding 判定/agent 推理</li>
+                    <li>狀態點：is-completed（綠）／is-running（深墨，當前高亮）／is-skipped（空心環，未走分支）／is-failed（紅）／pending（灰）。真實頁只演到 completed/running/skipped/pending；「失敗」態只在此處看得到（GUIDELINE §5：scss 狀態 class 沒有頁面演得出＝補元件庫靜態示範）</li>
+                    <li>進度「目前 X / N」與摘要「檢索」筆數全由節點資料推導、不烤字面量；收合復用 ui/accordion，本元件不自帶 js</li>
+                </ul>
+            </div>
+            {# 失敗流程示範：生成到一半被合規攔截而中止，下游未走／未到——一次演到 failed（唯一無真實頁的態）
+               ＋completed／skipped／pending，且是一個真實可能的狀態（§6）。節點與摘要一起給，檢索筆數對上「命中 3 筆」。 #}
+            {% set stepFlowNodes = [
+                { label: "初始化對話", state: "completed", time: "11ms" },
+                { label: "Agent 推理", state: "completed", time: "320ms", thinking: "先判斷是否需要檢索工具，再決定生成策略。" },
+                { label: "檢索知識庫", state: "completed", time: "1.4s", tools: "search_knowledge_base", params: "{ query: '示範查詢' }", result: "命中 3 筆片段（相似度 0.74–0.88），注入後續生成脈絡。" },
+                { label: "可回答性判定", state: "completed", time: "160ms", verdict: "generate（素材足以回答）" },
+                { label: "生成答案", state: "failed", time: "1.2s", result: "生成時偵測到不允許的外部連結，已攔截並中止本次回答。" },
+                { label: "生成推薦問題", state: "skipped", time: "" },
+                { label: "完成對話", state: "pending", time: "" },
+                { label: "輸出合規檢查", state: "pending", time: "" }
+            ] %}
+            {% set stepFlowSummary = {
+                tokens: "742", latency: "1.9s", ttft: "520ms", results: "3", model: "openai:gpt-4o-mini"
+            } %}
+            {% include "components/step-flow/step-flow.html" %}
         </section>
 
         <footer class="footer">
