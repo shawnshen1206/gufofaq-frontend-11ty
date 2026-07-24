@@ -1,0 +1,123 @@
+{# 執行流程（後台測試區詳細觀測）：SaaS 新需求／真 app 無對應。把「這次回答執行到哪一步、
+     現在在哪個 node、用了哪些工具、grounding 判定、agent 推理」畫成一張類 mermaid 的直式流程圖，
+     並在頂端給整體執行摘要（token/延遲/TTFT/檢索筆數/模型）。取代原分開的 ui/step-timeline（步驟列）
+     與 components/agent-activity（工具軌跡），統一成一處詳細檢視。
+   正典管線各節點依序畫出（未跑到＝待處理），以 chatbot 的結構化步驟事件（step_id/step_status，
+     Part 1 completed-only 對齊）點亮；當前節點高亮＝最後一個 completed 的下一個正典節點（前端 lib/stepFlow
+     computeFlow 推斷）。狀態 class：is-completed（--success 綠點）/ is-running（--brand-ink 深墨點，當前高亮）/
+     is-skipped（--text-muted 灰虛，分支/反問跳過）/ is-failed（--danger）/ 其餘 pending（--border）。
+   收合機制復用 ui/accordion（根 .js-accordion + 每節點列的 .accordion-btn + 隱藏的 .detail-row >
+     .accordion-content，見 ui/accordion accordion.js：GufoSlide 300ms、aria-expanded 每路徑同步）——
+     本元件不自帶 js；表格結構是 accordion findContent（closest("tr")+.detail-row 兄弟列）的硬需求。
+   每節點（摘要列＋隱藏詳細列）以 {% for %} 內嵌渲染（GUIDELINE §9 陷阱：元件內部的 for 不可再巢狀
+     include 子元件，會靜默渲染成空白）。真值由 React 端串流事件驅動（lib/sse steps/toolActivity/
+     thinkingByNode/summary + lib/stepFlow computeFlow）；此處為靜態示範。
+   參數：stepFlowNodes（選填，[{ label, state, time, tools, params, result, verdict, thinking }]）——
+     使用頁不同對話主題時覆寫，讓示範與同頁對話自洽（§6）；內部變數用元件專屬名 stepFlowNodeRows。
+   示範資料＝假資料（工具名/參數/結果/推理），依 GUIDELINE §4-2「只翻 UI chrome、不翻假資料」不掛 data-i18n。 #}
+{% set stepFlowNodeRows = stepFlowNodes or [
+    { label: "初始化對話", state: "completed", time: "12ms" },
+    { label: "Agent 推理", state: "completed", time: "340ms", thinking: "先判斷是否需要檢索；問題涉及具體規定，決定呼叫知識庫搜尋。" },
+    { label: "檢索知識庫", state: "completed", time: "1.2s", tools: "search_knowledge_base", params: "{ query: '新住民 結婚 應備文件' }", result: "命中 8 筆片段（相似度 0.79–0.92），注入後續生成脈絡。" },
+    { label: "可回答性判定", state: "completed", time: "210ms", verdict: "generate（素材足以回答）" },
+    { label: "生成答案", state: "running", time: "" },
+    { label: "誠實查無", state: "skipped", time: "" },
+    { label: "生成推薦問題", state: "pending", time: "" },
+    { label: "完成對話", state: "pending", time: "" },
+    { label: "輸出合規檢查", state: "pending", time: "" }
+] %}
+<div class="step-flow js-accordion mt-24">
+    <div class="flex-row justify-content-between align-items-center flex-wrap gap-8">
+        <span class="text-lg text-bold" data-i18n="agent.execFlow">執行流程</span>
+        <div class="flex-row align-items-center gap-8 flex-wrap">
+            {# 進度＝已完成數＋1（當前）/ 節點總數；由 React 依 computeFlow 算，此處示範靜態值。前後綴走 i18n、數字為資料 #}
+            <span class="step-flow-progress"><span data-i18n="agent.stepProgressPrefix">目前</span> 5 / 9</span>
+            <button type="button" class="button button-border button-sm js-expand-all" data-i18n="common.expandAll">全部展開</button>
+            <button type="button" class="button button-border button-sm js-collapse-all" data-i18n="common.collapseAll">全部收合</button>
+        </div>
+    </div>
+
+    {# 整體執行摘要（來自 chat_room chunk 的既有欄；缺欄不顯示）：一眼看完本次成本/效能。
+         label 走 i18n，數值為資料（不翻）。 #}
+    <div class="step-flow-summary flex-row flex-wrap gap-16 mt-16">
+        <span class="step-flow-metric"><span data-i18n="agent.summaryTokens">Token</span> 1,284</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryLatency">延遲</span> 2.4s</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryTtft">首字</span> 480ms</span>
+        <span class="step-flow-metric"><span data-i18n="agent.summaryResults">檢索</span> 8</span>
+        <span class="step-flow-metric"><span data-i18n="settings.modelName">模型</span> openai:gpt-5-mini</span>
+    </div>
+
+    <div class="table-container scrollTable mt-16">
+        <table class="default-table no-border step-flow-table">
+            <colgroup>
+                <col style="width:40px; min-width:40px;">
+                <col style="min-width:220px;">
+                <col style="width:80px; min-width:80px;">
+                <col style="width:96px; min-width:96px;">
+                <col style="width:40px; min-width:40px;">
+            </colgroup>
+            <tbody>
+                {% for node in stepFlowNodeRows %}
+                <tr class="step-node is-{{ node.state }}">
+                    <td class="step-node-dot-cell"><span class="step-node-dot"></span></td>
+                    <td><span class="step-node-label">{{ node.label }}</span></td>
+                    <td class="step-node-time">{{ node.time }}</td>
+                    <td class="step-node-state">
+                        {% if node.state == "completed" %}<span data-i18n="agent.stepCompleted">已完成</span>{% elif node.state == "running" %}<span data-i18n="agent.stepRunning">進行中</span>{% elif node.state == "skipped" %}<span data-i18n="agent.stepSkipped">略過</span>{% elif node.state == "failed" %}<span data-i18n="platform.resultFail">失敗</span>{% else %}<span data-i18n="agent.stepPending">待處理</span>{% endif %}
+                    </td>
+                    <td class="step-node-toggle-cell">
+                        {% if node.tools or node.params or node.result or node.verdict or node.thinking %}
+                        <button type="button" class="button accordion-btn" aria-expanded="false" title="展開表格" data-i18n-title="common.expandRow">
+                            <span class="sr-only" data-i18n="common.expandRow">展開表格</span>
+                        </button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if node.tools or node.params or node.result or node.verdict or node.thinking %}
+                <tr class="detail-row">
+                    <td colspan="5" class="detail-cell">
+                        <div class="accordion-content">
+                            {# tr 一律包 tbody（§4：table 直下放 tr 會 SSR/hydration mismatch） #}
+                            <table class="accordion-table">
+                                <tbody>
+                                    {% if node.tools %}
+                                    <tr>
+                                        <th data-i18n="agent.tool">工具</th>
+                                        <td><code class="step-flow-code">{{ node.tools }}</code></td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if node.params %}
+                                    <tr>
+                                        <th data-i18n="agent.params">參數</th>
+                                        <td><code class="step-flow-code">{{ node.params }}</code></td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if node.result %}
+                                    <tr>
+                                        <th data-i18n="agent.result">結果</th>
+                                        <td>{{ node.result }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if node.verdict %}
+                                    <tr>
+                                        <th data-i18n="agent.verdict">判定</th>
+                                        <td>{{ node.verdict }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if node.thinking %}
+                                    <tr>
+                                        <th data-i18n="agent.thinking">推理</th>
+                                        <td>{{ node.thinking }}</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

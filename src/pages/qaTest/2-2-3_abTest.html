@@ -244,24 +244,21 @@ permalink: 2-2-3_abTest.html
     </div>
 </div>
 
-{# agent 工具活動（測試區詳細）：顯示本次問答 agent 呼叫的工具軌跡（工具名 + 參數/結果，逐筆收合展開）。
-     詳細只在測試區、不進共用 chatroom。本頁對話問的是 UH3240 規格，故覆寫示範軌跡與之自洽（§6）；
-     元件內建預設軌跡是移民主題（配 2-2-1），見該元件檔頭註解。 #}
-{% set agentActivityRows = [
-    {
-        tool: "search_knowledge_base",
-        summary: "命中 6 筆相似片段",
-        params: "{ query: 'UH3240 USB-C 規格 特色' }",
-        result: "回傳 6 筆片段（相似度 0.81–0.93），注入後續生成脈絡。"
-    },
-    {
-        tool: "get_document",
-        summary: "取回產品規格書全文",
-        params: "{ document_id: '5c7de401aa93b6f2c8d10e754a3f9b06e2c517d84f6a0b3c9e8d7f2a1b4c5d6e' }",
-        result: "取得「UH3240 USB-C 多埠集線器規格書」整份文件內容，補齊輸出規格與供電數據，供 respond 節點生成回答。"
-    }
+{# 執行流程（測試區詳細觀測）：類 mermaid 直式流程圖，取代原 agent 工具活動軌跡（併入流程圖節點）。
+     本頁對話問的是 UH3240 規格，故覆寫示範節點與之自洽（§6，stepFlowNodes 元件專屬名）；元件內建
+     預設節點是移民主題（配 2-2-1），見該元件檔頭註解。11ty 此處單處 demo 元件結構；React 端 AB 兩側
+     各自即時渲染一份 StepFlow（每側獨立串流步驟，屬業務層——見 ab-test/page.tsx）。 #}
+{% set stepFlowNodes = [
+    { label: "初始化對話", state: "completed", time: "10ms" },
+    { label: "Agent 推理", state: "completed", time: "300ms", thinking: "問題要規格全表，決定先搜尋知識庫、必要時取回規格書全文。" },
+    { label: "檢索知識庫", state: "completed", time: "1.1s", tools: "search_knowledge_base", params: "{ query: 'UH3240 USB-C 規格 特色' }", result: "命中 6 筆片段（相似度 0.81–0.93），注入後續生成脈絡。" },
+    { label: "可回答性判定", state: "completed", time: "180ms", verdict: "generate（素材足以回答）" },
+    { label: "生成答案", state: "running", time: "" },
+    { label: "生成推薦問題", state: "pending", time: "" },
+    { label: "完成對話", state: "pending", time: "" },
+    { label: "輸出合規檢查", state: "pending", time: "" }
 ] %}
-{% include "components/agent-activity/agent-activity.html" %}
+{% include "components/step-flow/step-flow.html" %}
 
 {# 參考來源表格區塊：與 2-2-1_singleTest 版本差異僅在標頭以 .js-sources-side 標示目前檢視的是哪一側（設定A/B），
      來源列資料 set sources（示範 2 筆）同樣交給 components/sources-block 內嵌 for 渲染。

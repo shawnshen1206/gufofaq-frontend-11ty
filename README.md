@@ -52,7 +52,7 @@ push 到 `master` 會自動觸發 [`.github/workflows/deploy.yml`](.github/workf
 src/
 ├── _includes/
 │   ├── layouts/            整頁模板（3 支，見下表）＋ 模板專屬樣式 `_chatbot-shell.scss`
-│   ├── ui/                 不依賴其他元件的元件（48 個）
+│   ├── ui/                 不依賴其他元件的元件（47 個）
 │   └── components/         會用到其他元件，或某大元件的專屬子片段（39 個）
 ├── scss/                   全域層（元件樣式住在元件資料夾）
 │   ├── _var.scss           設計 token：語意色 + [data-theme=dark] 覆寫（全站唯一色源，單層直值）
@@ -114,7 +114,7 @@ dist/                       build 輸出（勿手改）
 | `components/chatroom` | `chatInputHidden`（true 時不渲染輸入區；`2-1` 是唯讀的問答紀錄預覽，真實頁沒有輸入框，單測頁 `2-2-1` 需要）。 |
 | `components/priority-table` | 頁面 set `rows = [{ category, description, prompt, priority }]`；渲染 5 欄意圖判斷表（`.default-table.priority-table`）。`rows` 空陣列＝空狀態。用於 5-2（檢索與欄位子頁籤依優先級分組，每組 set 後 include）。 |
 | `components/delete-modal` | `deleteTargetId`（設了就渲染空 `<span id>`，由業務 js 填入待刪除項目名稱）／`deleteTargetName`（靜態示範名稱）／`deleteConfirmBinding`（true＝確認鈕交給業務 js 綁定、不自動關窗）／`deleteConfirmClass`・`deleteToast`・`deleteToastKey`（確認鈕的 hook class 與成敗 toast，見元件檔頭）。 |
-| `components/agent-activity` | 選填 `agentActivityRows = [{ tool, summary, params, result }]`——使用頁對話主題與內建預設（移民主題）不同時覆寫（2-2-3 傳 USB-C 主題）；未設用內建示範軌跡。 |
+| `components/step-flow` | 後台測試區（單測 2-2-1／AB 2-2-3）詳細觀測：把整條正典管線畫成類 mermaid 直式流程圖，點亮當前 node，每節點可展開看工具/參數/結果/grounding 判定/agent 推理，頂端整體執行摘要。選填 `stepFlowNodes = [{ label, state, time, tools, params, result, verdict, thinking }]`（`state`＝completed/running/skipped/failed/pending）——使用頁不同對話主題時覆寫；未設用內建示範。收合復用 `ui/accordion`（表格結構＋`.js-accordion`），本元件不自帶 js。取代原 `ui/step-timeline`＋`components/agent-activity`。 |
 | `components/success-box` | 上傳完成卡：`successRetryHref/Label/Key`、`successViewHref/Label/Key`、`successHideDesc`（true 只留空 `.success-desc` 由業務 js 填）——完整語意見元件檔頭。 |
 | `ui/upload-box` | `uploadNextHref`（連結版）/`uploadAccept`/`uploadMultiple`/`uploadHint*`——按鈕版開原生檔案窗、拖曳換樣式（upload-box.js）。 |
 | `ui/chart-box` | `chartBoxId`（圖表容器 id 前綴）/`chartBoxTitleText`/`chartBoxTitleKey`；用於 5-3。 |
@@ -143,7 +143,7 @@ dist/                       build 輸出（勿手改）
 
 **`<元件名>.html` 的兩種身分**：被真實頁面 include 的是生產 markup；只被元件總覽頁 `component.html` include 的是展示片段（`button`、`checkbox`、`radio`、`switch`、`tab`、`form-control`、`multi-select`、`link-file`、`link-modal`、`list-style`、`divider-vertical`、`toast`、`tooltip`、`block`、`form-table`、`default-table`）。展示片段為了示範情境會用到別的元件，判斷桶歸屬時不算依賴（見 GUIDELINE §1-1）。
 
-> **上列不是完整清單**（`src/_includes/` 目前有 87 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
+> **上列不是完整清單**（`src/_includes/` 目前有 86 個元件）。完整結構以 `src/_includes/` 與元件總覽頁 `dist/component.html` 為準。跨檔一致性由 `npm test` 把關：有 js 的元件必須三方登記（實體檔 ⇄ `eleventy.config.js` ⇄ `base.html`）、有 scss 的必須在 `main.scss` `@use`、每個元件 html 都必須被 include（無孤兒）、每張圖都必須被引用。
 
 ---
 

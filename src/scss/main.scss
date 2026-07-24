@@ -74,8 +74,7 @@
 @use "../_includes/components/prompt-edit/prompt-edit";
 @use "../_includes/components/qa-record-tabs/qa-record-tabs";
 @use "../_includes/components/qa-side-panel/qa-side-panel";
-@use "../_includes/components/agent-activity/agent-activity";
-@use "../_includes/ui/step-timeline/step-timeline";
+@use "../_includes/components/step-flow/step-flow";
 @use "../_includes/components/multi-select-box/multi-select-box";
 @use "../_includes/ui/subscription-gate/subscription-gate";
 // 原第二支樣式表（真實 app css/style.css）已依 GUIDELINE §4 解散歸戶成下列三個純樣式元件
