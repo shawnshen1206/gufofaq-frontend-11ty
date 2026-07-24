@@ -19,19 +19,20 @@ permalink: 2-2-3_abTest.html
     {% include "ui/breadcrumb/breadcrumb.html" %}
 </div>
 
-{# 設定卡 A / B：兩欄結構完全對稱，僅標題與 selected 值不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
-     避免整段複製貼上；提示詞收合區塊用 components/prompt-edit（每圈重設 promptDefaultOpen）：
-     設定A 預設展開、設定B 預設收合，與真實頁一致 #}
+{# 設定卡 A / B：兩欄結構完全對稱，僅標題與 side 字母不同，故以 set+for 資料化 2 筆（同一 markup 逐欄位輸出），
+     避免整段複製貼上。每側比照對話設定頁：可切換對話模式、逐欄模式適用性（取用資料筆數僅傳統、Agent
+     最大迭代次數僅 Agent，modeMatrix 見 gufofaq-saas docs/mode-matrix.md）；設定為臨時，底部「回復儲存的
+     設定」隨時回復已儲存值。提示詞用 components/prompt-edit（常駐展開、無切換），套用/回復/儲存版本三鈕
+     移到每側底部同排（使用者定案）。 #}
 {% set abSides = [
-    { side: "A", defaultOpen: true },
-    { side: "B", defaultOpen: false }
+    { side: "A" },
+    { side: "B" }
 ] %}
 <div class="block ab-test-block flex-row gap-24 mobile-column">
     {% for ab in abSides %}
     <div class="ab-side" data-ab-side="{{ ab.side }}">
         <div class="flex-row align-items-center gap-10 mb-10">
             <span class="text-lg text-bold text-blue"><span data-i18n="qaTest.setting">設定</span> {{ ab.side }}</span>
-            <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
         </div>
 
         {# 真 app 此層有 .select-row class，但其樣式已依 §4 改寫為 .ab-field-label slot（見 _ab-test-block.scss），
@@ -66,24 +67,8 @@ permalink: 2-2-3_abTest.html
                     </select>
                 </div>
             </div>
-            <div class="form-group row mobile-col">
-                <div class="label ab-field-label">
-                    <label for="abSampleSelected-{{ ab.side }}" class="control-label" data-i18n="qaTest.sampleCount">資料取樣數</label>
-                </div>
-                <div class="field">
-                    <div class="flex-row align-items-center gap-4">
-                        <input type="text" id="abSampleSelected-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-selected"
-                            value="4">
-                        <span class="text-gray">/</span>
-                        <input type="text" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-total"
-                            value="6" aria-label="資料取樣總數" data-i18n-aria-label="qaTest.sampleTotal">
-                    </div>
-                </div>
-            </div>
-            {# 對話模式 + Agent 最大迭代次數：每側各一組，id 以 -{{ ab.side }} 保持同頁唯一；
-                 對齊 product qatest TestConfig 的 search_mode／agent_max_iterations（product 預設 traditional），
-                 業務讀值走 hook class js-chat-mode／js-agent-max-iter（React 接手）。
-                 示範選 agent（§6 示範資料要自洽：本頁下方展示 agent 工具軌跡，傳統搜尋模式不會有）。 #}
+            {# 對話模式：每側各一組，id 以 -{{ ab.side }} 保持同頁唯一；對齊 product TestConfig.search_mode。
+                 示範選 agent（§6 示範自洽：本頁下方展示 agent 工具軌跡，傳統搜尋模式不會有）。 #}
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label">
                     <label for="abChatModeSelect-{{ ab.side }}" class="control-label" data-i18n="qaTest.chatMode">對話模式</label>
@@ -95,19 +80,67 @@ permalink: 2-2-3_abTest.html
                     </select>
                 </div>
             </div>
+            {# 選用資料筆數（search_selected_number）：兩模式皆適用（modeMatrix both），不標模式。 #}
+            <div class="form-group row mobile-col">
+                <div class="label ab-field-label">
+                    <label for="abSampleSelected-{{ ab.side }}" class="control-label" data-i18n="settings.searchSelectedNumber">選用資料筆數</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="abSampleSelected-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-selected" value="8">
+                </div>
+            </div>
+            {# 取用資料筆數（search_total_number）：僅傳統搜尋模式生效（modeMatrix traditional）；切版常駐＋標示，
+                 React 於 agent 模式停用並紅字說明。 #}
+            <div class="form-group row mobile-col">
+                <div class="label ab-field-label">
+                    <label for="abSampleTotal-{{ ab.side }}" class="control-label" data-i18n="settings.searchTotalNumber">取用資料筆數</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="abSampleTotal-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control sample-count w100 js-sample-total" value="16">
+                    <span class="text-gray" data-i18n="settings.traditionalModeOnly">僅傳統搜尋模式生效</span>
+                </div>
+            </div>
+            {# Agent 最大迭代次數（agent_max_iterations）：僅 Agent 模式生效（modeMatrix agent）；預設 5。
+                 切版常駐＋標示，React 於傳統模式停用並紅字說明。 #}
             <div class="form-group row mobile-col">
                 <div class="label ab-field-label">
                     <label for="abAgentMaxIter-{{ ab.side }}" class="control-label" data-i18n="qaTest.agentMaxIter">Agent 最大迭代次數</label>
                 </div>
                 <div class="field">
                     <input type="text" id="abAgentMaxIter-{{ ab.side }}" placeholder="請輸入" data-i18n-placeholder="common.pleaseEnter" class="form-control js-agent-max-iter" value="5">
+                    <span class="text-gray" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</span>
                 </div>
             </div>
         </div>
 
-        {# 提示詞（收合 / 展開編輯）：抽成 components/prompt-edit #}
-        {% set promptDefaultOpen = ab.defaultOpen %}
-        {% include "components/prompt-edit/prompt-edit.html" %}
+        {# 提示詞（測試用，常駐展開輸入框）：每側的臨時提示詞。值載體 textarea 掛 js-prompt-input（React
+           受控）。不用 components/prompt-edit（版本管理型系統提示詞編輯器，仍用於對話設定頁）——測試頁
+           只要常駐展開輸入框，動作鈕在下方動作列。示範文案領域中性。 #}
+        <div class="flex-row column gap-8 mt-16">
+            <span class="control-label" data-i18n="comp.prompt">提示詞</span>
+            <textarea class="form-control size-lg js-prompt-input" aria-label="提示詞" data-i18n-aria-label="comp.prompt">角色定位：
+你是一位專業的知識庫問答助手，負責依據已上傳的資料回應使用者詢問。
+知識來源限制：
+你的回答必須僅依據以下資料來源：
+• 《知識庫檢索結果》（本次問答檢索到的資料片段）
+回應原則：
+• 優先使用條列式呈現資訊
+• 語氣清楚、專業且易懂
+• 不可臆測或補充未出現在資料中的內容
+• 若資料不足，需明確說明『無法從現有資料判斷』
+輸出格式：
+• 使用條列式（• 或 -）
+• 必要時分段（例如：說明 / 流程 / 注意事項）</textarea>
+        </div>
+
+        {# 動作列（每側三鈕同排，套用為正式設定移到此處與其他按鈕一起排列）：
+             回復儲存的設定（js-restore-saved，直送重載該側已儲存設定）／儲存提示詞版本（js-prompt-new-version）／
+             套用為正式設定（js-apply-production，業務依模型權限開彈窗，見 abTest.js）。 #}
+        <div class="flex-row justify-content-center flex-wrap gap-16 mt-24">
+            <button type="button" class="button button-green js-restore-saved" data-toast="已回復儲存的設定|無法載入儲存的設定" data-i18n-data-toast="toast.restoreSettings" data-toast-type="success|error" data-i18n="qaTest.restoreSaved">回復儲存的設定</button>
+            <button type="button" class="button button-primary js-prompt-new-version" data-toast="已儲存為新版本|內容欄位不可為空|新增提示詞失敗，請稍後再試" data-i18n-data-toast="toast.savePrompt" data-toast-type="success|warning|error" data-i18n="qaTest.savePromptVersion">儲存提示詞版本</button>
+            <button type="button" class="button button-dark js-apply-production" data-i18n="qaTest.applyProduction">套用為正式設定</button>
+        </div>
     </div>
     {% endfor %}
 </div>
