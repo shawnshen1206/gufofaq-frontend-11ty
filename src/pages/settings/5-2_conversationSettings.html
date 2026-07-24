@@ -30,7 +30,9 @@ permalink: 5-2_conversationSettings.html
 {# ── 租戶層（跨三設置共用；profile 頁籤之外）──
      設置頁籤（沿用 ui/tab 的 .tab-row.fit-content > .tab-group Pattern A）+ 前台問答預設使用 radio，
      兩者共用同一份「設置一/二/三」清單資料化（沿 5-2-1）。active＝檢視中頁籤；default＝前台預設設置，
-     radio 綁 default。data-setting-sn 是 React 讀值（切換即重載該設置全部 config），非內容切換。 #}
+     radio 綁 default，並帶 value=設置序號＋值載體 hook class js-front-qa-default 供 React 讀「選了哪個設置當前台預設」
+     （否則 React 只能靠 DOM 索引猜，§5 值載體）。data-setting-sn 是 React 讀值（切換即重載該設置全部 config），非內容切換。
+     （label settings.frontQaDefault 英譯用 frontend 對齊站內拼寫；saas 仍作 front-end，待統一，round28 驗。） #}
 {% set settingTabs = [
   { label: "設置一", active: true, i18nKey: "settings.config1" },
   { label: "設置二", default: true, i18nKey: "settings.config2" },
@@ -53,7 +55,7 @@ permalink: 5-2_conversationSettings.html
             <div class="flex-row flex-wrap gap-24" role="radiogroup" aria-labelledby="frontQaDefaultLabel">
                 {% for tab in settingTabs %}
                 <label class="form-radio">
-                    <input type="radio" name="frontEnd_qa"{% if tab.default %} checked{% endif %}>
+                    <input type="radio" name="frontEnd_qa" class="js-front-qa-default" value="{{ loop.index }}"{% if tab.default %} checked{% endif %}>
                     <span data-i18n="{{ tab.i18nKey }}">{{ tab.label }}</span>
                 </label>
                 {% endfor %}
@@ -685,8 +687,8 @@ permalink: 5-2_conversationSettings.html
      mcp.py list_tenant_mcp_catalog 只回啟用中的 server；示範 2 筆）。皆為 Agent 模式；值載體隨底部
      「儲存對話設定」直送。builtin_tool_overrides（自訂描述/extra_prompt）後端已支援、本頁與 React
      皆刻意緩做（spec 列為進階旋鈕，UI 待需求）。工具名／術語表名／Server 名為業務資料（識別字），不翻。
-     agentToolsIntro 的「已啟用」為修正後值（product catalog 仍作「已註冊」，與 mcp.py 只回啟用中不符，
-     待回流）。 #}
+     agentToolsIntro 的「已啟用」對齊 mcp.py 只回啟用中的 server；product catalog 已對齊「已啟用」
+     （round28 驗 saas apps/web/lib/i18n/messages.zh.json）。 #}
 <div class="tab-content" id="panelAgentTools" style="display: none;">
     <p class="text-gray" data-i18n="settings.agentToolsIntro">Agent 模式下可呼叫的工具：內建工具、綁定的術語表、以及平台已啟用的 MCP Server。</p>
     <div class="text-gray mb-8" data-i18n="settings.agentModeOnly">僅 Agent 模式生效</div>

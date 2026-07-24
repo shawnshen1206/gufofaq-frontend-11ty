@@ -14,8 +14,8 @@
      對 product ConfigCopyModal.tsx 的刻意差異：①移除其 .config-copy-body（§4 無主 class——兩 repo scss
      皆不寫、e2e 不查，排版由工具 class 承擔，待回流）；②錯誤列補 role="alert"（§4 動態訊息 live region，
      product 漏掛、待回流）；③錯誤列移入 gap-16 容器內（間距歸 gap 單一來源；product 在容器外、無間距
-     控制，待回流）；④copyConfigProductionWarning 英文用 frontend（站內拼寫統一 §4-2；product 作
-     front-end，待統一）。 #}
+     控制，待回流）；④copyConfigProductionWarning 英文用 frontend（站內拼寫統一 §4-2；product 已對齊
+     frontend，round28 驗）。 #}
 {# 元件內部示範資料用元件專屬變數名（§6）：六個複製群組＝GufoRAG chatbot services/config.py 的 COPY_GROUPS #}
 {% set configCopyGroups = [
     { i18nKey: "settings.copyConfigGroupPrompts", label: "提示詞：五層系統提示詞（聊天室／產品／意圖／回答／Agent）、機器人人設、回答格式、歡迎語" },
@@ -31,7 +31,7 @@
             {% include "ui/modal-close/modal-close.html" %}
             <div class="modals-content">
                 <div class="modals-header">
-                    <h3 class="modals-title" id="configCopyModal-title"><span data-i18n="settings.copyConfigModalTitlePrefix">複製到「</span><span id="configCopyTarget">設置一</span><span data-i18n="settings.copyConfigModalTitleSuffix">」</span></h3>
+                    <h3 class="modals-title" id="configCopyModal-title"><span data-i18n="settings.copyConfigModalTitlePrefix">複製到「</span><span id="configCopyTarget" data-i18n="settings.config1">設置一</span><span data-i18n="settings.copyConfigModalTitleSuffix">」</span></h3>
                 </div>
                 <div class="modals-body">
                     <div class="flex-row column gap-16">

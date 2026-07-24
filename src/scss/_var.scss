@@ -67,7 +67,7 @@
     --scrollbar-thumb-strong: #13386f; // 整頁 / mobile-nav 捲軸 thumb
     --control-track: #6c6c6c; // switch off 軌道
     --control-track-alt: #b4bfc9; // storage-bar 空軌
-    --control-knob: #ffffff; // switch 把手 / checkbox 勾記
+    --control-knob: #ffffff; // switch 把手 / checkbox 勾記底（未勾的 scale(0) 態與停用態）——已勾的勾記墨色是 --brand-ink（§4）
     --toggle-on: #409144; // switch on 底
 
     /* tooltip（淺色本就是深泡泡；深色反相成淺泡泡才跳得出來） */

@@ -13,7 +13,14 @@
 
 .config-copy-group-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+
+    // 群組說明是整句長文（列出該群組複製的所有欄位），必須換行。.form-checkbox > span 預設
+    // white-space: nowrap（_form-check），在固定寬 modal-md 裡會被 .modals-wrap 的 overflow: hidden
+    // 截掉大半，故此 slot 覆寫為可換行（勾選框改對齊頂端，配合多行 label）。
+    >span {
+        white-space: normal;
+    }
 }
 
 .config-copy-warning {

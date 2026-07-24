@@ -652,6 +652,7 @@
   "storage.used": "Used",
   "theme.toggle": "Toggle dark / light mode",
   "toast.applyProduction": "Applied as production settings|Insufficient permission to apply|Failed to apply production settings. Please try again later.",
+  "toast.applyProductionCompare": "Applied as production settings|Failed to apply production settings. Please try again later.",
   "toast.changePassword": "Password changed|New passwords do not match|Old password incorrect or change failed",
   "toast.chatSubmit": "Generating answer…|Answer generated|Failed to generate answer",
   "toast.copyConfig": "Configuration copied|Copy failed. Please try again later.",
